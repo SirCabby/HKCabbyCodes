@@ -22,6 +22,7 @@
     <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" />
     <PackageReference Include="BepInEx.Unity.Mono" Version="6.0.0-be.*" IncludeAssets="compile" />
     <PackageReference Include="BepInEx.PluginInfoProps" Version="2.*" />
+    <PackageReference Include="HarmonyX" Version="2.10.2" />
     <PackageReference Include="Unity3D.UnityEngine.UI" Version="2018.3.5.1" />
 	<PackageReference Include="UnityEngine.Modules" Version="2020.2" IncludeAssets="compile" />
   </ItemGroup>
