@@ -18,7 +18,7 @@ namespace CabbyCodes
         private void BuildPlayerCheats()
         {
             GameObject cheat1 = cabbyMenu.AddCheatPanel();
-            ToggleButton cheat1ToggleButton = new ToggleButton();
+            ToggleButton cheat1ToggleButton = new();
             //cheat1ToggleButton.GetComponent<Button>().onClick.AddListener(OnMenuButtonClicked);
             CabbyMenu.AttachAndAnchor(cheat1ToggleButton.GetGameObject(), cheat1.transform, new Vector2(0.07f, 0.5f), new Vector2(0.07f, 0.5f), new Vector2(120, 50));
 

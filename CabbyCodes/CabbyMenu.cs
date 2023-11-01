@@ -94,13 +94,13 @@ namespace CabbyCodes
                 }
                 else if (menuPanel != null)
                 {
-                    GameObject.Destroy(menuPanel);
+                    UnityEngine.Object.Destroy(menuPanel);
                     menuPanel = null;
                 }
             }
             else if (rootGameObject != null)
             {
-                GameObject.Destroy(rootGameObject);
+                UnityEngine.Object.Destroy(rootGameObject);
                 rootGameObject = null;
             }
 
@@ -121,8 +121,10 @@ namespace CabbyCodes
         private void BuildCanvas()
         {
             // Base Canvas
-            rootGameObject = new GameObject("CabbyCodes");
-            rootGameObject.name = "CC Root Canvas";
+            rootGameObject = new GameObject("CabbyCodes")
+            {
+                name = "CC Root Canvas"
+            };
 
             Canvas canvas = rootGameObject.AddComponent<Canvas>();
             canvas.renderMode = RenderMode.ScreenSpaceOverlay;
@@ -142,7 +144,7 @@ namespace CabbyCodes
         {
             foreach (Transform child in cheatContent.transform)
             {
-                GameObject.Destroy(child.gameObject);
+                UnityEngine.Object.Destroy(child.gameObject);
             }
         }
 
@@ -171,7 +173,7 @@ namespace CabbyCodes
             AttachAndAnchor(categoryTextObj, menuPanel.transform, new Vector2(0.11f, 0.74f), new Vector2(0.11f, 0.74f), new Vector2(400, 100));
 
             // Category Dropdown
-            Vector2 categorySize = new Vector2(250, 60);
+            Vector2 categorySize = new(250, 60);
             int showSize = 5;
             GameObject categoryDropdownGameObject = DefaultControls.CreateDropdown(new DefaultControls.Resources());
             categoryDropdownGameObject.name = "Category Dropdown";
@@ -181,7 +183,7 @@ namespace CabbyCodes
             categoryDropdown.onValueChanged.AddListener(OnCategorySelected);
 
             // Populate Registered Categories
-            List<Dropdown.OptionData> options = new List<Dropdown.OptionData>();
+            List<Dropdown.OptionData> options = new();
             foreach (string category in registeredCategories.Keys)
             {
                 options.Add(new Dropdown.OptionData(category));
@@ -239,13 +241,9 @@ namespace CabbyCodes
             AttachAndAnchor(titleTextObj, menuPanel.transform, new Vector2(0.5f, 0.93f), new Vector2(0.5f, 0.93f), new Vector2(400, 100));
 
             // Close Button
-            GameObject menuButton = new ButtonFactory("Close").SetName("Close Button").Build();
+            GameObject menuButton = new ButtonFactory("Close").SetName("Close Button").SetFontSize(46).Build();
             menuButton.GetComponent<Button>().onClick.AddListener(OnMenuButtonClicked);
             AttachAndAnchor(menuButton, menuPanel.transform, new Vector2(0.87f, 0.68f), new Vector2(0.92f, 0.7f), null);
-
-            Text menuText = menuButton.GetComponentInChildren<Text>();
-            menuText.text = "Close";
-            menuText.fontSize = 46;
 
             // Version Text
             GameObject versionTextObj = new TextFactory("v" + version).SetName("Version Text").SetFontStyle(FontStyle.BoldAndItalic).Build();

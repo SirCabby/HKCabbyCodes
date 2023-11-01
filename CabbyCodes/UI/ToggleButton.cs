@@ -6,9 +6,9 @@ namespace CabbyCodes.UI
     public class ToggleButton
     {
         private readonly GameObject toggleButton;
-        private readonly Color onColor = new Color(0, 0.8f, 1, 1);
+        private readonly Color onColor = new(0, 0.8f, 1, 1);
         private readonly Color offColor = Color.white;
-        public bool isOn { get; set; }
+        public bool IsOn { get; set; }
 
         public ToggleButton()
         {
@@ -24,7 +24,7 @@ namespace CabbyCodes.UI
 
         public void Toggle()
         {
-            isOn = !isOn;
+            IsOn = !IsOn;
             Update();
         }
 
@@ -32,7 +32,7 @@ namespace CabbyCodes.UI
         {
             Text toggleText = toggleButton.GetComponentInChildren<Text>();
             Image toggleImage = toggleButton.GetComponent<Image>();
-            if (isOn)
+            if (IsOn)
             {
                 toggleText.text = "ON";
                 toggleImage.color = onColor;
