@@ -12,12 +12,8 @@ namespace CabbyCodes.UI
 
         public ToggleButton()
         {
-            toggleButton = DefaultControls.CreateButton(new DefaultControls.Resources());
-            toggleButton.name = "Toggle Button";
+            toggleButton = new ButtonFactory("").SetName("Toggle Button").Build();
             toggleButton.GetComponent<Button>().onClick.AddListener(Toggle);
-
-            Text toggleText = toggleButton.GetComponentInChildren<Text>();
-            toggleText.fontSize = 36;
             Update();
         }
 
