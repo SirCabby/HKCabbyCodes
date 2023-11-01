@@ -1,13 +1,13 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-namespace CabbyCodes.UI
+namespace CabbyCodes.UI.Factories
 {
     public class TextFactory
     {
         protected GameObject buildInstance;
 
-        protected TextFactory(GameObject buildInstance, string text) 
+        protected TextFactory(GameObject buildInstance, string text)
         {
             this.buildInstance = buildInstance;
             SetText(buildInstance.GetComponentInChildren<Text>(), text);

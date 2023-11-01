@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-namespace CabbyCodes.UI
+namespace CabbyCodes.UI.Factories
 {
     public class ButtonFactory : TextFactory
     {
