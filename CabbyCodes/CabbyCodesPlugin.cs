@@ -3,6 +3,7 @@ using BepInEx.Unity.Mono;
 using UnityEngine.UI;
 using UnityEngine;
 using CabbyCodes.UI;
+using CabbyCodes.UI.Factories;
 
 namespace CabbyCodes
 {
@@ -20,18 +21,10 @@ namespace CabbyCodes
             GameObject cheat1 = cabbyMenu.AddCheatPanel();
             ToggleButton cheat1ToggleButton = new();
             //cheat1ToggleButton.GetComponent<Button>().onClick.AddListener(OnMenuButtonClicked);
-            CabbyMenu.AttachAndAnchor(cheat1ToggleButton.GetGameObject(), cheat1.transform, new Vector2(0.07f, 0.5f), new Vector2(0.07f, 0.5f), new Vector2(120, 50));
+            new Fitter(cheat1ToggleButton.GetGameObject()).Attach(cheat1).Anchor(new Vector2(0.07f, 0.5f), new Vector2(0.07f, 0.5f)).Size(new Vector2(120, 50));
 
-            GameObject cheat1TextObj = DefaultControls.CreateText(new DefaultControls.Resources());
-            cheat1TextObj.name = "Category Text";
-            CabbyMenu.AttachAndAnchor(cheat1TextObj, cheat1.transform, new Vector2(0.2f, 0.5f), new Vector2(0.95f, 0.5f), new Vector2(0, 50));
-
-            Text cheat1Text = cheat1TextObj.GetComponent<Text>();
-            cheat1Text.text = "Select Category";
-            cheat1Text.fontSize = 36;
-            cheat1Text.color = Color.black;
-            cheat1Text.alignment = TextAnchor.MiddleLeft;
-            cheat1Text.fontStyle = FontStyle.Bold;
+            GameObject cheat1TextObj = new TextFactory("Cheat Description").SetAlignment(TextAnchor.MiddleLeft).SetFontStyle(FontStyle.Bold).Build();
+            new Fitter(cheat1TextObj).Attach(cheat1).Anchor(new Vector2(0.2f, 0.5f), new Vector2(0.95f, 0.5f)).Size(new Vector2(0, 50));
 
             cabbyMenu.AddCheatPanel();
             cabbyMenu.AddCheatPanel();
