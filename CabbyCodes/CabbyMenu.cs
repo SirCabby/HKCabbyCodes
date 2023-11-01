@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using CabbyCodes.UI.Factories;
 using CabbyCodes.UI;
 using CabbyCodes.UI.Modders;
+using CabbyCodes.UI.CheatPanels;
 
 namespace CabbyCodes
 {
@@ -41,21 +42,12 @@ namespace CabbyCodes
             registeredCategories.Add(categoryName, buildMethod);
         }
 
-        public GameObject AddCheatPanel()
+        public void AddCheatPanel(CheatPanel cheatPanel)
         {
             Color thisColor = cheatContent.transform.childCount % 2 == 1 ? Color.red : Color.green;
 
-            GameObject cheatPanel = DefaultControls.CreatePanel(new DefaultControls.Resources());
-            cheatPanel.name = "Cheat Panel";
-            cheatPanel.GetComponent<Image>().color = thisColor;
-            cheatPanel.transform.SetParent(cheatContent.transform, false);
-            cheatPanel.transform.localScale = Vector2.one;
-
-            LayoutElement imageLayout = cheatPanel.AddComponent<LayoutElement>();
-            imageLayout.preferredHeight = 80;
-            imageLayout.flexibleWidth = 1;
-
-            return cheatPanel;
+            new ImageMod(cheatPanel.GetGameObject().GetComponent<Image>()).SetColor(thisColor);
+            new Fitter(cheatPanel.GetGameObject()).Attach(cheatContent);
         }
 
         public void Update()

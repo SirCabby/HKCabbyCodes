@@ -1,10 +1,10 @@
 ﻿using BepInEx;
 using BepInEx.Unity.Mono;
-using UnityEngine.UI;
 using UnityEngine;
 using CabbyCodes.UI;
 using CabbyCodes.UI.Factories;
 using CabbyCodes.UI.Modders;
+using CabbyCodes.UI.CheatPanels;
 
 namespace CabbyCodes
 {
@@ -19,42 +19,53 @@ namespace CabbyCodes
 
         private void BuildPlayerCheats()
         {
-            GameObject cheat1 = cabbyMenu.AddCheatPanel();
+            CheatPanel cheat1 = new(80);
             ToggleButton cheat1ToggleButton = new();
             //cheat1ToggleButton.GetComponent<Button>().onClick.AddListener(OnMenuButtonClicked);
-            new Fitter(cheat1ToggleButton.GetGameObject()).Attach(cheat1).Anchor(new Vector2(0.07f, 0.5f), new Vector2(0.07f, 0.5f)).Size(new Vector2(120, 50));
+            new Fitter(cheat1ToggleButton.GetGameObject()).Attach(cheat1.GetGameObject()).Anchor(new Vector2(0.07f, 0.5f), new Vector2(0.07f, 0.5f)).Size(new Vector2(120, 50));
 
             (GameObject cheat1TextObj, _, TextMod textMod) = TextFactory.Build("Cheat Description");
             textMod.SetAlignment(TextAnchor.MiddleLeft).SetFontStyle(FontStyle.Bold);
-            new Fitter(cheat1TextObj).Attach(cheat1).Anchor(new Vector2(0.2f, 0.5f), new Vector2(0.95f, 0.5f)).Size(new Vector2(0, 50));
+            new Fitter(cheat1TextObj).Attach(cheat1.GetGameObject()).Anchor(new Vector2(0.2f, 0.5f), new Vector2(0.95f, 0.5f)).Size(new Vector2(0, 50));
 
-            cabbyMenu.AddCheatPanel();
-            cabbyMenu.AddCheatPanel();
-            cabbyMenu.AddCheatPanel();
-            cabbyMenu.AddCheatPanel();
-            cabbyMenu.AddCheatPanel();
-            cabbyMenu.AddCheatPanel();
-            cabbyMenu.AddCheatPanel();
-            cabbyMenu.AddCheatPanel();
-            cabbyMenu.AddCheatPanel();
-            cabbyMenu.AddCheatPanel();
-            cabbyMenu.AddCheatPanel();
-            cabbyMenu.AddCheatPanel();
-            cabbyMenu.AddCheatPanel();
+            cabbyMenu.AddCheatPanel(cheat1);
+
+            for (int i = 0; i < 12; i++)
+            {
+                CheatPanel cheatPanel;
+                if (i % 2  == 0)
+                    cheatPanel = new CheatPanel(80);
+                else
+                    cheatPanel = new CheatPanel(100);
+                cabbyMenu.AddCheatPanel(cheatPanel);
+            }
+            
         }
 
         private void BuildMapCheats()
         {
-            cabbyMenu.AddCheatPanel();
-            cabbyMenu.AddCheatPanel();
+            for (int i = 0; i < 2; i++)
+            {
+                CheatPanel cheatPanel;
+                if (i % 2 == 0)
+                    cheatPanel = new CheatPanel(80);
+                else
+                    cheatPanel = new CheatPanel(100);
+                cabbyMenu.AddCheatPanel(cheatPanel);
+            }
         }
 
         private void BuildHunterCheats()
         {
-            cabbyMenu.AddCheatPanel();
-            cabbyMenu.AddCheatPanel();
-            cabbyMenu.AddCheatPanel();
-            cabbyMenu.AddCheatPanel();
+            for (int i = 0; i < 4; i++)
+            {
+                CheatPanel cheatPanel;
+                if (i % 2 == 0)
+                    cheatPanel = new CheatPanel(80);
+                else
+                    cheatPanel = new CheatPanel(100);
+                cabbyMenu.AddCheatPanel(cheatPanel);
+            }
         }
 
         private void Awake()
