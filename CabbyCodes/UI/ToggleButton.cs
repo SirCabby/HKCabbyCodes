@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using CabbyCodes.UI.Factories;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace CabbyCodes.UI
