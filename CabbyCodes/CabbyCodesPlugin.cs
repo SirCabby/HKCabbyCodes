@@ -23,7 +23,9 @@ namespace CabbyCodes
             //cheat1ToggleButton.GetComponent<Button>().onClick.AddListener(OnMenuButtonClicked);
             new Fitter(cheat1ToggleButton.GetGameObject()).Attach(cheat1).Anchor(new Vector2(0.07f, 0.5f), new Vector2(0.07f, 0.5f)).Size(new Vector2(120, 50));
 
-            GameObject cheat1TextObj = new TextFactory("Cheat Description").SetAlignment(TextAnchor.MiddleLeft).SetFontStyle(FontStyle.Bold).Build();
+            TextFactory textFactory = new TextFactory("Cheat Description");
+            textFactory.GetTextMod().SetAlignment(TextAnchor.MiddleLeft).SetFontStyle(FontStyle.Bold);
+            GameObject cheat1TextObj = textFactory.Build();
             new Fitter(cheat1TextObj).Attach(cheat1).Anchor(new Vector2(0.2f, 0.5f), new Vector2(0.95f, 0.5f)).Size(new Vector2(0, 50));
 
             cabbyMenu.AddCheatPanel();

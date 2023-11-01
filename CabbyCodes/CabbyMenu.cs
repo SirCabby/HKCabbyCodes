@@ -150,7 +150,7 @@ namespace CabbyCodes
             menuPanel = DefaultControls.CreatePanel(new DefaultControls.Resources());
             menuPanel.name = "Menu Panel";
             menuPanel.transform.SetParent(canvas.transform, false);
-            menuPanel.GetComponent<Image>().color = Color.grey;
+            menuPanel.GetComponent<Image>().color = new Color(0, 0, 0, 0.8f);
 
             // Category Select Text
             GameObject categoryTextObj = new TextFactory("Select Category").SetName("Category Text").Build();
@@ -221,16 +221,22 @@ namespace CabbyCodes
             contentSizeFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
 
             // Title Text
-            GameObject titleTextObj = new TextFactory(name).SetName("Title Text").SetFontStyle(FontStyle.BoldAndItalic).SetFontSize(60).Build();
+            TextFactory titleTextFactory = new TextFactory(name).SetName("Title Text").SetOutline(Color.black);
+            titleTextFactory.GetTextMod().SetFontStyle(FontStyle.BoldAndItalic).SetFontSize(60).SetColor(Color.white);
+            GameObject titleTextObj = titleTextFactory.Build();
             new Fitter(titleTextObj).Attach(menuPanel).Anchor(new Vector2(0.5f, 0.93f), new Vector2(0.5f, 0.93f)).Size(new Vector2(400, 100));
 
             // Close Button
-            GameObject menuButton = new ButtonFactory("Close").SetName("Close Button").SetFontSize(46).Build();
+            ButtonFactory menuButtonFactory = new ButtonFactory("Close").SetName("Close Button");
+            menuButtonFactory.GetTextMod().SetFontSize(46);
+            GameObject menuButton = menuButtonFactory.Build();
             menuButton.GetComponent<Button>().onClick.AddListener(OnMenuButtonClicked);
             new Fitter(menuButton).Attach(menuPanel).Anchor(new Vector2(0.87f, 0.68f), new Vector2(0.92f, 0.7f));
 
             // Version Text
-            GameObject versionTextObj = new TextFactory("v" + version).SetName("Version Text").SetFontStyle(FontStyle.BoldAndItalic).Build();
+            TextFactory versionTextFactory = new TextFactory("v" + version).SetName("Version Text");
+            versionTextFactory.GetTextMod().SetFontStyle(FontStyle.BoldAndItalic);
+            GameObject versionTextObj = versionTextFactory.Build();
             new Fitter(versionTextObj).Attach(menuPanel).Anchor(new Vector2(0.95f, 0.05f), new Vector2(0.95f, 0.1f)).Size(new Vector2(400, 100));
 
             OnCategorySelected(0);
