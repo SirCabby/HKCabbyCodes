@@ -143,7 +143,7 @@ namespace CabbyCodes
 
             menuPanel = DefaultControls.CreatePanel(new DefaultControls.Resources());
             menuPanel.name = "Menu Panel";
-            menuPanel.transform.SetParent(canvas.transform, false);
+            new Fitter(menuPanel).Attach(canvas);
             menuPanel.GetComponent<Image>().color = new Color(0, 0, 0, 0.8f);
 
             // Category Select Text

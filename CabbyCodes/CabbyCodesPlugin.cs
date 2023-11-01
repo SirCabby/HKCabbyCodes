@@ -1,9 +1,5 @@
 ﻿using BepInEx;
 using BepInEx.Unity.Mono;
-using UnityEngine;
-using CabbyCodes.UI;
-using CabbyCodes.UI.Factories;
-using CabbyCodes.UI.Modders;
 using CabbyCodes.UI.CheatPanels;
 
 namespace CabbyCodes
@@ -28,7 +24,6 @@ namespace CabbyCodes
                     cheatPanel = new CheatPanel("Cheat " + i, 100);
                 cabbyMenu.AddCheatPanel(cheatPanel);
             }
-            
         }
 
         private void BuildMapCheats()
