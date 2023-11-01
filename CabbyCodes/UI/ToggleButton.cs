@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-namespace CabbyCodes
+namespace CabbyCodes.UI
 {
     public class ToggleButton
     {

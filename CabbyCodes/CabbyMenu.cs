@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using UnityEngine;
 using System;
 using System.Collections.Generic;
+using CabbyCodes.UI;
 
 namespace CabbyCodes
 {
@@ -48,8 +49,6 @@ namespace CabbyCodes
             updateTimer.Elapsed += OnElapsedUpdateTimer;
             updateTimer.AutoReset = true;
             updateTimer.Enabled = true;
-
-            Update();
         }
 
         public void RegisterCategory(string categoryName, Action buildMethod)
@@ -134,15 +133,9 @@ namespace CabbyCodes
             canvasScalar.referenceResolution = new Vector2(2560, 1440);
 
             // Menu Button
-            GameObject menuButton = DefaultControls.CreateButton(new DefaultControls.Resources());
-            menuButton.name = "Open Menu Button";
-            menuButton.transform.SetParent(canvas.transform, false);
+            GameObject menuButton = new ButtonFactory("Code Menu").SetName("Open Menu Button").Build();
             menuButton.GetComponent<Button>().onClick.AddListener(OnMenuButtonClicked);
             AttachAndAnchor(menuButton, canvas.transform, new Vector2(0.07f, 0.92f), new Vector2(0.12f, 0.95f), null);
-
-            Text menuText = menuButton.GetComponentInChildren<Text>();
-            menuText.text = "Code Menu";
-            menuText.fontSize = 36;
         }
 
         private void ClearCheatContent()
@@ -174,14 +167,8 @@ namespace CabbyCodes
             menuPanel.GetComponent<Image>().color = Color.grey;
 
             // Category Select Text
-            GameObject categoryTextObj = DefaultControls.CreateText(new DefaultControls.Resources());
-            categoryTextObj.name = "Category Text";
+            GameObject categoryTextObj = new TextFactory("Select Category").SetName("Category Text").Build();
             AttachAndAnchor(categoryTextObj, menuPanel.transform, new Vector2(0.11f, 0.74f), new Vector2(0.11f, 0.74f), new Vector2(400, 100));
-
-            Text categoryText = categoryTextObj.GetComponent<Text>();
-            categoryText.text = "Select Category";
-            categoryText.fontSize = 36;
-            categoryText.color = Color.black;
 
             // Category Dropdown
             Vector2 categorySize = new Vector2(250, 60);
@@ -248,19 +235,11 @@ namespace CabbyCodes
             contentSizeFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
 
             // Title Text
-            GameObject titleTextObj = DefaultControls.CreateText(new DefaultControls.Resources());
-            titleTextObj.name = "Title Text";
+            GameObject titleTextObj = new TextFactory(name).SetName("Title Text").SetFontStyle(FontStyle.BoldAndItalic).SetFontSize(60).Build();
             AttachAndAnchor(titleTextObj, menuPanel.transform, new Vector2(0.5f, 0.93f), new Vector2(0.5f, 0.93f), new Vector2(400, 100));
 
-            Text titleText = titleTextObj.GetComponent<Text>();
-            titleText.text = name;
-            titleText.fontStyle = FontStyle.BoldAndItalic;
-            titleText.fontSize = 60;
-            titleText.color = Color.black;
-
             // Close Button
-            GameObject menuButton = DefaultControls.CreateButton(new DefaultControls.Resources());
-            menuButton.name = "Close Button";
+            GameObject menuButton = new ButtonFactory("Close").SetName("Close Button").Build();
             menuButton.GetComponent<Button>().onClick.AddListener(OnMenuButtonClicked);
             AttachAndAnchor(menuButton, menuPanel.transform, new Vector2(0.87f, 0.68f), new Vector2(0.92f, 0.7f), null);
 
@@ -269,15 +248,8 @@ namespace CabbyCodes
             menuText.fontSize = 46;
 
             // Version Text
-            GameObject versionTextObj = DefaultControls.CreateText(new DefaultControls.Resources());
-            versionTextObj.name = "Version Text";
+            GameObject versionTextObj = new TextFactory("v" + version).SetName("Version Text").SetFontStyle(FontStyle.BoldAndItalic).Build();
             AttachAndAnchor(versionTextObj, menuPanel.transform, new Vector2(0.95f, 0.05f), new Vector2(0.95f, 0.1f), new Vector2(400, 100));
-
-            Text versionText = versionTextObj.GetComponent<Text>();
-            versionText.text = "v" + version;
-            versionText.fontStyle = FontStyle.BoldAndItalic;
-            versionText.fontSize = 36;
-            versionText.color = Color.black;
 
             OnCategorySelected(0);
         }

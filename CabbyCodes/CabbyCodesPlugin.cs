@@ -2,6 +2,7 @@
 using BepInEx.Unity.Mono;
 using UnityEngine.UI;
 using UnityEngine;
+using CabbyCodes.UI;
 
 namespace CabbyCodes
 {
