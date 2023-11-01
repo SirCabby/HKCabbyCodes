@@ -5,17 +5,18 @@ using System;
 using System.Collections.Generic;
 using CabbyCodes.UI.Factories;
 using CabbyCodes.UI;
+using CabbyCodes.UI.Modders;
 
 namespace CabbyCodes
 {
     public class CabbyMenu
     {
-        private string name;
-        private string version;
-        private Dictionary<string, Action> registeredCategories = new Dictionary<string, Action>();
+        private readonly string name;
+        private readonly string version;
+        private readonly Dictionary<string, Action> registeredCategories = new();
 
         private bool shouldUpdate = true;
-        private Timer updateTimer;
+        private readonly Timer updateTimer;
 
         private GameObject rootGameObject;
         
@@ -119,7 +120,8 @@ namespace CabbyCodes
             canvasScalar.referenceResolution = new Vector2(2560, 1440);
 
             // Menu Button
-            GameObject menuButton = new ButtonFactory("Code Menu").SetName("Open Menu Button").Build();
+            (GameObject menuButton, GameObjectMod gameObjectMod, _) = ButtonFactory.Build("Code Menu");
+            gameObjectMod.SetName("Open Menu Button");
             menuButton.GetComponent<Button>().onClick.AddListener(OnMenuButtonClicked);
             new Fitter(menuButton).Attach(canvas).Anchor(new Vector2(0.07f, 0.92f), new Vector2(0.12f, 0.95f));
         }
@@ -153,7 +155,8 @@ namespace CabbyCodes
             menuPanel.GetComponent<Image>().color = new Color(0, 0, 0, 0.8f);
 
             // Category Select Text
-            GameObject categoryTextObj = new TextFactory("Select Category").SetName("Category Text").Build();
+            (GameObject categoryTextObj, GameObjectMod gameObjectMod, _) = TextFactory.Build("Select Category");
+            gameObjectMod.SetName("Category Text");
             new Fitter(categoryTextObj).Attach(menuPanel).Anchor(new Vector2(0.11f, 0.74f), new Vector2(0.11f, 0.74f)).Size(new Vector2(400, 100));
 
             // Category Dropdown
@@ -165,14 +168,6 @@ namespace CabbyCodes
             categoryDropdown = categoryDropdownGameObject.GetComponent<Dropdown>();
             categoryDropdownGameObject.transform.Find("Label").gameObject.GetComponent<Text>().fontSize = 36;
             categoryDropdown.onValueChanged.AddListener(OnCategorySelected);
-
-            // Populate Registered Categories
-            List<Dropdown.OptionData> options = new();
-            foreach (string category in registeredCategories.Keys)
-            {
-                options.Add(new Dropdown.OptionData(category));
-            }
-            categoryDropdown.options = options;
 
             GameObject template = categoryDropdownGameObject.transform.Find("Template").gameObject;
             template.GetComponent<RectTransform>().sizeDelta = new Vector2(0, categorySize.y * showSize);
@@ -193,6 +188,14 @@ namespace CabbyCodes
             GameObject item = content.transform.Find("Item").gameObject;
             item.GetComponent<RectTransform>().sizeDelta = new Vector2(0, categorySize.y);
             item.transform.Find("Item Label").gameObject.GetComponent<Text>().fontSize = 36;
+
+            // Populate Registered Categories
+            List<Dropdown.OptionData> options = new();
+            foreach (string category in registeredCategories.Keys)
+            {
+                options.Add(new Dropdown.OptionData(category));
+            }
+            categoryDropdown.options = options;
 
             // Cheat Scrollable
             GameObject cheatScrollable = DefaultControls.CreateScrollView(new DefaultControls.Resources());
@@ -221,22 +224,22 @@ namespace CabbyCodes
             contentSizeFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
 
             // Title Text
-            TextFactory titleTextFactory = new TextFactory(name).SetName("Title Text").SetOutline(Color.black);
-            titleTextFactory.GetTextMod().SetFontStyle(FontStyle.BoldAndItalic).SetFontSize(60).SetColor(Color.white);
-            GameObject titleTextObj = titleTextFactory.Build();
-            new Fitter(titleTextObj).Attach(menuPanel).Anchor(new Vector2(0.5f, 0.93f), new Vector2(0.5f, 0.93f)).Size(new Vector2(400, 100));
+            (GameObject titleText, GameObjectMod titleGoMod, TextMod titleTextMod) = TextFactory.Build(name);
+            titleGoMod.SetName("Title Text").SetOutline(Color.black);
+            titleTextMod.SetFontStyle(FontStyle.BoldAndItalic).SetFontSize(60).SetColor(Color.white);
+            new Fitter(titleText).Attach(menuPanel).Anchor(new Vector2(0.5f, 0.93f), new Vector2(0.5f, 0.93f)).Size(new Vector2(400, 100));
 
             // Close Button
-            ButtonFactory menuButtonFactory = new ButtonFactory("Close").SetName("Close Button");
-            menuButtonFactory.GetTextMod().SetFontSize(46);
-            GameObject menuButton = menuButtonFactory.Build();
+            (GameObject menuButton, GameObjectMod menuButtonGoMod, TextMod menuButtonTextMod) = ButtonFactory.Build("Close");
+            menuButtonGoMod.SetName("Close Button");
+            menuButtonTextMod.SetFontSize(46);
             menuButton.GetComponent<Button>().onClick.AddListener(OnMenuButtonClicked);
             new Fitter(menuButton).Attach(menuPanel).Anchor(new Vector2(0.87f, 0.68f), new Vector2(0.92f, 0.7f));
 
             // Version Text
-            TextFactory versionTextFactory = new TextFactory("v" + version).SetName("Version Text");
-            versionTextFactory.GetTextMod().SetFontStyle(FontStyle.BoldAndItalic);
-            GameObject versionTextObj = versionTextFactory.Build();
+            (GameObject versionTextObj, GameObjectMod versionTextGoMod, TextMod versionTextMod) = TextFactory.Build("v" + version);
+            versionTextGoMod.SetName("Version Text");
+            versionTextMod.SetFontStyle(FontStyle.BoldAndItalic);
             new Fitter(versionTextObj).Attach(menuPanel).Anchor(new Vector2(0.95f, 0.05f), new Vector2(0.95f, 0.1f)).Size(new Vector2(400, 100));
 
             OnCategorySelected(0);

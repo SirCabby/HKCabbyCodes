@@ -4,26 +4,16 @@ using UnityEngine.UI;
 
 namespace CabbyCodes.UI.Factories
 {
-    public class TextFactory : GameObjectFactory<TextFactory>
+    public class TextFactory
     {
-        protected TextMod textMod;
-
-        public TextFactory(string text = "") : base()
+        public static (GameObject gameObject, GameObjectMod gameObjectMod, TextMod textMod) Build(string text = "")
         {
-            buildInstance = DefaultControls.CreateText(new DefaultControls.Resources());
-            textMod = new TextMod(buildInstance.GetComponent<Text>());
+            GameObject buildInstance = DefaultControls.CreateText(new DefaultControls.Resources());
+            TextMod textMod = new(buildInstance.GetComponent<Text>());
             textMod.SetText(text).SetFontSize(36).SetColor(Color.black);
-        }
 
-        public TextMod GetTextMod()
-        {
-            return textMod;
-        }
-
-        public new GameObject Build()
-        {
-            textMod = null;
-            return base.Build();
+            (GameObject gameObject, GameObjectMod gameObjectMod) = GameObjectFactory.Build(buildInstance);
+            return (gameObject, gameObjectMod, textMod);
         }
     }
 }

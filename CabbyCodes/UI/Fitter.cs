@@ -4,7 +4,7 @@ namespace CabbyCodes.UI
 {
     public class Fitter
     {
-        GameObject go;
+        private readonly GameObject go;
 
         public Fitter(GameObject go)
         {

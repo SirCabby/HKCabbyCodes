@@ -5,7 +5,7 @@ namespace CabbyCodes.UI.Modders
 {
     public class TextMod
     {
-        Text text;
+        private readonly Text text;
 
         public TextMod(Text text)
         {

@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using UnityEngine;
 using CabbyCodes.UI;
 using CabbyCodes.UI.Factories;
+using CabbyCodes.UI.Modders;
 
 namespace CabbyCodes
 {
@@ -23,9 +24,8 @@ namespace CabbyCodes
             //cheat1ToggleButton.GetComponent<Button>().onClick.AddListener(OnMenuButtonClicked);
             new Fitter(cheat1ToggleButton.GetGameObject()).Attach(cheat1).Anchor(new Vector2(0.07f, 0.5f), new Vector2(0.07f, 0.5f)).Size(new Vector2(120, 50));
 
-            TextFactory textFactory = new TextFactory("Cheat Description");
-            textFactory.GetTextMod().SetAlignment(TextAnchor.MiddleLeft).SetFontStyle(FontStyle.Bold);
-            GameObject cheat1TextObj = textFactory.Build();
+            (GameObject cheat1TextObj, _, TextMod textMod) = TextFactory.Build("Cheat Description");
+            textMod.SetAlignment(TextAnchor.MiddleLeft).SetFontStyle(FontStyle.Bold);
             new Fitter(cheat1TextObj).Attach(cheat1).Anchor(new Vector2(0.2f, 0.5f), new Vector2(0.95f, 0.5f)).Size(new Vector2(0, 50));
 
             cabbyMenu.AddCheatPanel();
