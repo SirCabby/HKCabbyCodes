@@ -66,11 +66,6 @@ namespace CabbyCodes
                 {
                     rootGoMod.SetActive(true);
                 }
-
-                if (isMenuOpen != menuPanel.activeSelf)
-                {
-                    menuPanelGoMod.SetActive(isMenuOpen);
-                }
             }
             else if (rootGameObject != null && rootGoMod.IsActive())
             {
@@ -89,6 +84,7 @@ namespace CabbyCodes
         {
             isMenuOpen = !isMenuOpen;
             shouldUpdate = true;
+            menuPanelGoMod.SetActive(isMenuOpen);
         }
 
         private void OnCategorySelected(int arg0)
