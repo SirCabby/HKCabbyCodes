@@ -41,9 +41,6 @@ namespace CabbyCodes
 
         public void AddCheatPanel(CheatPanel cheatPanel)
         {
-            Color thisColor = cheatContent.transform.childCount % 2 == 1 ? Color.red : Color.green;
-
-            new ImageMod(cheatPanel.GetGameObject().GetComponent<Image>()).SetColor(thisColor);
             new Fitter(cheatPanel.GetGameObject()).Attach(cheatContent);
         }
 
@@ -71,9 +68,10 @@ namespace CabbyCodes
             {
                 rootGoMod.SetActive(false);
 
-                // Close the menu on unpausing
+                // Reset the menu on unpausing
                 if (isMenuOpen)
                 {
+                    OnCategorySelected(0);
                     OnMenuButtonClicked();
                 }
             }

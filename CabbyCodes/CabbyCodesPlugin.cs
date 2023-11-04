@@ -17,42 +17,12 @@ namespace CabbyCodes
         private void BuildPlayerCheats()
         {
             cabbyMenu.AddCheatPanel(new TogglePanel(CodeState.Get(InvulPatch.key), new InvulPatch(), "Invulnerability"));
-
-            for (int i = 0; i < 20; i++)
-            {
-                CheatPanel cheatPanel;
-                if (i % 2  == 0)
-                    cheatPanel = new TogglePanel(new BoxedReference(false), () => { }, "Cheat " + i, 80);
-                else
-                    cheatPanel = new CheatPanel("Cheat " + i, 100);
-                cabbyMenu.AddCheatPanel(cheatPanel);
-            }
         }
 
-        private void BuildMapCheats()
+        private void BuildAchievementCheats()
         {
-            for (int i = 0; i < 2; i++)
-            {
-                CheatPanel cheatPanel;
-                if (i % 2 == 0)
-                    cheatPanel = new TogglePanel(new BoxedReference(false), () => { }, "Cheat " + i, 80);
-                else
-                    cheatPanel = new CheatPanel("Cheat " + i, 100);
-                cabbyMenu.AddCheatPanel(cheatPanel);
-            }
-        }
-
-        private void BuildHunterCheats()
-        {
-            for (int i = 0; i < 4; i++)
-            {
-                CheatPanel cheatPanel;
-                if (i % 2 == 0)
-                    cheatPanel = new CheatPanel("Cheat " + i, 80);
-                else
-                    cheatPanel = new TogglePanel(new BoxedReference(false), () => { }, "Cheat " + i, 100);
-                cabbyMenu.AddCheatPanel(cheatPanel);
-            }
+            AchievementHandler achievementHandler = FindObjectOfType<AchievementHandler>();
+            cabbyMenu.AddCheatPanel(new InfoPanel("Warning: Changes are immediate and irreversible"));
         }
 
         private void Awake()
@@ -66,8 +36,7 @@ namespace CabbyCodes
 
             cabbyMenu = new CabbyMenu(NAME, VERSION);
             cabbyMenu.RegisterCategory("Player", BuildPlayerCheats);
-            cabbyMenu.RegisterCategory("Map", BuildMapCheats);
-            cabbyMenu.RegisterCategory("Hunter", BuildHunterCheats);
+            cabbyMenu.RegisterCategory("Achievements", BuildAchievementCheats);
 
             new CodeState().Add(InvulPatch.key, new(false));
         }
