@@ -1,5 +1,7 @@
-﻿using CabbyCodes.UI.Factories;
+﻿using CabbyCodes.Patches;
+using CabbyCodes.UI.Factories;
 using CabbyCodes.UI.Modders;
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -12,16 +14,36 @@ namespace CabbyCodes.UI
         private readonly ImageMod imageMod;
         private readonly Color onColor = new(0, 0.8f, 1, 1);
         private readonly Color offColor = Color.white;
-        public bool IsOn { get; set; }
+        private readonly Action<object> action;
+        public object IsOn { get; private set; }
 
-        public ToggleButton()
+        public ToggleButton(BasePatch patch) : this((Action<object>)null)
         {
+            action = (isOn) =>
+            {
+                if ((bool)isOn)
+                {
+                    patch.Patch();
+                }
+                else
+                {
+                    patch.UnPatch();
+                }
+            };
+        }
+
+        public ToggleButton(Action<object> action)
+        {
+            this.action = action;
+
             (toggleButton, GameObjectMod toggleButtonGoMod, _) = ButtonFactory.Build();
             toggleButtonGoMod.SetName("Toggle Button");
             toggleButton.GetComponent<Button>().onClick.AddListener(Toggle);
 
             textMod = new TextMod(toggleButton.GetComponentInChildren<Text>());
             imageMod = new ImageMod(toggleButton.GetComponent<Image>());
+
+            IsOn = false;
 
             Update();
         }
@@ -33,13 +55,14 @@ namespace CabbyCodes.UI
 
         public void Toggle()
         {
-            IsOn = !IsOn;
+            IsOn = !(bool)IsOn;
+            action(IsOn);
             Update();
         }
 
         private void Update()
         {
-            if (IsOn)
+            if ((bool)IsOn)
             {
                 textMod.SetText("ON");
                 imageMod.SetColor(onColor);

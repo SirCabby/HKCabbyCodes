@@ -1,5 +1,6 @@
 ﻿using BepInEx;
 using BepInEx.Unity.Mono;
+using CabbyCodes.Patches;
 using CabbyCodes.UI.CheatPanels;
 
 namespace CabbyCodes
@@ -15,11 +16,13 @@ namespace CabbyCodes
 
         private void BuildPlayerCheats()
         {
+            cabbyMenu.AddCheatPanel(new TogglePanel(new InvulPatch(), "Invulnerability"));
+
             for (int i = 0; i < 20; i++)
             {
                 CheatPanel cheatPanel;
                 if (i % 2  == 0)
-                    cheatPanel = new TogglePanel("Cheat " + i, 80);
+                    cheatPanel = new TogglePanel((o) => { }, "Cheat " + i, 80);
                 else
                     cheatPanel = new CheatPanel("Cheat " + i, 100);
                 cabbyMenu.AddCheatPanel(cheatPanel);
@@ -32,7 +35,7 @@ namespace CabbyCodes
             {
                 CheatPanel cheatPanel;
                 if (i % 2 == 0)
-                    cheatPanel = new TogglePanel("Cheat " + i, 80);
+                    cheatPanel = new TogglePanel((o) => { }, "Cheat " + i, 80);
                 else
                     cheatPanel = new CheatPanel("Cheat " + i, 100);
                 cabbyMenu.AddCheatPanel(cheatPanel);
@@ -47,7 +50,7 @@ namespace CabbyCodes
                 if (i % 2 == 0)
                     cheatPanel = new CheatPanel("Cheat " + i, 80);
                 else
-                    cheatPanel = new TogglePanel("Cheat " + i, 100);
+                    cheatPanel = new TogglePanel((o) => { }, "Cheat " + i, 100);
                 cabbyMenu.AddCheatPanel(cheatPanel);
             }
         }

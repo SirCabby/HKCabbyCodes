@@ -1,12 +1,12 @@
 ﻿using System.Timers;
 using UnityEngine.UI;
 using UnityEngine;
-using System;
 using System.Collections.Generic;
 using CabbyCodes.UI.Factories;
 using CabbyCodes.UI;
 using CabbyCodes.UI.Modders;
 using CabbyCodes.UI.CheatPanels;
+using System;
 
 namespace CabbyCodes
 {
@@ -20,10 +20,12 @@ namespace CabbyCodes
         private readonly Timer updateTimer;
 
         private GameObject rootGameObject;
+        private GameObjectMod rootGoMod;
         
         private bool isMenuOpen = false;
         private GameObject menuPanel;
-        private Dropdown categoryDropdown;
+        private GameObjectMod menuPanelGoMod;
+        Dropdown categoryDropdown;
         private GameObject cheatContent;
 
         public CabbyMenu(string name, string version)
@@ -37,11 +39,6 @@ namespace CabbyCodes
             updateTimer.Enabled = true;
         }
 
-        public void RegisterCategory(string categoryName, Action buildMethod)
-        {
-            registeredCategories.Add(categoryName, buildMethod);
-        }
-
         public void AddCheatPanel(CheatPanel cheatPanel)
         {
             Color thisColor = cheatContent.transform.childCount % 2 == 1 ? Color.red : Color.green;
@@ -50,35 +47,34 @@ namespace CabbyCodes
             new Fitter(cheatPanel.GetGameObject()).Attach(cheatContent);
         }
 
+        public void RegisterCategory(string categoryName, Action cheatContent)
+        {
+            registeredCategories.Add(categoryName, cheatContent);
+        }
+
         public void Update()
         {
             if (!shouldUpdate) return;
-            //if (GameManager._instance != null && GameManager.instance.IsGamePaused())
-            if (true)
+            if (GameManager._instance != null && GameManager.instance.IsGamePaused())
             {
                 if (rootGameObject == null)
                 {
                     BuildCanvas();
                 }
 
-                // Menu Panel
-                if (isMenuOpen)
+                if (!rootGoMod.IsActive())
                 {
-                    if (menuPanel == null)
-                    {
-                        BuildMenuPanel();
-                    }
+                    rootGoMod.SetActive(true);
                 }
-                else if (menuPanel != null)
+
+                if (isMenuOpen != menuPanel.activeSelf)
                 {
-                    UnityEngine.Object.Destroy(menuPanel);
-                    menuPanel = null;
+                    menuPanelGoMod.SetActive(isMenuOpen);
                 }
             }
-            else if (rootGameObject != null)
+            else if (rootGameObject != null && rootGoMod.IsActive())
             {
-                UnityEngine.Object.Destroy(rootGameObject);
-                rootGameObject = null;
+                rootGoMod.SetActive(false);
             }
 
             shouldUpdate = false;
@@ -95,13 +91,31 @@ namespace CabbyCodes
             shouldUpdate = true;
         }
 
+        private void OnCategorySelected(int arg0)
+        {
+            // Clear current cheat panels
+            foreach (Transform child in cheatContent.transform)
+            {
+                UnityEngine.Object.Destroy(child.gameObject);
+            }
+
+            // Build selected cheat panels
+            if (arg0 < categoryDropdown.options.Count)
+            {
+                registeredCategories[categoryDropdown.options[arg0].text]();
+            }
+        }
+
         private void BuildCanvas()
         {
+            if (rootGameObject != null) return;
+
             // Base Canvas
             rootGameObject = new GameObject("CabbyCodes")
             {
                 name = "CC Root Canvas"
             };
+            rootGoMod = new GameObjectMod(rootGameObject);
 
             Canvas canvas = rootGameObject.AddComponent<Canvas>();
             canvas.renderMode = RenderMode.ScreenSpaceOverlay;
@@ -112,43 +126,21 @@ namespace CabbyCodes
             canvasScalar.referenceResolution = new Vector2(2560, 1440);
 
             // Menu Button
-            (GameObject menuButton, GameObjectMod gameObjectMod, _) = ButtonFactory.Build("Code Menu");
-            gameObjectMod.SetName("Open Menu Button");
+            (GameObject menuButton, GameObjectMod menuButtonGoMod, _) = ButtonFactory.Build("Code Menu");
+            menuButtonGoMod.SetName("Open Menu Button");
             menuButton.GetComponent<Button>().onClick.AddListener(OnMenuButtonClicked);
             new Fitter(menuButton).Attach(canvas).Anchor(new Vector2(0.07f, 0.92f), new Vector2(0.12f, 0.95f));
-        }
 
-        private void ClearCheatContent()
-        {
-            foreach (Transform child in cheatContent.transform)
-            {
-                UnityEngine.Object.Destroy(child.gameObject);
-            }
-        }
-
-        private void OnCategorySelected(int arg0)
-        {
-            ClearCheatContent();
-
-            if (arg0 < categoryDropdown.options.Count)
-            {
-                registeredCategories[categoryDropdown.options[arg0].text]();
-            }
-        }
-
-        private void BuildMenuPanel()
-        {
             // Setup Menu Panel
-            Canvas canvas = rootGameObject.GetComponent<Canvas>();
-
             menuPanel = DefaultControls.CreatePanel(new DefaultControls.Resources());
             menuPanel.name = "Menu Panel";
             new Fitter(menuPanel).Attach(canvas);
-            menuPanel.GetComponent<Image>().color = new Color(0, 0, 0, 0.8f);
+            new ImageMod(menuPanel.GetComponent<Image>()).SetColor(new Color(0, 0, 0, 0.8f));
+            menuPanelGoMod = new GameObjectMod(menuPanel).SetActive(false);
 
             // Category Select Text
-            (GameObject categoryTextObj, GameObjectMod gameObjectMod, _) = TextFactory.Build("Select Category");
-            gameObjectMod.SetName("Category Text");
+            (GameObject categoryTextObj, GameObjectMod categoryTextGoMod, _) = TextFactory.Build("Select Category");
+            categoryTextGoMod.SetName("Category Text");
             new Fitter(categoryTextObj).Attach(menuPanel).Anchor(new Vector2(0.11f, 0.74f), new Vector2(0.11f, 0.74f)).Size(new Vector2(400, 100));
 
             // Category Dropdown
@@ -206,7 +198,6 @@ namespace CabbyCodes
             cheatScrollRect.movementType = ScrollRect.MovementType.Clamped;
 
             cheatContent = cheatScrollable.transform.Find("Viewport").Find("Content").gameObject;
-
             VerticalLayoutGroup cheatLayoutGroup = cheatContent.AddComponent<VerticalLayoutGroup>();
             cheatLayoutGroup.padding = new RectOffset(10, 10, 10, 10);
             cheatLayoutGroup.spacing = 10;
@@ -222,11 +213,11 @@ namespace CabbyCodes
             new Fitter(titleText).Attach(menuPanel).Anchor(new Vector2(0.5f, 0.93f), new Vector2(0.5f, 0.93f)).Size(new Vector2(400, 100));
 
             // Close Button
-            (GameObject menuButton, GameObjectMod menuButtonGoMod, TextMod menuButtonTextMod) = ButtonFactory.Build("Close");
-            menuButtonGoMod.SetName("Close Button");
-            menuButtonTextMod.SetFontSize(46);
-            menuButton.GetComponent<Button>().onClick.AddListener(OnMenuButtonClicked);
-            new Fitter(menuButton).Attach(menuPanel).Anchor(new Vector2(0.87f, 0.68f), new Vector2(0.92f, 0.7f));
+            (GameObject closeMenuButton, GameObjectMod closeMenuButtonGoMod, TextMod closeMenuButtonTextMod) = ButtonFactory.Build("Close");
+            closeMenuButtonGoMod.SetName("Close Button");
+            closeMenuButtonTextMod.SetFontSize(46);
+            closeMenuButton.GetComponent<Button>().onClick.AddListener(OnMenuButtonClicked);
+            new Fitter(closeMenuButton).Attach(menuPanel).Anchor(new Vector2(0.87f, 0.68f), new Vector2(0.92f, 0.7f));
 
             // Version Text
             (GameObject versionTextObj, GameObjectMod versionTextGoMod, TextMod versionTextMod) = TextFactory.Build("v" + version);

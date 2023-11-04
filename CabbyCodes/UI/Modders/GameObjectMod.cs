@@ -23,6 +23,17 @@ namespace CabbyCodes.UI.Modders
             return this;
         }
 
+        public GameObjectMod SetActive(bool active)
+        {
+            gameObject.SetActive(active);
+            return this;
+        }
+
+        public bool IsActive()
+        {
+            return gameObject.activeSelf;
+        }
+
         public GameObjectMod SetOutline(Color color)
         {
             Outline outline = gameObject.AddComponent<Outline>();
