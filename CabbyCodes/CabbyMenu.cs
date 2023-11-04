@@ -70,6 +70,12 @@ namespace CabbyCodes
             else if (rootGameObject != null && rootGoMod.IsActive())
             {
                 rootGoMod.SetActive(false);
+
+                // Close the menu on unpausing
+                if (isMenuOpen)
+                {
+                    OnMenuButtonClicked();
+                }
             }
 
             shouldUpdate = false;
