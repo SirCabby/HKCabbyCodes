@@ -16,13 +16,13 @@ namespace CabbyCodes
 
         private void BuildPlayerCheats()
         {
-            cabbyMenu.AddCheatPanel(new TogglePanel(new InvulPatch(), "Invulnerability"));
+            cabbyMenu.AddCheatPanel(new TogglePanel(CodeState.Get(InvulPatch.key), new InvulPatch(), "Invulnerability"));
 
             for (int i = 0; i < 20; i++)
             {
                 CheatPanel cheatPanel;
                 if (i % 2  == 0)
-                    cheatPanel = new TogglePanel((o) => { }, "Cheat " + i, 80);
+                    cheatPanel = new TogglePanel(new BoxedReference(false), () => { }, "Cheat " + i, 80);
                 else
                     cheatPanel = new CheatPanel("Cheat " + i, 100);
                 cabbyMenu.AddCheatPanel(cheatPanel);
@@ -35,7 +35,7 @@ namespace CabbyCodes
             {
                 CheatPanel cheatPanel;
                 if (i % 2 == 0)
-                    cheatPanel = new TogglePanel((o) => { }, "Cheat " + i, 80);
+                    cheatPanel = new TogglePanel(new BoxedReference(false), () => { }, "Cheat " + i, 80);
                 else
                     cheatPanel = new CheatPanel("Cheat " + i, 100);
                 cabbyMenu.AddCheatPanel(cheatPanel);
@@ -50,7 +50,7 @@ namespace CabbyCodes
                 if (i % 2 == 0)
                     cheatPanel = new CheatPanel("Cheat " + i, 80);
                 else
-                    cheatPanel = new TogglePanel((o) => { }, "Cheat " + i, 100);
+                    cheatPanel = new TogglePanel(new BoxedReference(false), () => { }, "Cheat " + i, 100);
                 cabbyMenu.AddCheatPanel(cheatPanel);
             }
         }
@@ -68,6 +68,8 @@ namespace CabbyCodes
             cabbyMenu.RegisterCategory("Player", BuildPlayerCheats);
             cabbyMenu.RegisterCategory("Map", BuildMapCheats);
             cabbyMenu.RegisterCategory("Hunter", BuildHunterCheats);
+
+            new CodeState().Add(InvulPatch.key, new(false));
         }
 
         private void Update()

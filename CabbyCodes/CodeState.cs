@@ -1,18 +1,20 @@
-﻿namespace CabbyCodes
+﻿using System.Collections.Generic;
+
+namespace CabbyCodes
 {
     public class CodeState
     {
-        private static CodeState instance;
+        private static readonly Dictionary<string, BoxedReference> boxes = new();
 
-        public static CodeState Get()
+        public CodeState Add(string key, BoxedReference boxedReference)
         {
-            instance ??= new CodeState();
-            return instance;
+            boxes.Add(key, boxedReference);
+            return this;
         }
 
-        public void Register()
+        public static BoxedReference Get(string key)
         {
-
+            return boxes.ContainsKey(key) ? boxes[key] : null;
         }
     }
 }

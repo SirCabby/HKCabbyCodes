@@ -6,15 +6,15 @@ namespace CabbyCodes.UI.CheatPanels
 {
     public class TogglePanel : CheatPanel
     {
-        public TogglePanel(BasePatch togglePatch, string description, float height = 80) : base(description, height)
+        public TogglePanel(BoxedReference IsOn, BasePatch togglePatch, string description, float height = 80) : base(description, height)
         {
-            ToggleButton toggleButton = new(togglePatch);
+            ToggleButton toggleButton = new(IsOn, togglePatch);
             Fit(toggleButton);
         }
 
-        public TogglePanel(Action<object> toggleAction, string description, float height = 80) : base(description, height)
+        public TogglePanel(BoxedReference IsOn, Action toggleAction, string description, float height = 80) : base(description, height)
         {
-            ToggleButton toggleButton = new(toggleAction);
+            ToggleButton toggleButton = new(IsOn, toggleAction);
             Fit(toggleButton);
         }
 

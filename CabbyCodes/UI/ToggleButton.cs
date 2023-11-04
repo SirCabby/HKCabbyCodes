@@ -14,14 +14,15 @@ namespace CabbyCodes.UI
         private readonly ImageMod imageMod;
         private readonly Color onColor = new(0, 0.8f, 1, 1);
         private readonly Color offColor = Color.white;
-        private readonly Action<object> action;
-        public object IsOn { get; private set; }
+        private readonly Action action;
+        public BoxedReference IsOn { get; private set; }
 
-        public ToggleButton(BasePatch patch) : this((Action<object>)null)
+        public ToggleButton(BoxedReference IsOn, BasePatch patch) : this(IsOn, (Action)null)
         {
-            action = (isOn) =>
+            this.IsOn = IsOn;
+            action = () =>
             {
-                if ((bool)isOn)
+                if ((bool)this.IsOn.Value)
                 {
                     patch.Patch();
                 }
@@ -32,8 +33,9 @@ namespace CabbyCodes.UI
             };
         }
 
-        public ToggleButton(Action<object> action)
+        public ToggleButton(BoxedReference IsOn, Action action)
         {
+            this.IsOn = IsOn;
             this.action = action;
 
             (toggleButton, GameObjectMod toggleButtonGoMod, _) = ButtonFactory.Build();
@@ -42,8 +44,6 @@ namespace CabbyCodes.UI
 
             textMod = new TextMod(toggleButton.GetComponentInChildren<Text>());
             imageMod = new ImageMod(toggleButton.GetComponent<Image>());
-
-            IsOn = false;
 
             Update();
         }
@@ -55,14 +55,14 @@ namespace CabbyCodes.UI
 
         public void Toggle()
         {
-            IsOn = !(bool)IsOn;
-            action(IsOn);
+            IsOn.Value = !(bool)IsOn.Value;
+            action();
             Update();
         }
 
         private void Update()
         {
-            if ((bool)IsOn)
+            if ((bool)IsOn.Value)
             {
                 textMod.SetText("ON");
                 imageMod.SetColor(onColor);
