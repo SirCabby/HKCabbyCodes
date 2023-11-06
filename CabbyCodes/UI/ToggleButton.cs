@@ -41,10 +41,6 @@ namespace CabbyCodes.UI
             (toggleButton, GameObjectMod toggleButtonGoMod, _) = ButtonFactory.Build();
             toggleButtonGoMod.SetName("Toggle Button");
             toggleButton.GetComponent<Button>().onClick.AddListener(Toggle);
-            
-            LayoutElement buttonLayout = toggleButton.AddComponent<LayoutElement>();
-            buttonLayout.minWidth = 120;
-            buttonLayout.minHeight = 60;
 
             textMod = new TextMod(toggleButton.GetComponentInChildren<Text>());
             imageMod = new ImageMod(toggleButton.GetComponent<Image>());
