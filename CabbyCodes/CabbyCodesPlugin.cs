@@ -28,10 +28,9 @@ namespace CabbyCodes
             cabbyMenu.AddCheatPanel(new InfoPanel("Warning: Changes are immediate and irreversible"));
 
             AchievementHandler achievementHandler = FindObjectOfType<AchievementHandler>();
-            foreach (var achievement in achievementHandler.achievementsList.achievements)
+            foreach (Achievement achievement in achievementHandler.achievementsList.achievements)
             {
-                string achText = Language.Language.Get(achievement.localizedTitle, "Achievements") + ": " + Language.Language.Get(achievement.localizedText, "Achievements");
-                cabbyMenu.AddCheatPanel(new TogglePanel(new BoxedReference(false), () => { }, achText));
+                cabbyMenu.AddCheatPanel(new AchievementPanel(achievement, new BoxedReference(false), () => { }));
             }
         }
 

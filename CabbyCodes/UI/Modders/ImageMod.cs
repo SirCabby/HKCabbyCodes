@@ -27,5 +27,11 @@ namespace CabbyCodes.UI.Modders
             image.color = color;
             return this;
         }
+
+        public ImageMod SetSprite(Sprite sprite)
+        {
+            image.sprite = sprite;
+            return this;
+        }
     }
 }
