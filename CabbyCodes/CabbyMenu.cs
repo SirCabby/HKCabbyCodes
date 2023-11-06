@@ -39,9 +39,10 @@ namespace CabbyCodes
             updateTimer.Enabled = true;
         }
 
-        public void AddCheatPanel(CheatPanel cheatPanel)
+        public CheatPanel AddCheatPanel(CheatPanel cheatPanel)
         {
-            new Fitter(cheatPanel.GetGameObject()).Attach(cheatContent);
+            new Fitter(cheatPanel.GetGameObject()).Attach(cheatContent).Size(new Vector2(0, 50));
+            return cheatPanel;
         }
 
         public void RegisterCategory(string categoryName, Action cheatContent)
@@ -52,7 +53,8 @@ namespace CabbyCodes
         public void Update()
         {
             if (!shouldUpdate) return;
-            if (GameManager._instance != null && GameManager.instance.IsGamePaused())
+            if (true)
+            //if (GameManager._instance != null && GameManager.instance.IsGamePaused())
             {
                 if (rootGameObject == null)
                 {
@@ -102,6 +104,7 @@ namespace CabbyCodes
             // Build selected cheat panels
             if (arg0 < categoryDropdown.options.Count)
             {
+                CheatPanel.ResetPattern();
                 registeredCategories[categoryDropdown.options[arg0].text]();
             }
         }
@@ -139,12 +142,13 @@ namespace CabbyCodes
             menuPanelGoMod = new GameObjectMod(menuPanel).SetActive(false);
 
             // Category Select Text
-            (GameObject categoryTextObj, GameObjectMod categoryTextGoMod, _) = TextFactory.Build("Select Category");
-            categoryTextGoMod.SetName("Category Text");
+            (GameObject categoryTextObj, GameObjectMod categoryTextGoMod, TextMod categoryTextMod) = TextFactory.Build("Select Category");
+            categoryTextGoMod.SetName("Category Text").SetOutline(Color.black);
+            categoryTextMod.SetColor(Color.white);
             new Fitter(categoryTextObj).Attach(menuPanel).Anchor(new Vector2(0.11f, 0.74f), new Vector2(0.11f, 0.74f)).Size(new Vector2(400, 100));
 
             // Category Dropdown
-            Vector2 categorySize = new(250, 60);
+            Vector2 categorySize = new(280, 60);
             int showSize = 5;
             GameObject categoryDropdownGameObject = DefaultControls.CreateDropdown(new DefaultControls.Resources());
             categoryDropdownGameObject.name = "Category Dropdown";
@@ -202,6 +206,7 @@ namespace CabbyCodes
             cheatLayoutGroup.padding = new RectOffset(10, 10, 10, 10);
             cheatLayoutGroup.spacing = 10;
             cheatLayoutGroup.childForceExpandHeight = false;
+            cheatLayoutGroup.childControlHeight = false;
 
             ContentSizeFitter contentSizeFitter = cheatContent.AddComponent<ContentSizeFitter>();
             contentSizeFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
@@ -221,8 +226,8 @@ namespace CabbyCodes
 
             // Version Text
             (GameObject versionTextObj, GameObjectMod versionTextGoMod, TextMod versionTextMod) = TextFactory.Build("v" + version);
-            versionTextGoMod.SetName("Version Text");
-            versionTextMod.SetFontStyle(FontStyle.BoldAndItalic);
+            versionTextGoMod.SetName("Version Text").SetOutline(Color.black);
+            versionTextMod.SetFontStyle(FontStyle.BoldAndItalic).SetColor(Color.white);
             new Fitter(versionTextObj).Attach(menuPanel).Anchor(new Vector2(0.95f, 0.05f), new Vector2(0.95f, 0.1f)).Size(new Vector2(400, 100));
 
             OnCategorySelected(0);

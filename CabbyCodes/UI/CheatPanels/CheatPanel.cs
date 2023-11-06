@@ -8,27 +8,44 @@ namespace CabbyCodes.UI.CheatPanels
     public class CheatPanel
     {
         protected static bool isOdd = true;
-        protected static Color color1 = new Color(0.8f, 0.8f, 0.8f);
-        protected static Color color2 = new Color(0.7f, 0.7f, 0.7f);
+        protected static Color color1 = new(0.8f, 0.8f, 0.8f);
+        protected static Color color2 = new(0.6f, 0.6f, 0.6f);
 
         protected readonly GameObject cheatPanel;
-        
-        public CheatPanel(string description, float height = 80)
+        protected readonly GameObject cheatTextObj;
+
+        public CheatPanel(string description)
         {
             cheatPanel = DefaultControls.CreatePanel(new DefaultControls.Resources());
             cheatPanel.name = "Cheat Panel";
 
-            LayoutElement imageLayout = cheatPanel.AddComponent<LayoutElement>();
-            imageLayout.preferredHeight = height;
-            imageLayout.flexibleWidth = 1;
-
-            (GameObject cheatTextObj, _, TextMod textMod) = TextFactory.Build(description);
-            textMod.SetAlignment(TextAnchor.MiddleLeft).SetFontStyle(FontStyle.Bold);
-            new Fitter(cheatTextObj).Attach(cheatPanel).Anchor(new Vector2(0.2f, 0.5f), new Vector2(0.95f, 0.5f)).Size(new Vector2(0, 50));
-
             Color thisColor = isOdd ? color1 : color2;
             new ImageMod(cheatPanel.GetComponent<Image>()).SetColor(thisColor);
             isOdd = !isOdd;
+
+            HorizontalLayoutGroup cheatLayoutGroup = cheatPanel.AddComponent<HorizontalLayoutGroup>();
+            cheatLayoutGroup.padding = new RectOffset(20, 20, 20, 20);
+            cheatLayoutGroup.spacing = 50;
+            cheatLayoutGroup.childForceExpandHeight = false;
+            cheatLayoutGroup.childForceExpandWidth = false;
+            cheatLayoutGroup.childControlHeight = true;
+            cheatLayoutGroup.childControlWidth = true;
+
+            ContentSizeFitter panelContentSizeFitter = cheatPanel.AddComponent<ContentSizeFitter>();
+            panelContentSizeFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+
+            // Setup Text
+            (cheatTextObj, _, TextMod textMod) = TextFactory.Build(description);
+            textMod.SetAlignment(TextAnchor.MiddleLeft).SetFontStyle(FontStyle.Bold);
+            new Fitter(cheatTextObj).Attach(cheatPanel);
+
+            LayoutElement textLayout = cheatTextObj.AddComponent<LayoutElement>();
+            textLayout.flexibleWidth = 1;
+            textLayout.flexibleHeight = 1;
+
+            ContentSizeFitter textContentSizeFitter = cheatTextObj.AddComponent<ContentSizeFitter>();
+            textContentSizeFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+
         }
 
         public CheatPanel SetColor(Color color)
@@ -37,7 +54,13 @@ namespace CabbyCodes.UI.CheatPanels
             return this;
         }
 
-        protected static void ResetPattern()
+        public CheatPanel SetSize(Vector2 size)
+        {
+            new Fitter(cheatPanel).Size(size);
+            return this;
+        }
+
+        public static void ResetPattern()
         {
             isOdd = true;
         }

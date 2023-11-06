@@ -1,18 +1,17 @@
 ﻿using CabbyCodes.Patches;
 using System;
-using UnityEngine;
 
 namespace CabbyCodes.UI.CheatPanels
 {
     public class TogglePanel : CheatPanel
     {
-        public TogglePanel(BoxedReference IsOn, BasePatch togglePatch, string description, float height = 80) : base(description, height)
+        public TogglePanel(BoxedReference IsOn, BasePatch togglePatch, string description) : base(description)
         {
             ToggleButton toggleButton = new(IsOn, togglePatch);
             Fit(toggleButton);
         }
 
-        public TogglePanel(BoxedReference IsOn, Action toggleAction, string description, float height = 80) : base(description, height)
+        public TogglePanel(BoxedReference IsOn, Action toggleAction, string description) : base(description)
         {
             ToggleButton toggleButton = new(IsOn, toggleAction);
             Fit(toggleButton);
@@ -20,7 +19,8 @@ namespace CabbyCodes.UI.CheatPanels
 
         private void Fit(ToggleButton toggleButton)
         {
-            new Fitter(toggleButton.GetGameObject()).Attach(cheatPanel).Anchor(new Vector2(0.07f, 0.5f), new Vector2(0.07f, 0.5f)).Size(new Vector2(120, 50));
+            new Fitter(toggleButton.GetGameObject()).Attach(cheatPanel);
+            toggleButton.GetGameObject().transform.SetAsFirstSibling();
         }
     }
 }

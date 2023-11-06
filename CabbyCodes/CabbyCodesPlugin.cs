@@ -1,4 +1,5 @@
 ﻿using BepInEx;
+using BepInEx.Logging;
 using BepInEx.Unity.Mono;
 using CabbyCodes.Patches;
 using CabbyCodes.UI.CheatPanels;
@@ -12,6 +13,8 @@ namespace CabbyCodes
         const string NAME = "Cabby Codes";
         const string VERSION = "0.0.1";
 
+        public static ManualLogSource BLogger;
+
         private CabbyMenu cabbyMenu;
 
         private void BuildPlayerCheats()
@@ -21,13 +24,21 @@ namespace CabbyCodes
 
         private void BuildAchievementCheats()
         {
-            AchievementHandler achievementHandler = FindObjectOfType<AchievementHandler>();
+            cabbyMenu.AddCheatPanel(new InfoPanel("Toggle Achievements On").SetColor(new UnityEngine.Color(0.2f, 0.8f, 0.2f)));
             cabbyMenu.AddCheatPanel(new InfoPanel("Warning: Changes are immediate and irreversible"));
+
+            AchievementHandler achievementHandler = FindObjectOfType<AchievementHandler>();
+            foreach (var achievement in achievementHandler.achievementsList.achievements)
+            {
+                string achText = Language.Language.Get(achievement.localizedTitle, "Achievements") + ": " + Language.Language.Get(achievement.localizedText, "Achievements");
+                cabbyMenu.AddCheatPanel(new TogglePanel(new BoxedReference(false), () => { }, achText));
+            }
         }
 
         private void Awake()
         {
             Logger.LogInfo("Plugin cabby.cabbycodes is loaded!");
+            BLogger = Logger;
         }
 
         private void Start()

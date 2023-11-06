@@ -6,7 +6,7 @@ namespace CabbyCodes.UI.CheatPanels
     {
         private static Color infoColor = new(1, 0.5f, 0);
 
-        public InfoPanel(string description, float height = 80) : base(description, height)
+        public InfoPanel(string description) : base(description)
         {
             SetColor(infoColor);
             ResetPattern();
