@@ -148,34 +148,14 @@ namespace CabbyCodes
             new Fitter(categoryTextObj).Attach(menuPanel).Anchor(new Vector2(0.11f, 0.74f), new Vector2(0.11f, 0.74f)).Size(new Vector2(400, 100));
 
             // Category Dropdown
-            Vector2 categorySize = new(280, 60);
-            int showSize = 5;
-            GameObject categoryDropdownGameObject = DefaultControls.CreateDropdown(new DefaultControls.Resources());
-            categoryDropdownGameObject.name = "Category Dropdown";
-            new Fitter(categoryDropdownGameObject).Attach(menuPanel).Anchor(new Vector2(0.08f, 0.72f), new Vector2(0.08f, 0.72f)).Size(categorySize);
+            Vector2 categorySize = new Vector2(280, 60);
+            (GameObject categoryDropdownGameObject, GameObjectMod categoryDropdownGoMod, DropdownMod categoryDropdownMod) = DropdownFactory.Build();
+            categoryDropdownMod.SetSize(categorySize).SetFontSize(36);
+            categoryDropdownGoMod.SetName("Category Dropdown");
+            new Fitter(categoryDropdownGameObject).Attach(menuPanel).Anchor(new Vector2(0.08f, 0.72f), new Vector2(0.08f, 0.72f));
+
             categoryDropdown = categoryDropdownGameObject.GetComponent<Dropdown>();
-            categoryDropdownGameObject.transform.Find("Label").gameObject.GetComponent<Text>().fontSize = 36;
             categoryDropdown.onValueChanged.AddListener(OnCategorySelected);
-
-            GameObject template = categoryDropdownGameObject.transform.Find("Template").gameObject;
-            template.GetComponent<RectTransform>().sizeDelta = new Vector2(0, categorySize.y * showSize);
-            template.GetComponent<ScrollRect>().scrollSensitivity = categorySize.y;
-
-            Scrollbar scrollBar = template.transform.Find("Scrollbar").gameObject.GetComponent<Scrollbar>();
-            ColorBlock scrollBarColors = scrollBar.colors;
-            scrollBarColors.normalColor = new Color(0.3f, 0.3f, 1, 1);
-            scrollBarColors.highlightedColor = new Color(0, 0, 1, 1);
-            scrollBar.colors = scrollBarColors;
-
-            GameObject viewport = template.transform.Find("Viewport").gameObject;
-            viewport.GetComponent<RectTransform>().sizeDelta = new Vector2(0, categorySize.y * showSize);
-
-            GameObject content = viewport.transform.Find("Content").gameObject; // dropdown popup
-            content.GetComponent<RectTransform>().sizeDelta = new Vector2(0, categorySize.y);
-
-            GameObject item = content.transform.Find("Item").gameObject;
-            item.GetComponent<RectTransform>().sizeDelta = new Vector2(0, categorySize.y);
-            item.transform.Find("Item Label").gameObject.GetComponent<Text>().fontSize = 36;
 
             // Populate Registered Categories
             List<Dropdown.OptionData> options = new();
@@ -191,12 +171,7 @@ namespace CabbyCodes
             cheatScrollable.GetComponent<Image>().color = Color.blue;
             cheatScrollable.GetComponent<ScrollRect>().scrollSensitivity = categorySize.y;
             new Fitter(cheatScrollable).Attach(menuPanel).Anchor(new Vector2(0.17f, 0.05f), new Vector2(0.8f, 0.9f)).Size(Vector2.zero);
-
-            Scrollbar cheatScrollBar = cheatScrollable.transform.Find("Scrollbar Vertical").gameObject.GetComponent<Scrollbar>();
-            ColorBlock cheatScrollBarColors = cheatScrollBar.colors;
-            cheatScrollBarColors.normalColor = new Color(0.3f, 0.3f, 1, 1);
-            cheatScrollBarColors.highlightedColor = new Color(0, 0, 1, 1);
-            cheatScrollBar.colors = cheatScrollBarColors;
+            new ScrollBarMod(cheatScrollable.transform.Find("Scrollbar Vertical").gameObject.GetComponent<Scrollbar>()).SetDefaults();
 
             ScrollRect cheatScrollRect = cheatScrollable.GetComponent<ScrollRect>();
             cheatScrollRect.movementType = ScrollRect.MovementType.Clamped;
