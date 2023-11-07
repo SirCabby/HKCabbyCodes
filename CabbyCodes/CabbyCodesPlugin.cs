@@ -2,6 +2,7 @@
 using BepInEx.Logging;
 using BepInEx.Unity.Mono;
 using CabbyCodes.Patches;
+using CabbyCodes.SyncedReferences;
 using CabbyCodes.UI.CheatPanels;
 
 namespace CabbyCodes
@@ -26,7 +27,8 @@ namespace CabbyCodes
         private void BuildAchievementCheats()
         {
             cabbyMenu.AddCheatPanel(new InfoPanel("Toggle Achievements <ON> to unlock in-game and in Online platform (Steam / GOG)").SetColor(CheatPanel.headerColor));
-            cabbyMenu.AddCheatPanel(new InfoPanel("Warning: Changes are immediate and irreversible").SetColor(CheatPanel.warningColor));
+            cabbyMenu.AddCheatPanel(new InfoPanel("Warning: Unable to toggle off achievements independently").SetColor(CheatPanel.warningColor));
+            cabbyMenu.AddCheatPanel(new TogglePanel(new ResetAchievementReference(), "Reset <ALL> Achievements to off. Requires Restart."));
 
             AchievementHandler achievementHandler = FindObjectOfType<AchievementHandler>();
             foreach (Achievement achievement in achievementHandler.achievementsList.achievements)

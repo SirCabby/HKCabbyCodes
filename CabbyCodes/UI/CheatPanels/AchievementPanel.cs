@@ -40,5 +40,10 @@ namespace CabbyCodes.UI.CheatPanels
         {
             iconImageMod.SetColor(Color.white);
         }
+
+        public new void Update()
+        {
+            base.Update();
+        }
     }
 }

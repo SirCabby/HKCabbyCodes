@@ -46,7 +46,7 @@ namespace CabbyCodes.UI
             Update();
         }
 
-        private void Update()
+        public void Update()
         {
             if (IsOn != null && IsOn.Get())
             {

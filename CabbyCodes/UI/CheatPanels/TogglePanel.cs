@@ -31,5 +31,10 @@ namespace CabbyCodes.UI.CheatPanels
         {
             return toggleButton;
         }
+
+        public void Update()
+        {
+            toggleButton.Update();
+        }
     }
 }
