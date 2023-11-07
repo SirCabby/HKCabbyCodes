@@ -1,7 +1,6 @@
-﻿using CabbyCodes.Patches;
+﻿using CabbyCodes.SyncedReferences;
 using CabbyCodes.UI.Factories;
 using CabbyCodes.UI.Modders;
-using System;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -14,29 +13,11 @@ namespace CabbyCodes.UI
         private readonly ImageMod imageMod;
         private readonly Color onColor = new(0, 0.8f, 1, 1);
         private readonly Color offColor = Color.white;
-        private readonly Action action;
-        public BoxedReference IsOn { get; private set; }
+        public SyncedReference<bool> IsOn { get; private set; }
 
-        public ToggleButton(BoxedReference IsOn, BasePatch patch) : this(IsOn, (Action)null)
+        public ToggleButton(SyncedReference<bool> IsOn)
         {
             this.IsOn = IsOn;
-            action = () =>
-            {
-                if ((bool)this.IsOn.Value)
-                {
-                    patch.Patch();
-                }
-                else
-                {
-                    patch.UnPatch();
-                }
-            };
-        }
-
-        public ToggleButton(BoxedReference IsOn, Action action)
-        {
-            this.IsOn = IsOn;
-            this.action = action;
 
             (toggleButton, GameObjectMod toggleButtonGoMod, _) = ButtonFactory.Build();
             toggleButtonGoMod.SetName("Toggle Button");
@@ -55,14 +36,19 @@ namespace CabbyCodes.UI
 
         public void Toggle()
         {
-            IsOn.Value = !(bool)IsOn.Value;
-            action();
+            IsOn.Set(!IsOn.Get());
+            Update();
+        }
+
+        public void SetIsOn(SyncedReference<bool> isOn)
+        {
+            IsOn = isOn;
             Update();
         }
 
         private void Update()
         {
-            if ((bool)IsOn.Value)
+            if (IsOn != null && IsOn.Get())
             {
                 textMod.SetText("ON");
                 imageMod.SetColor(onColor);

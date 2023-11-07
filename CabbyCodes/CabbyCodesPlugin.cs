@@ -19,18 +19,19 @@ namespace CabbyCodes
 
         private void BuildPlayerCheats()
         {
-            cabbyMenu.AddCheatPanel(new TogglePanel(CodeState.Get(InvulPatch.key), new InvulPatch(), "Invulnerability"));
+            cabbyMenu.AddCheatPanel(new InfoPanel("Player Codes").SetColor(CheatPanel.headerColor));
+            cabbyMenu.AddCheatPanel(new TogglePanel(new InvulPatch(), "Invulnerability"));
         }
 
         private void BuildAchievementCheats()
         {
-            cabbyMenu.AddCheatPanel(new InfoPanel("Toggle Achievements On").SetColor(new UnityEngine.Color(0.2f, 0.8f, 0.2f)));
-            cabbyMenu.AddCheatPanel(new InfoPanel("Warning: Changes are immediate and irreversible"));
+            cabbyMenu.AddCheatPanel(new InfoPanel("Toggle Achievements <ON> to unlock in-game and in Online platform (Steam / GOG)").SetColor(CheatPanel.headerColor));
+            cabbyMenu.AddCheatPanel(new InfoPanel("Warning: Changes are immediate and irreversible").SetColor(CheatPanel.warningColor));
 
             AchievementHandler achievementHandler = FindObjectOfType<AchievementHandler>();
             foreach (Achievement achievement in achievementHandler.achievementsList.achievements)
             {
-                cabbyMenu.AddCheatPanel(new AchievementPanel(achievement, new BoxedReference(false), () => { }));
+                cabbyMenu.AddCheatPanel(new AchievementPanel(achievement));
             }
         }
 

@@ -10,6 +10,8 @@ namespace CabbyCodes.UI.CheatPanels
         protected static bool isOdd = true;
         protected static Color color1 = new(0.8f, 0.8f, 0.8f);
         protected static Color color2 = new(0.6f, 0.6f, 0.6f);
+        public static readonly Color warningColor = new(1, 0.5f, 0);
+        public static readonly Color headerColor = new(0.2f, 0.8f, 0.2f);
 
         protected readonly GameObject cheatPanel;
         protected readonly GameObject cheatTextObj;
@@ -45,7 +47,6 @@ namespace CabbyCodes.UI.CheatPanels
 
             ContentSizeFitter textContentSizeFitter = cheatTextObj.AddComponent<ContentSizeFitter>();
             textContentSizeFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
-
         }
 
         public CheatPanel SetColor(Color color)

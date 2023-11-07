@@ -1,24 +1,36 @@
-﻿using HarmonyLib;
+﻿using CabbyCodes.SyncedReferences;
+using HarmonyLib;
 using System.Reflection;
 
 namespace CabbyCodes.Patches
 {
-    public class InvulPatch : BasePatch
+    public class InvulPatch : SyncedReference<bool>
     {
         public const string key = "Invul_Patch";
+        private static readonly BoxedReference value = CodeState.Get(key, false);
         private static readonly Harmony harmony = new(key);
         private static readonly MethodInfo mOriginal = AccessTools.Method(typeof(PlayerData), nameof(PlayerData.TakeHealth));
 
-        public override void Patch()
+        public InvulPatch()
         {
-            harmony.Patch(mOriginal, prefix: new HarmonyMethod(typeof(BasePatch).GetMethod(nameof(Prefix_SkipOriginal))));
-            CodeState.Get(key).Value = true;
-        }
+            Get = () =>
+            {
+                return (bool)value.Get();
+            };
 
-        public override void UnPatch()
-        {
-            harmony.UnpatchSelf();
-            CodeState.Get(key).Value = false;
+            Set = (isOn) =>
+            {
+                value.Set(isOn);
+
+                if (Get())
+                {
+                    harmony.Patch(mOriginal, prefix: new HarmonyMethod(typeof(CommonPatches).GetMethod("Prefix_SkipOriginal")));
+                }
+                else
+                {
+                    harmony.UnpatchSelf();
+                }
+            };
         }
     }
 }

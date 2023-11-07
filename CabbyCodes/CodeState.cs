@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using CabbyCodes.SyncedReferences;
 
 namespace CabbyCodes
 {
@@ -12,9 +13,14 @@ namespace CabbyCodes
             return this;
         }
 
-        public static BoxedReference Get(string key)
+        public static BoxedReference Get(string key, object initialValue)
         {
-            return boxes.ContainsKey(key) ? boxes[key] : null;
+            if (!boxes.ContainsKey(key))
+            {
+                boxes.Add(key, new BoxedReference(initialValue));
+            }
+
+            return boxes[key];
         }
     }
 }

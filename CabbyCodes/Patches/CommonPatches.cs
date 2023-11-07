@@ -1,13 +1,10 @@
 ﻿namespace CabbyCodes.Patches
 {
-    public abstract class BasePatch
+    public abstract class CommonPatches
     {
         public static bool Prefix_SkipOriginal()
         {
             return false;
         }
-
-        public abstract void Patch();
-        public abstract void UnPatch();
     }
 }
