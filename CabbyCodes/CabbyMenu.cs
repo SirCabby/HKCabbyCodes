@@ -53,8 +53,8 @@ namespace CabbyCodes
         public void Update()
         {
             if (!shouldUpdate) return;
-            if (true)
-            //if (GameManager._instance != null && GameManager.instance.IsGamePaused())
+            //if (true)
+            if (GameManager._instance != null && GameManager.instance.IsGamePaused())
             {
                 if (rootGameObject == null)
                 {
@@ -148,10 +148,10 @@ namespace CabbyCodes
             new Fitter(categoryTextObj).Attach(menuPanel).Anchor(new Vector2(0.11f, 0.74f), new Vector2(0.11f, 0.74f)).Size(new Vector2(400, 100));
 
             // Category Dropdown
-            Vector2 categorySize = new Vector2(280, 60);
+            Vector2 categorySize = new(280, 60);
             (GameObject categoryDropdownGameObject, GameObjectMod categoryDropdownGoMod, DropdownMod categoryDropdownMod) = DropdownFactory.Build();
-            categoryDropdownMod.SetSize(categorySize).SetFontSize(36);
             categoryDropdownGoMod.SetName("Category Dropdown");
+            categoryDropdownMod.SetSize(categorySize).SetFontSize(36);
             new Fitter(categoryDropdownGameObject).Attach(menuPanel).Anchor(new Vector2(0.08f, 0.72f), new Vector2(0.08f, 0.72f));
 
             categoryDropdown = categoryDropdownGameObject.GetComponent<Dropdown>();
