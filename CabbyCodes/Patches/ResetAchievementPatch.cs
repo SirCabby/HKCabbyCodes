@@ -1,6 +1,8 @@
-﻿namespace CabbyCodes.SyncedReferences
+﻿using CabbyCodes.SyncedReferences;
+
+namespace CabbyCodes.Patches
 {
-    public class ResetAchievementReference : ISyncedReference<bool>
+    public class ResetAchievementPatch : ISyncedReference<bool>
     {
         public bool Get()
         {

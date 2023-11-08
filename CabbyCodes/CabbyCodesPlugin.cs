@@ -3,7 +3,6 @@ using BepInEx.Logging;
 using BepInEx.Unity.Mono;
 using CabbyCodes.Debug;
 using CabbyCodes.Patches;
-using CabbyCodes.SyncedReferences;
 using CabbyCodes.UI.CheatPanels;
 using System.Reflection;
 using UnityEngine;
@@ -30,7 +29,7 @@ namespace CabbyCodes
         private void BuildTeleportCheats()
         {
             cabbyMenu.AddCheatPanel(new InfoPanel("Teleportation").SetColor(CheatPanel.headerColor));
-            cabbyMenu.AddCheatPanel(new DropdownPanel(new TeleportReference(), "Select Area to Teleport"));
+            cabbyMenu.AddCheatPanel(new DropdownPanel(new TeleportPatch(), "Select Area to Teleport"));
             cabbyMenu.AddCheatPanel(new InfoPanel("Lloyd's Beacon: Save and recall teleportation locations").SetColor(CheatPanel.headerColor));
         }
 
@@ -38,7 +37,7 @@ namespace CabbyCodes
         {
             cabbyMenu.AddCheatPanel(new InfoPanel("Toggle Achievements <ON> to unlock in-game and in Online platform (Steam / GOG)").SetColor(CheatPanel.headerColor));
             cabbyMenu.AddCheatPanel(new InfoPanel("Warning: Unable to toggle off achievements independently").SetColor(CheatPanel.warningColor));
-            cabbyMenu.AddCheatPanel(new TogglePanel(new ResetAchievementReference(), "Reset <ALL> Achievements to off. Requires Restart."));
+            cabbyMenu.AddCheatPanel(new TogglePanel(new ResetAchievementPatch(), "Reset <ALL> Achievements to off. Requires Restart."));
 
             AchievementHandler achievementHandler = FindObjectOfType<AchievementHandler>();
             foreach (Achievement achievement in achievementHandler.achievementsList.achievements)

@@ -1,13 +1,14 @@
-﻿using CabbyCodes.UI.CheatPanels;
+﻿using CabbyCodes.SyncedReferences;
+using CabbyCodes.UI.CheatPanels;
 
-namespace CabbyCodes.SyncedReferences
+namespace CabbyCodes.Patches
 {
-    public class AchievementReference : ISyncedReference<bool>
+    public class AchievementPatch : ISyncedReference<bool>
     {
         private readonly Achievement achievement;
         private readonly AchievementPanel parent;
 
-        public AchievementReference(Achievement achievement, AchievementPanel parent)
+        public AchievementPatch(Achievement achievement, AchievementPanel parent)
         {
             this.achievement = achievement;
             this.parent = parent;

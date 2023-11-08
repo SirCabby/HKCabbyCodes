@@ -33,7 +33,7 @@ namespace CabbyCodes.UI.CheatPanels
             iconImageMod = new ImageMod(achievementIcon.GetComponent<Image>()).SetSprite(achievement.earnedIcon).SetColor(achievementColor);
             new Fitter(achievementIcon).Attach(imagePanel).Anchor(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f)).Size(new Vector2(width, width));
 
-            GetToggleButton().SetIsOn(new AchievementReference(achievement, this));
+            GetToggleButton().SetIsOn(new AchievementPatch(achievement, this));
         }
 
         public void AwardIcon()

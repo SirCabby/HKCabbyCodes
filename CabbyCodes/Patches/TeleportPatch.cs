@@ -1,18 +1,17 @@
-﻿using CabbyCodes.Debug;
-using CabbyCodes.Patches;
+﻿using CabbyCodes.SyncedReferences;
 using HarmonyLib;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 
-namespace CabbyCodes.SyncedReferences
+namespace CabbyCodes.Patches
 {
-    public class TeleportReference : ISyncedValueList<int, List<string>>
+    public class TeleportPatch : ISyncedValueList<int, List<string>>
     {
         public const string key = "TeleportPlayerLocation";
         private static readonly Harmony harmony = new(key);
         private static readonly MethodInfo mOriginal = typeof(GameManager).GetMethod("EnterHero", BindingFlags.NonPublic | BindingFlags.Instance);
-        private static readonly MethodInfo postMethod = typeof(TeleportReference).GetMethod(nameof(PostTeleport), BindingFlags.NonPublic | BindingFlags.Static);
+        private static readonly MethodInfo postMethod = typeof(TeleportPatch).GetMethod(nameof(PostTeleport), BindingFlags.NonPublic | BindingFlags.Static);
         private static readonly FieldInfo targetSceneFieldInfo = typeof(GameManager).GetField("targetScene", BindingFlags.NonPublic | BindingFlags.Instance);
         private static readonly FieldInfo entryDelayFieldInfo = typeof(GameManager).GetField("entryDelay", BindingFlags.NonPublic | BindingFlags.Instance);
         private static readonly List<KeyValuePair<string, Vector2>> teleportLocations = new()
