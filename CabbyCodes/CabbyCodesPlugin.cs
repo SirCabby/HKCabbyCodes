@@ -1,9 +1,12 @@
 ﻿using BepInEx;
 using BepInEx.Logging;
 using BepInEx.Unity.Mono;
+using CabbyCodes.Debug;
 using CabbyCodes.Patches;
 using CabbyCodes.SyncedReferences;
 using CabbyCodes.UI.CheatPanels;
+using System.Reflection;
+using UnityEngine;
 
 namespace CabbyCodes
 {
@@ -15,13 +18,20 @@ namespace CabbyCodes
         const string VERSION = "0.0.1";
 
         public static ManualLogSource BLogger;
-
-        private CabbyMenu cabbyMenu;
+        public static CabbyMenu cabbyMenu;
+        private static readonly FieldInfo heroFieldInfo = typeof(GameMap).GetField("hero", BindingFlags.NonPublic | BindingFlags.Instance);
 
         private void BuildPlayerCheats()
         {
             cabbyMenu.AddCheatPanel(new InfoPanel("Player Codes").SetColor(CheatPanel.headerColor));
             cabbyMenu.AddCheatPanel(new TogglePanel(new InvulPatch(), "Invulnerability"));
+        }
+
+        private void BuildTeleportCheats()
+        {
+            cabbyMenu.AddCheatPanel(new InfoPanel("Teleportation").SetColor(CheatPanel.headerColor));
+            cabbyMenu.AddCheatPanel(new DropdownPanel(new TeleportReference(), "Select Area to Teleport"));
+            cabbyMenu.AddCheatPanel(new InfoPanel("Lloyd's Beacon: Save and recall teleportation locations").SetColor(CheatPanel.headerColor));
         }
 
         private void BuildAchievementCheats()
@@ -37,6 +47,34 @@ namespace CabbyCodes
             }
         }
 
+        private void BuildDebugCheats()
+        {
+            cabbyMenu.AddCheatPanel(new InfoPanel("Debug Utilities: Prints information to BepInEx console").SetColor(CheatPanel.headerColor));
+            cabbyMenu.AddCheatPanel(new ButtonPanel(() => 
+            {
+                GameMap gm = GameManager._instance.gameMap.GetComponent<GameMap>();
+                Vector3 heroPos = ((GameObject)heroFieldInfo.GetValue(gm)).transform.position;
+                Logger.LogInfo("Location: " + heroPos.x + ", " + heroPos.y);
+                Logger.LogInfo("Scene: " + GameManager.GetBaseSceneName(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name));
+            }, "Print", "General Info"));
+            cabbyMenu.AddCheatPanel(new ButtonPanel(() =>
+            {
+                ObjectPrint.DisplayObjectInfo(GameManager._instance);
+            }, "Print", "GameManager"));
+            cabbyMenu.AddCheatPanel(new ButtonPanel(() =>
+            {
+                ObjectPrint.DisplayObjectInfo(GameManager._instance.gameMap.GetComponent<GameMap>());
+            }, "Print", "GameMap"));
+            cabbyMenu.AddCheatPanel(new ButtonPanel(() =>
+            {
+                ObjectPrint.DisplayObjectInfo(UIManager.instance);
+            }, "Print", "UIManager"));
+            cabbyMenu.AddCheatPanel(new ButtonPanel(() =>
+            {
+                ObjectPrint.DisplayObjectInfo(GameManager._instance.playerData);
+            }, "Print", "PlayerData"));
+        }
+
         private void Awake()
         {
             Logger.LogInfo("Plugin cabby.cabbycodes is loaded!");
@@ -49,7 +87,9 @@ namespace CabbyCodes
 
             cabbyMenu = new CabbyMenu(NAME, VERSION);
             cabbyMenu.RegisterCategory("Player", BuildPlayerCheats);
+            cabbyMenu.RegisterCategory("Teleport", BuildTeleportCheats);
             cabbyMenu.RegisterCategory("Achievements", BuildAchievementCheats);
+            cabbyMenu.RegisterCategory("Debug", BuildDebugCheats);
 
             new CodeState().Add(InvulPatch.key, new(false));
         }
