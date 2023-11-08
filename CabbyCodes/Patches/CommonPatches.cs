@@ -6,5 +6,10 @@
         {
             return false;
         }
+
+        public static bool Prefix_RunOriginal()
+        {
+            return true;
+        }
     }
 }
