@@ -4,7 +4,7 @@ using CabbyCodes.UI.Modders;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace CabbyCodes.UI
+namespace CabbyCodes.UI.ReferenceControls
 {
     public class ToggleButton
     {
@@ -13,9 +13,9 @@ namespace CabbyCodes.UI
         private readonly ImageMod imageMod;
         private readonly Color onColor = new(0, 0.8f, 1, 1);
         private readonly Color offColor = Color.white;
-        public SyncedReference<bool> IsOn { get; private set; }
+        public ISyncedReference<bool> IsOn { get; private set; }
 
-        public ToggleButton(SyncedReference<bool> IsOn)
+        public ToggleButton(ISyncedReference<bool> IsOn)
         {
             this.IsOn = IsOn;
 
@@ -40,7 +40,7 @@ namespace CabbyCodes.UI
             Update();
         }
 
-        public void SetIsOn(SyncedReference<bool> isOn)
+        public void SetIsOn(ISyncedReference<bool> isOn)
         {
             IsOn = isOn;
             Update();
