@@ -4,33 +4,30 @@ using System.Reflection;
 
 namespace CabbyCodes.Patches
 {
-    public class InvulPatch : SyncedReference<bool>
+    public class InvulPatch : ISyncedReference<bool>
     {
         public const string key = "Invul_Patch";
         private static readonly BoxedReference value = CodeState.Get(key, false);
         private static readonly Harmony harmony = new(key);
         private static readonly MethodInfo mOriginal = AccessTools.Method(typeof(PlayerData), nameof(PlayerData.TakeHealth));
 
-        public InvulPatch()
+        public bool Get()
         {
-            Get = () =>
-            {
-                return (bool)value.Get();
-            };
+            return (bool)value.Get();
+        }
 
-            Set = (isOn) =>
-            {
-                value.Set(isOn);
+        public void Set(bool value)
+        {
+            InvulPatch.value.Set(value);
 
-                if (Get())
-                {
-                    harmony.Patch(mOriginal, prefix: new HarmonyMethod(typeof(CommonPatches).GetMethod("Prefix_SkipOriginal")));
-                }
-                else
-                {
-                    harmony.UnpatchSelf();
-                }
-            };
+            if (Get())
+            {
+                harmony.Patch(mOriginal, prefix: new HarmonyMethod(typeof(CommonPatches).GetMethod("Prefix_SkipOriginal")));
+            }
+            else
+            {
+                harmony.UnpatchSelf();
+            }
         }
     }
 }

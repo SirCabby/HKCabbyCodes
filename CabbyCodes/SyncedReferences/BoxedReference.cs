@@ -1,22 +1,22 @@
 ﻿namespace CabbyCodes.SyncedReferences
 {
-    public class BoxedReference : SyncedReference<object>
+    public class BoxedReference : ISyncedReference<object>
     {
         private object value;
 
         public BoxedReference(object initialValue = null)
         {
             value = initialValue;
+        }
 
-            Get = () =>
-            {
-                return value;
-            };
+        public object Get()
+        {
+            return value;
+        }
 
-            Set = (obj) =>
-            {
-                value = obj;
-            };
+        public void Set(object value)
+        {
+            this.value = value;
         }
     }
 }

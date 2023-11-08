@@ -2,24 +2,30 @@
 
 namespace CabbyCodes.SyncedReferences
 {
-    public class AchievementReference : SyncedReference<bool>
+    public class AchievementReference : ISyncedReference<bool>
     {
+        private readonly Achievement achievement;
+        private readonly AchievementPanel parent;
+
         public AchievementReference(Achievement achievement, AchievementPanel parent)
         {
-            Get = () =>
-            {
-                return GameManager.instance.IsAchievementAwarded(achievement.key);
-            };
+            this.achievement = achievement;
+            this.parent = parent;
+        }
 
-            Set = (isAchieved) =>
+        public bool Get()
+        {
+            return GameManager.instance.IsAchievementAwarded(achievement.key);
+        }
+
+        public void Set(bool value)
+        {
+            if (value && !Get())
             {
-                if (isAchieved && !Get())
-                {
-                    AchievementHandler achievementHandler = UnityEngine.Object.FindObjectOfType<AchievementHandler>();
-                    achievementHandler.AwardAchievementToPlayer(achievement.key);
-                    parent.AwardIcon();
-                }
-            };
+                AchievementHandler achievementHandler = UnityEngine.Object.FindObjectOfType<AchievementHandler>();
+                achievementHandler.AwardAchievementToPlayer(achievement.key);
+                parent.AwardIcon();
+            }
         }
     }
 }

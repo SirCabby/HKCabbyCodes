@@ -1,5 +1,6 @@
 ﻿using CabbyCodes.SyncedReferences;
 using CabbyCodes.UI.Modders;
+using CabbyCodes.UI.ReferenceControls;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,7 +10,7 @@ namespace CabbyCodes.UI.CheatPanels
     {
         private readonly ToggleButton toggleButton;
 
-        public TogglePanel(SyncedReference<bool> syncedReference, string description) : base(description)
+        public TogglePanel(ISyncedReference<bool> syncedReference, string description) : base(description)
         {
             int width = 120;
 

@@ -1,19 +1,16 @@
 ﻿namespace CabbyCodes.SyncedReferences
 {
-    public class ResetAchievementReference : SyncedReference<bool>
+    public class ResetAchievementReference : ISyncedReference<bool>
     {
-        public ResetAchievementReference()
+        public bool Get()
         {
-            Get = () =>
-            {
-                return false;
-            };
+            return false;
+        }
 
-            Set = (doReset) =>
-            {
-                AchievementHandler achievementHandler = UnityEngine.Object.FindObjectOfType<AchievementHandler>();
-                achievementHandler.ResetAllAchievements();
-            };
+        public void Set(bool value)
+        {
+            AchievementHandler achievementHandler = UnityEngine.Object.FindObjectOfType<AchievementHandler>();
+            achievementHandler.ResetAllAchievements();
         }
     }
 }

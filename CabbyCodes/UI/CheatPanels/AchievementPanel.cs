@@ -7,7 +7,7 @@ namespace CabbyCodes.UI.CheatPanels
 {
     public class AchievementPanel : TogglePanel
     {
-        ImageMod iconImageMod;
+        private readonly ImageMod iconImageMod;
 
         public AchievementPanel(Achievement achievement)
             : base(null, Language.Language.Get(achievement.localizedTitle, "Achievements") + ": " + Language.Language.Get(achievement.localizedText, "Achievements"))
