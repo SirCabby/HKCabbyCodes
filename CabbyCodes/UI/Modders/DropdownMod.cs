@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace CabbyCodes.UI.Modders
@@ -43,6 +44,18 @@ namespace CabbyCodes.UI.Modders
 
             GameObject item = dropdownGameObject.transform.Find("Template").Find("Viewport").Find("Content").Find("Item").gameObject;
             item.transform.Find("Item Label").gameObject.GetComponent<Text>().fontSize = fontSize;
+
+            return this;
+        }
+
+        public DropdownMod SetOptions(List<string> options)
+        {
+            List<Dropdown.OptionData> dropdownOptions = new();
+            foreach (string option in options)
+            {
+                dropdownOptions.Add(new Dropdown.OptionData(option));
+            }
+            dropdownGameObject.GetComponent<Dropdown>().options = dropdownOptions;
 
             return this;
         }
