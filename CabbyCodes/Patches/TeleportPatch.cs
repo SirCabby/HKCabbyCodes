@@ -94,7 +94,7 @@ namespace CabbyCodes.Patches
             string sceneName = GameManager.GetBaseSceneName(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
             Vector2 teleportLocation = new(heroPos.x, (int)Math.Ceiling(heroPos.y));
 
-            List<TeleportLocation> teleportLocations = (List<TeleportLocation>)TeleportPatch.savedTeleports.Get();
+            List<TeleportLocation> teleportLocations = (List<TeleportLocation>)savedTeleports.Get();
             bool locationFound = false;
             for (int i = 0; i < teleportLocations.Count; i++)
             {
@@ -116,7 +116,8 @@ namespace CabbyCodes.Patches
 
         public static void AddCustomTeleport(TeleportLocation location)
         {
-            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new ButtonPanel(() => { DoTeleport(location); }, "Teleport", location.displayName));
+            ButtonPanel buttonPanel = new ButtonPanel(() => { DoTeleport(location); }, "Teleport", location.displayName).SetButtonSize(160);
+            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(buttonPanel);
         }
     }
 }

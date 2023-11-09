@@ -1,5 +1,4 @@
-﻿using CabbyCodes.SyncedReferences;
-using CabbyCodes.UI.Modders;
+﻿using CabbyCodes.UI.Modders;
 using UnityEngine.UI;
 using UnityEngine;
 using CabbyCodes.UI.Factories;
@@ -10,6 +9,7 @@ namespace CabbyCodes.UI.CheatPanels
     public class ButtonPanel : CheatPanel
     {
         private readonly GameObject button;
+        private readonly LayoutElement buttonPanelLayout;
         private readonly Action action;
 
         public ButtonPanel(Action action, string buttonText, string description) : base(description)
@@ -23,13 +23,21 @@ namespace CabbyCodes.UI.CheatPanels
             new Fitter(buttonPanel).Attach(cheatPanel);
             buttonPanel.transform.SetAsFirstSibling();
 
-            LayoutElement buttonPanelLayout = buttonPanel.AddComponent<LayoutElement>();
+            buttonPanelLayout = buttonPanel.AddComponent<LayoutElement>();
             buttonPanelLayout.flexibleHeight = 1;
             buttonPanelLayout.minWidth = width;
 
             (button, _, _) = ButtonFactory.Build(buttonText);
             button.GetComponent<Button>().onClick.AddListener(DoAction);
             new Fitter(button).Attach(buttonPanel).Anchor(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f)).Size(new Vector2(width, 60));
+        }
+
+        public ButtonPanel SetButtonSize(int width)
+        {
+            buttonPanelLayout.minWidth = width;
+            new Fitter(button).Size(new Vector2(width, 60));
+            LayoutRebuilder.ForceRebuildLayoutImmediate(cheatPanel.GetComponent<RectTransform>());
+            return this;
         }
 
         private void DoAction()
