@@ -3,11 +3,10 @@ using BepInEx.Logging;
 using BepInEx.Unity.Mono;
 using CabbyCodes.Debug;
 using CabbyCodes.Patches;
-using CabbyCodes.Structs;
+using CabbyCodes.Types;
 using CabbyCodes.UI;
 using CabbyCodes.UI.CheatPanels;
 using System.Collections.Generic;
-using System.Reflection;
 using UnityEngine;
 
 namespace CabbyCodes

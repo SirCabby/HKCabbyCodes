@@ -1,6 +1,5 @@
-﻿using CabbyCodes.Structs;
+﻿using CabbyCodes.Types;
 using CabbyCodes.SyncedReferences;
-using CabbyCodes.UI;
 using CabbyCodes.UI.CheatPanels;
 using HarmonyLib;
 using System;
@@ -101,7 +100,7 @@ namespace CabbyCodes.Patches
             {
                 if (teleportLocations[i].sceneName == sceneName)
                 {
-                    teleportLocations[i].SetLocation(teleportLocation);
+                    teleportLocations[i].location = teleportLocation;
                     locationFound = true;
                     break;
                 }

@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 
-namespace CabbyCodes.Structs
+namespace CabbyCodes.Types
 {
-    public struct TeleportLocation
+    public class TeleportLocation
     {
         public string sceneName;
         public string displayName;
@@ -12,11 +12,6 @@ namespace CabbyCodes.Structs
         {
             this.sceneName = sceneName;
             this.displayName = displayName;
-            this.location = location;
-        }
-
-        public void SetLocation(Vector2 location)
-        {
             this.location = location;
         }
     }
