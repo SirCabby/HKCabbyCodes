@@ -1,5 +1,9 @@
-﻿using CabbyCodes.SyncedReferences;
+﻿using CabbyCodes.Structs;
+using CabbyCodes.SyncedReferences;
+using CabbyCodes.UI;
+using CabbyCodes.UI.CheatPanels;
 using HarmonyLib;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
@@ -9,16 +13,15 @@ namespace CabbyCodes.Patches
     public class TeleportPatch : ISyncedValueList<int, List<string>>
     {
         public const string key = "TeleportPlayerLocation";
+        public static readonly BoxedReference savedTeleports = CodeState.Get(key, new List<TeleportLocation>());
+
         private static readonly Harmony harmony = new(key);
         private static readonly MethodInfo mOriginal = typeof(GameManager).GetMethod("EnterHero", BindingFlags.NonPublic | BindingFlags.Instance);
         private static readonly MethodInfo postMethod = typeof(TeleportPatch).GetMethod(nameof(PostTeleport), BindingFlags.NonPublic | BindingFlags.Static);
-        private static readonly FieldInfo targetSceneFieldInfo = typeof(GameManager).GetField("targetScene", BindingFlags.NonPublic | BindingFlags.Instance);
-        private static readonly FieldInfo entryDelayFieldInfo = typeof(GameManager).GetField("entryDelay", BindingFlags.NonPublic | BindingFlags.Instance);
-        private static readonly List<KeyValuePair<string, Vector2>> teleportLocations = new()
+        private static readonly List<TeleportLocation> teleportLocations = new()
         {
-            new("<Select Location>", Vector2.zero),
-            new("Town", new Vector2(136, 12)),
-            new("Fungus1_26", new Vector2(136, 12)),
+            new("", "<Select Location>", Vector2.zero),
+            new("Town", "Starting Town", new Vector2(136, 12)),
         };
         private static Vector2 originalDreamGateLoc;
 
@@ -31,41 +34,43 @@ namespace CabbyCodes.Patches
         {
             if (value < 1 || value > teleportLocations.Count) return;
 
-            string targetSceneName = teleportLocations[value].Key;
-            Vector2 targetCoordinates = teleportLocations[value].Value;
+            DoTeleport(teleportLocations[value]);
+        }
 
-            CabbyCodesPlugin.BLogger.LogInfo("Teleporting to [" + targetSceneName + "] (" + targetCoordinates.x + ", " + targetCoordinates.y + ")");
+        public List<string> GetValueList()
+        {
+            List<string> result = new();
+            foreach (TeleportLocation loc in teleportLocations)
+            {
+                result.Add(loc.displayName);
+            }
+            return result;
+        }
+
+        public static void DoTeleport(TeleportLocation teleportLocation)
+        {
+            CabbyCodesPlugin.BLogger.LogInfo("Teleporting to [" + teleportLocation.sceneName + "] (" + teleportLocation.location.x + ", " + teleportLocation.location.y + ")");
 
             MethodInfo runPrefix = typeof(CommonPatches).GetMethod(nameof(CommonPatches.Prefix_RunOriginal));
             harmony.Patch(mOriginal, prefix: new HarmonyMethod(runPrefix), postfix: new HarmonyMethod(postMethod));
 
             GameManager gm = GameManager._instance;
             originalDreamGateLoc = new(gm.playerData.dreamGateX, gm.playerData.dreamGateY);
-            gm.playerData.dreamGateX = targetCoordinates.x;
-            gm.playerData.dreamGateY = targetCoordinates.y;
+            gm.playerData.dreamGateX = teleportLocation.location.x;
+            gm.playerData.dreamGateY = teleportLocation.location.y;
 
             gm.entryGateName = "dreamGate";
-            targetSceneFieldInfo.SetValue(gm, targetSceneName);
-            entryDelayFieldInfo.SetValue(gm, 0);
+            GameData.targetSceneFieldInfo.SetValue(gm, teleportLocation.sceneName);
+            GameData.entryDelayFieldInfo.SetValue(gm, 0);
             gm.cameraCtrl.FreezeInPlace(false);
             gm.BeginSceneTransition(new GameManager.SceneLoadInfo
             {
                 AlwaysUnloadUnusedAssets = true,
                 EntryGateName = "dreamGate",
                 PreventCameraFadeOut = true,
-                SceneName = targetSceneName,
+                SceneName = teleportLocation.sceneName,
                 Visualization = GameManager.SceneLoadVisualizations.Dream
             });
-        }
-
-        public List<string> GetValueList()
-        {
-            List<string> result = new();
-            foreach (KeyValuePair<string, Vector2> kvp in teleportLocations)
-            {
-                result.Add(kvp.Key);
-            }
-            return result;
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "Required for reflection lookup")]
@@ -81,6 +86,38 @@ namespace CabbyCodes.Patches
             //UIManager.instance.SetState(UIState.PLAYING);
 
             harmony.UnpatchSelf();
+        }
+
+        public static void SaveTeleportLocation()
+        {
+            GameMap gm = GameManager._instance.gameMap.GetComponent<GameMap>();
+            Vector3 heroPos = ((GameObject)GameData.heroFieldInfo.GetValue(gm)).transform.position;
+            string sceneName = GameManager.GetBaseSceneName(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
+            Vector2 teleportLocation = new(heroPos.x, (int)Math.Ceiling(heroPos.y));
+
+            List<TeleportLocation> teleportLocations = (List<TeleportLocation>)TeleportPatch.savedTeleports.Get();
+            bool locationFound = false;
+            for (int i = 0; i < teleportLocations.Count; i++)
+            {
+                if (teleportLocations[i].sceneName == sceneName)
+                {
+                    teleportLocations[i].SetLocation(teleportLocation);
+                    locationFound = true;
+                    break;
+                }
+            }
+
+            if (!locationFound)
+            {
+                TeleportLocation loc = new(sceneName, sceneName, teleportLocation);
+                teleportLocations.Add(loc);
+                AddCustomTeleport(loc);
+            }
+        }
+
+        public static void AddCustomTeleport(TeleportLocation location)
+        {
+            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new ButtonPanel(() => { DoTeleport(location); }, "Teleport", location.displayName));
         }
     }
 }

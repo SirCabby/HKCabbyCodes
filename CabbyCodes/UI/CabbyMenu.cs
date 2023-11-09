@@ -68,11 +68,12 @@ namespace CabbyCodes.UI
             else if (rootGameObject != null && rootGoMod.IsActive())
             {
                 rootGoMod.SetActive(false);
+                categoryDropdown.value = 0;
+                OnCategorySelected(0);
 
                 // Reset the menu on unpausing
                 if (isMenuOpen)
                 {
-                    OnCategorySelected(0);
                     OnMenuButtonClicked();
                 }
             }

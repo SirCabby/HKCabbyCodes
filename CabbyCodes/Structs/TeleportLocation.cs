@@ -14,5 +14,10 @@ namespace CabbyCodes.Structs
             this.displayName = displayName;
             this.location = location;
         }
+
+        public void SetLocation(Vector2 location)
+        {
+            this.location = location;
+        }
     }
 }

@@ -3,7 +3,10 @@ using BepInEx.Logging;
 using BepInEx.Unity.Mono;
 using CabbyCodes.Debug;
 using CabbyCodes.Patches;
+using CabbyCodes.Structs;
+using CabbyCodes.UI;
 using CabbyCodes.UI.CheatPanels;
+using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 
@@ -18,7 +21,6 @@ namespace CabbyCodes
 
         public static ManualLogSource BLogger;
         public static CabbyMenu cabbyMenu;
-        private static readonly FieldInfo heroFieldInfo = typeof(GameMap).GetField("hero", BindingFlags.NonPublic | BindingFlags.Instance);
 
         private void BuildPlayerCheats()
         {
@@ -29,8 +31,14 @@ namespace CabbyCodes
         private void BuildTeleportCheats()
         {
             cabbyMenu.AddCheatPanel(new InfoPanel("Teleportation").SetColor(CheatPanel.headerColor));
+            cabbyMenu.AddCheatPanel(new InfoPanel("Warning: Teleporting requires a pause / unpause to complete").SetColor(CheatPanel.warningColor));
             cabbyMenu.AddCheatPanel(new DropdownPanel(new TeleportPatch(), "Select Area to Teleport"));
             cabbyMenu.AddCheatPanel(new InfoPanel("Lloyd's Beacon: Save and recall teleportation locations").SetColor(CheatPanel.headerColor));
+            cabbyMenu.AddCheatPanel(new ButtonPanel(TeleportPatch.SaveTeleportLocation, "Save", "Save a custom teleport at current position"));
+            foreach (TeleportLocation location in (List<TeleportLocation>)TeleportPatch.savedTeleports.Get())
+            {
+                TeleportPatch.AddCustomTeleport(location);
+            }
         }
 
         private void BuildAchievementCheats()
@@ -52,7 +60,7 @@ namespace CabbyCodes
             cabbyMenu.AddCheatPanel(new ButtonPanel(() => 
             {
                 GameMap gm = GameManager._instance.gameMap.GetComponent<GameMap>();
-                Vector3 heroPos = ((GameObject)heroFieldInfo.GetValue(gm)).transform.position;
+                Vector3 heroPos = ((GameObject)GameData.heroFieldInfo.GetValue(gm)).transform.position;
                 Logger.LogInfo("Location: " + heroPos.x + ", " + heroPos.y);
                 Logger.LogInfo("Scene: " + GameManager.GetBaseSceneName(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name));
             }, "Print", "General Info"));
