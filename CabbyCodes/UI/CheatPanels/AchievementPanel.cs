@@ -1,7 +1,7 @@
 ﻿using CabbyCodes.UI.Modders;
 using UnityEngine.UI;
 using UnityEngine;
-using CabbyCodes.SyncedReferences;
+using CabbyCodes.Patches;
 
 namespace CabbyCodes.UI.CheatPanels
 {

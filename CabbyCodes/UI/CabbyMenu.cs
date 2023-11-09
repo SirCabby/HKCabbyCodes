@@ -3,12 +3,11 @@ using UnityEngine.UI;
 using UnityEngine;
 using System.Collections.Generic;
 using CabbyCodes.UI.Factories;
-using CabbyCodes.UI;
 using CabbyCodes.UI.Modders;
 using CabbyCodes.UI.CheatPanels;
 using System;
 
-namespace CabbyCodes
+namespace CabbyCodes.UI
 {
     public class CabbyMenu
     {
@@ -21,7 +20,7 @@ namespace CabbyCodes
 
         private GameObject rootGameObject;
         private GameObjectMod rootGoMod;
-        
+
         private bool isMenuOpen = false;
         private GameObject menuPanel;
         private GameObjectMod menuPanelGoMod;
