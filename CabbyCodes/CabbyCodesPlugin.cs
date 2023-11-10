@@ -1,4 +1,5 @@
 ﻿using BepInEx;
+using BepInEx.Configuration;
 using BepInEx.Logging;
 using BepInEx.Unity.Mono;
 using CabbyCodes.Debug;
@@ -6,7 +7,6 @@ using CabbyCodes.Patches;
 using CabbyCodes.Types;
 using CabbyCodes.UI;
 using CabbyCodes.UI.CheatPanels;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace CabbyCodes
@@ -20,6 +20,7 @@ namespace CabbyCodes
 
         public static ManualLogSource BLogger;
         public static CabbyMenu cabbyMenu;
+        public static ConfigFile configFile;
 
         private void BuildPlayerCheats()
         {
@@ -34,9 +35,9 @@ namespace CabbyCodes
             cabbyMenu.AddCheatPanel(new DropdownPanel(new TeleportPatch(), "Select Area to Teleport"));
             cabbyMenu.AddCheatPanel(new InfoPanel("Lloyd's Beacon: Save and recall teleportation locations").SetColor(CheatPanel.headerColor));
             cabbyMenu.AddCheatPanel(new ButtonPanel(TeleportPatch.SaveTeleportLocation, "Save", "Save a custom teleport at current position"));
-            foreach (TeleportLocation location in (List<TeleportLocation>)TeleportPatch.savedTeleports.Get())
+            foreach (TeleportLocation location in TeleportPatch.savedTeleports)
             {
-                TeleportPatch.AddCustomTeleport(location);
+                TeleportPatch.AddTeleportPanel(location);
             }
         }
 
@@ -85,6 +86,8 @@ namespace CabbyCodes
         {
             Logger.LogInfo("Plugin cabby.cabbycodes is loaded!");
             BLogger = Logger;
+            Logger.LogInfo("config location: " + Config.ConfigFilePath);
+            configFile = Config;
         }
 
         private void Start()
@@ -96,8 +99,6 @@ namespace CabbyCodes
             cabbyMenu.RegisterCategory("Teleport", BuildTeleportCheats);
             cabbyMenu.RegisterCategory("Achievements", BuildAchievementCheats);
             cabbyMenu.RegisterCategory("Debug", BuildDebugCheats);
-
-            new CodeState().Add(InvulPatch.key, new(false));
         }
 
         private void Update()
