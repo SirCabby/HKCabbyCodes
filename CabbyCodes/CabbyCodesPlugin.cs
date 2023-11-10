@@ -43,6 +43,12 @@ namespace CabbyCodes
             }
         }
 
+        private void BuildMapCheats()
+        {
+            cabbyMenu.AddCheatPanel(new InfoPanel("Maps: Enable to have map for area").SetColor(CheatPanel.headerColor));
+            MapPatch.BuildMapPanels();
+        }
+
         private void BuildAchievementCheats()
         {
             cabbyMenu.AddCheatPanel(new InfoPanel("Toggle Achievements <ON> to unlock in-game and in Online platform (Steam / GOG)").SetColor(CheatPanel.headerColor));
@@ -99,6 +105,7 @@ namespace CabbyCodes
             cabbyMenu = new CabbyMenu(NAME, VERSION);
             cabbyMenu.RegisterCategory("Player", BuildPlayerCheats);
             cabbyMenu.RegisterCategory("Teleport", BuildTeleportCheats);
+            cabbyMenu.RegisterCategory("Maps", BuildMapCheats);
             cabbyMenu.RegisterCategory("Achievements", BuildAchievementCheats);
             cabbyMenu.RegisterCategory("Debug", BuildDebugCheats);
         }
