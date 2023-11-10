@@ -147,7 +147,7 @@ namespace CabbyCodes.Patches
                     CabbyCodesPlugin.configFile.Save();
                 }
             }, "X", new Vector2(60, 60));
-            destroyButton.GetComponent<Image>().color = new Color(1, 0.8f, 0.8f);
+            destroyButton.transform.Find("Button").gameObject.GetComponent<Image>().color = new Color(1, 0.5f, 0.5f);
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(buttonPanel);
         }
     }
