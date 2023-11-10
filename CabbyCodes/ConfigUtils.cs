@@ -1,8 +1,6 @@
 ﻿using BepInEx.Configuration;
-using CabbyCodes.Types;
 using System.Collections.Generic;
 using System.IO;
-using static FlingUtils;
 
 namespace CabbyCodes
 {

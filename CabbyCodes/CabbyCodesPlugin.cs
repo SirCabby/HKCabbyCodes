@@ -26,14 +26,16 @@ namespace CabbyCodes
         {
             cabbyMenu.AddCheatPanel(new InfoPanel("Player Codes").SetColor(CheatPanel.headerColor));
             cabbyMenu.AddCheatPanel(new TogglePanel(new InvulPatch(), "Invulnerability"));
+            cabbyMenu.AddCheatPanel(new TogglePanel(new SoulPatch(), "Infinite Soul"));
+            cabbyMenu.AddCheatPanel(new TogglePanel(new GeoPatch(), "Infinite Geo"));
         }
 
         private void BuildTeleportCheats()
         {
-            cabbyMenu.AddCheatPanel(new InfoPanel("Teleportation").SetColor(CheatPanel.headerColor));
+            cabbyMenu.AddCheatPanel(new InfoPanel("Teleportation: Select common point of interest to travel to").SetColor(CheatPanel.headerColor));
             cabbyMenu.AddCheatPanel(new InfoPanel("Warning: Teleporting requires a pause / unpause to complete").SetColor(CheatPanel.warningColor));
             cabbyMenu.AddCheatPanel(new DropdownPanel(new TeleportPatch(), "Select Area to Teleport"));
-            cabbyMenu.AddCheatPanel(new InfoPanel("Lloyd's Beacon: Save and recall teleportation locations").SetColor(CheatPanel.headerColor));
+            cabbyMenu.AddCheatPanel(new InfoPanel("Lloyd's Beacon: Save and recall custom teleportation locations").SetColor(CheatPanel.headerColor));
             cabbyMenu.AddCheatPanel(new ButtonPanel(TeleportPatch.SaveTeleportLocation, "Save", "Save a custom teleport at current position"));
             foreach (TeleportLocation location in TeleportPatch.savedTeleports)
             {
