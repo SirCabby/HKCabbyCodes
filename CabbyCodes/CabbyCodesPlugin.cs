@@ -28,6 +28,7 @@ namespace CabbyCodes
             cabbyMenu.AddCheatPanel(new TogglePanel(new InvulPatch(), "Invulnerability"));
             cabbyMenu.AddCheatPanel(new TogglePanel(new SoulPatch(), "Infinite Soul"));
             cabbyMenu.AddCheatPanel(new TogglePanel(new GeoPatch(), "Infinite Geo"));
+            cabbyMenu.AddCheatPanel(new TogglePanel(new PermadeathPatch(), "Permadeath Mode"));
         }
 
         private void BuildTeleportCheats()
@@ -46,6 +47,7 @@ namespace CabbyCodes
         private void BuildMapCheats()
         {
             cabbyMenu.AddCheatPanel(new InfoPanel("Maps: Enable to have map for area").SetColor(CheatPanel.headerColor));
+            cabbyMenu.AddCheatPanel(new InfoPanel("Warning: Still requires Quill item to fill maps out").SetColor(CheatPanel.warningColor));
             MapPatch.BuildMapPanels();
         }
 
