@@ -1,9 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using BepInEx.Configuration;
+using CabbyCodes.Types;
+using System.Collections.Generic;
 using System.IO;
+using static FlingUtils;
 
 namespace CabbyCodes
 {
-    public class ConfigKeyFind
+    public class ConfigUtils
     {
         public static List<string> GetConfigKeys(string sectionName)
         {
@@ -38,6 +41,19 @@ namespace CabbyCodes
             }
 
             return result;
+        }
+
+        public static ConfigDefinition GetConfigDefinition(string sectionName, string key)
+        {
+            foreach (ConfigDefinition def in CabbyCodesPlugin.configFile.Keys)
+            {
+                if (def.Section == sectionName && def.Key == key)
+                {
+                    return def;
+                }
+            }
+
+            return null;
         }
     }
 }
