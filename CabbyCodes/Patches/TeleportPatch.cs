@@ -7,8 +7,6 @@ using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 using BepInEx.Configuration;
-using CabbyCodes.Debug;
-using static GamepadVibrationMixer.GamepadVibrationEmission;
 
 namespace CabbyCodes.Patches
 {
