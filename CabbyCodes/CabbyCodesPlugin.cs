@@ -28,7 +28,7 @@ namespace CabbyCodes
             cabbyMenu.AddCheatPanel(new TogglePanel(new InvulPatch(), "Invulnerability"));
             cabbyMenu.AddCheatPanel(new TogglePanel(new SoulPatch(), "Infinite Soul"));
             cabbyMenu.AddCheatPanel(new TogglePanel(new GeoPatch(), "Infinite Geo"));
-            cabbyMenu.AddCheatPanel(new TogglePanel(new PermadeathPatch(), "Permadeath Mode"));
+            cabbyMenu.AddCheatPanel(new TogglePanel(new PermadeathPatch(), "Steel Soul Mode"));
         }
 
         private void BuildTeleportCheats()
