@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 using BepInEx.Configuration;
+using UnityEngine.UI;
 
 namespace CabbyCodes.Patches
 {
@@ -53,18 +54,13 @@ namespace CabbyCodes.Patches
             ConfigFile config = CabbyCodesPlugin.configFile;
 
             // Init all keys in config memory
-            List<string> savedPortalNames = ConfigKeyFind.GetConfigKeys(key);
-            foreach (string portalName in savedPortalNames)
+            List<string> savedSceneNames = ConfigUtils.GetConfigKeys(key);
+            foreach (string sceneName in savedSceneNames)
             {
-                config.Bind(key, portalName, "");
-                foreach (ConfigDefinition def in config.Keys)
-                {
-                    if (def.Section == key && def.Key == portalName)
-                    {
-                        config.TryGetEntry(def, out ConfigEntry<string> value);
-                        result.Add(new CustomTeleportLocation(def, value));
-                    }
-                }
+                config.Bind(key, sceneName, "");
+                ConfigDefinition def = ConfigUtils.GetConfigDefinition(key, sceneName);
+                config.TryGetEntry(def, out ConfigEntry<string> value);
+                result.Add(new CustomTeleportLocation(def, value));
             }
 
             return result;
@@ -142,6 +138,16 @@ namespace CabbyCodes.Patches
         public static void AddTeleportPanel(TeleportLocation location)
         {
             ButtonPanel buttonPanel = new ButtonPanel(() => { DoTeleport(location); }, "Teleport", location.DisplayName).SetButtonSize(160);
+            GameObject destroyButton = PanelAdder.AddDestroyPanelButton(buttonPanel, buttonPanel.cheatPanel.transform.childCount, () =>
+            {
+                savedTeleports.Remove(location);
+                if (location is CustomTeleportLocation customLocation)
+                {
+                    CabbyCodesPlugin.configFile.Remove(customLocation.configDef);
+                    CabbyCodesPlugin.configFile.Save();
+                }
+            }, "X", new Vector2(60, 60));
+            destroyButton.GetComponent<Image>().color = new Color(1, 0.8f, 0.8f);
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(buttonPanel);
         }
     }

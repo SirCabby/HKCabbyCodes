@@ -5,7 +5,7 @@ namespace CabbyCodes.Types
 {
     public class CustomTeleportLocation : TeleportLocation
     {
-        private readonly ConfigDefinition configDef;
+        public readonly ConfigDefinition configDef;
         private readonly ConfigEntry<string> configEntry;
 
         public override string SceneName { get => configDef.Key; }
