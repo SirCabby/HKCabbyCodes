@@ -59,6 +59,11 @@ namespace CabbyCodes.UI
             registeredInputs.Add(inputFieldStatus);
         }
 
+        private void ClearInputFields()
+        {
+            registeredInputs.Clear();
+        }
+
         // A click action happened while menu was open, so manage selected states
         private void OnElapsedClickTimer(object source, ElapsedEventArgs e)
         {
@@ -174,8 +179,11 @@ namespace CabbyCodes.UI
             if (arg0 < categoryDropdown.options.Count)
             {
                 CheatPanel.ResetPattern();
+                ClearInputFields();
                 registeredCategories[categoryDropdown.options[arg0].text]();
             }
+
+            lastSelected = null;
         }
 
         private void BuildCanvas()
