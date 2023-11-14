@@ -1,4 +1,5 @@
 ﻿using CabbyCodes.SyncedReferences;
+using CabbyCodes.UI.CheatPanels;
 
 namespace CabbyCodes.Patches
 {
@@ -13,6 +14,11 @@ namespace CabbyCodes.Patches
         {
             AchievementHandler achievementHandler = UnityEngine.Object.FindObjectOfType<AchievementHandler>();
             achievementHandler.ResetAllAchievements();
+        }
+
+        public static void AddPanel()
+        {
+            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new TogglePanel(new ResetAchievementPatch(), "Reset <ALL> Achievements to off. Requires Restart."));
         }
     }
 }

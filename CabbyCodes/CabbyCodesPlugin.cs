@@ -25,10 +25,10 @@ namespace CabbyCodes
         private void BuildPlayerCheats()
         {
             cabbyMenu.AddCheatPanel(new InfoPanel("Player Codes").SetColor(CheatPanel.headerColor));
-            cabbyMenu.AddCheatPanel(new TogglePanel(new InvulPatch(), "Invulnerability"));
-            cabbyMenu.AddCheatPanel(new TogglePanel(new SoulPatch(), "Infinite Soul"));
-            cabbyMenu.AddCheatPanel(new TogglePanel(new GeoPatch(), "Infinite Geo"));
-            cabbyMenu.AddCheatPanel(new TogglePanel(new PermadeathPatch(), "Steel Soul Mode"));
+            InvulPatch.AddPanel();
+            SoulPatch.AddPanel();
+            GeoPatch.AddPanel();
+            PermadeathPatch.AddPanel();
             GeoValuePatch.AddPanel();
         }
 
@@ -36,12 +36,12 @@ namespace CabbyCodes
         {
             cabbyMenu.AddCheatPanel(new InfoPanel("Teleportation: Select common point of interest to travel to").SetColor(CheatPanel.headerColor));
             cabbyMenu.AddCheatPanel(new InfoPanel("Warning: Teleporting requires a pause / unpause to complete").SetColor(CheatPanel.warningColor));
-            cabbyMenu.AddCheatPanel(new DropdownPanel(new TeleportPatch(), 400, "Select Area to Teleport"));
+            TeleportPatch.AddPanel();
             cabbyMenu.AddCheatPanel(new InfoPanel("Lloyd's Beacon: Save and recall custom teleportation locations").SetColor(CheatPanel.headerColor));
-            cabbyMenu.AddCheatPanel(new ButtonPanel(TeleportPatch.SaveTeleportLocation, "Save", "Save a custom teleport at current position"));
+            TeleportPatch.AddSavePanel();
             foreach (TeleportLocation location in TeleportPatch.savedTeleports)
             {
-                TeleportPatch.AddTeleportPanel(location);
+                TeleportPatch.AddCustomPanel(location);
             }
         }
 
@@ -56,7 +56,7 @@ namespace CabbyCodes
         {
             cabbyMenu.AddCheatPanel(new InfoPanel("Toggle Achievements <ON> to unlock in-game and in Online platform (Steam / GOG)").SetColor(CheatPanel.headerColor));
             cabbyMenu.AddCheatPanel(new InfoPanel("Warning: Unable to toggle off achievements independently").SetColor(CheatPanel.warningColor));
-            cabbyMenu.AddCheatPanel(new TogglePanel(new ResetAchievementPatch(), "Reset <ALL> Achievements to off. Requires Restart."));
+            ResetAchievementPatch.AddPanel();
 
             AchievementHandler achievementHandler = FindObjectOfType<AchievementHandler>();
             foreach (Achievement achievement in achievementHandler.achievementsList.achievements)

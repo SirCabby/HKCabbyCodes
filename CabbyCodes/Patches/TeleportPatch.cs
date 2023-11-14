@@ -131,11 +131,21 @@ namespace CabbyCodes.Patches
                 ConfigDefinition configDef = new(key, sceneName);
                 CustomTeleportLocation loc = new(configDef, CabbyCodesPlugin.configFile.Bind(configDef, teleportLocation.x + "," + teleportLocation.y));
                 teleportLocations.Add(loc);
-                AddTeleportPanel(loc);
+                AddCustomPanel(loc);
             }
         }
 
-        public static void AddTeleportPanel(TeleportLocation location)
+        public static void AddPanel()
+        {
+            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new DropdownPanel(new TeleportPatch(), 400, "Select Area to Teleport"));
+        }
+
+        public static void AddSavePanel()
+        {
+            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new ButtonPanel(SaveTeleportLocation, "Save", "Save a custom teleport at current position"));
+        }
+
+        public static void AddCustomPanel(TeleportLocation location)
         {
             ButtonPanel buttonPanel = new ButtonPanel(() => { DoTeleport(location); }, "Teleport", location.DisplayName).SetButtonSize(160);
             GameObject destroyButton = PanelAdder.AddDestroyPanelButton(buttonPanel, buttonPanel.cheatPanel.transform.childCount, () =>

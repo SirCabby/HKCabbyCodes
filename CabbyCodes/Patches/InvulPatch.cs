@@ -1,4 +1,6 @@
 ﻿using CabbyCodes.SyncedReferences;
+using CabbyCodes.UI.CheatPanels;
+using CabbyCodes.UI;
 using HarmonyLib;
 using System.Reflection;
 
@@ -28,6 +30,11 @@ namespace CabbyCodes.Patches
             {
                 harmony.UnpatchSelf();
             }
+        }
+
+        public static void AddPanel()
+        {
+            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new TogglePanel(new InvulPatch(), "Invulnerability"));
         }
     }
 }

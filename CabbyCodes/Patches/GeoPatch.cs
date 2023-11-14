@@ -1,4 +1,5 @@
 ﻿using CabbyCodes.SyncedReferences;
+using CabbyCodes.UI.CheatPanels;
 using HarmonyLib;
 using System.Reflection;
 
@@ -28,6 +29,11 @@ namespace CabbyCodes.Patches
             {
                 harmony.UnpatchSelf();
             }
+        }
+
+        public static void AddPanel()
+        {
+            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new TogglePanel(new GeoPatch(), "Infinite Geo"));
         }
     }
 }

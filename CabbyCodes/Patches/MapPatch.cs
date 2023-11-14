@@ -30,7 +30,7 @@ namespace CabbyCodes.Patches
             foreach (string name in Enum.GetNames(type))
             {
                 string fixedName = char.ToLower(name[0]).ToString() + name.Substring(1);
-                TogglePanel buttonPanel = new(new MapPatch(fixedName), fixedName);
+                TogglePanel buttonPanel = new(new MapPatch(fixedName), fixedName.Substring(3));
                 CabbyCodesPlugin.cabbyMenu.AddCheatPanel(buttonPanel);
             }
         }
