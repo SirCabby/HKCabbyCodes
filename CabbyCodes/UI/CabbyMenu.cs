@@ -1,11 +1,12 @@
-﻿using System.Timers;
-using UnityEngine.UI;
+﻿using UnityEngine.UI;
 using UnityEngine;
 using System.Collections.Generic;
 using CabbyCodes.UI.Factories;
 using CabbyCodes.UI.Modders;
 using CabbyCodes.UI.CheatPanels;
 using System;
+using CabbyCodes.Types;
+using System.Timers;
 
 namespace CabbyCodes.UI
 {
@@ -15,12 +16,17 @@ namespace CabbyCodes.UI
         private readonly string version;
         private readonly Dictionary<string, Action> registeredCategories = new();
 
-        private bool shouldUpdate = true;
-        private readonly Timer updateTimer;
+        // Manage InputFieldSync updates
+        private readonly List<InputFieldStatus> registeredInputs = new();
+        private InputFieldStatus lastSelected;
+        private float lastSelectedTime = 0;
+        private readonly Timer clickTimer;
 
+        // Root Button
         private GameObject rootGameObject;
         private GameObjectMod rootGoMod;
 
+        // Opened Menu
         private bool isMenuOpen = false;
         private GameObject menuPanel;
         private GameObjectMod menuPanelGoMod;
@@ -32,10 +38,9 @@ namespace CabbyCodes.UI
             this.name = name;
             this.version = version;
 
-            updateTimer = new Timer(100);
-            updateTimer.Elapsed += OnElapsedUpdateTimer;
-            updateTimer.AutoReset = true;
-            updateTimer.Enabled = true;
+            clickTimer = new Timer(100);
+            clickTimer.Elapsed += OnElapsedClickTimer;
+            clickTimer.AutoReset = false;
         }
 
         public CheatPanel AddCheatPanel(CheatPanel cheatPanel)
@@ -49,9 +54,43 @@ namespace CabbyCodes.UI
             registeredCategories.Add(categoryName, cheatContent);
         }
 
+        public void RegisterInputFieldSync(InputFieldStatus inputFieldStatus)
+        {
+            registeredInputs.Add(inputFieldStatus);
+        }
+
+        // A click action happened while menu was open, so manage selected states
+        private void OnElapsedClickTimer(object source, ElapsedEventArgs e)
+        {
+            lastSelected?.Submit();
+
+            // Determine last selected
+            bool updateSelected = false;
+            foreach (InputFieldStatus input in registeredInputs)
+            {
+                float thisSelectedTime = input.GetSelectedTime();
+
+                if (input.WasSelected() && (thisSelectedTime > lastSelectedTime))
+                {
+                    lastSelected = input;
+                    lastSelectedTime = thisSelectedTime;
+                    updateSelected = true;
+                }
+            }
+
+            foreach (InputFieldStatus input in registeredInputs)
+            {
+                if (input == lastSelected && !updateSelected)
+                {
+                    lastSelected = null;
+                }
+
+                input.OnSelected(input == lastSelected);
+            }
+        }
+
         public void Update()
         {
-            if (!shouldUpdate) return;
             //if (true)
             if (GameManager._instance != null && GameManager.instance.IsGamePaused())
             {
@@ -64,12 +103,45 @@ namespace CabbyCodes.UI
                 {
                     rootGoMod.SetActive(true);
                 }
+
+                if (Input.GetMouseButtonUp(0))
+                {
+                    clickTimer.Stop();
+                    clickTimer.Start();
+                }
+
+                // keyboard inputs...
+                if (Input.anyKeyDown && lastSelected != null)
+                {
+                    char? keyPressed = KeyCodeMap.GetChar(lastSelected.ValidChars);
+                    if (keyPressed.HasValue)
+                    {
+                        lastSelected.InputFieldGo.GetComponent<InputField>().text += keyPressed.Value;
+                    }
+
+                    if (Input.GetKeyDown(KeyCode.Backspace))
+                    {
+                        InputField inputField = lastSelected.InputFieldGo.GetComponent<InputField>();
+                        inputField.text = inputField.text.Substring(0, inputField.text.Length - 1);
+                    }
+
+                    if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
+                    {
+                        lastSelected.Submit();
+                    }
+
+                    if (Input.GetKeyDown(KeyCode.Escape))
+                    {
+                        lastSelected.Cancel();
+                    }
+                }
             }
             else if (rootGameObject != null && rootGoMod.IsActive())
             {
                 rootGoMod.SetActive(false);
                 categoryDropdown.value = 0;
                 OnCategorySelected(0);
+                lastSelected = null;
 
                 // Reset the menu on unpausing
                 if (isMenuOpen)
@@ -77,19 +149,11 @@ namespace CabbyCodes.UI
                     OnMenuButtonClicked();
                 }
             }
-
-            shouldUpdate = false;
-        }
-
-        private void OnElapsedUpdateTimer(object source, ElapsedEventArgs e)
-        {
-            shouldUpdate = true;
         }
 
         private void OnMenuButtonClicked()
         {
             isMenuOpen = !isMenuOpen;
-            shouldUpdate = true;
             menuPanelGoMod.SetActive(isMenuOpen);
         }
 
