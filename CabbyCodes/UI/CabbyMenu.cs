@@ -62,8 +62,6 @@ namespace CabbyCodes.UI
         // A click action happened while menu was open, so manage selected states
         private void OnElapsedClickTimer(object source, ElapsedEventArgs e)
         {
-            lastSelected?.Submit();
-
             // Determine last selected
             bool updateSelected = false;
             foreach (InputFieldStatus input in registeredInputs)
@@ -72,6 +70,8 @@ namespace CabbyCodes.UI
 
                 if (input.WasSelected() && (thisSelectedTime > lastSelectedTime))
                 {
+                    lastSelected?.Submit();
+
                     lastSelected = input;
                     lastSelectedTime = thisSelectedTime;
                     updateSelected = true;
@@ -82,6 +82,7 @@ namespace CabbyCodes.UI
             {
                 if (input == lastSelected && !updateSelected)
                 {
+                    lastSelected.Submit();
                     lastSelected = null;
                 }
 
@@ -117,22 +118,26 @@ namespace CabbyCodes.UI
                     if (keyPressed.HasValue)
                     {
                         lastSelected.InputFieldGo.GetComponent<InputField>().text += keyPressed.Value;
+                        lastSelectedTime = lastSelected.GetSelectedTime();
                     }
 
                     if (Input.GetKeyDown(KeyCode.Backspace))
                     {
                         InputField inputField = lastSelected.InputFieldGo.GetComponent<InputField>();
                         inputField.text = inputField.text.Substring(0, inputField.text.Length - 1);
+                        lastSelectedTime = lastSelected.GetSelectedTime();
                     }
 
                     if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
                     {
                         lastSelected.Submit();
+                        lastSelected = null;
                     }
 
                     if (Input.GetKeyDown(KeyCode.Escape))
                     {
                         lastSelected.Cancel();
+                        lastSelected = null;
                     }
                 }
             }

@@ -59,6 +59,7 @@ namespace CabbyCodes.UI.ReferenceControls
         public void Cancel()
         {
             inputField.text = InputValue.Get().ToString();
+            SetSelected(false);
         }
 
         public void SetSelected(bool isSelected)

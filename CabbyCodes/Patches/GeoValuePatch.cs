@@ -1,6 +1,5 @@
 ﻿using CabbyCodes.SyncedReferences;
 using CabbyCodes.UI.CheatPanels;
-using CabbyCodes.UI;
 using System;
 
 namespace CabbyCodes.Patches
@@ -21,7 +20,7 @@ namespace CabbyCodes.Patches
 
         public static void AddPanel()
         {
-            InputFieldPanel<int> panel = new(new GeoValuePatch(), KeyCodeMap.ValidChars.Numeric, 9, 200, "Edit Current Geo (0-9999999)");
+            InputFieldPanel<int> panel = new(new GeoValuePatch(), KeyCodeMap.ValidChars.Numeric, 7, 180, "Edit Current Geo (0-9999999)");
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(panel);
         }
     }
