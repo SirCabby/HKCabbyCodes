@@ -35,6 +35,9 @@
     <Reference Include="Assembly-CSharp">
       <HintPath>lib\Assembly-CSharp.dll</HintPath>
     </Reference>
+    <Reference Include="PlayMaker">
+      <HintPath>lib\PlayMaker.dll</HintPath>
+    </Reference>
     <Reference Include="UnityExplorer.Standalone.Mono">
       <HintPath>lib\UnityExplorer.STANDALONE.Mono.dll</HintPath>
     </Reference>
