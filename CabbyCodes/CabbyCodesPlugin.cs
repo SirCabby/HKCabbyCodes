@@ -52,7 +52,9 @@ namespace CabbyCodes
         {
             cabbyMenu.AddCheatPanel(new InfoPanel("Maps: Enable to have map for area").SetColor(CheatPanel.headerColor));
             cabbyMenu.AddCheatPanel(new InfoPanel("Warning: Still requires Quill item to fill maps out").SetColor(CheatPanel.warningColor));
-            MapPatch.BuildMapPanels();
+            MapPatch.AddPanels();
+            cabbyMenu.AddCheatPanel(new InfoPanel("Rooms: Enable to have room mapped out").SetColor(CheatPanel.headerColor));
+            MapRoomPatch.AddPanels();
         }
 
         private void BuildAchievementCheats()

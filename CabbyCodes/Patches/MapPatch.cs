@@ -24,7 +24,7 @@ namespace CabbyCodes.Patches
             typeof(PlayerData).GetField(mapName, BindingFlags.Public | BindingFlags.Instance).SetValue(PlayerData.instance, value);
         }
 
-        public static void BuildMapPanels()
+        public static void AddPanels()
         {
             Type type = typeof(PlayerData).Assembly.GetType("PlayerData+MapBools");
             foreach (string name in Enum.GetNames(type))
