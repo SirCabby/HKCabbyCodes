@@ -27,6 +27,7 @@ namespace CabbyCodes
             cabbyMenu.AddCheatPanel(new InfoPanel("Player Codes").SetColor(CheatPanel.headerColor));
             InvulPatch.AddPanel();
             DamagePatch.AddPanel();
+            JumpPatch.AddPanel();
             SoulPatch.AddPanel();
             PermadeathPatch.AddPanel();
             GeoPatch.AddPanel();
