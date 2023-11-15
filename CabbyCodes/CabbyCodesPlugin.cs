@@ -32,6 +32,7 @@ namespace CabbyCodes
             PermadeathPatch.AddPanel();
             GeoPatch.AddPanel();
             GeoValuePatch.AddPanel();
+            PlayTimePatch.AddPanel();
         }
 
         private void BuildTeleportCheats()
