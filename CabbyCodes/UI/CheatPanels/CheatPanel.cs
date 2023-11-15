@@ -12,6 +12,7 @@ namespace CabbyCodes.UI.CheatPanels
         protected static Color color2 = new(0.6f, 0.6f, 0.6f);
         public static readonly Color warningColor = new(1, 0.5f, 0);
         public static readonly Color headerColor = new(0.2f, 0.8f, 0.2f);
+        public static readonly Color subHeaderColor = new(0.5f, 0.5f, 0.8f);
 
         public readonly GameObject cheatPanel;
         protected readonly GameObject cheatTextObj;
