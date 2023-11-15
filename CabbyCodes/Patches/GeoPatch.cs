@@ -7,7 +7,7 @@ namespace CabbyCodes.Patches
 {
     public class GeoPatch : ISyncedReference<bool>
     {
-        public const string key = "Soul_Patch";
+        public const string key = "Geo_Patch";
         private static readonly BoxedReference value = CodeState.Get(key, false);
         private static readonly Harmony harmony = new(key);
         private static readonly MethodInfo mOriginal = AccessTools.Method(typeof(PlayerData), nameof(PlayerData.TakeGeo));

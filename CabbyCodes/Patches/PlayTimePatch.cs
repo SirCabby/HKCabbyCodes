@@ -5,8 +5,6 @@ namespace CabbyCodes.Patches
 {
     public class PlayTimePatch : ISyncedReference<float>
     {
-        public const string key = "PlayTime_Patch";
-
         public float Get()
         {
             return PlayerData.instance.playTime;

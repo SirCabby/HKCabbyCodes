@@ -5,8 +5,6 @@ namespace CabbyCodes.Patches
 {
     public class JumpPatch : ISyncedReference<bool>
     {
-        public const string key = "Soul_Patch";
-
         public bool Get()
         {
             return PlayerData.instance.infiniteAirJump;
