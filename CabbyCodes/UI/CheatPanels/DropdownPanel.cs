@@ -9,6 +9,8 @@ namespace CabbyCodes.UI.CheatPanels
 {
     public class DropdownPanel : CheatPanel
     {
+        private static readonly Vector2 middle = new(0.5f, 0.5f);
+
         private readonly DropDownSync dropdown;
 
         public DropdownPanel(ISyncedValueList<int, List<string>> syncedValueReference, int width, string description) : base(description)
@@ -25,7 +27,7 @@ namespace CabbyCodes.UI.CheatPanels
 
             dropdown = new(syncedValueReference);
             new DropdownMod(dropdown.GetGameObject()).SetOptions(syncedValueReference.GetValueList()).SetSize(new Vector2(width, 60), 10).SetFontSize(36);
-            new Fitter(dropdown.GetGameObject()).Attach(dropdownPanel).Anchor(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f));
+            new Fitter(dropdown.GetGameObject()).Attach(dropdownPanel).Anchor(middle, middle);
         }
     }
 }

@@ -12,6 +12,8 @@ namespace CabbyCodes.UI
 {
     public class CabbyMenu
     {
+        private static readonly Vector2 cheatPanelSize = new (0, 50);
+
         private readonly string name;
         private readonly string version;
         private readonly Dictionary<string, Action> registeredCategories = new();
@@ -46,7 +48,7 @@ namespace CabbyCodes.UI
 
         public CheatPanel AddCheatPanel(CheatPanel cheatPanel)
         {
-            new Fitter(cheatPanel.GetGameObject()).Attach(cheatContent).Size(new Vector2(0, 50));
+            new Fitter(cheatPanel.GetGameObject()).Attach(cheatContent).Size(cheatPanelSize);
             contentCheatPanels.Add(cheatPanel);
             return cheatPanel;
         }

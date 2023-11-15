@@ -9,6 +9,8 @@ namespace CabbyCodes.UI.CheatPanels
 {
     public class PanelAdder
     {
+        private static readonly Vector2 middle = new(0.5f, 0.5f);
+
         public static GameObject AddButton(CheatPanel panel, int siblingIndex, UnityAction action, string buttonText, Vector2 size)
         {
             GameObject buttonPanel = DefaultControls.CreatePanel(new DefaultControls.Resources());
@@ -23,7 +25,7 @@ namespace CabbyCodes.UI.CheatPanels
 
             (GameObject button, _, _) = ButtonFactory.Build(buttonText);
             button.GetComponent<Button>().onClick.AddListener(action);
-            new Fitter(button).Attach(buttonPanel).Anchor(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f)).Size(size);
+            new Fitter(button).Attach(buttonPanel).Anchor(middle, middle).Size(size);
 
             return buttonPanel;
         }

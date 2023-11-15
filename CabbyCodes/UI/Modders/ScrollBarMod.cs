@@ -5,6 +5,9 @@ namespace CabbyCodes.UI.Modders
 {
     public class ScrollBarMod
     {
+        private static readonly Color normalColor = new(0.3f, 0.3f, 1, 1);
+        private static readonly Color highlightColor = new(0, 0, 1, 1);
+
         private readonly Scrollbar scrollbar;
 
         public ScrollBarMod(Scrollbar scrollbar)
@@ -20,8 +23,8 @@ namespace CabbyCodes.UI.Modders
         public ScrollBarMod SetDefaults()
         {
             ColorBlock scrollBarColors = scrollbar.colors;
-            scrollBarColors.normalColor = new Color(0.3f, 0.3f, 1, 1);
-            scrollBarColors.highlightedColor = new Color(0, 0, 1, 1);
+            scrollBarColors.normalColor = normalColor;
+            scrollBarColors.highlightedColor = highlightColor;
             scrollbar.colors = scrollBarColors;
 
             return this;

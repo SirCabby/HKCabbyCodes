@@ -102,7 +102,7 @@ namespace CabbyCodes
         {
             Logger.LogInfo("Plugin cabby.cabbycodes is loaded!");
             BLogger = Logger;
-            Logger.LogInfo("config location: " + Config.ConfigFilePath);
+            Logger.LogInfo("Config location: " + Config.ConfigFilePath);
             configFile = Config;
         }
 

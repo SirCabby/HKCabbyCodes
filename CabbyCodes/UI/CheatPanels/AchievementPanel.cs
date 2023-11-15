@@ -7,13 +7,15 @@ namespace CabbyCodes.UI.CheatPanels
 {
     public class AchievementPanel : TogglePanel
     {
+        private static readonly int defaultWidth = 60;
+        private static readonly Vector2 middle = new(0.5f, 0.5f);
+        private static readonly Color unearnedColor = new(0.57f, 0.57f, 0.57f, 0.57f);
+
         private readonly ImageMod iconImageMod;
 
         public AchievementPanel(Achievement achievement)
             : base(null, Language.Language.Get(achievement.localizedTitle, "Achievements") + ": " + Language.Language.Get(achievement.localizedText, "Achievements"))
         {
-            int width = 60;
-
             GameObject imagePanel = DefaultControls.CreatePanel(new DefaultControls.Resources());
             imagePanel.name = "Achievement Icon Panel";
             new ImageMod(imagePanel.GetComponent<Image>()).SetColor(Color.clear);
@@ -22,16 +24,16 @@ namespace CabbyCodes.UI.CheatPanels
 
             LayoutElement imagePanelLayout = imagePanel.AddComponent<LayoutElement>();
             imagePanelLayout.flexibleHeight = 1;
-            imagePanelLayout.minWidth = width;
+            imagePanelLayout.minWidth = defaultWidth;
 
             GameObject achievementIcon = DefaultControls.CreateImage(new DefaultControls.Resources());
             Color achievementColor = Color.white;
             if (!GameManager.instance.IsAchievementAwarded(achievement.key))
             {
-                achievementColor = new Color(0.57f, 0.57f, 0.57f, 0.57f);
+                achievementColor = unearnedColor;
             }
             iconImageMod = new ImageMod(achievementIcon.GetComponent<Image>()).SetSprite(achievement.earnedIcon).SetColor(achievementColor);
-            new Fitter(achievementIcon).Attach(imagePanel).Anchor(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f)).Size(new Vector2(width, width));
+            new Fitter(achievementIcon).Attach(imagePanel).Anchor(middle, middle).Size(new Vector2(defaultWidth, defaultWidth));
 
             GetToggleButton().SetIsOn(new AchievementPatch(achievement, this));
         }
