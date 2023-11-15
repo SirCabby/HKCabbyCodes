@@ -9,7 +9,9 @@ namespace CabbyCodes.UI.CheatPanels
 {
     public class PanelAdder
     {
+        private static readonly Vector2 defaultIconSize = new(60, 60);
         private static readonly Vector2 middle = new(0.5f, 0.5f);
+        private static readonly Color unearnedColor = new(0.57f, 0.57f, 0.57f, 0.57f);
 
         public static GameObject AddButton(CheatPanel panel, int siblingIndex, UnityAction action, string buttonText, Vector2 size)
         {
@@ -28,6 +30,42 @@ namespace CabbyCodes.UI.CheatPanels
             new Fitter(button).Attach(buttonPanel).Anchor(middle, middle).Size(size);
 
             return buttonPanel;
+        }
+
+        public static GameObject AddSprite(CheatPanel panel, Sprite sprite, Func<bool> isEarned, int siblingIndex)
+        {
+            GameObject imagePanel = DefaultControls.CreatePanel(new DefaultControls.Resources());
+            imagePanel.name = "Sprite panel";
+            new ImageMod(imagePanel.GetComponent<Image>()).SetColor(Color.clear);
+            new Fitter(imagePanel).Attach(panel.cheatPanel);
+            imagePanel.transform.SetSiblingIndex(siblingIndex);
+
+            LayoutElement imagePanelLayout = imagePanel.AddComponent<LayoutElement>();
+            imagePanelLayout.flexibleHeight = 1;
+            imagePanelLayout.minWidth = defaultIconSize.x;
+
+            GameObject icon = DefaultControls.CreateImage(new DefaultControls.Resources());
+            Color iconColor = Color.white;
+            if (!isEarned())
+            {
+                iconColor = unearnedColor;
+            }
+            new ImageMod(icon.GetComponent<Image>()).SetSprite(sprite).SetColor(iconColor);
+            new Fitter(icon).Attach(imagePanel).Anchor(middle, middle).Size(defaultIconSize);
+
+            panel.updateActions.Add(() =>
+            {
+                if (isEarned())
+                {
+                    iconColor = Color.white;
+                }
+                else
+                {
+                    iconColor = unearnedColor;
+                }
+            });
+
+            return imagePanel;
         }
 
         public static GameObject AddDestroyPanelButton(CheatPanel panel, int siblingIndex, Action additionalAction, string buttonText, Vector2 size)

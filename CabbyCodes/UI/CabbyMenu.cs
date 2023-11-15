@@ -187,12 +187,13 @@ namespace CabbyCodes.UI
                 UnityEngine.Object.Destroy(child.gameObject);
             }
 
+            ClearInputFields();
+            contentCheatPanels.Clear();
+            CheatPanel.ResetPattern();
+
             // Build selected cheat panels
             if (arg0 < categoryDropdown.options.Count)
             {
-                CheatPanel.ResetPattern();
-                ClearInputFields();
-                contentCheatPanels.Clear();
                 registeredCategories[categoryDropdown.options[arg0].text]();
             }
 

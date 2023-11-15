@@ -9,7 +9,6 @@ namespace CabbyCodes.UI.CheatPanels
 {
     public class CheatPanel
     {
-        protected static readonly List<Action> updateActions = new();
         protected static bool isOdd = true;
         protected static Color color1 = new(0.8f, 0.8f, 0.8f);
         protected static Color color2 = new(0.6f, 0.6f, 0.6f);
@@ -19,6 +18,7 @@ namespace CabbyCodes.UI.CheatPanels
 
         public readonly GameObject cheatPanel;
         protected readonly GameObject cheatTextObj;
+        public readonly List<Action> updateActions = new();
 
         public CheatPanel(string description)
         {
@@ -81,6 +81,8 @@ namespace CabbyCodes.UI.CheatPanels
             {
                 action();
             }
+
+            LayoutRebuilder.ForceRebuildLayoutImmediate(cheatPanel.GetComponent<RectTransform>());
         }
     }
 }

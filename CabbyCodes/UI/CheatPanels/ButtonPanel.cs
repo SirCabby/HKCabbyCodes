@@ -8,14 +8,14 @@ namespace CabbyCodes.UI.CheatPanels
 {
     public class ButtonPanel : CheatPanel
     {
-        private static readonly Vector2 defaultSize = new(120, 60);
         private static readonly Vector2 middle = new(0.5f, 0.5f);
+        private static readonly int height = 60;
 
         private readonly GameObject button;
         private readonly LayoutElement buttonPanelLayout;
         private readonly Action action;
 
-        public ButtonPanel(Action action, string buttonText, string description) : base(description)
+        public ButtonPanel(Action action, string buttonText, string description, int width = 120) : base(description)
         {
             this.action = action;
 
@@ -27,18 +27,18 @@ namespace CabbyCodes.UI.CheatPanels
 
             buttonPanelLayout = buttonPanel.AddComponent<LayoutElement>();
             buttonPanelLayout.flexibleHeight = 1;
-            buttonPanelLayout.minWidth = defaultSize.x;
+            buttonPanelLayout.minWidth = width;
 
             (button, _, _) = ButtonFactory.Build(buttonText);
             button.GetComponent<Button>().onClick.AddListener(DoAction);
-            new Fitter(button).Attach(buttonPanel).Anchor(middle, middle).Size(defaultSize);
+            new Fitter(button).Attach(buttonPanel).Anchor(middle, middle).Size(new Vector2(width, height));
         }
 
         public ButtonPanel SetButtonSize(int width)
         {
             buttonPanelLayout.minWidth = width;
-            new Fitter(button).Size(defaultSize);
-            LayoutRebuilder.ForceRebuildLayoutImmediate(cheatPanel.GetComponent<RectTransform>());
+            new Fitter(button).Size(new Vector2(width, height));
+            Update();
             return this;
         }
 

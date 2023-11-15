@@ -147,7 +147,8 @@ namespace CabbyCodes.Patches
 
         public static void AddCustomPanel(TeleportLocation location)
         {
-            ButtonPanel buttonPanel = new ButtonPanel(() => { DoTeleport(location); }, "Teleport", location.DisplayName).SetButtonSize(160);
+            ButtonPanel buttonPanel = new ButtonPanel(() => { DoTeleport(location); }, "Teleport", location.DisplayName, 160);
+
             GameObject destroyButton = PanelAdder.AddDestroyPanelButton(buttonPanel, buttonPanel.cheatPanel.transform.childCount, () =>
             {
                 savedTeleports.Remove(location);
@@ -158,6 +159,7 @@ namespace CabbyCodes.Patches
                 }
             }, "X", new Vector2(60, 60));
             destroyButton.transform.Find("Button").gameObject.GetComponent<Image>().color = new Color(1, 0.5f, 0.5f);
+
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(buttonPanel);
         }
     }

@@ -48,6 +48,12 @@ namespace CabbyCodes
             }
         }
 
+        private void BuildCharmCheats()
+        {
+            cabbyMenu.AddCheatPanel(new InfoPanel("Charms:").SetColor(CheatPanel.headerColor));
+            CharmPatch.AddPanels();
+        }
+
         private void BuildMapCheats()
         {
             cabbyMenu.AddCheatPanel(new InfoPanel("Maps: Enable to have map for area").SetColor(CheatPanel.headerColor));
@@ -113,6 +119,7 @@ namespace CabbyCodes
             cabbyMenu = new CabbyMenu(NAME, VERSION);
             cabbyMenu.RegisterCategory("Player", BuildPlayerCheats);
             cabbyMenu.RegisterCategory("Teleport", BuildTeleportCheats);
+            cabbyMenu.RegisterCategory("Charms", BuildCharmCheats);
             cabbyMenu.RegisterCategory("Maps", BuildMapCheats);
             cabbyMenu.RegisterCategory("Achievements", BuildAchievementCheats);
             cabbyMenu.RegisterCategory("Debug", BuildDebugCheats);
