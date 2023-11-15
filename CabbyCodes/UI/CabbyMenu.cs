@@ -15,6 +15,7 @@ namespace CabbyCodes.UI
         private readonly string name;
         private readonly string version;
         private readonly Dictionary<string, Action> registeredCategories = new();
+        private readonly List<CheatPanel> contentCheatPanels = new();
 
         // Manage InputFieldSync updates
         private readonly List<InputFieldStatus> registeredInputs = new();
@@ -46,6 +47,7 @@ namespace CabbyCodes.UI
         public CheatPanel AddCheatPanel(CheatPanel cheatPanel)
         {
             new Fitter(cheatPanel.GetGameObject()).Attach(cheatContent).Size(new Vector2(0, 50));
+            contentCheatPanels.Add(cheatPanel);
             return cheatPanel;
         }
 
@@ -92,6 +94,14 @@ namespace CabbyCodes.UI
                 }
 
                 input.OnSelected(input == lastSelected);
+            }
+        }
+
+        public void UpdateCheatPanels()
+        {
+            foreach (CheatPanel panel in contentCheatPanels)
+            {
+                panel.Update();
             }
         }
 
@@ -180,6 +190,7 @@ namespace CabbyCodes.UI
             {
                 CheatPanel.ResetPattern();
                 ClearInputFields();
+                contentCheatPanels.Clear();
                 registeredCategories[categoryDropdown.options[arg0].text]();
             }
 

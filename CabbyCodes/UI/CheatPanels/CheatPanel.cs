@@ -2,11 +2,14 @@
 using UnityEngine;
 using CabbyCodes.UI.Factories;
 using CabbyCodes.UI.Modders;
+using System.Collections.Generic;
+using System;
 
 namespace CabbyCodes.UI.CheatPanels
 {
     public class CheatPanel
     {
+        protected static readonly List<Action> updateActions = new();
         protected static bool isOdd = true;
         protected static Color color1 = new(0.8f, 0.8f, 0.8f);
         protected static Color color2 = new(0.6f, 0.6f, 0.6f);
@@ -70,6 +73,14 @@ namespace CabbyCodes.UI.CheatPanels
         public GameObject GetGameObject()
         {
             return cheatPanel;
+        }
+
+        public void Update()
+        {
+            foreach (Action action in updateActions)
+            {
+                action();
+            }
         }
     }
 }

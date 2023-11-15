@@ -26,16 +26,12 @@ namespace CabbyCodes.UI.CheatPanels
 
             toggleButton = new(syncedReference);
             new Fitter(toggleButton.GetGameObject()).Attach(buttonPanel).Anchor(new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f)).Size(new Vector2(width, 60));
+            updateActions.Add(toggleButton.Update);
         }
 
         public ToggleButton GetToggleButton()
         {
             return toggleButton;
-        }
-
-        public void Update()
-        {
-            toggleButton.Update();
         }
     }
 }

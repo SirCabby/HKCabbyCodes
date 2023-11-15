@@ -1,12 +1,14 @@
 ﻿using CabbyCodes.SyncedReferences;
 using CabbyCodes.UI.CheatPanels;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace CabbyCodes.Patches
 {
     public class MapRoomPatch : ISyncedReference<bool>
     {
         public static readonly Dictionary<string, List<string>> roomsInMaps = BuildMapRoomDict();
+        private static readonly Vector2 buttonSize = new(120, 60);
 
         private readonly string roomName;
 
@@ -32,15 +34,36 @@ namespace CabbyCodes.Patches
             }
         }
 
+        private static void ToggleAllRooms(string mapName, bool setToOn)
+        {
+            List<string> scenesMapped = PlayerData.instance.scenesMapped;
+
+            foreach (string roomName in roomsInMaps[mapName])
+            {
+                if (setToOn && !scenesMapped.Contains(roomName))
+                {
+                    scenesMapped.Add(roomName);
+                }
+                else if (!setToOn && scenesMapped.Contains(roomName))
+                {
+                    scenesMapped.Remove(roomName);
+                }
+            }
+
+            CabbyCodesPlugin.cabbyMenu.UpdateCheatPanels();
+        }
+
         public static void AddPanels()
         {
             foreach (KeyValuePair<string, List<string>> kvp in roomsInMaps)
             {
                 CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Area: " + kvp.Key).SetColor(CheatPanel.subHeaderColor));
+                ButtonPanel toggleAllPanel = new(() => ToggleAllRooms(kvp.Key, true), "ON", "Toggle All Rooms");
+                PanelAdder.AddButton(toggleAllPanel, 1, () => ToggleAllRooms(kvp.Key, false), "OFF", buttonSize);
+                CabbyCodesPlugin.cabbyMenu.AddCheatPanel(toggleAllPanel);
 
                 foreach (string roomName in kvp.Value)
                 {
-                    // TODO: Add buttons to PanelAdder to create a cheat panel with 2 buttons for <Map all rooms> and <Unmap all rooms>
                     CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new TogglePanel(new MapRoomPatch(roomName), roomName));
                 }
             }
