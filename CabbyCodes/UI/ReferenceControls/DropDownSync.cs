@@ -18,7 +18,10 @@ namespace CabbyCodes.UI.ReferenceControls
 
             (dropdownGo, GameObjectMod dropdownGoMod, DropdownMod dropdownMod) = DropdownFactory.Build();
             dropdownGoMod.SetName("DropDownSync");
-            dropdownGo.GetComponent<Dropdown>().onValueChanged.AddListener(DropdownSelect);
+
+            Dropdown dropdown = dropdownGo.GetComponent<Dropdown>();
+            
+            dropdown.onValueChanged.AddListener(DropdownSelect);
         }
 
         public GameObject GetGameObject()
@@ -29,6 +32,11 @@ namespace CabbyCodes.UI.ReferenceControls
         public void DropdownSelect(int value)
         {
             SelectedValue.Set(value);
+        }
+
+        public void Update()
+        {
+            dropdownGo.GetComponent<Dropdown>().value = SelectedValue.Get();
         }
     }
 }

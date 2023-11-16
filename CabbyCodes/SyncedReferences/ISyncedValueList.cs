@@ -1,7 +1,9 @@
-﻿namespace CabbyCodes.SyncedReferences
+﻿using System.Collections.Generic;
+
+namespace CabbyCodes.SyncedReferences
 {
-    public interface ISyncedValueList<T, T2> : ISyncedReference<T>
+    public interface ISyncedValueList<T> : ISyncedReference<T>
     {
-        public T2 GetValueList();
+        public List<string> GetValueList();
     }
 }

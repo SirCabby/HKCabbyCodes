@@ -3,7 +3,6 @@ using CabbyCodes.UI.Modders;
 using UnityEngine.UI;
 using UnityEngine;
 using CabbyCodes.UI.ReferenceControls;
-using System.Collections.Generic;
 
 namespace CabbyCodes.UI.CheatPanels
 {
@@ -13,7 +12,7 @@ namespace CabbyCodes.UI.CheatPanels
 
         private readonly DropDownSync dropdown;
 
-        public DropdownPanel(ISyncedValueList<int, List<string>> syncedValueReference, int width, string description) : base(description)
+        public DropdownPanel(ISyncedValueList<int> syncedValueReference, int width, string description) : base(description)
         {
             GameObject dropdownPanel = DefaultControls.CreatePanel(new DefaultControls.Resources());
             dropdownPanel.name = "Dropdown Panel";
@@ -28,6 +27,7 @@ namespace CabbyCodes.UI.CheatPanels
             dropdown = new(syncedValueReference);
             new DropdownMod(dropdown.GetGameObject()).SetOptions(syncedValueReference.GetValueList()).SetSize(new Vector2(width, 60), 10).SetFontSize(36);
             new Fitter(dropdown.GetGameObject()).Attach(dropdownPanel).Anchor(middle, middle);
+            dropdown.Update();
         }
     }
 }
