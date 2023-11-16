@@ -50,18 +50,18 @@ namespace CabbyCodes.UI.CheatPanels
             {
                 iconColor = unearnedColor;
             }
-            new ImageMod(icon.GetComponent<Image>()).SetSprite(sprite).SetColor(iconColor);
+            ImageMod imageMod = new ImageMod(icon.GetComponent<Image>()).SetSprite(sprite).SetColor(iconColor);
             new Fitter(icon).Attach(imagePanel).Anchor(middle, middle).Size(defaultIconSize);
 
             panel.updateActions.Add(() =>
             {
                 if (isEarned())
                 {
-                    iconColor = Color.white;
+                    imageMod.SetColor(Color.white);
                 }
                 else
                 {
-                    iconColor = unearnedColor;
+                    imageMod.SetColor(unearnedColor);
                 }
             });
 

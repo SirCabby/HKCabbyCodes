@@ -1,4 +1,5 @@
 ﻿using CabbyCodes.SyncedReferences;
+using CabbyCodes.Types;
 using CabbyCodes.UI.CheatPanels;
 using System.Collections.Generic;
 
@@ -7,16 +8,10 @@ namespace CabbyCodes.Patches
     public class CharmPatch : ISyncedReference<bool>
     {
         private static readonly string gotCharmName = "gotCharm_";
-        private static readonly Dictionary<int, string> charmDict = BuildCharmDict();
-        private static readonly List<int> charmOrder = new()
-        {
-            2, 1, 4, 20, 19, 21, 31, 37, 3, 35,
-            23, 24, 25, 33, 14, 15, 32, 18, 13, 6,
-            12, 5, 11, 10, 22, 7, 34, 8, 9, 27,
-            29, 17, 16, 28, 26, 39, 30, 38, 40, 36
-        };
-
+        public static readonly List<Charm> charms = BuildCharmList();
+        
         private readonly int charmIndex;
+        private TogglePanel parent;
 
         public CharmPatch(int charmIndex)
         {
@@ -31,63 +26,77 @@ namespace CabbyCodes.Patches
         public void Set(bool value)
         {
             PlayerData.instance.SetBool(gotCharmName + charmIndex, value);
+            parent?.Update();
+        }
+
+        public void SetCheatPanel(TogglePanel parent)
+        {
+            this.parent = parent;
         }
 
         public static void AddPanels()
         {
-            for (int i = 0; i < charmOrder.Count;)
+            for (int i = 0; i < charms.Count; i++)
             {
-                int charmIndex = charmOrder[i];
-                TogglePanel togglePanel = new(new CharmPatch(charmIndex), ++i + ": " + charmDict[charmIndex]);
-                PanelAdder.AddSprite(togglePanel, CharmIconList.Instance.GetSprite(charmIndex), () => { return PlayerData.instance.GetBool(gotCharmName + charmIndex); }, 1);
+                Charm charm = charms[i];
+                CharmPatch patch = new(charm.id);
+
+                int index = i + 1;
+                TogglePanel togglePanel = new(patch, index + ": " + charm.name);
+                PanelAdder.AddSprite(togglePanel, CharmIconList.Instance.GetSprite(charm.id), () => { return PlayerData.instance.GetBool(gotCharmName + charm.id); }, 1);
+                patch.SetCheatPanel(togglePanel);
+                
                 CabbyCodesPlugin.cabbyMenu.AddCheatPanel(togglePanel);
             }
         }
 
-        private static Dictionary<int, string> BuildCharmDict()
+        private static List<Charm> BuildCharmList()
         {
-            Dictionary<int, string> result = new()
+            List<Charm> result = new()
             {
-                { 1, "Gathering Swarm" },
-                { 2, "Wayward Compass" },
-                { 3, "Grubsong" },
-                { 4, "Stalward Shell" },
-                { 5, "Baldur Shell" },
-                { 6, "Fury of the Fallen" },
-                { 7, "Quick Focus" },
-                { 8, "Lifeblood Heart" },
-                { 9, "Lifeblood Core" },
-                { 10, "Defender's Crest" },
-                { 11, "Flukenest" },
-                { 12, "Thorns of Agony" },
-                { 13, "Mark of Pride" },
-                { 14, "Steady Body" },
-                { 15, "Heavy Blow" },
-                { 16, "Sharp Shadow" },
-                { 17, "Spore Shroom" },
-                { 18, "Longnail" },
-                { 19, "Shaman Stone" },
-                { 20, "Soul Catcher" },
-                { 21, "Soul Eater" },
-                { 22, "Glowing Womb" },
-                { 23, "Fragile Heart" },
-                { 24, "Fragile Greed" },
-                { 25, "Fragile Strength" },
-                { 26, "Nailmaster's Glory" },
-                { 27, "Joni's Blessing" },
-                { 28, "Shape of Unn" },
-                { 29, "Hiveblood" },
-                { 30, "Dream Wielder" },
-                { 31, "Dashmaster" },
-                { 32, "Quickslash" },
-                { 33, "Spell Twister" },
-                { 34, "Deep Focus" },
-                { 35, "Grubberfly's Elegy" },
-                { 36, "<Unknown>" },
-                { 37, "Sprintmaster" },
-                { 38, "Dreamshield" },
-                { 39, "Weaversong" },
-                { 40, "Grimmchild" }
+                new( 2, "Wayward Compass"),
+                new( 1, "Gathering Swarm"),
+                new( 4, "Stalward Shell"),
+                new(20, "Soul Catcher"),
+                new(19, "Shaman Stone"),
+                new(21, "Soul Eater"),
+                new(31, "Dashmaster"),
+                new(37, "Sprintmaster"),
+                new( 3, "Grubsong"),
+                new(35, "Grubberfly's Elegy"),
+
+                new(23, "Fragile Heart"),
+                new(24, "Fragile Greed"),
+                new(25, "Fragile Strength"),
+                new(33, "Spell Twister"),
+                new(14, "Steady Body"),
+                new(15, "Heavy Blow"),
+                new(32, "Quickslash"),
+                new(18, "Longnail"),
+                new(13, "Mark of Pride"),
+                new( 6, "Fury of the Fallen"),
+
+                new(12, "Thorns of Agony"),
+                new( 5, "Baldur Shell"),
+                new(11, "Flukenest"),
+                new(10, "Defender's Crest"),
+                new(22, "Glowing Womb"),
+                new( 7, "Quick Focus"),
+                new(34, "Deep Focus"),
+                new( 8, "Lifeblood Heart"),
+                new( 9, "Lifeblood Core"),
+                new(27, "Joni's Blessing"),
+
+                new(29, "Hiveblood"),
+                new(17, "Spore Shroom"),
+                new(16, "Sharp Shadow"),
+                new(28, "Shape of Unn"),
+                new(26, "Nailmaster's Glory"),
+                new(39, "Weaversong"),
+                new(30, "Dream Wielder"),
+                new(38, "Dreamshield"),
+                new(40, "Grimmchild"),
+                new(36, "<Unknown>")
             };
 
             return result;
