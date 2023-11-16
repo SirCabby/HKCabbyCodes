@@ -171,7 +171,7 @@ namespace CabbyCodes.Patches
                 new(30, "Dream Wielder"),
                 new(38, "Dreamshield"),
                 new(40, "Grimmchild")
-                //new(36, "<Unknown>") Kingsoul / Void Heart
+                //new(36, "Kingsoul / Void Heart")
             };
 
             return result;

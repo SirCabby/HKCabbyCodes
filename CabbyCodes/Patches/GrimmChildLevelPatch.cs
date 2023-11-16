@@ -1,5 +1,7 @@
 ﻿using CabbyCodes.SyncedReferences;
+using CabbyCodes.Types;
 using CabbyCodes.UI.CheatPanels;
+using CabbyCodes.UI.Modders;
 using System.Collections.Generic;
 
 namespace CabbyCodes.Patches
@@ -23,13 +25,25 @@ namespace CabbyCodes.Patches
         {
             return new()
             {
-                "1", "2", "3", "4", "5"
+                "1", "2", "3", "4", "CM"
             };
         }
 
         public static void AddPanel()
         {
-            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new DropdownPanel(new GrimmChildLevelPatch(), 100, "Grimm Child Level (1-5)"));
+            int charmId = 40;
+            GrimmChildLevelPatch patch = new();
+            DropdownPanel dropdownPanel = new(patch, 120, "39: Grimm Child Level (1-4) or Carefree Melody");
+
+            (_, ImageMod spriteImageMod) = PanelAdder.AddSprite(dropdownPanel, CharmIconList.Instance.GetSprite(charmId), 1);
+
+            dropdownPanel.updateActions.Add(() =>
+            {
+                spriteImageMod.SetSprite(CharmPatch.GetCharmIcon(charmId));
+            });
+            dropdownPanel.Update();
+
+            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(dropdownPanel);
         }
     }
 }
