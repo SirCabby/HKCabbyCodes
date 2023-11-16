@@ -65,19 +65,6 @@ namespace CabbyCodes
             MapRoomPatch.AddPanels();
         }
 
-        private void BuildAchievementCheats()
-        {
-            cabbyMenu.AddCheatPanel(new InfoPanel("Toggle Achievements <ON> to unlock in-game and in Online platform (Steam / GOG)").SetColor(CheatPanel.headerColor));
-            cabbyMenu.AddCheatPanel(new InfoPanel("Warning: Unable to toggle off achievements independently").SetColor(CheatPanel.warningColor));
-            ResetAchievementPatch.AddPanel();
-
-            AchievementHandler achievementHandler = FindObjectOfType<AchievementHandler>();
-            foreach (Achievement achievement in achievementHandler.achievementsList.achievements)
-            {
-                cabbyMenu.AddCheatPanel(new AchievementPanel(achievement));
-            }
-        }
-
         private void BuildDebugCheats()
         {
             cabbyMenu.AddCheatPanel(new InfoPanel("Debug Utilities: Prints information to BepInEx console").SetColor(CheatPanel.headerColor));
@@ -123,7 +110,7 @@ namespace CabbyCodes
             cabbyMenu.RegisterCategory("Teleport", BuildTeleportCheats);
             cabbyMenu.RegisterCategory("Charms", BuildCharmCheats);
             cabbyMenu.RegisterCategory("Maps", BuildMapCheats);
-            cabbyMenu.RegisterCategory("Achievements", BuildAchievementCheats);
+            cabbyMenu.RegisterCategory("Achievements", AchievementPatch.AddPanels);
             cabbyMenu.RegisterCategory("Debug", BuildDebugCheats);
         }
 
