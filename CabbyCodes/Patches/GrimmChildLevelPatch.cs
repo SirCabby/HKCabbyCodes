@@ -1,5 +1,4 @@
 ﻿using CabbyCodes.SyncedReferences;
-using CabbyCodes.Types;
 using CabbyCodes.UI.CheatPanels;
 using CabbyCodes.UI.Modders;
 using System.Collections.Generic;
