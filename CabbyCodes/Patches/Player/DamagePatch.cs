@@ -3,7 +3,7 @@ using CabbyCodes.UI.CheatPanels;
 using HarmonyLib;
 using System.Reflection;
 
-namespace CabbyCodes.Patches
+namespace CabbyCodes.Patches.Player
 {
     public class DamagePatch : ISyncedReference<bool>
     {

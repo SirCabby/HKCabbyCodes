@@ -1,4 +1,5 @@
-﻿using CabbyCodes.UI.CheatPanels;
+﻿using CabbyCodes.Patches.Player;
+using CabbyCodes.UI.CheatPanels;
 
 namespace CabbyCodes.Patches
 {

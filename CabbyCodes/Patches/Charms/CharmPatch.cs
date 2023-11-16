@@ -1,4 +1,5 @@
-﻿using CabbyCodes.SyncedReferences;
+﻿using CabbyCodes.Patches.Charms;
+using CabbyCodes.SyncedReferences;
 using CabbyCodes.Types;
 using CabbyCodes.UI.CheatPanels;
 using CabbyCodes.UI.Modders;

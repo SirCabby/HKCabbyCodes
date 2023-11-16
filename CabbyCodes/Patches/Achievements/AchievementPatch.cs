@@ -3,7 +3,7 @@ using CabbyCodes.UI.CheatPanels;
 using CabbyCodes.UI.Modders;
 using UnityEngine;
 
-namespace CabbyCodes.Patches
+namespace CabbyCodes.Patches.Achievements
 {
     public class AchievementPatch : ISyncedReference<bool>
     {

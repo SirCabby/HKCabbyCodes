@@ -4,7 +4,7 @@ using CabbyCodes.UI.CheatPanels;
 using CabbyCodes.UI.Modders;
 using System.Linq;
 
-namespace CabbyCodes.Patches
+namespace CabbyCodes.Patches.Charms
 {
     public class BrokenCharmPatch : ISyncedReference<bool>
     {
@@ -44,7 +44,7 @@ namespace CabbyCodes.Patches
                     spriteImageMod.SetSprite(CharmPatch.GetCharmIcon(charm.id));
                 });
                 togglePanel.Update();
-                
+
                 CabbyCodesPlugin.cabbyMenu.AddCheatPanel(togglePanel);
             }
         }

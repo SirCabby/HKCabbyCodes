@@ -3,7 +3,7 @@ using CabbyCodes.UI.CheatPanels;
 using System;
 using System.Reflection;
 
-namespace CabbyCodes.Patches
+namespace CabbyCodes.Patches.Maps
 {
     public class MapPatch : ISyncedReference<bool>
     {
