@@ -34,7 +34,7 @@ namespace CabbyCodes.Patches
             this.parent = parent;
         }
 
-        public static void AddPanels()
+        private static void AddCharmPanels()
         {
             for (int i = 0; i < charms.Count; i++)
             {
@@ -100,6 +100,14 @@ namespace CabbyCodes.Patches
             };
 
             return result;
+        }
+
+        public static void AddPanels()
+        {
+            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Charms:").SetColor(CheatPanel.headerColor));
+            CharmCostPatch.AddPanel();
+            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Toggle ON to Have Charm").SetColor(CheatPanel.headerColor));
+            AddCharmPanels();
         }
     }
 }

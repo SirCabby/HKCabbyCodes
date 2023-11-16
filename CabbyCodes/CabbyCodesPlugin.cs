@@ -2,12 +2,8 @@
 using BepInEx.Configuration;
 using BepInEx.Logging;
 using BepInEx.Unity.Mono;
-using CabbyCodes.Debug;
 using CabbyCodes.Patches;
-using CabbyCodes.Types;
 using CabbyCodes.UI;
-using CabbyCodes.UI.CheatPanels;
-using UnityEngine;
 
 namespace CabbyCodes
 {
@@ -22,77 +18,6 @@ namespace CabbyCodes
         public static CabbyMenu cabbyMenu;
         public static ConfigFile configFile;
 
-        private void BuildPlayerCheats()
-        {
-            cabbyMenu.AddCheatPanel(new InfoPanel("Player Codes").SetColor(CheatPanel.headerColor));
-            InvulPatch.AddPanel();
-            DamagePatch.AddPanel();
-            JumpPatch.AddPanel();
-            SoulPatch.AddPanel();
-            PermadeathPatch.AddPanel();
-            GeoPatch.AddPanel();
-            GeoValuePatch.AddPanel();
-            PlayTimePatch.AddPanel();
-        }
-
-        private void BuildTeleportCheats()
-        {
-            cabbyMenu.AddCheatPanel(new InfoPanel("Teleportation: Select common point of interest to travel to").SetColor(CheatPanel.headerColor));
-            cabbyMenu.AddCheatPanel(new InfoPanel("Warning: Teleporting requires a pause / unpause to complete").SetColor(CheatPanel.warningColor));
-            TeleportPatch.AddPanel();
-            cabbyMenu.AddCheatPanel(new InfoPanel("Lloyd's Beacon: Save and recall custom teleportation locations").SetColor(CheatPanel.headerColor));
-            TeleportPatch.AddSavePanel();
-            foreach (TeleportLocation location in TeleportPatch.savedTeleports)
-            {
-                TeleportPatch.AddCustomPanel(location);
-            }
-        }
-
-        private void BuildCharmCheats()
-        {
-            cabbyMenu.AddCheatPanel(new InfoPanel("Charms:").SetColor(CheatPanel.headerColor));
-            CharmCostPatch.AddPanel();
-            cabbyMenu.AddCheatPanel(new InfoPanel("Toggle ON to Have Charm").SetColor(CheatPanel.headerColor));
-            CharmPatch.AddPanels();
-        }
-
-        private void BuildMapCheats()
-        {
-            cabbyMenu.AddCheatPanel(new InfoPanel("Maps: Enable to have map for area").SetColor(CheatPanel.headerColor));
-            cabbyMenu.AddCheatPanel(new InfoPanel("Warning: Still requires Quill item to fill maps out").SetColor(CheatPanel.warningColor));
-            MapPatch.AddPanels();
-            cabbyMenu.AddCheatPanel(new InfoPanel("Rooms: Enable to have room mapped out").SetColor(CheatPanel.headerColor));
-            MapRoomPatch.AddPanels();
-        }
-
-        private void BuildDebugCheats()
-        {
-            cabbyMenu.AddCheatPanel(new InfoPanel("Debug Utilities: Prints information to BepInEx console").SetColor(CheatPanel.headerColor));
-            cabbyMenu.AddCheatPanel(new ButtonPanel(() => 
-            {
-                GameMap gm = GameManager._instance.gameMap.GetComponent<GameMap>();
-                Vector3 heroPos = ((GameObject)GameData.heroFieldInfo.GetValue(gm)).transform.position;
-                Logger.LogInfo("Location: " + heroPos.x + ", " + heroPos.y);
-                Logger.LogInfo("Scene: " + GameManager.GetBaseSceneName(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name));
-            }, "Print", "General Info"));
-            cabbyMenu.AddCheatPanel(new ButtonPanel(() =>
-            {
-                ObjectPrint.DisplayObjectInfo(GameManager._instance);
-            }, "Print", "GameManager"));
-            cabbyMenu.AddCheatPanel(new ButtonPanel(() =>
-            {
-                ObjectPrint.DisplayObjectInfo(GameManager._instance.gameMap.GetComponent<GameMap>());
-            }, "Print", "GameMap"));
-            cabbyMenu.AddCheatPanel(new ButtonPanel(() =>
-            {
-                ObjectPrint.DisplayObjectInfo(UIManager.instance);
-            }, "Print", "UIManager"));
-            cabbyMenu.AddCheatPanel(new ButtonPanel(() =>
-            {
-                ObjectPrint.DisplayObjectInfo(GameManager._instance.playerData);
-            }, "Print", "PlayerData"));
-        }
-
         private void Awake()
         {
             Logger.LogInfo("Plugin cabby.cabbycodes is loaded!");
@@ -106,12 +31,12 @@ namespace CabbyCodes
             UnityExplorer.ExplorerStandalone.CreateInstance();
 
             cabbyMenu = new CabbyMenu(NAME, VERSION);
-            cabbyMenu.RegisterCategory("Player", BuildPlayerCheats);
-            cabbyMenu.RegisterCategory("Teleport", BuildTeleportCheats);
-            cabbyMenu.RegisterCategory("Charms", BuildCharmCheats);
-            cabbyMenu.RegisterCategory("Maps", BuildMapCheats);
+            cabbyMenu.RegisterCategory("Player", PlayerPatch.AddPanels);
+            cabbyMenu.RegisterCategory("Teleport", TeleportPatch.AddPanels);
+            cabbyMenu.RegisterCategory("Charms", CharmPatch.AddPanels);
+            cabbyMenu.RegisterCategory("Maps", MapPatch.AddPanels);
             cabbyMenu.RegisterCategory("Achievements", AchievementPatch.AddPanels);
-            cabbyMenu.RegisterCategory("Debug", BuildDebugCheats);
+            cabbyMenu.RegisterCategory("Debug", DebugPatch.AddPanels);
         }
 
         private void Update()

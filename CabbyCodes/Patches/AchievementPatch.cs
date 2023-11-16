@@ -1,11 +1,6 @@
 ﻿using CabbyCodes.SyncedReferences;
-using CabbyCodes.Types;
-using CabbyCodes.UI;
 using CabbyCodes.UI.CheatPanels;
-using CabbyCodes.UI.Modders;
-using System.Reflection;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace CabbyCodes.Patches
 {

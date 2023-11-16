@@ -135,19 +135,19 @@ namespace CabbyCodes.Patches
             }
         }
 
-        public static void AddPanel()
+        private static void AddPanel()
         {
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new DropdownPanel(new TeleportPatch(), 400, "Select Area to Teleport"));
         }
 
-        public static void AddSavePanel()
+        private static void AddSavePanel()
         {
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new ButtonPanel(SaveTeleportLocation, "Save", "Save a custom teleport at current position"));
         }
 
-        public static void AddCustomPanel(TeleportLocation location)
+        private static void AddCustomPanel(TeleportLocation location)
         {
-            ButtonPanel buttonPanel = new ButtonPanel(() => { DoTeleport(location); }, "Teleport", location.DisplayName, 160);
+            ButtonPanel buttonPanel = new(() => { DoTeleport(location); }, "Teleport", location.DisplayName, 160);
 
             GameObject destroyButton = PanelAdder.AddDestroyPanelButton(buttonPanel, buttonPanel.cheatPanel.transform.childCount, () =>
             {
@@ -161,6 +161,19 @@ namespace CabbyCodes.Patches
             destroyButton.transform.Find("Button").gameObject.GetComponent<Image>().color = new Color(1, 0.5f, 0.5f);
 
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(buttonPanel);
+        }
+
+        public static void AddPanels()
+        {
+            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Teleportation: Select common point of interest to travel to").SetColor(CheatPanel.headerColor));
+            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Warning: Teleporting requires a pause / unpause to complete").SetColor(CheatPanel.warningColor));
+            AddPanel();
+            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Lloyd's Beacon: Save and recall custom teleportation locations").SetColor(CheatPanel.headerColor));
+            AddSavePanel();
+            foreach (TeleportLocation location in savedTeleports)
+            {
+                AddCustomPanel(location);
+            }
         }
     }
 }
