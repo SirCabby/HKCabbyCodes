@@ -3,6 +3,9 @@ using BepInEx.Configuration;
 using BepInEx.Logging;
 using BepInEx.Unity.Mono;
 using CabbyCodes.Patches;
+using CabbyCodes.Patches.Achievements;
+using CabbyCodes.Patches.Inventory;
+using CabbyCodes.Patches.Maps;
 using CabbyCodes.UI;
 
 namespace CabbyCodes
@@ -33,6 +36,7 @@ namespace CabbyCodes
             cabbyMenu = new CabbyMenu(NAME, VERSION);
             cabbyMenu.RegisterCategory("Player", PlayerPatch.AddPanels);
             cabbyMenu.RegisterCategory("Teleport", TeleportPatch.AddPanels);
+            cabbyMenu.RegisterCategory("Inventory", InventoryPatch.AddPanels);
             cabbyMenu.RegisterCategory("Charms", CharmPatch.AddPanels);
             cabbyMenu.RegisterCategory("Maps", MapPatch.AddPanels);
             cabbyMenu.RegisterCategory("Achievements", AchievementPatch.AddPanels);
