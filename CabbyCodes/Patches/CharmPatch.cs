@@ -183,6 +183,7 @@ namespace CabbyCodes.Patches
             CharmCostPatch.AddPanel();
             GrimmChildLevelPatch.AddPanel();
             BrokenCharmPatch.AddPanels();
+            UpgradeCharmPatch.AddPanels();
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Toggle ON to Have Charm").SetColor(CheatPanel.headerColor));
             AddCharmPanels();
         }
