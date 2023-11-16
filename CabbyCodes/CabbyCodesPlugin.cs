@@ -51,7 +51,7 @@ namespace CabbyCodes
         private void BuildCharmCheats()
         {
             cabbyMenu.AddCheatPanel(new InfoPanel("Charms:").SetColor(CheatPanel.headerColor));
-
+            CharmCostPatch.AddPanel();
             cabbyMenu.AddCheatPanel(new InfoPanel("Toggle ON to Have Charm").SetColor(CheatPanel.headerColor));
             CharmPatch.AddPanels();
         }
