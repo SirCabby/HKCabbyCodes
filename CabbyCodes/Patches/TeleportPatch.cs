@@ -19,6 +19,9 @@ namespace CabbyCodes.Patches
         private static readonly Harmony harmony = new(key);
         private static readonly MethodInfo mOriginal = typeof(GameManager).GetMethod("EnterHero", BindingFlags.NonPublic | BindingFlags.Instance);
         private static readonly MethodInfo postMethod = typeof(TeleportPatch).GetMethod(nameof(PostTeleport), BindingFlags.NonPublic | BindingFlags.Static);
+        private static readonly FieldInfo targetSceneFieldInfo = typeof(GameManager).GetField("targetScene", BindingFlags.NonPublic | BindingFlags.Instance);
+        private static readonly FieldInfo entryDelayFieldInfo = typeof(GameManager).GetField("entryDelay", BindingFlags.NonPublic | BindingFlags.Instance);
+        private static readonly FieldInfo heroFieldInfo = typeof(GameMap).GetField("hero", BindingFlags.NonPublic | BindingFlags.Instance);
         private static readonly List<TeleportLocation> teleportLocations = new()
         {
             new("", "<Select Location>", Vector2.zero),
@@ -79,8 +82,8 @@ namespace CabbyCodes.Patches
             gm.playerData.dreamGateY = teleportLocation.Location.y;
 
             gm.entryGateName = "dreamGate";
-            GameData.targetSceneFieldInfo.SetValue(gm, teleportLocation.SceneName);
-            GameData.entryDelayFieldInfo.SetValue(gm, 0);
+            targetSceneFieldInfo.SetValue(gm, teleportLocation.SceneName);
+            entryDelayFieldInfo.SetValue(gm, 0);
             gm.cameraCtrl.FreezeInPlace(false);
             gm.BeginSceneTransition(new GameManager.SceneLoadInfo
             {
@@ -110,7 +113,7 @@ namespace CabbyCodes.Patches
         public static void SaveTeleportLocation()
         {
             GameMap gm = GameManager._instance.gameMap.GetComponent<GameMap>();
-            Vector3 heroPos = ((GameObject)GameData.heroFieldInfo.GetValue(gm)).transform.position;
+            Vector3 heroPos = ((GameObject)heroFieldInfo.GetValue(gm)).transform.position;
             string sceneName = GameManager.GetBaseSceneName(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
             Vector2 teleportLocation = new((int)Math.Round(heroPos.x), (int)Math.Ceiling(heroPos.y));
 

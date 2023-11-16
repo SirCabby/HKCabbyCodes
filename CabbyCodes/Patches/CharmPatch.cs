@@ -1,13 +1,16 @@
 ﻿using CabbyCodes.SyncedReferences;
 using CabbyCodes.Types;
 using CabbyCodes.UI.CheatPanels;
+using CabbyCodes.UI.Modders;
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace CabbyCodes.Patches
 {
     public class CharmPatch : ISyncedReference<bool>
     {
         private static readonly string gotCharmName = "gotCharm_";
+        private static readonly Color unearnedColor = new(0.57f, 0.57f, 0.57f, 0.57f);
         public static readonly List<Charm> charms = BuildCharmList();
         
         private readonly int charmIndex;
@@ -34,6 +37,56 @@ namespace CabbyCodes.Patches
             this.parent = parent;
         }
 
+        public static Sprite GetCharmIcon(int id)
+        {
+            PlayerData playerData = PlayerData.instance;
+            if (id == 23)
+            {
+                if (playerData.fragileHealth_unbreakable)
+                {
+                    return CharmIconList.Instance.unbreakableHeart;
+                }
+            }
+            else if (id == 24)
+            {
+                if (playerData.fragileGreed_unbreakable)
+                {
+                    return CharmIconList.Instance.unbreakableGreed;
+                }
+            }
+            else if (id == 25)
+            {
+                if (playerData.fragileStrength_unbreakable)
+                {
+                    return CharmIconList.Instance.unbreakableStrength;
+                }
+            }
+            else if (id == 40)
+            {
+                if (playerData.grimmChildLevel == 1)
+                {
+                    return CharmIconList.Instance.grimmchildLevel1;
+                }
+                if (playerData.grimmChildLevel == 2)
+                {
+                    return CharmIconList.Instance.grimmchildLevel2;
+                }
+                if (playerData.grimmChildLevel == 3)
+                {
+                    return CharmIconList.Instance.grimmchildLevel3;
+                }
+                if (playerData.grimmChildLevel == 4)
+                {
+                    return CharmIconList.Instance.grimmchildLevel4;
+                }
+                if (playerData.grimmChildLevel == 5)
+                {
+                    return CharmIconList.Instance.nymmCharm;
+                }
+            }
+            return CharmIconList.Instance.spriteList[id];
+        }
+
         private static void AddCharmPanels()
         {
             for (int i = 0; i < charms.Count; i++)
@@ -43,9 +96,31 @@ namespace CabbyCodes.Patches
 
                 int index = i + 1;
                 TogglePanel togglePanel = new(patch, index + ": " + charm.name);
-                PanelAdder.AddSprite(togglePanel, CharmIconList.Instance.GetSprite(charm.id), () => { return PlayerData.instance.GetBool(gotCharmName + charm.id); }, 1);
+                (_, ImageMod spriteImageMod) = PanelAdder.AddSprite(togglePanel, CharmIconList.Instance.GetSprite(charm.id), 1);
                 patch.SetCheatPanel(togglePanel);
-                
+
+                togglePanel.updateActions.Add(() =>
+                {
+                    spriteImageMod.SetSprite(GetCharmIcon(charm.id));
+                    if (PlayerData.instance.GetBool(gotCharmName + charm.id))
+                    {
+                        if (charm.id == 40 && PlayerData.instance.royalCharmState < 3)
+                        {
+                            PlayerData.instance.royalCharmState = 3;
+                        }
+                        spriteImageMod.SetColor(Color.white);
+                    }
+                    else
+                    {
+                        if (charm.id == 40 && PlayerData.instance.royalCharmState > 0)
+                        {
+                            PlayerData.instance.royalCharmState = 0;
+                        }
+                        spriteImageMod.SetColor(unearnedColor);
+                    }
+                });
+                togglePanel.Update();
+
                 CabbyCodesPlugin.cabbyMenu.AddCheatPanel(togglePanel);
             }
         }
@@ -95,8 +170,8 @@ namespace CabbyCodes.Patches
                 new(39, "Weaversong"),
                 new(30, "Dream Wielder"),
                 new(38, "Dreamshield"),
-                new(40, "Grimmchild"),
-                new(36, "<Unknown>")
+                new(40, "Grimmchild")
+                //new(36, "<Unknown>") Kingsoul / Void Heart
             };
 
             return result;
@@ -107,6 +182,7 @@ namespace CabbyCodes.Patches
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Charms:").SetColor(CheatPanel.headerColor));
             CharmCostPatch.AddPanel();
             GrimmChildLevelPatch.AddPanel();
+            BrokenCharmPatch.AddPanels();
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Toggle ON to Have Charm").SetColor(CheatPanel.headerColor));
             AddCharmPanels();
         }

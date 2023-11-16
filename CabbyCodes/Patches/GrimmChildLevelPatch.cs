@@ -9,15 +9,14 @@ namespace CabbyCodes.Patches
         public int Get()
         {
             int result = PlayerData.instance.grimmChildLevel - 1;
-            CabbyCodesPlugin.BLogger.LogInfo("returning out value: " + result);
             return result;
         }
 
         public void Set(int value)
         {
             int result = value + 1;
-            CabbyCodesPlugin.BLogger.LogInfo("setting inc value: " + result);
             PlayerData.instance.grimmChildLevel = result;
+            CabbyCodesPlugin.cabbyMenu.UpdateCheatPanels();
         }
 
         public List<string> GetValueList()

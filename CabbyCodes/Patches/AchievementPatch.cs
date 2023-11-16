@@ -1,11 +1,14 @@
 ﻿using CabbyCodes.SyncedReferences;
 using CabbyCodes.UI.CheatPanels;
+using CabbyCodes.UI.Modders;
 using UnityEngine;
 
 namespace CabbyCodes.Patches
 {
     public class AchievementPatch : ISyncedReference<bool>
     {
+        private static readonly Color unearnedColor = new(0.57f, 0.57f, 0.57f, 0.57f);
+
         private readonly Achievement achievement;
         private TogglePanel parent;
 
@@ -40,8 +43,21 @@ namespace CabbyCodes.Patches
             AchievementPatch patch = new(achievement);
 
             TogglePanel togglePanel = new(patch, text);
-            PanelAdder.AddSprite(togglePanel, achievement.earnedIcon, () => { return GameManager.instance.IsAchievementAwarded(achievement.key); }, 1);
+            (_, ImageMod spriteImageMod) = PanelAdder.AddSprite(togglePanel, achievement.earnedIcon, 1);
             patch.SetCheatPanel(togglePanel);
+
+            togglePanel.updateActions.Add(() =>
+            {
+                if (GameManager.instance.IsAchievementAwarded(achievement.key))
+                {
+                    spriteImageMod.SetColor(Color.white);
+                }
+                else
+                {
+                    spriteImageMod.SetColor(unearnedColor);
+                }
+            });
+            togglePanel.Update();
 
             return togglePanel;
         }
