@@ -4,6 +4,8 @@ using BepInEx.Logging;
 using BepInEx.Unity.Mono;
 using CabbyCodes.Patches;
 using CabbyCodes.Patches.Achievements;
+using CabbyCodes.Patches.Flags;
+using CabbyCodes.Patches.Hunter;
 using CabbyCodes.Patches.Inventory;
 using CabbyCodes.Patches.Maps;
 using CabbyCodes.UI;
@@ -39,6 +41,8 @@ namespace CabbyCodes
             cabbyMenu.RegisterCategory("Inventory", InventoryPatch.AddPanels);
             cabbyMenu.RegisterCategory("Charms", CharmPatch.AddPanels);
             cabbyMenu.RegisterCategory("Maps", MapPatch.AddPanels);
+            cabbyMenu.RegisterCategory("Hunter", HunterPatch.AddPanels);
+            cabbyMenu.RegisterCategory("Flags", FlagsPatch.AddPanels);
             cabbyMenu.RegisterCategory("Achievements", AchievementPatch.AddPanels);
             cabbyMenu.RegisterCategory("Debug", DebugPatch.AddPanels);
         }

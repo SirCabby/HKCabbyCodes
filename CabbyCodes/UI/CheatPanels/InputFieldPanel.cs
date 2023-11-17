@@ -10,6 +10,7 @@ namespace CabbyCodes.UI.CheatPanels
             InputFieldSync<T> inputField = new(syncedReference, validChars, new(width, 60), characterLimit);
             new Fitter(inputField.GetGameObject()).Attach(cheatPanel);
             inputField.GetGameObject().transform.SetAsFirstSibling();
+            updateActions.Add(inputField.Update);
         }
     }
 }

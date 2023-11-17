@@ -41,6 +41,11 @@ namespace CabbyCodes.UI.ReferenceControls
             return inputFieldGo;
         }
 
+        public void Update()
+        {
+            inputField.text = Convert.ToString(InputValue.Get());
+        }
+
         public void Submit()
         {
             string text = inputField.text;

@@ -4,12 +4,15 @@ using UnityEngine.UI;
 using UnityEngine;
 using UnityEngine.Events;
 using System;
+using CabbyCodes.SyncedReferences;
+using CabbyCodes.UI.ReferenceControls;
 
 namespace CabbyCodes.UI.CheatPanels
 {
     public class PanelAdder
     {
         private static readonly Vector2 defaultIconSize = new(60, 60);
+        private static readonly Vector2 defaultToggleButtonSize = new(120, 60);
         private static readonly Vector2 middle = new(0.5f, 0.5f);
 
         public static GameObject AddButton(CheatPanel panel, int siblingIndex, UnityAction action, string buttonText, Vector2 size)
@@ -27,6 +30,25 @@ namespace CabbyCodes.UI.CheatPanels
             (GameObject button, _, _) = ButtonFactory.Build(buttonText);
             button.GetComponent<Button>().onClick.AddListener(action);
             new Fitter(button).Attach(buttonPanel).Anchor(middle, middle).Size(size);
+
+            return buttonPanel;
+        }
+
+        public static GameObject AddToggleButton(CheatPanel panel, int siblingIndex, ISyncedReference<bool> syncedReference)
+        {
+            GameObject buttonPanel = DefaultControls.CreatePanel(new DefaultControls.Resources());
+            buttonPanel.name = "Toggle Button Panel";
+            new ImageMod(buttonPanel.GetComponent<Image>()).SetColor(Color.clear);
+            new Fitter(buttonPanel).Attach(panel.cheatPanel);
+            buttonPanel.transform.SetSiblingIndex(siblingIndex);
+
+            LayoutElement buttonPanelLayout = buttonPanel.AddComponent<LayoutElement>();
+            buttonPanelLayout.flexibleHeight = 1;
+            buttonPanelLayout.minWidth = defaultToggleButtonSize.x;
+
+            ToggleButton toggleButton = new(syncedReference);
+            new Fitter(toggleButton.GetGameObject()).Attach(buttonPanel).Anchor(middle, middle).Size(defaultToggleButtonSize);
+            panel.updateActions.Add(toggleButton.Update);
 
             return buttonPanel;
         }

@@ -259,7 +259,8 @@ namespace CabbyCodes.UI
             Vector2 categorySize = new(280, 60);
             (GameObject categoryDropdownGameObject, GameObjectMod categoryDropdownGoMod, DropdownMod categoryDropdownMod) = DropdownFactory.Build();
             categoryDropdownGoMod.SetName("Category Dropdown");
-            categoryDropdownMod.SetSize(categorySize).SetFontSize(36);
+            int showSize = Math.Min(9, registeredCategories.Count);
+            categoryDropdownMod.SetSize(categorySize, showSize).SetFontSize(36);
             new Fitter(categoryDropdownGameObject).Attach(menuPanel).Anchor(new Vector2(0.08f, 0.72f), new Vector2(0.08f, 0.72f));
 
             categoryDropdown = categoryDropdownGameObject.GetComponent<Dropdown>();
