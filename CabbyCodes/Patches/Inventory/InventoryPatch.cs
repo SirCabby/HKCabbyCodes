@@ -1,6 +1,7 @@
 ﻿using CabbyCodes.Patches.Inventory.Abilities;
 using CabbyCodes.Patches.Inventory.Currency;
 using CabbyCodes.Patches.Inventory.Items;
+using CabbyCodes.Patches.Inventory.Keys;
 using CabbyCodes.Patches.Inventory.Map;
 using CabbyCodes.Patches.Inventory.NailArts;
 using CabbyCodes.Patches.Inventory.PowerUps;
@@ -18,6 +19,7 @@ namespace CabbyCodes.Patches.Inventory
 
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Currency").SetColor(CheatPanel.subHeaderColor));
             GeoValuePatch.AddPanel();
+            DreamEssencePatch.AddPanel();
             PaleOrePatch.AddPanel();
             RancidEggPatch.AddPanel();
             WanderersJournalPatch.AddPanel();
@@ -62,6 +64,14 @@ namespace CabbyCodes.Patches.Inventory
             HuntersMarkPatch.AddPanel();
             DelicateFlowerPatch.AddPanel();
             GodtunerPatch.AddPanel();
+
+            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Keys").SetColor(CheatPanel.subHeaderColor));
+            SimpleKeyPatch.AddPanel();
+            ElegantKeyPatch.AddPanel();
+            LoveKeyPatch.AddPanel();
+            ShopkeepersKeyPatch.AddPanel();
+            CityCrestPatch.AddPanel();
+            KingsBrandPatch.AddPanel();
 
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Map Accessories").SetColor(CheatPanel.subHeaderColor));
             ScarabMarkerPatch.AddPanel();
