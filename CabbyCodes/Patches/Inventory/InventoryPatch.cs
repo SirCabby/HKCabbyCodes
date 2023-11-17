@@ -22,6 +22,7 @@ namespace CabbyCodes.Patches.Inventory
             CrystalHeartPatch.AddPanel();
             IsmasTearPatch.AddPanel();
             DreamNailPatch.AddPanel();
+            DreamgatePatch.AddPanel();
 
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Nail Arts").SetColor(CheatPanel.subHeaderColor));
             CyclonePatch.AddPanel();
