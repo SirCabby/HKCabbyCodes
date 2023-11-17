@@ -139,10 +139,15 @@ namespace CabbyCodes.UI
                         {
                             inputField.text = keyPressed.Value.ToString();
                         }
+                        else if (inputField.text.Length == inputField.characterLimit)
+                        {
+                            inputField.text = inputField.text.Substring(0, inputField.characterLimit - 1) + keyPressed.Value.ToString();
+                        }
                         else
                         {
                             inputField.text += keyPressed.Value;
                         }
+
                         
                         lastSelectedTime = lastSelected.GetSelectedTime();
                     }
