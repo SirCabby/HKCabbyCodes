@@ -14,6 +14,12 @@ namespace CabbyCodes.Patches.Inventory
 
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Currency").SetColor(CheatPanel.subHeaderColor));
             GeoValuePatch.AddPanel();
+            PaleOrePatch.AddPanel();
+            RancidEggPatch.AddPanel();
+            WanderersJournalPatch.AddPanel();
+            HallownestSealPatch.AddPanel();
+            KingsIdolPatch.AddPanel();
+            ArcaneEggPatch.AddPanel();
 
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Ability Items").SetColor(CheatPanel.subHeaderColor));
             MothwingCloakPatch.AddPanel();
