@@ -1,4 +1,5 @@
-﻿using CabbyCodes.Patches.Inventory.NailArts;
+﻿using CabbyCodes.Patches.Inventory.Abilities;
+using CabbyCodes.Patches.Inventory.NailArts;
 using CabbyCodes.Patches.Inventory.Spells;
 using CabbyCodes.UI.CheatPanels;
 
@@ -9,6 +10,8 @@ namespace CabbyCodes.Patches.Inventory
         public static void AddPanels()
         {
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Inventory").SetColor(CheatPanel.headerColor));
+            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Ability Items").SetColor(CheatPanel.subHeaderColor));
+            MothwingCloakPatch.AddPanel();
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Nail Arts").SetColor(CheatPanel.subHeaderColor));
             CyclonePatch.AddPanel();
             DashSlashPatch.AddPanel();
