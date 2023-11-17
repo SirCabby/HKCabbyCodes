@@ -1,4 +1,5 @@
 ﻿using CabbyCodes.Patches.Inventory.NailArts;
+using CabbyCodes.Patches.Inventory.Spells;
 using CabbyCodes.UI.CheatPanels;
 
 namespace CabbyCodes.Patches.Inventory
@@ -12,6 +13,11 @@ namespace CabbyCodes.Patches.Inventory
             CyclonePatch.AddPanel();
             DashSlashPatch.AddPanel();
             UpwardSlashPatch.AddPanel();
+            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Spells").SetColor(CheatPanel.subHeaderColor));
+            FocusPatch.AddPanel();
+            VengefulSpiritPatch.AddPanel();
+            DesolateDivePatch.AddPanel();
+            HowlingWraithsPatch.AddPanel();
         }
     }
 }
