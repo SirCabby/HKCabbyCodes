@@ -1,6 +1,7 @@
 ﻿using CabbyCodes.Patches.Inventory.Abilities;
 using CabbyCodes.Patches.Inventory.Currency;
 using CabbyCodes.Patches.Inventory.Items;
+using CabbyCodes.Patches.Inventory.Map;
 using CabbyCodes.Patches.Inventory.NailArts;
 using CabbyCodes.Patches.Inventory.PowerUps;
 using CabbyCodes.Patches.Inventory.Spells;
@@ -52,7 +53,24 @@ namespace CabbyCodes.Patches.Inventory
             HowlingWraithsPatch.AddPanel();
 
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Items").SetColor(CheatPanel.subHeaderColor));
+            MapItemPatch.AddPanel();
+            QuillPatch.AddPanel();
+            LumaflyLanternPatch.AddPanel();
             TramPassPatch.AddPanel();
+
+            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Map Accessories").SetColor(CheatPanel.subHeaderColor));
+            ScarabMarkerPatch.AddPanel();
+            ShellMarkerPatch.AddPanel();
+            GleamingMarkerPatch.AddPanel();
+            TokenMarkerPatch.AddPanel();
+            WhisperingRootPinPatch.AddPanel();
+            WarriorsGravePinPatch.AddPanel();
+            StagStationPinPatch.AddPanel();
+            TramPinPatch.AddPanel();
+            VendorPinPatch.AddPanel();
+            HotSpringPinPatch.AddPanel();
+            CocoonPinPatch.AddPanel();
+            BenchPinPatch.AddPanel();
         }
     }
 }

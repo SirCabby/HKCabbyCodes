@@ -1,0 +1,27 @@
+﻿using CabbyCodes.SyncedReferences;
+using CabbyCodes.UI.CheatPanels;
+
+namespace CabbyCodes.Patches.Inventory.Items
+{
+    public class TokenMarkerPatch : ISyncedReference<bool>
+    {
+        public bool Get()
+        {
+            return PlayerData.instance.hasMarker_y;
+        }
+
+        public void Set(bool value)
+        {
+            PlayerData.instance.hasMarker_y = value;
+            if (value)
+            {
+                PlayerData.instance.hasMarker = true;
+            }
+        }
+
+        public static void AddPanel()
+        {
+            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new TogglePanel(new TokenMarkerPatch(), "Token Marker"));
+        }
+    }
+}
