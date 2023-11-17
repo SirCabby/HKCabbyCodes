@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace CabbyCodes.Patches
 {
-    public class GrimmChildLevelPatch : ISyncedValueList<int>
+    public class GrimmChildLevelPatch : ISyncedValueList
     {
         public int Get()
         {

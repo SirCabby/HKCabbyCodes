@@ -12,7 +12,7 @@ namespace CabbyCodes.UI.CheatPanels
 
         private readonly DropDownSync dropdown;
 
-        public DropdownPanel(ISyncedValueList<int> syncedValueReference, int width, string description) : base(description)
+        public DropdownPanel(ISyncedValueList syncedValueReference, int width, string description) : base(description)
         {
             GameObject dropdownPanel = DefaultControls.CreatePanel(new DefaultControls.Resources());
             dropdownPanel.name = "Dropdown Panel";

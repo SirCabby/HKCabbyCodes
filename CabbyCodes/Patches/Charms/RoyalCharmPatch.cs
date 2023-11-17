@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace CabbyCodes.Patches
 {
-    public class RoyalCharmPatch : ISyncedValueList<int>
+    public class RoyalCharmPatch : ISyncedValueList
     {
         public int Get()
         {

@@ -2,7 +2,7 @@
 
 namespace CabbyCodes.SyncedReferences
 {
-    public interface ISyncedValueList<T> : ISyncedReference<T>
+    public interface ISyncedValueList : ISyncedReference<int>
     {
         public List<string> GetValueList();
     }

@@ -11,7 +11,7 @@ using UnityEngine.UI;
 
 namespace CabbyCodes.Patches
 {
-    public class TeleportPatch : ISyncedValueList<int>
+    public class TeleportPatch : ISyncedValueList
     {
         public const string key = "TeleportLocations";
         public static readonly List<TeleportLocation> savedTeleports = InitTeleportLocations();
