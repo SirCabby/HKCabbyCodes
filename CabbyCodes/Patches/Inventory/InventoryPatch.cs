@@ -20,6 +20,7 @@ namespace CabbyCodes.Patches.Inventory
             MonarchWingsPatch.AddPanel();
             MantisClawPatch.AddPanel();
             CrystalHeartPatch.AddPanel();
+            IsmasTearPatch.AddPanel();
 
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Nail Arts").SetColor(CheatPanel.subHeaderColor));
             CyclonePatch.AddPanel();
