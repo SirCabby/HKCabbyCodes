@@ -17,6 +17,7 @@ namespace CabbyCodes.Patches.Inventory
 
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Ability Items").SetColor(CheatPanel.subHeaderColor));
             MothwingCloakPatch.AddPanel();
+            MonarchWingsPatch.AddPanel();
             MantisClawPatch.AddPanel();
             CrystalHeartPatch.AddPanel();
 
