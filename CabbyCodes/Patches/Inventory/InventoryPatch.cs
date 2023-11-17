@@ -57,6 +57,11 @@ namespace CabbyCodes.Patches.Inventory
             QuillPatch.AddPanel();
             LumaflyLanternPatch.AddPanel();
             TramPassPatch.AddPanel();
+            CollectorsMapPatch.AddPanel();
+            HuntersJournalPatch.AddPanel();
+            HuntersMarkPatch.AddPanel();
+            DelicateFlowerPatch.AddPanel();
+            GodtunerPatch.AddPanel();
 
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Map Accessories").SetColor(CheatPanel.subHeaderColor));
             ScarabMarkerPatch.AddPanel();
