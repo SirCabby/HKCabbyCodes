@@ -134,14 +134,26 @@ namespace CabbyCodes.UI
                     char? keyPressed = KeyCodeMap.GetChar(lastSelected.ValidChars);
                     if (keyPressed.HasValue)
                     {
-                        lastSelected.InputFieldGo.GetComponent<InputField>().text += keyPressed.Value;
+                        InputField inputField = lastSelected.InputFieldGo.GetComponent<InputField>();
+                        if (inputField.text == "0")
+                        {
+                            inputField.text = keyPressed.Value.ToString();
+                        }
+                        else
+                        {
+                            inputField.text += keyPressed.Value;
+                        }
+                        
                         lastSelectedTime = lastSelected.GetSelectedTime();
                     }
 
                     if (Input.GetKeyDown(KeyCode.Backspace))
                     {
                         InputField inputField = lastSelected.InputFieldGo.GetComponent<InputField>();
-                        inputField.text = inputField.text.Substring(0, inputField.text.Length - 1);
+                        if (inputField.text.Length > 0)
+                        {
+                            inputField.text = inputField.text.Substring(0, inputField.text.Length - 1);
+                        }
                         lastSelectedTime = lastSelected.GetSelectedTime();
                     }
 
