@@ -2,7 +2,7 @@
 using CabbyCodes.UI.CheatPanels;
 using System;
 
-namespace CabbyCodes.Patches
+namespace CabbyCodes.Patches.Inventory.Currency
 {
     public class GeoValuePatch : ISyncedReference<int>
     {
@@ -20,7 +20,7 @@ namespace CabbyCodes.Patches
 
         public static void AddPanel()
         {
-            InputFieldPanel<int> panel = new(new GeoValuePatch(), KeyCodeMap.ValidChars.Numeric, 7, 180, "Edit Current Geo (0-9999999)");
+            InputFieldPanel<int> panel = new(new GeoValuePatch(), KeyCodeMap.ValidChars.Numeric, 7, 180, "Geo (0-9999999)");
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(panel);
         }
     }

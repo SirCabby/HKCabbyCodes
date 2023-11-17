@@ -14,7 +14,6 @@ namespace CabbyCodes.Patches
             SoulPatch.AddPanel();
             PermadeathPatch.AddPanel();
             GeoPatch.AddPanel();
-            GeoValuePatch.AddPanel();
             PlayTimePatch.AddPanel();
         }
     }
