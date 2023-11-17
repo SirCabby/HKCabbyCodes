@@ -181,6 +181,7 @@ namespace CabbyCodes.Patches
         public static void AddPanels()
         {
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Charms:").SetColor(CheatPanel.headerColor));
+            NotchPatch.AddPanel();
             CharmCostPatch.AddPanel();
             GrimmChildLevelPatch.AddPanel();
             RoyalCharmPatch.AddPanel();
