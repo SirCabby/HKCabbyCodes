@@ -13,6 +13,7 @@ namespace CabbyCodes.Patches
             JumpPatch.AddPanel();
             SoulPatch.AddPanel();
             PermadeathPatch.AddPanel();
+            HealthPatch.AddPanel();
             GeoPatch.AddPanel();
             PlayTimePatch.AddPanel();
         }
