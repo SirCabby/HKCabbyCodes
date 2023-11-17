@@ -1,7 +1,10 @@
 ﻿using CabbyCodes.Patches.Inventory.Abilities;
 using CabbyCodes.Patches.Inventory.Currency;
+using CabbyCodes.Patches.Inventory.Items;
 using CabbyCodes.Patches.Inventory.NailArts;
+using CabbyCodes.Patches.Inventory.PowerUps;
 using CabbyCodes.Patches.Inventory.Spells;
+using CabbyCodes.Patches.Inventory.Upgrades;
 using CabbyCodes.UI.CheatPanels;
 
 namespace CabbyCodes.Patches.Inventory
@@ -31,6 +34,12 @@ namespace CabbyCodes.Patches.Inventory
             DreamgatePatch.AddPanel();
             WorldSensePatch.AddPanel();
 
+            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Upgrades").SetColor(CheatPanel.subHeaderColor));
+            NailPatch.AddPanel();
+            MaskShardPatch.AddPanel();
+            VesselFragmentPatch.AddPanel();
+            SalubrasBlessingPatch.AddPanel();
+
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Nail Arts").SetColor(CheatPanel.subHeaderColor));
             CyclonePatch.AddPanel();
             DashSlashPatch.AddPanel();
@@ -41,6 +50,9 @@ namespace CabbyCodes.Patches.Inventory
             VengefulSpiritPatch.AddPanel();
             DesolateDivePatch.AddPanel();
             HowlingWraithsPatch.AddPanel();
+
+            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Items").SetColor(CheatPanel.subHeaderColor));
+            TramPassPatch.AddPanel();
         }
     }
 }
