@@ -12,6 +12,7 @@ namespace CabbyCodes.Patches.Inventory
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Inventory").SetColor(CheatPanel.headerColor));
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Ability Items").SetColor(CheatPanel.subHeaderColor));
             MothwingCloakPatch.AddPanel();
+            CrystalHeartPatch.AddPanel();
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Nail Arts").SetColor(CheatPanel.subHeaderColor));
             CyclonePatch.AddPanel();
             DashSlashPatch.AddPanel();
