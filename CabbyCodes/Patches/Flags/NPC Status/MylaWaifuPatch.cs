@@ -11,7 +11,7 @@ namespace CabbyCodes.Patches.Flags.NPC_Status
         public bool Get()
         {
             // true = alive
-            return !MakePbi().activated;
+            return !PbdMaker.GetPbd(id, sceneName).activated;
         }
 
         public void Set(bool value)
@@ -20,36 +20,16 @@ namespace CabbyCodes.Patches.Flags.NPC_Status
 
             if (value && !wasAlive)
             {
-                PersistentBoolData pbd = MakePbi();
+                PersistentBoolData pbd = PbdMaker.GetPbd(id, sceneName);
                 pbd.activated = false;
                 SceneData.instance.SaveMyState(pbd);
             }
             else if (!value && wasAlive)
             {
-                PersistentBoolData pbd = MakePbi();
+                PersistentBoolData pbd = PbdMaker.GetPbd(id, sceneName);
                 pbd.activated = true;
                 SceneData.instance.SaveMyState(pbd);
             }
-        }
-
-        private PersistentBoolData MakePbi()
-        {
-            PersistentBoolData pbd = new()
-            {
-                id = id,
-                sceneName = sceneName,
-                activated = false,
-                semiPersistent = false
-            };
-
-            PersistentBoolData result = SceneData.instance.FindMyState(pbd);
-            if (result == null)
-            {
-                SceneData.instance.SaveMyState(pbd);
-                result = SceneData.instance.FindMyState(pbd);
-            }
-
-            return result;
         }
 
         public static void AddPanel()

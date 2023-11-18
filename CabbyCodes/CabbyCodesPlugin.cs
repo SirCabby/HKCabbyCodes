@@ -41,6 +41,7 @@ namespace CabbyCodes
             cabbyMenu.RegisterCategory("Inventory", InventoryPatch.AddPanels);
             cabbyMenu.RegisterCategory("Charms", CharmPatch.AddPanels);
             cabbyMenu.RegisterCategory("Maps", MapPatch.AddPanels);
+            cabbyMenu.RegisterCategory("Grubs", GrubPatch.AddPanels);
             cabbyMenu.RegisterCategory("Hunter", HunterPatch.AddPanels);
             cabbyMenu.RegisterCategory("Flags", FlagsPatch.AddPanels);
             cabbyMenu.RegisterCategory("Achievements", AchievementPatch.AddPanels);

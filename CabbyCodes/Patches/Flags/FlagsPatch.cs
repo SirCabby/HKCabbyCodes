@@ -18,7 +18,6 @@ namespace CabbyCodes.Patches.Flags
             MylaWaifuPatch.AddPanel();
 
             //CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Boss Defeated").SetColor(CheatPanel.subHeaderColor));
-            //CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Grubs").SetColor(CheatPanel.subHeaderColor));
             //CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Stag Stations").SetColor(CheatPanel.subHeaderColor));
         }
     }
