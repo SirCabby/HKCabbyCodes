@@ -2,6 +2,7 @@
 using UnityEngine;
 using CabbyCodes.Debug;
 using System.Reflection;
+using System.Collections.Generic;
 
 namespace CabbyCodes.Patches
 {
@@ -54,13 +55,39 @@ namespace CabbyCodes.Patches
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new ButtonPanel(() =>
             {
                 CabbyCodesPlugin.BLogger.LogInfo("SceneData:");
+                Dictionary<string, List<string>> sceneValues = new();
+
+                // Build bools
                 foreach (PersistentBoolData pbd in SceneData.instance.persistentBoolItems)
                 {
-                    ObjectPrint.DisplayObjectInfo(pbd);
+                    if (!sceneValues.ContainsKey(pbd.sceneName))
+                    {
+                        sceneValues.Add(pbd.sceneName, new());
+                    }
+
+                    sceneValues[pbd.sceneName].Add(pbd.id + " - " + pbd.activated);
                 }
-                foreach (PersistentIntData pbd in SceneData.instance.persistentIntItems)
+
+                // Build ints
+                foreach (PersistentIntData pid in SceneData.instance.persistentIntItems)
                 {
-                    ObjectPrint.DisplayObjectInfo(pbd);
+                    if (!sceneValues.ContainsKey(pid.sceneName))
+                    {
+                        sceneValues.Add(pid.sceneName, new());
+                    }
+
+                    sceneValues[pid.sceneName].Add(pid.id + " - " + pid.value);
+                }
+
+                // Print
+                foreach (KeyValuePair<string, List<string>> kvp in sceneValues)
+                {
+                    CabbyCodesPlugin.BLogger.LogInfo("    Scene: " + kvp.Key);
+
+                    foreach (string value in kvp.Value)
+                    {
+                        CabbyCodesPlugin.BLogger.LogInfo("        " + value);
+                    }
                 }
             }, "Print", "SceneData"));
         }
