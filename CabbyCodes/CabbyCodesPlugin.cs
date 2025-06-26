@@ -39,8 +39,8 @@ namespace CabbyCodes
         /// </summary>
         private void Awake()
         {
-            BLogger.LogInfo("Plugin cabby.cabbycodes is loaded!");
             BLogger = Logger;
+            BLogger.LogInfo("Plugin cabby.cabbycodes is loaded!");
             BLogger.LogInfo("Config location: {0}", Config.ConfigFilePath);
             configFile = Config;
 

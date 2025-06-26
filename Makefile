@@ -28,7 +28,7 @@ all: build
 
 # Build the project
 .PHONY: build
-build: install-deps restore format 
+build: restore format 
 	@echo "Building $(PROJECT_NAME)..."
 	dotnet build $(SOLUTION_FILE) --configuration $(CONFIGURATION) --no-restore
 	@echo "Build completed successfully!"
@@ -82,14 +82,15 @@ publish: build
 .PHONY: deploy
 deploy: build
 	@echo "Deploying $(PROJECT_NAME) to Hollow Knight..."
-	@if [ -d "$(BEPINEX_PLUGINS_PATH)" ]; then \
-		cp "$(OUTPUT_DIR)/$(DLL_NAME)" "$(BEPINEX_PLUGINS_PATH)/"; \
-		echo "Deployed to $(BEPINEX_PLUGINS_PATH)"; \
-	else \
-		echo "Error: BepInEx plugins directory not found at $(BEPINEX_PLUGINS_PATH)"; \
-		echo "Please ensure Hollow Knight is installed and BepInEx is set up correctly."; \
-		exit 1; \
-	fi
+	@powershell -Command "\
+if (Test-Path '$(BEPINEX_PLUGINS_PATH)') { \
+    Copy-Item '$(OUTPUT_DIR)/$(DLL_NAME)' '$(BEPINEX_PLUGINS_PATH)/' -Force; \
+    Write-Host 'Deployed to $(BEPINEX_PLUGINS_PATH)'; \
+} else { \
+    Write-Host 'Error: BepInEx plugins directory not found at $(BEPINEX_PLUGINS_PATH)'; \
+    Write-Host 'Please ensure Hollow Knight is installed and BepInEx is set up correctly.'; \
+    exit 1; \
+}"
 
 # Check .NET SDK version
 .PHONY: check-sdk
@@ -125,12 +126,6 @@ help:
 	@echo "  info         - Show project information"
 	@echo "  help         - Show this help message"
 
-# Watch for changes and rebuild (useful for development)
-.PHONY: watch
-watch:
-	@echo "Watching for changes in $(PROJECT_NAME)..."
-	dotnet watch --project $(PROJECT_FILE) --configuration $(CONFIGURATION)
-
 # Package the mod (create a zip file for distribution)
 .PHONY: package
 package: build
@@ -140,13 +135,6 @@ package: build
 	@if [ -f README.md ]; then cp README.md dist/; fi
 	@cd dist && zip -r "../$(PROJECT_NAME)-$(shell date +%Y%m%d).zip" .
 	@echo "Package created: $(PROJECT_NAME)-$(shell date +%Y%m%d).zip"
-
-# Install dependencies (useful for CI/CD)
-.PHONY: install-deps
-install-deps:
-	@echo "Installing project dependencies..."
-	dotnet tool restore
-	@echo "Dependencies installed!"
 
 # Format code
 .PHONY: format
