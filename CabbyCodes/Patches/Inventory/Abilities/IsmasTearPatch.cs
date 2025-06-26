@@ -1,6 +1,6 @@
-﻿using CabbyCodes.Patches.Inventory.NailArts;
-using CabbyCodes.SyncedReferences;
-using CabbyCodes.UI.CheatPanels;
+using CabbyCodes.Patches.Inventory.NailArts;
+using CabbyMenu.SyncedReferences;
+using CabbyMenu.UI.CheatPanels;
 
 namespace CabbyCodes.Patches.Inventory.Abilities
 {

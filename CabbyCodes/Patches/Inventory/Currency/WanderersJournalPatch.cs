@@ -1,5 +1,5 @@
-﻿using CabbyCodes.SyncedReferences;
-using CabbyCodes.UI.CheatPanels;
+using CabbyMenu.SyncedReferences;
+using CabbyMenu.UI.CheatPanels;
 using System;
 
 namespace CabbyCodes.Patches.Inventory.Currency
@@ -13,7 +13,7 @@ namespace CabbyCodes.Patches.Inventory.Currency
 
         public void Set(int value)
         {
-            value = ValidationUtils.ValidateRange(value, 0, Constants.MAX_WANDERERS_JOURNALS, nameof(value));
+            value = CabbyMenu.ValidationUtils.ValidateRange(value, 0, Constants.MAX_WANDERERS_JOURNALS, nameof(value));
             if (value > 0)
             {
                 PlayerData.instance.foundTrinket1 = true;
@@ -23,7 +23,7 @@ namespace CabbyCodes.Patches.Inventory.Currency
 
         public static void AddPanel()
         {
-            InputFieldPanel<int> panel = new(new WanderersJournalPatch(), KeyCodeMap.ValidChars.Numeric, 2, 120, "Wanderer's Journals (0-14)");
+            InputFieldPanel<int> panel = new(new WanderersJournalPatch(), CabbyMenu.KeyCodeMap.ValidChars.Numeric, 2, 120, "Wanderer's Journals (0-14)");
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(panel);
         }
     }

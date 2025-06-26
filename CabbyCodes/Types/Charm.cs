@@ -1,4 +1,4 @@
-﻿namespace CabbyCodes.Types
+namespace CabbyCodes.Types
 {
     /// <summary>
     /// Represents a charm in the game with its properties and cost information.

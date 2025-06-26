@@ -1,6 +1,9 @@
-﻿using CabbyCodes.SyncedReferences;
-using CabbyCodes.UI.CheatPanels;
+using CabbyMenu.SyncedReferences;
+using CabbyMenu.UI.CheatPanels;
 using System;
+using HarmonyLib;
+using UnityEngine;
+using CabbyMenu;
 
 namespace CabbyCodes.Patches.Player
 {
@@ -18,12 +21,12 @@ namespace CabbyCodes.Patches.Player
             PlayerData.instance.maxHealthBase = value;
             PlayerData.instance.maxHealth = value;
 
-            CabbyCodesPlugin.BLogger.LogDebug("Health updated to {0}", value);
+            CabbyCodesPlugin.BLogger.LogDebug($"Health updated to {value}");
         }
 
         public static void AddPanel()
         {
-            InputFieldPanel<int> panel = new(new HealthPatch(), KeyCodeMap.ValidChars.Numeric, 1, 120, "Max Health (5-9)");
+            InputFieldPanel<int> panel = new(new HealthPatch(), KeyCodeMap.ValidChars.Numeric, CabbyMenu.Constants.DEFAULT_CHARACTER_LIMIT, CabbyMenu.Constants.DEFAULT_PANEL_WIDTH, "Max Health (5-9)");
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(panel);
         }
     }

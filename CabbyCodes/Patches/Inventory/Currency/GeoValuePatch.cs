@@ -1,6 +1,7 @@
-﻿using CabbyCodes.SyncedReferences;
-using CabbyCodes.UI.CheatPanels;
+using CabbyMenu.SyncedReferences;
+using CabbyMenu.UI.CheatPanels;
 using System;
+using CabbyMenu;
 
 namespace CabbyCodes.Patches.Inventory.Currency
 {
@@ -17,12 +18,12 @@ namespace CabbyCodes.Patches.Inventory.Currency
 
             PlayerData.instance.geo = value;
 
-            CabbyCodesPlugin.BLogger.LogDebug("Geo updated to {0}", value);
+            CabbyCodesPlugin.BLogger.LogDebug($"Geo updated to {value}");
         }
 
         public static void AddPanel()
         {
-            InputFieldPanel<int> panel = new(new GeoValuePatch(), KeyCodeMap.ValidChars.Numeric, 7, 180, "Geo (0-9999999)");
+            InputFieldPanel<int> panel = new(new GeoValuePatch(), CabbyMenu.KeyCodeMap.ValidChars.Numeric, 7, CabbyMenu.Constants.DEFAULT_PANEL_WIDTH, "Geo (0-9999999)");
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(panel);
         }
     }

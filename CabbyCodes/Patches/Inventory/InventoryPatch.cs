@@ -1,4 +1,4 @@
-﻿using CabbyCodes.Patches.Inventory.Abilities;
+using CabbyCodes.Patches.Inventory.Abilities;
 using CabbyCodes.Patches.Inventory.Currency;
 using CabbyCodes.Patches.Inventory.Items;
 using CabbyCodes.Patches.Inventory.Keys;
@@ -7,7 +7,7 @@ using CabbyCodes.Patches.Inventory.NailArts;
 using CabbyCodes.Patches.Inventory.PowerUps;
 using CabbyCodes.Patches.Inventory.Spells;
 using CabbyCodes.Patches.Inventory.Upgrades;
-using CabbyCodes.UI.CheatPanels;
+using CabbyMenu.UI.CheatPanels;
 
 namespace CabbyCodes.Patches.Inventory
 {

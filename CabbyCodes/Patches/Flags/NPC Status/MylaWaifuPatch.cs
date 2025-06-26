@@ -1,5 +1,6 @@
-﻿using CabbyCodes.SyncedReferences;
-using CabbyCodes.UI.CheatPanels;
+using CabbyMenu.SyncedReferences;
+using CabbyMenu.UI.CheatPanels;
+using CabbyMenu;
 
 namespace CabbyCodes.Patches.Flags.NPC_Status
 {

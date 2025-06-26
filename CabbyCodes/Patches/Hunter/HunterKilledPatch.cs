@@ -1,4 +1,4 @@
-﻿using CabbyCodes.SyncedReferences;
+using CabbyMenu.SyncedReferences;
 
 namespace CabbyCodes.Patches.Hunter
 {

@@ -2,6 +2,28 @@
 
 A comprehensive cheat menu mod for Hollow Knight that provides extensive control over player stats, inventory, and game state through an intuitive in-game interface.
 
+## 🏗️ Project Structure
+
+This project uses a **multi-project solution** with two main components:
+
+- **CabbyCodes**: Main mod plugin with game patches and logic
+- **CabbyMenu**: Reusable UI library for creating mod menus
+
+### Architecture
+```
+HKCabbyCodes/
+├── CabbyCodes/          # Main mod project
+│   ├── Patches/         # Game modification patches
+│   ├── Types/           # Game-specific types
+│   └── CabbyCodesPlugin.cs  # Main plugin entry point
+├── CabbyMenu/           # UI library project
+│   ├── UI/              # UI components and controls
+│   ├── SyncedReferences/ # Data synchronization
+│   ├── Types/           # UI-specific types
+│   └── Constants.cs     # UI constants (moved from CabbyCodes)
+└── CabbyCodes.sln       # Solution file
+```
+
 ## 🎮 Features
 
 ### Player Modifications
@@ -50,7 +72,7 @@ A comprehensive cheat menu mod for Hollow Knight that provides extensive control
 
 2. **Install CabbyCodes**:
    - Download the latest release from the releases page
-   - Extract `CabbyCodes.dll` to `BepInEx/plugins/`
+   - Extract both `CabbyCodes.dll` and `CabbyMenu.dll` to `BepInEx/plugins/`
    - Start the game
 
 3. **Verify Installation**:
@@ -105,76 +127,80 @@ Custom teleport locations are automatically saved to the config file and will pe
 ## 🛠️ Development
 
 ### Building from Source
-1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/yourusername/CabbyCodes.git
-   cd CabbyCodes
-   ```
 
-2. **Restore dependencies**:
-   ```bash
-   dotnet restore
-   ```
+#### Using Make (Recommended)
+```bash
+# Build the entire solution
+make build
 
-3. **Build the project**:
-   ```bash
-   dotnet build --configuration Release
-   ```
+# Build individual projects
+make build-cabbycodes
+make build-cabbymenu
 
-4. **Copy to game directory**:
-   ```bash
-   copy "bin\Release\net472\CabbyCodes.dll" "C:\Program Files (x86)\Steam\steamapps\common\Hollow Knight\BepInEx\plugins\"
-   ```
+# Clean build artifacts
+make clean
 
-### Project Structure
+# Deploy to game directory
+make deploy
 ```
-CabbyCodes/
-├── Patches/           # Game modification patches
-│   ├── Player/       # Player-related modifications
-│   ├── Inventory/    # Inventory management
-│   ├── Charms/       # Charm system
-│   └── ...
-├── UI/               # User interface components
-│   ├── CheatPanels/  # Individual cheat panels
-│   ├── Factories/    # UI component factories
-│   └── Modders/      # UI modification utilities
-├── SyncedReferences/ # Data synchronization
-├── Types/            # Custom data types
-├── Configuration/    # Configuration management
-└── Utils/            # Utility classes
+
+#### Using .NET CLI
+```bash
+# Restore dependencies
+dotnet restore
+
+# Build the solution
+dotnet build --configuration Release
+
+# Build individual projects
+dotnet build CabbyCodes/CabbyCodes.csproj --configuration Release
+dotnet build CabbyMenu/CabbyMenu.csproj --configuration Release
 ```
+
+### Project Dependencies
+- **CabbyCodes** depends on **CabbyMenu** for UI functionality
+- **CabbyMenu** is a standalone library that can be used by other mods
+- Both projects target .NET Framework 4.7.2
+
+### Build Output
+- **CabbyCodes.dll**: Main mod plugin (contains game patches)
+- **CabbyMenu.dll**: UI library (required by CabbyCodes)
 
 ### Key Components
+
+#### CabbyCodes Project
 - **CabbyCodesPlugin**: Main plugin entry point
-- **CabbyMenu**: Core UI management
-- **ModConfig**: Configuration system
-- **ISyncedReference**: Data synchronization interface
-- **ValidationUtils**: Input validation utilities
-- **LoggingExtensions**: Enhanced logging capabilities
+- **Patches/**: Game modification patches organized by category
+- **Constants.cs**: Game-specific constants (health limits, currency limits, etc.)
+
+#### CabbyMenu Project
+- **UI/**: Complete UI system with panels, controls, and factories
+- **SyncedReferences/**: Data synchronization interfaces
+- **Constants.cs**: UI constants (panel sizes, character limits, etc.)
 
 ## 🐛 Troubleshooting
 
 ### Common Issues
 
 **Menu doesn't appear:**
-- Ensure BepInEx is properly installed
+- Ensure both `CabbyCodes.dll` and `CabbyMenu.dll` are in the plugins folder
 - Check BepInEx console for error messages
-- Verify the DLL is in the correct plugins folder
+- Verify BepInEx is properly installed
 
 **Values not updating:**
 - Make sure you're paused in the game
 - Check that input validation isn't blocking changes
 - Verify the game state allows the modification
 
-**Teleport locations not saving:**
-- Check that the config file is writable
-- Verify BepInEx has proper permissions
-- Look for error messages in the BepInEx console
+**Build errors:**
+- Ensure .NET 6.0 SDK is installed
+- Run `dotnet restore` to restore dependencies
+- Check that both projects are included in the solution
 
-**Performance issues:**
-- Close other mods that might conflict
-- Check for memory leaks in long sessions
-- Restart the game if issues persist
+**Deployment issues:**
+- Use `make deploy` to automatically copy both DLLs
+- Verify the Hollow Knight path in the Makefile
+- Check file permissions in the plugins directory
 
 ### Debug Information
 Check the BepInEx console for detailed information about:
@@ -199,6 +225,14 @@ Check the BepInEx console for detailed information about:
 - Include error handling for all user inputs
 - Test changes thoroughly before submitting
 - Update documentation for new features
+- Keep UI constants in CabbyMenu project
+- Keep game-specific constants in CabbyCodes project
+
+### Project Organization
+- **Game Logic**: Add to CabbyCodes project
+- **UI Components**: Add to CabbyMenu project
+- **Shared Types**: Place in appropriate project based on usage
+- **Constants**: UI constants in CabbyMenu, game constants in CabbyCodes
 
 ## 📄 License
 

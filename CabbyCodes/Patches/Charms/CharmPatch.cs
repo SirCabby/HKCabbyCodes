@@ -1,10 +1,11 @@
-﻿using CabbyCodes.Patches.Charms;
-using CabbyCodes.SyncedReferences;
-using CabbyCodes.Types;
-using CabbyCodes.UI.CheatPanels;
-using CabbyCodes.UI.Modders;
+using CabbyCodes.Patches.Charms;
+using CabbyMenu.SyncedReferences;
+using CabbyMenu.Types;
+using CabbyMenu.UI.CheatPanels;
+using CabbyMenu.UI.Modders;
 using System.Collections.Generic;
 using UnityEngine;
+using CabbyCodes.Types;
 
 namespace CabbyCodes.Patches
 {

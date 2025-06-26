@@ -1,5 +1,5 @@
-﻿using CabbyCodes.SyncedReferences;
-using CabbyCodes.UI.CheatPanels;
+using CabbyMenu.SyncedReferences;
+using CabbyMenu.UI.CheatPanels;
 
 namespace CabbyCodes.Patches
 {
@@ -17,7 +17,7 @@ namespace CabbyCodes.Patches
 
         public static void AddPanel()
         {
-            InputFieldPanel<float> panel = new(new PlayTimePatch(), KeyCodeMap.ValidChars.Numeric, 9, 180, "Playtime (seconds)");
+            InputFieldPanel<float> panel = new(new PlayTimePatch(), CabbyMenu.KeyCodeMap.ValidChars.Numeric, 9, 180, "Playtime (seconds)");
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(panel);
         }
     }

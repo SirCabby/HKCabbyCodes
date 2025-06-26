@@ -1,5 +1,5 @@
-﻿using CabbyCodes.SyncedReferences;
-using CabbyCodes.UI.CheatPanels;
+using CabbyMenu.SyncedReferences;
+using CabbyMenu.UI.CheatPanels;
 using System;
 
 namespace CabbyCodes.Patches.Inventory.Upgrades
@@ -13,13 +13,13 @@ namespace CabbyCodes.Patches.Inventory.Upgrades
 
         public void Set(int value)
         {
-            value = ValidationUtils.ValidateRange(value, 0, Constants.MAX_VESSEL_FRAGMENTS, nameof(value));
+            value = CabbyMenu.ValidationUtils.ValidateRange(value, 0, Constants.MAX_VESSEL_FRAGMENTS, nameof(value));
             PlayerData.instance.vesselFragments = value;
         }
 
         public static void AddPanel()
         {
-            InputFieldPanel<int> panel = new(new VesselFragmentPatch(), KeyCodeMap.ValidChars.Numeric, 1, 120, "Vessel Fragments (0-2)");
+            InputFieldPanel<int> panel = new(new VesselFragmentPatch(), CabbyMenu.KeyCodeMap.ValidChars.Numeric, CabbyMenu.Constants.DEFAULT_CHARACTER_LIMIT, CabbyMenu.Constants.DEFAULT_PANEL_WIDTH, "Vessel Fragments (0-2)");
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(panel);
         }
     }

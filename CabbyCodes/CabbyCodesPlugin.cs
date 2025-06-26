@@ -1,4 +1,4 @@
-﻿using BepInEx;
+using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.Logging;
 using BepInEx.Unity.Mono;
@@ -8,8 +8,7 @@ using CabbyCodes.Patches.Flags;
 using CabbyCodes.Patches.Hunter;
 using CabbyCodes.Patches.Inventory;
 using CabbyCodes.Patches.Maps;
-using CabbyCodes.UI;
-using CabbyCodes.Configuration;
+using CabbyMenu.UI;
 
 namespace CabbyCodes
 {
@@ -27,7 +26,7 @@ namespace CabbyCodes
         /// <summary>
         /// Main menu instance for the mod.
         /// </summary>
-        public static CabbyMenu cabbyMenu;
+        public static CabbyMenu.UI.CabbyMenu cabbyMenu;
 
         /// <summary>
         /// Configuration file instance.
@@ -41,11 +40,8 @@ namespace CabbyCodes
         {
             BLogger = Logger;
             BLogger.LogInfo("Plugin cabby.cabbycodes is loaded!");
-            BLogger.LogInfo("Config location: {0}", Config.ConfigFilePath);
+            BLogger.LogInfo($"Config location: {Config.ConfigFilePath}");
             configFile = Config;
-
-            // Initialize configuration system
-            ModConfig.Initialize(configFile);
         }
 
         /// <summary>
@@ -55,7 +51,7 @@ namespace CabbyCodes
         {
             UnityExplorer.ExplorerStandalone.CreateInstance();
 
-            cabbyMenu = new CabbyMenu(Constants.NAME, Constants.VERSION);
+            cabbyMenu = new CabbyMenu.UI.CabbyMenu(Constants.NAME, Constants.VERSION);
             cabbyMenu.RegisterCategory("Player", PlayerPatch.AddPanels);
             cabbyMenu.RegisterCategory("Teleport", TeleportPatch.AddPanels);
             cabbyMenu.RegisterCategory("Inventory", InventoryPatch.AddPanels);

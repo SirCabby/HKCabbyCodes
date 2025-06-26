@@ -1,0 +1,45 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net472</TargetFramework>
+    <AssemblyName>CabbyMenu</AssemblyName>
+    <Description>Hollow Knight Cabby Menu UI Library</Description>
+    <Version>0.0.1</Version>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <LangVersion>latest</LangVersion>
+    <RestoreAdditionalProjectSources>
+      https://api.nuget.org/v3/index.json;
+      https://nuget.bepinex.dev/v3/index.json;
+      https://nuget.samboy.dev/v3/index.json
+    </RestoreAdditionalProjectSources>
+    <RootNamespace>CabbyMenu</RootNamespace>
+    <Title>Hollow Knight Cabby Menu UI Library</Title>
+    <PackageId>$(AssemblyName)</PackageId>
+    <Authors>$(AssemblyName)test</Authors>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="BepInEx.Unity.Mono" Version="6.0.0-be.*" IncludeAssets="compile" />
+    <PackageReference Include="BepInEx.PluginInfoProps" Version="2.*" />
+    <PackageReference Include="HarmonyX" Version="2.10.2" />
+    <PackageReference Include="Unity3D.UnityEngine.UI" Version="2018.3.5.1" />
+    <PackageReference Include="UnityEngine.Modules" Version="2020.2" IncludeAssets="compile" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>..\CabbyCodes\lib\Assembly-CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="PlayMaker">
+      <HintPath>..\CabbyCodes\lib\PlayMaker.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityExplorer.Standalone.Mono">
+      <HintPath>..\CabbyCodes\lib\UnityExplorer.STANDALONE.Mono.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project> 

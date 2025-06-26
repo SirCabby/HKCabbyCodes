@@ -10,12 +10,6 @@ namespace CabbyCodes
         public const string NAME = "Cabby Codes";
         public const string VERSION = "0.0.1";
 
-        // UI Constants
-        public const int DEFAULT_CHARACTER_LIMIT = 1;
-        public const int DEFAULT_PANEL_WIDTH = 120;
-        public const int DEFAULT_PANEL_HEIGHT = 60;
-        public const int CLICK_TIMER_DELAY = 100;
-
         // Game Limits
         public const int MIN_HEALTH = 5;
         public const int MAX_HEALTH = 9;

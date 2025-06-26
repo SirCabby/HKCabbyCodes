@@ -1,6 +1,6 @@
-﻿using CabbyCodes.UI.CheatPanels;
+using CabbyMenu.UI.CheatPanels;
 using UnityEngine;
-using CabbyCodes.Debug;
+using CabbyMenu.Debug;
 using System.Reflection;
 using System.Collections.Generic;
 
@@ -27,8 +27,8 @@ namespace CabbyCodes.Patches
             {
                 GameMap gm = GameManager._instance.gameMap.GetComponent<GameMap>();
                 Vector3 heroPos = ((GameObject)heroFieldInfo.GetValue(gm)).transform.position;
-                CabbyCodesPlugin.BLogger.LogInfo("Location: " + heroPos.x + ", " + heroPos.y);
-                CabbyCodesPlugin.BLogger.LogInfo("Scene: " + GameManager.GetBaseSceneName(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name));
+                CabbyCodesPlugin.BLogger.LogInfo($"Location: {heroPos.x}, {heroPos.y}");
+                CabbyCodesPlugin.BLogger.LogInfo(string.Format("Scene: {0}", GameManager.GetBaseSceneName(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name)));
             }, "Print", "General Info"));
 
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new ButtonPanel(() =>

@@ -1,5 +1,5 @@
-﻿using CabbyCodes.SyncedReferences;
-using CabbyCodes.UI.CheatPanels;
+using CabbyMenu.SyncedReferences;
+using CabbyMenu.UI.CheatPanels;
 using System;
 
 namespace CabbyCodes.Patches.Inventory.Currency
@@ -13,7 +13,7 @@ namespace CabbyCodes.Patches.Inventory.Currency
 
         public void Set(int value)
         {
-            value = ValidationUtils.ValidateRange(value, 0, Constants.MAX_KINGS_IDOLS, nameof(value));
+            value = CabbyMenu.ValidationUtils.ValidateRange(value, 0, Constants.MAX_KINGS_IDOLS, nameof(value));
             if (value > 0)
             {
                 PlayerData.instance.foundTrinket3 = true;
@@ -23,7 +23,7 @@ namespace CabbyCodes.Patches.Inventory.Currency
 
         public static void AddPanel()
         {
-            InputFieldPanel<int> panel = new(new KingsIdolPatch(), KeyCodeMap.ValidChars.Numeric, 1, 120, "King's Idols (0-8)");
+            InputFieldPanel<int> panel = new(new KingsIdolPatch(), CabbyMenu.KeyCodeMap.ValidChars.Numeric, 1, 120, "King's Idols (0-8)");
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(panel);
         }
     }

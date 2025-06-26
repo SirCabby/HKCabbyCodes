@@ -1,6 +1,6 @@
-﻿using CabbyCodes.SyncedReferences;
-using CabbyCodes.UI.CheatPanels;
-using CabbyCodes.UI.Modders;
+using CabbyMenu.SyncedReferences;
+using CabbyMenu.UI.CheatPanels;
+using CabbyMenu.UI.Modders;
 using System.Collections.Generic;
 
 namespace CabbyCodes.Patches

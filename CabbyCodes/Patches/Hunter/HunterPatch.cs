@@ -1,5 +1,5 @@
-﻿using CabbyCodes.SyncedReferences;
-using CabbyCodes.UI.CheatPanels;
+using CabbyMenu.SyncedReferences;
+using CabbyMenu.UI.CheatPanels;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +25,7 @@ namespace CabbyCodes.Patches.Hunter
 
         public void Set(int value)
         {
-            value = ValidationUtils.ValidateRange(value, Constants.MIN_HUNTER_KILLS, Constants.MAX_HUNTER_KILLS, nameof(value));
+            value = CabbyMenu.ValidationUtils.ValidateRange(value, Constants.MIN_HUNTER_KILLS, Constants.MAX_HUNTER_KILLS, nameof(value));
             PlayerData.instance.SetInt("kills" + targetName, value);
         }
 
@@ -38,7 +38,7 @@ namespace CabbyCodes.Patches.Hunter
 
         private static InputFieldPanel<int> BuildCheatPanel(string targetName)
         {
-            InputFieldPanel<int> panel = new(new HunterPatch(targetName), KeyCodeMap.ValidChars.Numeric, 2, 200, targetName);
+            InputFieldPanel<int> panel = new(new HunterPatch(targetName), CabbyMenu.KeyCodeMap.ValidChars.Numeric, 2, 200, targetName);
             PanelAdder.AddToggleButton(panel, 0, new HunterKilledPatch(targetName));
 
             return panel;

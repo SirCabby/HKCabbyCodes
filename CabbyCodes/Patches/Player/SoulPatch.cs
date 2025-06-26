@@ -1,7 +1,10 @@
-﻿using CabbyCodes.SyncedReferences;
-using CabbyCodes.UI.CheatPanels;
-using HarmonyLib;
+using CabbyMenu.SyncedReferences;
+using CabbyMenu.UI.CheatPanels;
+using System;
 using System.Reflection;
+using HarmonyLib;
+using UnityEngine;
+using CabbyMenu;
 
 namespace CabbyCodes.Patches
 {

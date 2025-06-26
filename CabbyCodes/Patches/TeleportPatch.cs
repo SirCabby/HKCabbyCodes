@@ -1,7 +1,5 @@
-﻿using CabbyCodes.Types;
-using CabbyCodes.SyncedReferences;
-using CabbyCodes.UI.CheatPanels;
-using CabbyCodes.Configuration;
+using CabbyMenu.SyncedReferences;
+using CabbyMenu.UI.CheatPanels;
 using HarmonyLib;
 using System;
 using System.Collections.Generic;
@@ -10,6 +8,8 @@ using UnityEngine;
 using BepInEx.Configuration;
 using UnityEngine.UI;
 using System.Linq;
+using CabbyCodes.Types;
+using CabbyMenu;
 
 namespace CabbyCodes.Patches
 {
@@ -143,10 +143,10 @@ namespace CabbyCodes.Patches
             }
             catch (System.Exception ex)
             {
-                CabbyCodesPlugin.BLogger.LogWarning("Failed to load teleport locations from config: {0}", ex.Message);
+                CabbyCodesPlugin.BLogger.LogWarning($"Failed to load teleport locations from config: {ex.Message}");
             }
 
-            CabbyCodesPlugin.BLogger.LogDebug("Loaded {0} custom teleport locations", result.Count);
+            CabbyCodesPlugin.BLogger.LogDebug($"Loaded {result.Count} custom teleport locations");
             return result;
         }
 
@@ -156,9 +156,9 @@ namespace CabbyCodes.Patches
         /// <param name="teleportLocation">The location to teleport to.</param>
         public static void DoTeleport(TeleportLocation teleportLocation)
         {
-            CabbyCodesPlugin.BLogger.LogInfo("Teleporting to [" + teleportLocation.SceneName + "] (" + teleportLocation.Location.x + ", " + teleportLocation.Location.y + ")");
+            CabbyCodesPlugin.BLogger.LogInfo($"Teleporting to [{teleportLocation.SceneName}] ({teleportLocation.Location.x}, {teleportLocation.Location.y})");
 
-            MethodInfo runPrefix = typeof(CommonPatches).GetMethod(nameof(CommonPatches.Prefix_RunOriginal));
+            MethodInfo runPrefix = typeof(CabbyMenu.CommonPatches).GetMethod(nameof(CabbyMenu.CommonPatches.Prefix_RunOriginal));
             harmony.Patch(mOriginal, prefix: new HarmonyMethod(runPrefix), postfix: new HarmonyMethod(postMethod));
 
             GameManager gm = GameManager._instance;
@@ -238,11 +238,11 @@ namespace CabbyCodes.Patches
                     // Update the list of saved locations
                     UpdateSavedLocationsList();
 
-                    CabbyCodesPlugin.BLogger.LogDebug("Saved new teleport location: {0} at ({1}, {2})", sceneName, teleportLocation.x, teleportLocation.y);
+                    CabbyCodesPlugin.BLogger.LogDebug($"Saved new teleport location: {sceneName} at ({teleportLocation.x}, {teleportLocation.y})");
                 }
                 else
                 {
-                    CabbyCodesPlugin.BLogger.LogWarning("Failed to create config entry for teleport location: {0}", sceneName);
+                    CabbyCodesPlugin.BLogger.LogWarning($"Failed to create config entry for teleport location: {sceneName}");
                 }
             }
         }
@@ -267,7 +267,7 @@ namespace CabbyCodes.Patches
             }
             catch (System.Exception ex)
             {
-                CabbyCodesPlugin.BLogger.LogWarning("Failed to update saved locations list: {0}", ex.Message);
+                CabbyCodesPlugin.BLogger.LogWarning($"Failed to update saved locations list: {ex.Message}");
             }
         }
 
@@ -309,11 +309,11 @@ namespace CabbyCodes.Patches
                         // Update the saved locations list
                         UpdateSavedLocationsList();
 
-                        CabbyCodesPlugin.BLogger.LogDebug("Removed teleport location: {0}", customLocation.SceneName);
+                        CabbyCodesPlugin.BLogger.LogDebug($"Removed teleport location: {customLocation.SceneName}");
                     }
                     catch (System.Exception ex)
                     {
-                        CabbyCodesPlugin.BLogger.LogWarning("Failed to remove teleport location from config: {0} - {1}", customLocation.SceneName, ex.Message);
+                        CabbyCodesPlugin.BLogger.LogWarning($"Failed to remove teleport location from config: {customLocation.SceneName} - {ex.Message}");
                     }
                 }
             }, "X", new Vector2(60, 60));
