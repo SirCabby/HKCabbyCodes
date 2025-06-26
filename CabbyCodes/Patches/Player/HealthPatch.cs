@@ -14,10 +14,10 @@ namespace CabbyCodes.Patches.Player
         public void Set(int value)
         {
             value = ValidationUtils.ValidateRange(value, Constants.MIN_HEALTH, Constants.MAX_HEALTH, nameof(value));
-            
+
             PlayerData.instance.maxHealthBase = value;
             PlayerData.instance.maxHealth = value;
-            
+
             CabbyCodesPlugin.BLogger.LogDebug("Health updated to {0}", value);
         }
 

@@ -13,4 +13,4 @@ namespace CabbyCodes.Patches
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new SettingsPanel());
         }
     }
-} 
+}

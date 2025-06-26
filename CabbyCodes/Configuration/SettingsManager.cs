@@ -30,7 +30,7 @@ namespace CabbyCodes.Configuration
             RegisterSettingCallbacks();
             EnsureBackupDirectoryExists();
             _isInitialized = true;
-            
+
             CabbyCodesPlugin.BLogger.LogInfo("Settings manager initialized");
         }
 
@@ -53,31 +53,31 @@ namespace CabbyCodes.Configuration
         private static void RegisterSettingCallbacks()
         {
             // UI Settings
-            ModConfig.EnableInputValidation.SettingChanged += (sender, e) => 
+            ModConfig.EnableInputValidation.SettingChanged += (sender, e) =>
                 OnSettingChanged?.Invoke("EnableInputValidation", ModConfig.EnableInputValidation.Value);
-            ModConfig.ShowDebugInfo.SettingChanged += (sender, e) => 
+            ModConfig.ShowDebugInfo.SettingChanged += (sender, e) =>
                 OnSettingChanged?.Invoke("ShowDebugInfo", ModConfig.ShowDebugInfo.Value);
-            ModConfig.MenuPositionX.SettingChanged += (sender, e) => 
+            ModConfig.MenuPositionX.SettingChanged += (sender, e) =>
             {
                 OnSettingChanged?.Invoke("MenuPositionX", ModConfig.MenuPositionX.Value);
                 ApplyMenuPosition(); // Apply position change immediately
             };
-            ModConfig.MenuPositionY.SettingChanged += (sender, e) => 
+            ModConfig.MenuPositionY.SettingChanged += (sender, e) =>
             {
                 OnSettingChanged?.Invoke("MenuPositionY", ModConfig.MenuPositionY.Value);
                 ApplyMenuPosition(); // Apply position change immediately
             };
             // Performance Settings
-            ModConfig.EnablePerformanceLogging.SettingChanged += (sender, e) => 
+            ModConfig.EnablePerformanceLogging.SettingChanged += (sender, e) =>
                 OnSettingChanged?.Invoke("EnablePerformanceLogging", ModConfig.EnablePerformanceLogging.Value);
-            ModConfig.MaxLogEntries.SettingChanged += (sender, e) => 
+            ModConfig.MaxLogEntries.SettingChanged += (sender, e) =>
                 OnSettingChanged?.Invoke("MaxLogEntries", ModConfig.MaxLogEntries.Value);
             // Gameplay Settings
-            ModConfig.EnableUndoRedo.SettingChanged += (sender, e) => 
+            ModConfig.EnableUndoRedo.SettingChanged += (sender, e) =>
                 OnSettingChanged?.Invoke("EnableUndoRedo", ModConfig.EnableUndoRedo.Value);
-            ModConfig.UndoHistorySize.SettingChanged += (sender, e) => 
+            ModConfig.UndoHistorySize.SettingChanged += (sender, e) =>
                 OnSettingChanged?.Invoke("UndoHistorySize", ModConfig.UndoHistorySize.Value);
-            ModConfig.ConfirmDestructiveChanges.SettingChanged += (sender, e) => 
+            ModConfig.ConfirmDestructiveChanges.SettingChanged += (sender, e) =>
                 OnSettingChanged?.Invoke("ConfirmDestructiveChanges", ModConfig.ConfirmDestructiveChanges.Value);
         }
 
@@ -136,7 +136,7 @@ namespace CabbyCodes.Configuration
 
                 setting.Value = newValue;
                 ModConfig.Save();
-                
+
                 CabbyCodesPlugin.BLogger.LogDebug("Setting updated: {0} = {1}", setting.Definition.Key, newValue);
                 return true;
             }
@@ -176,13 +176,13 @@ namespace CabbyCodes.Configuration
             {
                 // Apply UI settings
                 ApplyUISettings();
-                
+
                 // Apply performance settings
                 ApplyPerformanceSettings();
-                
+
                 // Apply gameplay settings
                 ApplyGameplaySettings();
-                
+
                 CabbyCodesPlugin.BLogger.LogInfo("All settings applied successfully");
             }
             catch (Exception ex)
@@ -197,7 +197,7 @@ namespace CabbyCodes.Configuration
             if (ModConfig.MenuPositionX.Value != 100 || ModConfig.MenuPositionY.Value != 100)
             {
                 ApplyMenuPosition();
-                CabbyCodesPlugin.BLogger.LogDebug("Menu position: ({0}, {1})", 
+                CabbyCodesPlugin.BLogger.LogDebug("Menu position: ({0}, {1})",
                     ModConfig.MenuPositionX.Value, ModConfig.MenuPositionY.Value);
             }
         }
@@ -215,11 +215,11 @@ namespace CabbyCodes.Configuration
                         // Calculate normalized position (0-1 range)
                         float normalizedX = ModConfig.MenuPositionX.Value / 1920f;
                         float normalizedY = ModConfig.MenuPositionY.Value / 1080f;
-                        
+
                         // Clamp values to valid range
                         normalizedX = Math.Max(0f, Math.Min(1f, normalizedX));
                         normalizedY = Math.Max(0f, Math.Min(1f, normalizedY));
-                        
+
                         // Apply position to the menu button
                         var menuButton = rootCanvas.transform.Find("Open Menu Button");
                         if (menuButton != null)
@@ -230,7 +230,7 @@ namespace CabbyCodes.Configuration
                                 rectTransform.anchorMin = new UnityEngine.Vector2(normalizedX, normalizedY);
                                 rectTransform.anchorMax = new UnityEngine.Vector2(normalizedX + 0.05f, normalizedY + 0.03f);
                                 rectTransform.anchoredPosition = UnityEngine.Vector2.zero;
-                                
+
                                 CabbyCodesPlugin.BLogger.LogDebug("Menu position applied: ({0}, {1})", normalizedX, normalizedY);
                             }
                         }
@@ -270,19 +270,19 @@ namespace CabbyCodes.Configuration
             try
             {
                 EnsureBackupDirectoryExists();
-                
+
                 // Create backup filename with timestamp
                 string timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
                 string backupFileName = $"CabbyCodes_Backup_{timestamp}.cfg";
                 string backupPath = Path.Combine(_backupDirectory, backupFileName);
-                
+
                 // Create backup content in INI format
                 var backupContent = new StringBuilder();
                 backupContent.AppendLine("# CabbyCodes Settings Backup");
                 backupContent.AppendLine($"# Created: {DateTime.Now:yyyy-MM-dd HH:mm:ss}");
                 backupContent.AppendLine($"# Version: 1.0");
                 backupContent.AppendLine();
-                
+
                 // UI Settings
                 backupContent.AppendLine("[UI]");
                 backupContent.AppendLine($"EnableInputValidation = {ModConfig.EnableInputValidation.Value}");
@@ -290,29 +290,29 @@ namespace CabbyCodes.Configuration
                 backupContent.AppendLine($"MenuPositionX = {ModConfig.MenuPositionX.Value}");
                 backupContent.AppendLine($"MenuPositionY = {ModConfig.MenuPositionY.Value}");
                 backupContent.AppendLine();
-                
+
                 // Performance Settings
                 backupContent.AppendLine("[Performance]");
                 backupContent.AppendLine($"EnablePerformanceLogging = {ModConfig.EnablePerformanceLogging.Value}");
                 backupContent.AppendLine($"MaxLogEntries = {ModConfig.MaxLogEntries.Value}");
                 backupContent.AppendLine();
-                
+
                 // Gameplay Settings
                 backupContent.AppendLine("[Gameplay]");
                 backupContent.AppendLine($"EnableUndoRedo = {ModConfig.EnableUndoRedo.Value}");
                 backupContent.AppendLine($"UndoHistorySize = {ModConfig.UndoHistorySize.Value}");
                 backupContent.AppendLine($"ConfirmDestructiveChanges = {ModConfig.ConfirmDestructiveChanges.Value}");
-                
+
                 // Save backup
                 File.WriteAllText(backupPath, backupContent.ToString());
-                
+
                 // Also create a copy of the original config file
                 string configBackupPath = Path.Combine(_backupDirectory, $"Original_Config_Backup_{timestamp}.cfg");
                 if (File.Exists(CabbyCodesPlugin.configFile.ConfigFilePath))
                 {
                     File.Copy(CabbyCodesPlugin.configFile.ConfigFilePath, configBackupPath);
                 }
-                
+
                 CabbyCodesPlugin.BLogger.LogInfo("Settings backup created: {0}", backupPath);
                 return true;
             }
@@ -337,7 +337,7 @@ namespace CabbyCodes.Configuration
                     CabbyCodesPlugin.BLogger.LogWarning("Backup directory does not exist");
                     return false;
                 }
-                
+
                 // Find backup file
                 string backupPath;
                 if (string.IsNullOrEmpty(backupFileName))
@@ -349,7 +349,7 @@ namespace CabbyCodes.Configuration
                         CabbyCodesPlugin.BLogger.LogWarning("No backup files found");
                         return false;
                     }
-                    
+
                     // Sort by creation time and get the most recent
                     Array.Sort(backupFiles, (a, b) => File.GetCreationTime(b).CompareTo(File.GetCreationTime(a)));
                     backupPath = backupFiles[0];
@@ -363,44 +363,44 @@ namespace CabbyCodes.Configuration
                         return false;
                     }
                 }
-                
+
                 // Read backup file
                 string[] lines = File.ReadAllLines(backupPath);
                 string currentSection = "";
-                
+
                 foreach (string line in lines)
                 {
                     string trimmedLine = line.Trim();
-                    
+
                     // Skip comments and empty lines
                     if (string.IsNullOrEmpty(trimmedLine) || trimmedLine.StartsWith("#"))
                         continue;
-                    
+
                     // Check for section headers
                     if (trimmedLine.StartsWith("[") && trimmedLine.EndsWith("]"))
                     {
                         currentSection = trimmedLine.Substring(1, trimmedLine.Length - 2);
                         continue;
                     }
-                    
+
                     // Parse key-value pairs
                     int equalsIndex = trimmedLine.IndexOf('=');
                     if (equalsIndex > 0)
                     {
                         string key = trimmedLine.Substring(0, equalsIndex).Trim();
                         string value = trimmedLine.Substring(equalsIndex + 1).Trim();
-                        
+
                         // Restore settings based on section and key
                         RestoreSetting(currentSection, key, value);
                     }
                 }
-                
+
                 // Save the restored settings
                 ModConfig.Save();
-                
+
                 // Apply the restored settings
                 ApplyAllSettings();
-                
+
                 CabbyCodesPlugin.BLogger.LogInfo("Settings restored from backup: {0}", backupPath);
                 return true;
             }
@@ -438,7 +438,7 @@ namespace CabbyCodes.Configuration
                                 break;
                         }
                         break;
-                        
+
                     case "performance":
                         switch (key.ToLower())
                         {
@@ -452,7 +452,7 @@ namespace CabbyCodes.Configuration
                                 break;
                         }
                         break;
-                        
+
                     case "gameplay":
                         switch (key.ToLower())
                         {
@@ -488,10 +488,10 @@ namespace CabbyCodes.Configuration
             {
                 if (!Directory.Exists(_backupDirectory))
                     return new string[0];
-                
+
                 var backupFiles = Directory.GetFiles(_backupDirectory, "CabbyCodes_Backup_*.cfg");
                 Array.Sort(backupFiles, (a, b) => File.GetCreationTime(b).CompareTo(File.GetCreationTime(a)));
-                
+
                 return Array.ConvertAll(backupFiles, Path.GetFileName);
             }
             catch (Exception ex)
@@ -555,11 +555,11 @@ namespace CabbyCodes.Configuration
 
                 string[] lines = File.ReadAllLines(filePath);
                 string currentSection = "";
-                
+
                 for (int i = 0; i < lines.Length; i++)
                 {
                     string line = lines[i].Trim();
-                    
+
                     // Skip comments and empty lines
                     if (string.IsNullOrEmpty(line) || line.StartsWith("#"))
                     {
@@ -799,4 +799,4 @@ namespace CabbyCodes.Configuration
             return result;
         }
     }
-} 
+}

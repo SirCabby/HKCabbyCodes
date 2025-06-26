@@ -17,12 +17,12 @@ namespace CabbyCodes
             /// Only numeric characters (0-9).
             /// </summary>
             Numeric,
-            
+
             /// <summary>
             /// Only alphabetic characters (A-Z).
             /// </summary>
             Alpha,
-            
+
             /// <summary>
             /// Both alphabetic and numeric characters.
             /// </summary>

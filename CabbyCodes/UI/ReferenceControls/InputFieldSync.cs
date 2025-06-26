@@ -43,7 +43,7 @@ namespace CabbyCodes.UI.ReferenceControls
                 }
 
                 inputField.characterLimit = characterLimit;
-                
+
                 // Safely get the initial value
                 try
                 {

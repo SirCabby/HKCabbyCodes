@@ -12,7 +12,7 @@ namespace CabbyCodes.Types
         /// The configuration definition for this custom location.
         /// </summary>
         public readonly ConfigDefinition configDef;
-        
+
         /// <summary>
         /// The configuration entry that stores the location data.
         /// </summary>
@@ -22,12 +22,12 @@ namespace CabbyCodes.Types
         /// Gets the scene name from the configuration key.
         /// </summary>
         public override string SceneName { get => configDef.Key; }
-        
+
         /// <summary>
         /// Gets the display name from the configuration key.
         /// </summary>
         public override string DisplayName { get => configDef.Key; }
-        
+
         /// <summary>
         /// Gets or sets the location coordinates by parsing the configuration value.
         /// </summary>

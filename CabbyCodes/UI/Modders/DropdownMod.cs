@@ -21,7 +21,7 @@ namespace CabbyCodes.UI.Modders
         public DropdownMod SetSize(Vector2 size, int showSize = 5)
         {
             new Fitter(dropdownGameObject).Size(size);
-            
+
             GameObject template = dropdownGameObject.transform.Find("Template").gameObject;
             template.GetComponent<RectTransform>().sizeDelta = new Vector2(0, size.y * showSize);
             template.GetComponent<ScrollRect>().scrollSensitivity = size.y;

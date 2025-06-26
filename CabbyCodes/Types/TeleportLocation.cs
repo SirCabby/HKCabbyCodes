@@ -11,12 +11,12 @@ namespace CabbyCodes.Types
         /// Gets or sets the name of the scene where this location is located.
         /// </summary>
         public virtual string SceneName { get; protected set; }
-        
+
         /// <summary>
         /// Gets or sets the display name for this teleport location.
         /// </summary>
         public virtual string DisplayName { get; protected set; }
-        
+
         /// <summary>
         /// Gets or sets the 2D position coordinates of this teleport location.
         /// </summary>

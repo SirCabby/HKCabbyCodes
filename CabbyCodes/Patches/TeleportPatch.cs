@@ -21,7 +21,7 @@ namespace CabbyCodes.Patches
         /// Configuration key for storing teleport locations.
         /// </summary>
         public const string key = "TeleportLocations";
-        
+
         /// <summary>
         /// List of saved custom teleport locations.
         /// </summary>
@@ -31,32 +31,32 @@ namespace CabbyCodes.Patches
         /// Harmony instance for patching game methods.
         /// </summary>
         private static readonly Harmony harmony = new(key);
-        
+
         /// <summary>
         /// Method info for the original EnterHero method.
         /// </summary>
         private static readonly MethodInfo mOriginal = typeof(GameManager).GetMethod("EnterHero", BindingFlags.NonPublic | BindingFlags.Instance);
-        
+
         /// <summary>
         /// Method info for the post-teleport method.
         /// </summary>
         private static readonly MethodInfo postMethod = typeof(TeleportPatch).GetMethod(nameof(PostTeleport), BindingFlags.NonPublic | BindingFlags.Static);
-        
+
         /// <summary>
         /// Field info for accessing the target scene field.
         /// </summary>
         private static readonly FieldInfo targetSceneFieldInfo = typeof(GameManager).GetField("targetScene", BindingFlags.NonPublic | BindingFlags.Instance);
-        
+
         /// <summary>
         /// Field info for accessing the entry delay field.
         /// </summary>
         private static readonly FieldInfo entryDelayFieldInfo = typeof(GameManager).GetField("entryDelay", BindingFlags.NonPublic | BindingFlags.Instance);
-        
+
         /// <summary>
         /// Field info for accessing the hero field in GameMap.
         /// </summary>
         private static readonly FieldInfo heroFieldInfo = typeof(GameMap).GetField("hero", BindingFlags.NonPublic | BindingFlags.Instance);
-        
+
         /// <summary>
         /// List of predefined teleport locations.
         /// </summary>
@@ -65,7 +65,7 @@ namespace CabbyCodes.Patches
             new("", "<Select Location>", Vector2.zero),
             new("Town", "Starting Town", new Vector2(136, 12)),
         };
-        
+
         /// <summary>
         /// Original dream gate location for restoration after teleport.
         /// </summary>
@@ -115,12 +115,12 @@ namespace CabbyCodes.Patches
 
             // Get all teleport location entries from the config
             Dictionary<string, ConfigEntry<string>> teleportEntries = SettingsManager.GetConfigEntries<string>(key, "");
-            
+
             foreach (var entry in teleportEntries)
             {
                 string sceneName = entry.Key;
                 ConfigEntry<string> configEntry = entry.Value;
-                
+
                 // Create ConfigDefinition for the CustomTeleportLocation
                 ConfigDefinition configDef = new(key, sceneName);
                 result.Add(new CustomTeleportLocation(configDef, configEntry));
@@ -206,14 +206,14 @@ namespace CabbyCodes.Patches
                 // Use SettingsManager to create the config entry
                 string locationValue = teleportLocation.x + "," + teleportLocation.y;
                 ConfigEntry<string> configEntry = SettingsManager.GetOrCreateConfigEntry(key, sceneName, locationValue);
-                
+
                 if (configEntry != null)
                 {
                     ConfigDefinition configDef = new(key, sceneName);
                     CustomTeleportLocation loc = new(configDef, configEntry);
                     teleportLocations.Add(loc);
                     AddCustomPanel(loc);
-                    
+
                     CabbyCodesPlugin.BLogger.LogDebug("Saved new teleport location: {0} at ({1}, {2})", sceneName, teleportLocation.x, teleportLocation.y);
                 }
                 else

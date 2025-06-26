@@ -65,4 +65,4 @@ namespace CabbyCodes
             return int.TryParse(value, out int result) ? result : defaultValue;
         }
     }
-} 
+}

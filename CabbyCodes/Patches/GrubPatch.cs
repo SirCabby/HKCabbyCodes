@@ -13,7 +13,7 @@ namespace CabbyCodes.Patches
         /// The identifier for grub bottle persistent data.
         /// </summary>
         private static readonly string grubId = "Grub Bottle";
-        
+
         /// <summary>
         /// List of scenes that contain grubs.
         /// </summary>

@@ -20,7 +20,7 @@ namespace CabbyCodes.UI.ReferenceControls
             dropdownGoMod.SetName("DropDownSync");
 
             Dropdown dropdown = dropdownGo.GetComponent<Dropdown>();
-            
+
             dropdown.onValueChanged.AddListener(DropdownSelect);
         }
 

@@ -19,27 +19,27 @@ namespace CabbyCodes.Types
         /// The GameObject containing the input field.
         /// </summary>
         public GameObject InputFieldGo { get; private set; }
-        
+
         /// <summary>
         /// The timestamp when this input field was last updated.
         /// </summary>
         public float LastUpdated { get; set; }
-        
+
         /// <summary>
         /// The types of characters that are valid for this input field.
         /// </summary>
         public KeyCodeMap.ValidChars ValidChars { get; private set; }
-        
+
         /// <summary>
         /// Callback invoked when the input field selection state changes.
         /// </summary>
         public readonly Action<bool> OnSelected;
-        
+
         /// <summary>
         /// Callback invoked when the input field value is submitted.
         /// </summary>
         public readonly Action Submit;
-        
+
         /// <summary>
         /// Callback invoked when the input field input is cancelled.
         /// </summary>

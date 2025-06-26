@@ -11,7 +11,7 @@
         /// </summary>
         /// <returns>The current value.</returns>
         public T Get();
-        
+
         /// <summary>
         /// Sets the value in the game data.
         /// </summary>

@@ -9,17 +9,17 @@ namespace CabbyCodes.Configuration
     public static class ModConfig
     {
         private static ConfigFile _config;
-        
+
         // UI Settings
         public static ConfigEntry<bool> EnableInputValidation { get; private set; }
         public static ConfigEntry<bool> ShowDebugInfo { get; private set; }
         public static ConfigEntry<int> MenuPositionX { get; private set; }
         public static ConfigEntry<int> MenuPositionY { get; private set; }
-        
+
         // Performance Settings
         public static ConfigEntry<bool> EnablePerformanceLogging { get; private set; }
         public static ConfigEntry<int> MaxLogEntries { get; private set; }
-        
+
         // Gameplay Settings
         public static ConfigEntry<bool> EnableUndoRedo { get; private set; }
         public static ConfigEntry<int> UndoHistorySize { get; private set; }
@@ -36,10 +36,10 @@ namespace CabbyCodes.Configuration
                 CabbyCodesPlugin.BLogger.LogWarning("Config file is null, creating default configuration");
                 // Create a default config file path if none provided
                 string defaultConfigPath = System.IO.Path.Combine(
-                    BepInEx.Paths.ConfigPath, 
+                    BepInEx.Paths.ConfigPath,
                     "CabbyCodes.cfg"
                 );
-                
+
                 try
                 {
                     _config = new ConfigFile(defaultConfigPath, true);
@@ -55,44 +55,44 @@ namespace CabbyCodes.Configuration
             {
                 _config = configFile;
             }
-            
+
             InitializeUISettings();
             InitializePerformanceSettings();
             InitializeGameplaySettings();
-            
+
             // Save the configuration to ensure the file is created with default values
             Save();
-            
+
             CabbyCodesPlugin.BLogger.LogInfo("Mod configuration initialized successfully");
         }
 
         private static void InitializeUISettings()
         {
             EnableInputValidation = _config.Bind(
-                "UI", 
-                "EnableInputValidation", 
-                true, 
+                "UI",
+                "EnableInputValidation",
+                true,
                 "Enable input validation for all cheat values"
             );
-            
+
             ShowDebugInfo = _config.Bind(
-                "UI", 
-                "ShowDebugInfo", 
-                false, 
+                "UI",
+                "ShowDebugInfo",
+                false,
                 "Show debug information in the menu"
             );
-            
+
             MenuPositionX = _config.Bind(
-                "UI", 
-                "MenuPositionX", 
-                100, 
+                "UI",
+                "MenuPositionX",
+                100,
                 "Horizontal position of the menu (0-1920)"
             );
-            
+
             MenuPositionY = _config.Bind(
-                "UI", 
-                "MenuPositionY", 
-                100, 
+                "UI",
+                "MenuPositionY",
+                100,
                 "Vertical position of the menu (0-1080)"
             );
         }
@@ -100,16 +100,16 @@ namespace CabbyCodes.Configuration
         private static void InitializePerformanceSettings()
         {
             EnablePerformanceLogging = _config.Bind(
-                "Performance", 
-                "EnablePerformanceLogging", 
-                false, 
+                "Performance",
+                "EnablePerformanceLogging",
+                false,
                 "Enable performance logging for debugging"
             );
-            
+
             MaxLogEntries = _config.Bind(
-                "Performance", 
-                "MaxLogEntries", 
-                1000, 
+                "Performance",
+                "MaxLogEntries",
+                1000,
                 "Maximum number of log entries to keep in memory"
             );
         }
@@ -117,23 +117,23 @@ namespace CabbyCodes.Configuration
         private static void InitializeGameplaySettings()
         {
             EnableUndoRedo = _config.Bind(
-                "Gameplay", 
-                "EnableUndoRedo", 
-                true, 
+                "Gameplay",
+                "EnableUndoRedo",
+                true,
                 "Enable undo/redo functionality for changes"
             );
-            
+
             UndoHistorySize = _config.Bind(
-                "Gameplay", 
-                "UndoHistorySize", 
-                10, 
+                "Gameplay",
+                "UndoHistorySize",
+                10,
                 "Number of changes to keep in undo history"
             );
-            
+
             ConfirmDestructiveChanges = _config.Bind(
-                "Gameplay", 
-                "ConfirmDestructiveChanges", 
-                true, 
+                "Gameplay",
+                "ConfirmDestructiveChanges",
+                true,
                 "Show confirmation dialog for destructive changes"
             );
         }
@@ -186,7 +186,7 @@ namespace CabbyCodes.Configuration
                 EnableUndoRedo.Value = true;
                 UndoHistorySize.Value = 10;
                 ConfirmDestructiveChanges.Value = true;
-                
+
                 Save();
                 CabbyCodesPlugin.BLogger.LogInfo("Configuration reset to defaults");
             }
@@ -196,4 +196,4 @@ namespace CabbyCodes.Configuration
             }
         }
     }
-} 
+}

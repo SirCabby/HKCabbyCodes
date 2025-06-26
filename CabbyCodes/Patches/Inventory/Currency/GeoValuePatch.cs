@@ -14,9 +14,9 @@ namespace CabbyCodes.Patches.Inventory.Currency
         public void Set(int value)
         {
             value = ValidationUtils.ValidateRange(value, Constants.MIN_GEO, Constants.MAX_GEO, nameof(value));
-            
+
             PlayerData.instance.geo = value;
-            
+
             CabbyCodesPlugin.BLogger.LogDebug("Geo updated to {0}", value);
         }
 

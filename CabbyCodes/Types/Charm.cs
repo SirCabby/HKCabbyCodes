@@ -9,12 +9,12 @@
         /// The unique identifier for the charm.
         /// </summary>
         public int id;
-        
+
         /// <summary>
         /// The display name of the charm.
         /// </summary>
         public string name;
-        
+
         /// <summary>
         /// The default cost of the charm in notches.
         /// </summary>

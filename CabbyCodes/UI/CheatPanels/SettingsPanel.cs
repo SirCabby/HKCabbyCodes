@@ -31,26 +31,29 @@ namespace CabbyCodes.UI.CheatPanels
         {
             // UI Settings Section
             AddSectionHeader("UI Settings");
-            
-            inputValidationToggle = CreateToggle("Enable Input Validation", 
+
+            inputValidationToggle = CreateToggle("Enable Input Validation",
                 ModConfig.EnableInputValidation.Value,
-                (value) => {
+                (value) =>
+                {
                     ModConfig.EnableInputValidation.Value = value;
                     ModConfig.Save();
                     CabbyCodesPlugin.BLogger.LogInfo("Input validation {0}", value ? "enabled" : "disabled");
                 });
 
-            debugInfoToggle = CreateToggle("Show Debug Info", 
+            debugInfoToggle = CreateToggle("Show Debug Info",
                 ModConfig.ShowDebugInfo.Value,
-                (value) => {
+                (value) =>
+                {
                     ModConfig.ShowDebugInfo.Value = value;
                     ModConfig.Save();
                     CabbyCodesPlugin.BLogger.LogInfo("Debug info {0}", value ? "enabled" : "disabled");
                 });
 
-            menuPosXInput = CreateInputField("Menu Position X", 
+            menuPosXInput = CreateInputField("Menu Position X",
                 ModConfig.MenuPositionX.Value.ToString(),
-                (value) => {
+                (value) =>
+                {
                     if (int.TryParse(value, out int x) && x >= 0 && x <= 1920)
                     {
                         ModConfig.MenuPositionX.Value = x;
@@ -59,9 +62,10 @@ namespace CabbyCodes.UI.CheatPanels
                     }
                 });
 
-            menuPosYInput = CreateInputField("Menu Position Y", 
+            menuPosYInput = CreateInputField("Menu Position Y",
                 ModConfig.MenuPositionY.Value.ToString(),
-                (value) => {
+                (value) =>
+                {
                     if (int.TryParse(value, out int y) && y >= 0 && y <= 1080)
                     {
                         ModConfig.MenuPositionY.Value = y;
@@ -72,18 +76,20 @@ namespace CabbyCodes.UI.CheatPanels
 
             // Performance Settings Section
             AddSectionHeader("Performance Settings");
-            
-            performanceLoggingToggle = CreateToggle("Enable Performance Logging", 
+
+            performanceLoggingToggle = CreateToggle("Enable Performance Logging",
                 ModConfig.EnablePerformanceLogging.Value,
-                (value) => {
+                (value) =>
+                {
                     ModConfig.EnablePerformanceLogging.Value = value;
                     ModConfig.Save();
                     CabbyCodesPlugin.BLogger.LogInfo("Performance logging {0}", value ? "enabled" : "disabled");
                 });
 
-            maxLogEntriesInput = CreateInputField("Max Log Entries", 
+            maxLogEntriesInput = CreateInputField("Max Log Entries",
                 ModConfig.MaxLogEntries.Value.ToString(),
-                (value) => {
+                (value) =>
+                {
                     if (int.TryParse(value, out int max) && max > 0 && max <= 10000)
                     {
                         ModConfig.MaxLogEntries.Value = max;
@@ -94,18 +100,20 @@ namespace CabbyCodes.UI.CheatPanels
 
             // Gameplay Settings Section
             AddSectionHeader("Gameplay Settings");
-            
-            undoRedoToggle = CreateToggle("Enable Undo/Redo", 
+
+            undoRedoToggle = CreateToggle("Enable Undo/Redo",
                 ModConfig.EnableUndoRedo.Value,
-                (value) => {
+                (value) =>
+                {
                     ModConfig.EnableUndoRedo.Value = value;
                     ModConfig.Save();
                     CabbyCodesPlugin.BLogger.LogInfo("Undo/Redo {0}", value ? "enabled" : "disabled");
                 });
 
-            undoHistoryInput = CreateInputField("Undo History Size", 
+            undoHistoryInput = CreateInputField("Undo History Size",
                 ModConfig.UndoHistorySize.Value.ToString(),
-                (value) => {
+                (value) =>
+                {
                     if (int.TryParse(value, out int size) && size > 0 && size <= 100)
                     {
                         ModConfig.UndoHistorySize.Value = size;
@@ -114,9 +122,10 @@ namespace CabbyCodes.UI.CheatPanels
                     }
                 });
 
-            confirmChangesToggle = CreateToggle("Confirm Destructive Changes", 
+            confirmChangesToggle = CreateToggle("Confirm Destructive Changes",
                 ModConfig.ConfirmDestructiveChanges.Value,
-                (value) => {
+                (value) =>
+                {
                     ModConfig.ConfirmDestructiveChanges.Value = value;
                     ModConfig.Save();
                     CabbyCodesPlugin.BLogger.LogInfo("Destructive change confirmation {0}", value ? "enabled" : "disabled");
@@ -124,18 +133,21 @@ namespace CabbyCodes.UI.CheatPanels
 
             // Action Buttons
             AddSectionHeader("Actions");
-            CreateButton("Reset to Defaults", () => {
+            CreateButton("Reset to Defaults", () =>
+            {
                 ModConfig.ResetToDefaults();
                 RefreshUI();
                 CabbyCodesPlugin.BLogger.LogInfo("Settings reset to defaults");
             });
 
-            CreateButton("Save Settings", () => {
+            CreateButton("Save Settings", () =>
+            {
                 ModConfig.Save();
                 CabbyCodesPlugin.BLogger.LogInfo("Settings saved successfully");
             });
 
-            CreateButton("Reload Settings", () => {
+            CreateButton("Reload Settings", () =>
+            {
                 ModConfig.Reload();
                 RefreshUI();
                 CabbyCodesPlugin.BLogger.LogInfo("Settings reloaded from disk");
@@ -143,7 +155,8 @@ namespace CabbyCodes.UI.CheatPanels
 
             // Backup and Restore Section
             AddSectionHeader("Backup & Restore");
-            CreateButton("Create Backup", () => {
+            CreateButton("Create Backup", () =>
+            {
                 if (SettingsManager.CreateBackup())
                 {
                     CabbyCodesPlugin.BLogger.LogInfo("Settings backup created successfully");
@@ -154,7 +167,8 @@ namespace CabbyCodes.UI.CheatPanels
                 }
             });
 
-            CreateButton("Restore from Backup", () => {
+            CreateButton("Restore from Backup", () =>
+            {
                 if (SettingsManager.RestoreFromBackup())
                 {
                     RefreshUI();
@@ -166,7 +180,8 @@ namespace CabbyCodes.UI.CheatPanels
                 }
             });
 
-            CreateButton("List Backups", () => {
+            CreateButton("List Backups", () =>
+            {
                 var backups = SettingsManager.GetAvailableBackups();
                 if (backups.Length > 0)
                 {
@@ -199,10 +214,10 @@ namespace CabbyCodes.UI.CheatPanels
         private InputField CreateInputField(string label, string initialValue, Action<string> onValueChanged)
         {
             var inputPanel = new InputFieldPanel<string>(
-                new StringReference(initialValue, onValueChanged), 
-                KeyCodeMap.ValidChars.Numeric, 
-                10, 
-                200, 
+                new StringReference(initialValue, onValueChanged),
+                KeyCodeMap.ValidChars.Numeric,
+                10,
+                200,
                 label
             );
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(inputPanel);
@@ -220,28 +235,28 @@ namespace CabbyCodes.UI.CheatPanels
             // Update UI elements with current config values
             if (inputValidationToggle != null)
                 inputValidationToggle.isOn = ModConfig.EnableInputValidation.Value;
-            
+
             if (debugInfoToggle != null)
                 debugInfoToggle.isOn = ModConfig.ShowDebugInfo.Value;
-            
+
             if (performanceLoggingToggle != null)
                 performanceLoggingToggle.isOn = ModConfig.EnablePerformanceLogging.Value;
-            
+
             if (undoRedoToggle != null)
                 undoRedoToggle.isOn = ModConfig.EnableUndoRedo.Value;
-            
+
             if (confirmChangesToggle != null)
                 confirmChangesToggle.isOn = ModConfig.ConfirmDestructiveChanges.Value;
-            
+
             if (maxLogEntriesInput != null)
                 maxLogEntriesInput.text = ModConfig.MaxLogEntries.Value.ToString();
-            
+
             if (undoHistoryInput != null)
                 undoHistoryInput.text = ModConfig.UndoHistorySize.Value.ToString();
-            
+
             if (menuPosXInput != null)
                 menuPosXInput.text = ModConfig.MenuPositionX.Value.ToString();
-            
+
             if (menuPosYInput != null)
                 menuPosYInput.text = ModConfig.MenuPositionY.Value.ToString();
         }
@@ -298,4 +313,4 @@ namespace CabbyCodes.UI.CheatPanels
             _onValueChanged?.Invoke(value);
         }
     }
-} 
+}

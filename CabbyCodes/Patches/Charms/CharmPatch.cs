@@ -13,7 +13,7 @@ namespace CabbyCodes.Patches
         private static readonly string gotCharmName = "gotCharm_";
         private static readonly Color unearnedColor = new(0.57f, 0.57f, 0.57f, 0.57f);
         public static readonly List<Charm> charms = BuildCharmList();
-        
+
         private readonly int charmIndex;
         private TogglePanel parent;
 

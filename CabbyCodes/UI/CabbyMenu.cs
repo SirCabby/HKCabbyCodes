@@ -18,23 +18,23 @@ namespace CabbyCodes.UI
         /// <summary>
         /// Default size for cheat panels.
         /// </summary>
-        private static readonly Vector2 cheatPanelSize = new (0, 50);
+        private static readonly Vector2 cheatPanelSize = new(0, 50);
 
         /// <summary>
         /// The name of the mod.
         /// </summary>
         private readonly string name;
-        
+
         /// <summary>
         /// The version of the mod.
         /// </summary>
         private readonly string version;
-        
+
         /// <summary>
         /// Dictionary mapping category names to their panel creation actions.
         /// </summary>
         private readonly Dictionary<string, Action> registeredCategories = new();
-        
+
         /// <summary>
         /// List of currently active cheat panels.
         /// </summary>
@@ -45,17 +45,17 @@ namespace CabbyCodes.UI
         /// List of registered input fields for synchronization.
         /// </summary>
         private readonly List<InputFieldStatus> registeredInputs = new();
-        
+
         /// <summary>
         /// The last selected input field.
         /// </summary>
         private InputFieldStatus lastSelected;
-        
+
         /// <summary>
         /// Timestamp of the last selection.
         /// </summary>
         private float lastSelectedTime = 0;
-        
+
         /// <summary>
         /// Timer for handling click events.
         /// </summary>
@@ -66,7 +66,7 @@ namespace CabbyCodes.UI
         /// The root GameObject for the menu system.
         /// </summary>
         private GameObject rootGameObject;
-        
+
         /// <summary>
         /// Modifier for the root GameObject.
         /// </summary>
@@ -77,22 +77,22 @@ namespace CabbyCodes.UI
         /// Whether the menu is currently open.
         /// </summary>
         private bool isMenuOpen = false;
-        
+
         /// <summary>
         /// The main menu panel GameObject.
         /// </summary>
         private GameObject menuPanel;
-        
+
         /// <summary>
         /// Modifier for the menu panel GameObject.
         /// </summary>
         private GameObjectMod menuPanelGoMod;
-        
+
         /// <summary>
         /// Dropdown for category selection.
         /// </summary>
         Dropdown categoryDropdown;
-        
+
         /// <summary>
         /// GameObject containing the cheat content area.
         /// </summary>
@@ -241,7 +241,7 @@ namespace CabbyCodes.UI
                             inputField.text += keyPressed.Value;
                         }
 
-                        
+
                         lastSelectedTime = lastSelected.GetSelectedTime();
                     }
 

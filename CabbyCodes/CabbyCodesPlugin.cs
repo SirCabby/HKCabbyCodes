@@ -23,12 +23,12 @@ namespace CabbyCodes
         /// Logger instance for the plugin.
         /// </summary>
         public static ManualLogSource BLogger;
-        
+
         /// <summary>
         /// Main menu instance for the mod.
         /// </summary>
         public static CabbyMenu cabbyMenu;
-        
+
         /// <summary>
         /// Configuration file instance.
         /// </summary>
@@ -43,7 +43,7 @@ namespace CabbyCodes
             BLogger = Logger;
             BLogger.LogInfo("Config location: {0}", Config.ConfigFilePath);
             configFile = Config;
-            
+
             // Initialize configuration system
             ModConfig.Initialize(configFile);
             SettingsManager.Initialize();
@@ -68,9 +68,9 @@ namespace CabbyCodes
             cabbyMenu.RegisterCategory("Achievements", AchievementPatch.AddPanels);
             cabbyMenu.RegisterCategory("Settings", SettingsPatch.AddPanels);
             cabbyMenu.RegisterCategory("Debug", DebugPatch.AddPanels);
-            
+
             BLogger.LogInfo("CabbyCodes menu initialized successfully");
-            
+
             // Apply all settings
             SettingsManager.ApplyAllSettings();
         }

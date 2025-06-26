@@ -12,7 +12,7 @@ namespace CabbyCodes.Patches
         private static readonly Harmony harmony = new(key);
         private static readonly MethodInfo mOriginal = AccessTools.Method(typeof(PlayerData), nameof(PlayerData.TakeHealth));
         private static readonly MethodInfo mOriginal2 = AccessTools.Method(typeof(PlayerData), nameof(PlayerData.WouldDie));
-        
+
         public bool Get()
         {
             return (bool)value.Get();

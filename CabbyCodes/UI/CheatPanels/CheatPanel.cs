@@ -16,27 +16,27 @@ namespace CabbyCodes.UI.CheatPanels
         /// Tracks whether the current panel should use the odd or even color pattern.
         /// </summary>
         protected static bool isOdd = true;
-        
+
         /// <summary>
         /// First color in the alternating panel color scheme.
         /// </summary>
         protected static Color color1 = new(0.8f, 0.8f, 0.8f);
-        
+
         /// <summary>
         /// Second color in the alternating panel color scheme.
         /// </summary>
         protected static Color color2 = new(0.6f, 0.6f, 0.6f);
-        
+
         /// <summary>
         /// Color used for warning messages.
         /// </summary>
         public static readonly Color warningColor = new(1, 0.5f, 0);
-        
+
         /// <summary>
         /// Color used for header panels.
         /// </summary>
         public static readonly Color headerColor = new(0.2f, 0.8f, 0.2f);
-        
+
         /// <summary>
         /// Color used for sub-header panels.
         /// </summary>
@@ -46,12 +46,12 @@ namespace CabbyCodes.UI.CheatPanels
         /// The main GameObject for this cheat panel.
         /// </summary>
         public readonly GameObject cheatPanel;
-        
+
         /// <summary>
         /// The GameObject containing the description text.
         /// </summary>
         protected readonly GameObject cheatTextObj;
-        
+
         /// <summary>
         /// List of actions to execute during panel updates.
         /// </summary>

@@ -31,7 +31,7 @@ namespace CabbyCodes.Patches
             for (int i = 23; i < 26; i++)
             {
                 string charmBool = "";
-                switch(i)
+                switch (i)
                 {
                     case 23:
                         charmBool = "fragileHealth_unbreakable";
