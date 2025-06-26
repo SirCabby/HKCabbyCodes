@@ -107,35 +107,31 @@ namespace CabbyCodes.Patches
         }
 
         /// <summary>
-        /// Initializes the list of saved teleport locations from configuration.
+        /// Initializes teleport locations from configuration.
         /// </summary>
         /// <returns>A list of custom teleport locations loaded from configuration.</returns>
         private static List<TeleportLocation> InitTeleportLocations()
         {
             List<TeleportLocation> result = new();
 
-            // Get all teleport location entries from the config
-            Dictionary<string, ConfigEntry<string>> teleportEntries = SettingsManager.GetConfigEntries<string>(key, "");
-
-            foreach (var entry in teleportEntries)
+            try
             {
-                string sceneName = entry.Key;
                 // Try to get a list of saved teleport location names from a special config entry
-                var savedLocationsEntry = CabbyCodesPlugin.configFile.Bind(key, "SavedLocations", "", 
+                var savedLocationsEntry = CabbyCodesPlugin.configFile.Bind(key, "SavedLocations", "",
                     new ConfigDescription("List of saved teleport location names"));
-                
+
                 if (!string.IsNullOrEmpty(savedLocationsEntry.Value))
                 {
                     string[] locationNames = savedLocationsEntry.Value.Split(',');
-                    
+
                     foreach (string locationName in locationNames)
                     {
                         if (!string.IsNullOrEmpty(locationName))
                         {
                             // Try to get the location data for this name
-                            var locationEntry = CabbyCodesPlugin.configFile.Bind(key, locationName, "", 
+                            var locationEntry = CabbyCodesPlugin.configFile.Bind(key, locationName, "",
                                 new ConfigDescription($"Teleport location data for {locationName}"));
-                            
+
                             if (!string.IsNullOrEmpty(locationEntry.Value))
                             {
                                 ConfigDefinition configDef = new(key, locationName);
@@ -229,7 +225,7 @@ namespace CabbyCodes.Patches
             {
                 // Create the config entry directly using BepInEx
                 string locationValue = teleportLocation.x + "," + teleportLocation.y;
-                ConfigEntry<string> configEntry = CabbyCodesPlugin.configFile.Bind(key, sceneName, locationValue, 
+                ConfigEntry<string> configEntry = CabbyCodesPlugin.configFile.Bind(key, sceneName, locationValue,
                     new ConfigDescription($"Custom teleport location for {sceneName}"));
 
                 if (configEntry != null)
@@ -258,14 +254,14 @@ namespace CabbyCodes.Patches
         {
             try
             {
-                var savedLocationsEntry = CabbyCodesPlugin.configFile.Bind(key, "SavedLocations", "", 
+                var savedLocationsEntry = CabbyCodesPlugin.configFile.Bind(key, "SavedLocations", "",
                     new ConfigDescription("List of saved teleport location names"));
-                
+
                 var locationNames = savedTeleports
                     .Where(loc => loc is CustomTeleportLocation)
                     .Select(loc => loc.SceneName)
                     .ToArray();
-                
+
                 savedLocationsEntry.Value = string.Join(",", locationNames);
                 CabbyCodesPlugin.configFile.Save();
             }
@@ -309,10 +305,10 @@ namespace CabbyCodes.Patches
                     {
                         CabbyCodesPlugin.configFile.Remove(customLocation.configDef);
                         CabbyCodesPlugin.configFile.Save();
-                        
+
                         // Update the saved locations list
                         UpdateSavedLocationsList();
-                        
+
                         CabbyCodesPlugin.BLogger.LogDebug("Removed teleport location: {0}", customLocation.SceneName);
                     }
                     catch (System.Exception ex)
