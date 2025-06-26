@@ -13,8 +13,7 @@ namespace CabbyCodes.Patches.Inventory.Keys
 
         public void Set(int value)
         {
-            value = Math.Max(0, value);
-            value = Math.Min(4, value);
+            value = ValidationUtils.ValidateRange(value, 0, Constants.MAX_SIMPLE_KEYS, nameof(value));
             PlayerData.instance.simpleKeys = value;
         }
 

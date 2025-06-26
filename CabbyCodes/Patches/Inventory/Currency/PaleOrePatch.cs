@@ -13,8 +13,7 @@ namespace CabbyCodes.Patches.Inventory.Currency
 
         public void Set(int value)
         {
-            value = Math.Max(0, value);
-            value = Math.Min(6, value);
+            value = ValidationUtils.ValidateRange(value, 0, Constants.MAX_PALE_ORE, nameof(value));
             PlayerData.instance.ore = value;
         }
 

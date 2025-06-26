@@ -13,8 +13,7 @@ namespace CabbyCodes.Patches.Inventory.Currency
 
         public void Set(int value)
         {
-            value = Math.Max(0, value);
-            value = Math.Min(80, value);
+            value = ValidationUtils.ValidateRange(value, 0, Constants.MAX_RANCID_EGGS, nameof(value));
             PlayerData.instance.rancidEggs = value;
         }
 

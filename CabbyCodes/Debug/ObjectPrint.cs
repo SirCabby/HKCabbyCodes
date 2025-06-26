@@ -3,10 +3,20 @@ using System.Reflection;
 
 namespace CabbyCodes.Debug
 {
+    /// <summary>
+    /// Utility class for debugging and displaying object information through reflection.
+    /// </summary>
     public class ObjectPrint
     {
+        /// <summary>
+        /// Tab character used for indentation in debug output.
+        /// </summary>
         private const string tab = "    ";
 
+        /// <summary>
+        /// Displays comprehensive information about an object including all fields and properties.
+        /// </summary>
+        /// <param name="o">The object to display information about.</param>
         public static void DisplayObjectInfo(object o)
         {
             Type type = o.GetType();
@@ -39,6 +49,11 @@ namespace CabbyCodes.Debug
             PrintProperties(o, type.GetProperties(BindingFlags.NonPublic | BindingFlags.Static));
         }
 
+        /// <summary>
+        /// Prints information about the specified fields of an object.
+        /// </summary>
+        /// <param name="o">The object whose fields to print.</param>
+        /// <param name="fields">The array of FieldInfo objects to process.</param>
         private static void PrintFields(object o, FieldInfo[] fields)
         {
             if (fields.Length > 0)
@@ -54,6 +69,11 @@ namespace CabbyCodes.Debug
             }
         }
 
+        /// <summary>
+        /// Prints information about the specified properties of an object.
+        /// </summary>
+        /// <param name="o">The object whose properties to print.</param>
+        /// <param name="properties">The array of PropertyInfo objects to process.</param>
         private static void PrintProperties(object o, PropertyInfo[] properties)
         {
             if (properties.Length > 0)

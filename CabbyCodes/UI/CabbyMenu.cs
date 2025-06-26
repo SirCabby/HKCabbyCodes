@@ -10,42 +10,114 @@ using System.Timers;
 
 namespace CabbyCodes.UI
 {
+    /// <summary>
+    /// Main menu system for the CabbyCodes mod. Manages the UI, input handling, and cheat panel organization.
+    /// </summary>
     public class CabbyMenu
     {
+        /// <summary>
+        /// Default size for cheat panels.
+        /// </summary>
         private static readonly Vector2 cheatPanelSize = new (0, 50);
 
+        /// <summary>
+        /// The name of the mod.
+        /// </summary>
         private readonly string name;
+        
+        /// <summary>
+        /// The version of the mod.
+        /// </summary>
         private readonly string version;
+        
+        /// <summary>
+        /// Dictionary mapping category names to their panel creation actions.
+        /// </summary>
         private readonly Dictionary<string, Action> registeredCategories = new();
+        
+        /// <summary>
+        /// List of currently active cheat panels.
+        /// </summary>
         private readonly List<CheatPanel> contentCheatPanels = new();
 
         // Manage InputFieldSync updates
+        /// <summary>
+        /// List of registered input fields for synchronization.
+        /// </summary>
         private readonly List<InputFieldStatus> registeredInputs = new();
+        
+        /// <summary>
+        /// The last selected input field.
+        /// </summary>
         private InputFieldStatus lastSelected;
+        
+        /// <summary>
+        /// Timestamp of the last selection.
+        /// </summary>
         private float lastSelectedTime = 0;
+        
+        /// <summary>
+        /// Timer for handling click events.
+        /// </summary>
         private readonly Timer clickTimer;
 
         // Root Button
+        /// <summary>
+        /// The root GameObject for the menu system.
+        /// </summary>
         private GameObject rootGameObject;
+        
+        /// <summary>
+        /// Modifier for the root GameObject.
+        /// </summary>
         private GameObjectMod rootGoMod;
 
         // Opened Menu
+        /// <summary>
+        /// Whether the menu is currently open.
+        /// </summary>
         private bool isMenuOpen = false;
+        
+        /// <summary>
+        /// The main menu panel GameObject.
+        /// </summary>
         private GameObject menuPanel;
+        
+        /// <summary>
+        /// Modifier for the menu panel GameObject.
+        /// </summary>
         private GameObjectMod menuPanelGoMod;
+        
+        /// <summary>
+        /// Dropdown for category selection.
+        /// </summary>
         Dropdown categoryDropdown;
+        
+        /// <summary>
+        /// GameObject containing the cheat content area.
+        /// </summary>
         private GameObject cheatContent;
 
+        /// <summary>
+        /// Initializes a new instance of the CabbyMenu class.
+        /// </summary>
+        /// <param name="name">The name of the mod.</param>
+        /// <param name="version">The version of the mod.</param>
         public CabbyMenu(string name, string version)
         {
             this.name = name;
             this.version = version;
 
-            clickTimer = new Timer(100);
+            clickTimer = new Timer(Constants.CLICK_TIMER_DELAY);
             clickTimer.Elapsed += OnElapsedClickTimer;
             clickTimer.AutoReset = false;
         }
 
+        /// <summary>
+        /// Adds a cheat panel to the menu content area.
+        /// </summary>
+        /// <param name="cheatPanel">The cheat panel to add.</param>
+        /// <returns>The added cheat panel.</returns>
         public CheatPanel AddCheatPanel(CheatPanel cheatPanel)
         {
             new Fitter(cheatPanel.GetGameObject()).Attach(cheatContent).Size(cheatPanelSize);
@@ -53,22 +125,38 @@ namespace CabbyCodes.UI
             return cheatPanel;
         }
 
+        /// <summary>
+        /// Registers a category with its panel creation action.
+        /// </summary>
+        /// <param name="categoryName">The name of the category.</param>
+        /// <param name="cheatContent">The action that creates panels for this category.</param>
         public void RegisterCategory(string categoryName, Action cheatContent)
         {
             registeredCategories.Add(categoryName, cheatContent);
         }
 
+        /// <summary>
+        /// Registers an input field for synchronization.
+        /// </summary>
+        /// <param name="inputFieldStatus">The input field status to register.</param>
         public void RegisterInputFieldSync(InputFieldStatus inputFieldStatus)
         {
             registeredInputs.Add(inputFieldStatus);
         }
 
+        /// <summary>
+        /// Clears all registered input fields.
+        /// </summary>
         private void ClearInputFields()
         {
             registeredInputs.Clear();
         }
 
-        // A click action happened while menu was open, so manage selected states
+        /// <summary>
+        /// Handles click timer elapsed events to manage input field selection states.
+        /// </summary>
+        /// <param name="source">The source of the event.</param>
+        /// <param name="e">The elapsed event arguments.</param>
         private void OnElapsedClickTimer(object source, ElapsedEventArgs e)
         {
             // Determine last selected
@@ -99,6 +187,9 @@ namespace CabbyCodes.UI
             }
         }
 
+        /// <summary>
+        /// Updates all cheat panels.
+        /// </summary>
         public void UpdateCheatPanels()
         {
             foreach (CheatPanel panel in contentCheatPanels)
@@ -107,9 +198,11 @@ namespace CabbyCodes.UI
             }
         }
 
+        /// <summary>
+        /// Main update method called every frame. Handles menu visibility and input processing.
+        /// </summary>
         public void Update()
         {
-            //if (true)
             if (GameManager._instance != null && GameManager.instance.IsGamePaused())
             {
                 if (rootGameObject == null)
@@ -190,12 +283,19 @@ namespace CabbyCodes.UI
             }
         }
 
+        /// <summary>
+        /// Handles menu button click events to toggle menu visibility.
+        /// </summary>
         private void OnMenuButtonClicked()
         {
             isMenuOpen = !isMenuOpen;
             menuPanelGoMod.SetActive(isMenuOpen);
         }
 
+        /// <summary>
+        /// Handles category selection changes in the dropdown.
+        /// </summary>
+        /// <param name="arg0">The index of the selected category.</param>
         private void OnCategorySelected(int arg0)
         {
             // Clear current cheat panels
@@ -217,6 +317,9 @@ namespace CabbyCodes.UI
             lastSelected = null;
         }
 
+        /// <summary>
+        /// Builds the main canvas and UI elements for the menu system.
+        /// </summary>
         private void BuildCanvas()
         {
             if (rootGameObject != null) return;

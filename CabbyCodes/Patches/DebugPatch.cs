@@ -6,10 +6,19 @@ using System.Collections.Generic;
 
 namespace CabbyCodes.Patches
 {
+    /// <summary>
+    /// Provides debug utilities and information panels for the mod menu.
+    /// </summary>
     public class DebugPatch
     {
+        /// <summary>
+        /// Reflection field info for accessing the hero field in GameMap.
+        /// </summary>
         private static readonly FieldInfo heroFieldInfo = typeof(GameMap).GetField("hero", BindingFlags.NonPublic | BindingFlags.Instance);
 
+        /// <summary>
+        /// Adds debug panels to the mod menu for various debugging utilities.
+        /// </summary>
         public static void AddPanels()
         {
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Debug Utilities: Prints information to BepInEx console").SetColor(CheatPanel.headerColor));

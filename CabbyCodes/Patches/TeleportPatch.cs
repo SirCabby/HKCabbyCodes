@@ -1,6 +1,7 @@
 ﻿using CabbyCodes.Types;
 using CabbyCodes.SyncedReferences;
 using CabbyCodes.UI.CheatPanels;
+using CabbyCodes.Configuration;
 using HarmonyLib;
 using System;
 using System.Collections.Generic;
@@ -11,29 +12,78 @@ using UnityEngine.UI;
 
 namespace CabbyCodes.Patches
 {
+    /// <summary>
+    /// Handles teleportation functionality and custom teleport location management.
+    /// </summary>
     public class TeleportPatch : ISyncedValueList
     {
+        /// <summary>
+        /// Configuration key for storing teleport locations.
+        /// </summary>
         public const string key = "TeleportLocations";
+        
+        /// <summary>
+        /// List of saved custom teleport locations.
+        /// </summary>
         public static readonly List<TeleportLocation> savedTeleports = InitTeleportLocations();
 
+        /// <summary>
+        /// Harmony instance for patching game methods.
+        /// </summary>
         private static readonly Harmony harmony = new(key);
+        
+        /// <summary>
+        /// Method info for the original EnterHero method.
+        /// </summary>
         private static readonly MethodInfo mOriginal = typeof(GameManager).GetMethod("EnterHero", BindingFlags.NonPublic | BindingFlags.Instance);
+        
+        /// <summary>
+        /// Method info for the post-teleport method.
+        /// </summary>
         private static readonly MethodInfo postMethod = typeof(TeleportPatch).GetMethod(nameof(PostTeleport), BindingFlags.NonPublic | BindingFlags.Static);
+        
+        /// <summary>
+        /// Field info for accessing the target scene field.
+        /// </summary>
         private static readonly FieldInfo targetSceneFieldInfo = typeof(GameManager).GetField("targetScene", BindingFlags.NonPublic | BindingFlags.Instance);
+        
+        /// <summary>
+        /// Field info for accessing the entry delay field.
+        /// </summary>
         private static readonly FieldInfo entryDelayFieldInfo = typeof(GameManager).GetField("entryDelay", BindingFlags.NonPublic | BindingFlags.Instance);
+        
+        /// <summary>
+        /// Field info for accessing the hero field in GameMap.
+        /// </summary>
         private static readonly FieldInfo heroFieldInfo = typeof(GameMap).GetField("hero", BindingFlags.NonPublic | BindingFlags.Instance);
+        
+        /// <summary>
+        /// List of predefined teleport locations.
+        /// </summary>
         private static readonly List<TeleportLocation> teleportLocations = new()
         {
             new("", "<Select Location>", Vector2.zero),
             new("Town", "Starting Town", new Vector2(136, 12)),
         };
+        
+        /// <summary>
+        /// Original dream gate location for restoration after teleport.
+        /// </summary>
         private static Vector2 originalDreamGateLoc;
 
+        /// <summary>
+        /// Gets the current teleport selection index.
+        /// </summary>
+        /// <returns>Always returns 0 as this is used for the dropdown.</returns>
         public int Get()
         {
             return 0;
         }
 
+        /// <summary>
+        /// Sets the teleport destination based on the selected index.
+        /// </summary>
+        /// <param name="value">The index of the teleport location to use.</param>
         public void Set(int value)
         {
             if (value < 1 || value > teleportLocations.Count) return;
@@ -41,6 +91,10 @@ namespace CabbyCodes.Patches
             DoTeleport(teleportLocations[value]);
         }
 
+        /// <summary>
+        /// Gets the list of teleport location display names for the dropdown.
+        /// </summary>
+        /// <returns>A list of display names for available teleport locations.</returns>
         public List<string> GetValueList()
         {
             List<string> result = new();
@@ -51,24 +105,35 @@ namespace CabbyCodes.Patches
             return result;
         }
 
+        /// <summary>
+        /// Initializes the list of saved teleport locations from configuration.
+        /// </summary>
+        /// <returns>A list of custom teleport locations loaded from configuration.</returns>
         private static List<TeleportLocation> InitTeleportLocations()
         {
             List<TeleportLocation> result = new();
-            ConfigFile config = CabbyCodesPlugin.configFile;
 
-            // Init all keys in config memory
-            List<string> savedSceneNames = ConfigUtils.GetConfigKeys(key);
-            foreach (string sceneName in savedSceneNames)
+            // Get all teleport location entries from the config
+            Dictionary<string, ConfigEntry<string>> teleportEntries = SettingsManager.GetConfigEntries<string>(key, "");
+            
+            foreach (var entry in teleportEntries)
             {
-                config.Bind(key, sceneName, "");
-                ConfigDefinition def = ConfigUtils.GetConfigDefinition(key, sceneName);
-                config.TryGetEntry(def, out ConfigEntry<string> value);
-                result.Add(new CustomTeleportLocation(def, value));
+                string sceneName = entry.Key;
+                ConfigEntry<string> configEntry = entry.Value;
+                
+                // Create ConfigDefinition for the CustomTeleportLocation
+                ConfigDefinition configDef = new(key, sceneName);
+                result.Add(new CustomTeleportLocation(configDef, configEntry));
             }
 
+            CabbyCodesPlugin.BLogger.LogDebug("Loaded {0} custom teleport locations", result.Count);
             return result;
         }
 
+        /// <summary>
+        /// Performs the actual teleportation to the specified location.
+        /// </summary>
+        /// <param name="teleportLocation">The location to teleport to.</param>
         public static void DoTeleport(TeleportLocation teleportLocation)
         {
             CabbyCodesPlugin.BLogger.LogInfo("Teleporting to [" + teleportLocation.SceneName + "] (" + teleportLocation.Location.x + ", " + teleportLocation.Location.y + ")");
@@ -95,6 +160,10 @@ namespace CabbyCodes.Patches
             });
         }
 
+        /// <summary>
+        /// Post-teleport method that restores the original dream gate location.
+        /// </summary>
+        /// <param name="additiveGateSearch">Unused parameter required for reflection lookup.</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "Required for reflection lookup")]
         private static void PostTeleport(bool additiveGateSearch)
         {
@@ -110,6 +179,9 @@ namespace CabbyCodes.Patches
             harmony.UnpatchSelf();
         }
 
+        /// <summary>
+        /// Saves the current player position as a custom teleport location.
+        /// </summary>
         public static void SaveTeleportLocation()
         {
             GameMap gm = GameManager._instance.gameMap.GetComponent<GameMap>();
@@ -131,23 +203,46 @@ namespace CabbyCodes.Patches
 
             if (!locationFound)
             {
-                ConfigDefinition configDef = new(key, sceneName);
-                CustomTeleportLocation loc = new(configDef, CabbyCodesPlugin.configFile.Bind(configDef, teleportLocation.x + "," + teleportLocation.y));
-                teleportLocations.Add(loc);
-                AddCustomPanel(loc);
+                // Use SettingsManager to create the config entry
+                string locationValue = teleportLocation.x + "," + teleportLocation.y;
+                ConfigEntry<string> configEntry = SettingsManager.GetOrCreateConfigEntry(key, sceneName, locationValue);
+                
+                if (configEntry != null)
+                {
+                    ConfigDefinition configDef = new(key, sceneName);
+                    CustomTeleportLocation loc = new(configDef, configEntry);
+                    teleportLocations.Add(loc);
+                    AddCustomPanel(loc);
+                    
+                    CabbyCodesPlugin.BLogger.LogDebug("Saved new teleport location: {0} at ({1}, {2})", sceneName, teleportLocation.x, teleportLocation.y);
+                }
+                else
+                {
+                    CabbyCodesPlugin.BLogger.LogWarning("Failed to create config entry for teleport location: {0}", sceneName);
+                }
             }
         }
 
+        /// <summary>
+        /// Adds the main teleport dropdown panel to the menu.
+        /// </summary>
         private static void AddPanel()
         {
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new DropdownPanel(new TeleportPatch(), 400, "Select Area to Teleport"));
         }
 
+        /// <summary>
+        /// Adds the save teleport location button panel to the menu.
+        /// </summary>
         private static void AddSavePanel()
         {
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new ButtonPanel(SaveTeleportLocation, "Save", "Save a custom teleport at current position"));
         }
 
+        /// <summary>
+        /// Adds a custom teleport location panel with delete functionality.
+        /// </summary>
+        /// <param name="location">The teleport location to create a panel for.</param>
         private static void AddCustomPanel(TeleportLocation location)
         {
             ButtonPanel buttonPanel = new(() => { DoTeleport(location); }, "Teleport", location.DisplayName, 160);
@@ -157,8 +252,15 @@ namespace CabbyCodes.Patches
                 savedTeleports.Remove(location);
                 if (location is CustomTeleportLocation customLocation)
                 {
-                    CabbyCodesPlugin.configFile.Remove(customLocation.configDef);
-                    CabbyCodesPlugin.configFile.Save();
+                    // Use SettingsManager to remove the config entry
+                    if (SettingsManager.RemoveConfigEntry(key, customLocation.SceneName))
+                    {
+                        CabbyCodesPlugin.BLogger.LogDebug("Removed teleport location: {0}", customLocation.SceneName);
+                    }
+                    else
+                    {
+                        CabbyCodesPlugin.BLogger.LogWarning("Failed to remove teleport location from config: {0}", customLocation.SceneName);
+                    }
                 }
             }, "X", new Vector2(60, 60));
             destroyButton.transform.Find("Button").gameObject.GetComponent<Image>().color = new Color(1, 0.5f, 0.5f);
@@ -166,6 +268,9 @@ namespace CabbyCodes.Patches
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(buttonPanel);
         }
 
+        /// <summary>
+        /// Adds all teleport-related panels to the mod menu.
+        /// </summary>
         public static void AddPanels()
         {
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Teleportation: Select common point of interest to travel to").SetColor(CheatPanel.headerColor));

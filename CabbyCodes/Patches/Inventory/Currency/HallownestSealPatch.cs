@@ -13,8 +13,7 @@ namespace CabbyCodes.Patches.Inventory.Currency
 
         public void Set(int value)
         {
-            value = Math.Max(0, value);
-            value = Math.Min(17, value);
+            value = ValidationUtils.ValidateRange(value, 0, Constants.MAX_HALLOWNEST_SEALS, nameof(value));
             if (value > 0)
             {
                 PlayerData.instance.foundTrinket2 = true;

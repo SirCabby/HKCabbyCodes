@@ -13,8 +13,7 @@ namespace CabbyCodes.Patches.Inventory.Currency
 
         public void Set(int value)
         {
-            value = Math.Max(0, value);
-            value = Math.Min(9999, value);
+            value = ValidationUtils.ValidateRange(value, Constants.MIN_DREAM_ESSENCE, Constants.MAX_DREAM_ESSENCE, nameof(value));
             PlayerData.instance.dreamOrbs = value;
         }
 

@@ -34,5 +34,10 @@ namespace CabbyCodes.UI.CheatPanels
         {
             return toggleButton;
         }
+
+        public Toggle GetToggle()
+        {
+            return toggleButton.GetGameObject().GetComponent<Toggle>();
+        }
     }
 }

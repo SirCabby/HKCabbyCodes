@@ -25,8 +25,7 @@ namespace CabbyCodes.Patches.Hunter
 
         public void Set(int value)
         {
-            value = Math.Max(0, value);
-            value = Math.Min(99, value);
+            value = ValidationUtils.ValidateRange(value, Constants.MIN_HUNTER_KILLS, Constants.MAX_HUNTER_KILLS, nameof(value));
             PlayerData.instance.SetInt("kills" + targetName, value);
         }
 

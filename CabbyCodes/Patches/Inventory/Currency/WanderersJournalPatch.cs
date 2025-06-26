@@ -13,8 +13,7 @@ namespace CabbyCodes.Patches.Inventory.Currency
 
         public void Set(int value)
         {
-            value = Math.Max(0, value);
-            value = Math.Min(14, value);
+            value = ValidationUtils.ValidateRange(value, 0, Constants.MAX_WANDERERS_JOURNALS, nameof(value));
             if (value > 0)
             {
                 PlayerData.instance.foundTrinket1 = true;

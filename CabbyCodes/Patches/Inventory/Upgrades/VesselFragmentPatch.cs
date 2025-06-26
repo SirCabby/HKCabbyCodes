@@ -13,8 +13,7 @@ namespace CabbyCodes.Patches.Inventory.Upgrades
 
         public void Set(int value)
         {
-            value = Math.Max(0, value);
-            value = Math.Min(2, value);
+            value = ValidationUtils.ValidateRange(value, 0, Constants.MAX_VESSEL_FRAGMENTS, nameof(value));
             PlayerData.instance.vesselFragments = value;
         }
 

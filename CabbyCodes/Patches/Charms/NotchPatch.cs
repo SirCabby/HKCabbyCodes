@@ -13,8 +13,7 @@ namespace CabbyCodes.Patches.Charms
 
         public void Set(int value)
         {
-            value = Math.Max(3, value);
-            value = Math.Min(11, value);
+            value = ValidationUtils.ValidateRange(value, Constants.MIN_CHARM_NOTCHES, Constants.MAX_CHARM_NOTCHES, nameof(value));
             PlayerData.instance.charmSlots = value;
         }
 

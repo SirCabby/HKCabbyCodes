@@ -13,8 +13,7 @@ namespace CabbyCodes.Patches.Inventory.Upgrades
 
         public void Set(int value)
         {
-            value = Math.Max(0, value);
-            value = Math.Min(3, value);
+            value = ValidationUtils.ValidateRange(value, 0, Constants.MAX_MASK_SHARDS, nameof(value));
             PlayerData.instance.heartPieces = value;
         }
 
