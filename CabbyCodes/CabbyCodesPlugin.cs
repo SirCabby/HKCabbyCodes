@@ -46,7 +46,6 @@ namespace CabbyCodes
 
             // Initialize configuration system
             ModConfig.Initialize(configFile);
-            SettingsManager.Initialize();
         }
 
         /// <summary>
@@ -66,13 +65,9 @@ namespace CabbyCodes
             cabbyMenu.RegisterCategory("Hunter", HunterPatch.AddPanels);
             cabbyMenu.RegisterCategory("Flags", FlagsPatch.AddPanels);
             cabbyMenu.RegisterCategory("Achievements", AchievementPatch.AddPanels);
-            cabbyMenu.RegisterCategory("Settings", SettingsPatch.AddPanels);
             cabbyMenu.RegisterCategory("Debug", DebugPatch.AddPanels);
 
             BLogger.LogInfo("CabbyCodes menu initialized successfully");
-
-            // Apply all settings
-            SettingsManager.ApplyAllSettings();
         }
 
         /// <summary>

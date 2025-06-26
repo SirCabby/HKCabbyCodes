@@ -9,6 +9,7 @@ using System.Reflection;
 using UnityEngine;
 using BepInEx.Configuration;
 using UnityEngine.UI;
+using System.Linq;
 
 namespace CabbyCodes.Patches
 {
@@ -119,11 +120,34 @@ namespace CabbyCodes.Patches
             foreach (var entry in teleportEntries)
             {
                 string sceneName = entry.Key;
-                ConfigEntry<string> configEntry = entry.Value;
-
-                // Create ConfigDefinition for the CustomTeleportLocation
-                ConfigDefinition configDef = new(key, sceneName);
-                result.Add(new CustomTeleportLocation(configDef, configEntry));
+                // Try to get a list of saved teleport location names from a special config entry
+                var savedLocationsEntry = CabbyCodesPlugin.configFile.Bind(key, "SavedLocations", "", 
+                    new ConfigDescription("List of saved teleport location names"));
+                
+                if (!string.IsNullOrEmpty(savedLocationsEntry.Value))
+                {
+                    string[] locationNames = savedLocationsEntry.Value.Split(',');
+                    
+                    foreach (string locationName in locationNames)
+                    {
+                        if (!string.IsNullOrEmpty(locationName))
+                        {
+                            // Try to get the location data for this name
+                            var locationEntry = CabbyCodesPlugin.configFile.Bind(key, locationName, "", 
+                                new ConfigDescription($"Teleport location data for {locationName}"));
+                            
+                            if (!string.IsNullOrEmpty(locationEntry.Value))
+                            {
+                                ConfigDefinition configDef = new(key, locationName);
+                                result.Add(new CustomTeleportLocation(configDef, locationEntry));
+                            }
+                        }
+                    }
+                }
+            }
+            catch (System.Exception ex)
+            {
+                CabbyCodesPlugin.BLogger.LogWarning("Failed to load teleport locations from config: {0}", ex.Message);
             }
 
             CabbyCodesPlugin.BLogger.LogDebug("Loaded {0} custom teleport locations", result.Count);
@@ -203,9 +227,10 @@ namespace CabbyCodes.Patches
 
             if (!locationFound)
             {
-                // Use SettingsManager to create the config entry
+                // Create the config entry directly using BepInEx
                 string locationValue = teleportLocation.x + "," + teleportLocation.y;
-                ConfigEntry<string> configEntry = SettingsManager.GetOrCreateConfigEntry(key, sceneName, locationValue);
+                ConfigEntry<string> configEntry = CabbyCodesPlugin.configFile.Bind(key, sceneName, locationValue, 
+                    new ConfigDescription($"Custom teleport location for {sceneName}"));
 
                 if (configEntry != null)
                 {
@@ -214,12 +239,39 @@ namespace CabbyCodes.Patches
                     teleportLocations.Add(loc);
                     AddCustomPanel(loc);
 
+                    // Update the list of saved locations
+                    UpdateSavedLocationsList();
+
                     CabbyCodesPlugin.BLogger.LogDebug("Saved new teleport location: {0} at ({1}, {2})", sceneName, teleportLocation.x, teleportLocation.y);
                 }
                 else
                 {
                     CabbyCodesPlugin.BLogger.LogWarning("Failed to create config entry for teleport location: {0}", sceneName);
                 }
+            }
+        }
+
+        /// <summary>
+        /// Updates the list of saved teleport location names in the config file.
+        /// </summary>
+        private static void UpdateSavedLocationsList()
+        {
+            try
+            {
+                var savedLocationsEntry = CabbyCodesPlugin.configFile.Bind(key, "SavedLocations", "", 
+                    new ConfigDescription("List of saved teleport location names"));
+                
+                var locationNames = savedTeleports
+                    .Where(loc => loc is CustomTeleportLocation)
+                    .Select(loc => loc.SceneName)
+                    .ToArray();
+                
+                savedLocationsEntry.Value = string.Join(",", locationNames);
+                CabbyCodesPlugin.configFile.Save();
+            }
+            catch (System.Exception ex)
+            {
+                CabbyCodesPlugin.BLogger.LogWarning("Failed to update saved locations list: {0}", ex.Message);
             }
         }
 
@@ -252,14 +304,20 @@ namespace CabbyCodes.Patches
                 savedTeleports.Remove(location);
                 if (location is CustomTeleportLocation customLocation)
                 {
-                    // Use SettingsManager to remove the config entry
-                    if (SettingsManager.RemoveConfigEntry(key, customLocation.SceneName))
+                    // Remove the config entry directly
+                    try
                     {
+                        CabbyCodesPlugin.configFile.Remove(customLocation.configDef);
+                        CabbyCodesPlugin.configFile.Save();
+                        
+                        // Update the saved locations list
+                        UpdateSavedLocationsList();
+                        
                         CabbyCodesPlugin.BLogger.LogDebug("Removed teleport location: {0}", customLocation.SceneName);
                     }
-                    else
+                    catch (System.Exception ex)
                     {
-                        CabbyCodesPlugin.BLogger.LogWarning("Failed to remove teleport location from config: {0}", customLocation.SceneName);
+                        CabbyCodesPlugin.BLogger.LogWarning("Failed to remove teleport location from config: {0} - {1}", customLocation.SceneName, ex.Message);
                     }
                 }
             }, "X", new Vector2(60, 60));

@@ -90,10 +90,17 @@ A comprehensive cheat menu mod for Hollow Knight that provides extensive control
 BepInEx/config/cabby.cabbycodes.cfg
 ```
 
-### Key Settings
-- **Menu Position**: Customize menu placement
-- **Input Validation**: Enable/disable value validation
-- **Logging Level**: Control debug output
+### Configuration System
+The mod uses BepInEx's built-in configuration system for:
+- **Teleport Locations**: Custom teleport points are automatically saved and loaded
+- **Game State**: Various game modifications are persisted between sessions
+- **Menu Settings**: Basic menu configuration options
+
+### Teleport System
+Custom teleport locations are automatically saved to the config file and will persist between game sessions. The system maintains:
+- Location coordinates (X, Y)
+- Scene names
+- Display names for easy identification
 
 ## 🛠️ Development
 
@@ -133,12 +140,14 @@ CabbyCodes/
 │   └── Modders/      # UI modification utilities
 ├── SyncedReferences/ # Data synchronization
 ├── Types/            # Custom data types
+├── Configuration/    # Configuration management
 └── Utils/            # Utility classes
 ```
 
 ### Key Components
 - **CabbyCodesPlugin**: Main plugin entry point
 - **CabbyMenu**: Core UI management
+- **ModConfig**: Configuration system
 - **ISyncedReference**: Data synchronization interface
 - **ValidationUtils**: Input validation utilities
 - **LoggingExtensions**: Enhanced logging capabilities
@@ -157,17 +166,22 @@ CabbyCodes/
 - Check that input validation isn't blocking changes
 - Verify the game state allows the modification
 
+**Teleport locations not saving:**
+- Check that the config file is writable
+- Verify BepInEx has proper permissions
+- Look for error messages in the BepInEx console
+
 **Performance issues:**
-- Disable debug logging in config
 - Close other mods that might conflict
 - Check for memory leaks in long sessions
+- Restart the game if issues persist
 
 ### Debug Information
-Enable debug logging by setting the log level to Debug in the config file. This will provide detailed information about:
+Check the BepInEx console for detailed information about:
 - Menu interactions
 - Value changes
 - Error conditions
-- Performance metrics
+- Configuration loading/saving
 
 ## 🤝 Contributing
 
