@@ -1,19 +1,19 @@
-using UnityEngine.UI;
-using UnityEngine;
+using System;
 using System.Collections.Generic;
+using System.Timers;
+using UnityEngine;
+using UnityEngine.UI;
+using CabbyMenu.Types;
+using CabbyMenu.UI.CheatPanels;
 using CabbyMenu.UI.Factories;
 using CabbyMenu.UI.Modders;
-using CabbyMenu.UI.CheatPanels;
-using System;
-using CabbyMenu.Types;
-using System.Timers;
 
 namespace CabbyMenu.UI
 {
     /// <summary>
-    /// Main menu system for the CabbyCodes mod. Manages the UI, input handling, and cheat panel organization.
+    /// Main menu system for mod UI. Manages the UI, input handling, and cheat panel organization.
     /// </summary>
-    public class CabbyMenu
+    public class CabbyMainMenu
     {
         /// <summary>
         /// Default size for cheat panels.
@@ -29,6 +29,11 @@ namespace CabbyMenu.UI
         /// The version of the mod.
         /// </summary>
         private readonly string version;
+
+        /// <summary>
+        /// Provider for game state information.
+        /// </summary>
+        private readonly IGameStateProvider gameStateProvider;
 
         /// <summary>
         /// Dictionary mapping category names to their panel creation actions.
@@ -99,14 +104,16 @@ namespace CabbyMenu.UI
         private GameObject cheatContent;
 
         /// <summary>
-        /// Initializes a new instance of the CabbyMenu class.
+        /// Initializes a new instance of the CabbyMainMenu class.
         /// </summary>
         /// <param name="name">The name of the mod.</param>
         /// <param name="version">The version of the mod.</param>
-        public CabbyMenu(string name, string version)
+        /// <param name="gameStateProvider">Provider for game state information.</param>
+        public CabbyMainMenu(string name, string version, IGameStateProvider gameStateProvider)
         {
             this.name = name;
             this.version = version;
+            this.gameStateProvider = gameStateProvider ?? throw new ArgumentNullException(nameof(gameStateProvider));
 
             clickTimer = new Timer(Constants.CLICK_TIMER_DELAY);
             clickTimer.Elapsed += OnElapsedClickTimer;
@@ -203,7 +210,7 @@ namespace CabbyMenu.UI
         /// </summary>
         public void Update()
         {
-            if (GameManager._instance != null && GameManager.instance.IsGamePaused())
+            if (gameStateProvider.ShouldShowMenu())
             {
                 if (rootGameObject == null)
                 {
@@ -234,7 +241,7 @@ namespace CabbyMenu.UI
                         }
                         else if (inputField.text.Length == inputField.characterLimit)
                         {
-                            inputField.text = inputField.text.Substring(0, inputField.characterLimit - 1) + keyPressed.Value.ToString();
+                            inputField.text = inputField.text.Substring(0, inputField.text.Length - 1) + keyPressed.Value.ToString();
                         }
                         else
                         {
@@ -325,9 +332,9 @@ namespace CabbyMenu.UI
             if (rootGameObject != null) return;
 
             // Base Canvas
-            rootGameObject = new GameObject("CabbyCodes")
+            rootGameObject = new GameObject("ModMenu")
             {
-                name = "CC Root Canvas"
+                name = "Mod Menu Root Canvas"
             };
             rootGoMod = new GameObjectMod(rootGameObject);
 

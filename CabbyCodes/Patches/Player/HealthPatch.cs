@@ -1,8 +1,5 @@
 using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
-using System;
-using HarmonyLib;
-using UnityEngine;
 using CabbyMenu;
 
 namespace CabbyCodes.Patches.Player

@@ -30,16 +30,4 @@
     <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.2" PrivateAssets="all" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Reference Include="Assembly-CSharp">
-      <HintPath>..\CabbyCodes\lib\Assembly-CSharp.dll</HintPath>
-    </Reference>
-    <Reference Include="PlayMaker">
-      <HintPath>..\CabbyCodes\lib\PlayMaker.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityExplorer.Standalone.Mono">
-      <HintPath>..\CabbyCodes\lib\UnityExplorer.STANDALONE.Mono.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-
 </Project> 

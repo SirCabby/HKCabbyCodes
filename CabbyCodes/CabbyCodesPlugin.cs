@@ -26,7 +26,7 @@ namespace CabbyCodes
         /// <summary>
         /// Main menu instance for the mod.
         /// </summary>
-        public static CabbyMenu.UI.CabbyMenu cabbyMenu;
+        public static CabbyMainMenu cabbyMenu;
 
         /// <summary>
         /// Configuration file instance.
@@ -34,8 +34,14 @@ namespace CabbyCodes
         public static ConfigFile configFile;
 
         /// <summary>
+        /// Game state provider for the menu system.
+        /// </summary>
+        private static GameStateProvider gameStateProvider;
+
+        /// <summary>
         /// Called when the plugin is loaded. Initializes the configuration system and logging.
         /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "Unity lifecycle method called by Unity engine")]
         private void Awake()
         {
             BLogger = Logger;
@@ -47,11 +53,16 @@ namespace CabbyCodes
         /// <summary>
         /// Called after Awake. Sets up the Unity Explorer and initializes the mod menu with all categories.
         /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "Unity lifecycle method called by Unity engine")]
         private void Start()
         {
             UnityExplorer.ExplorerStandalone.CreateInstance();
 
-            cabbyMenu = new CabbyMenu.UI.CabbyMenu(Constants.NAME, Constants.VERSION);
+            // Create the game state provider
+            gameStateProvider = new GameStateProvider();
+
+            // Initialize the menu with the game state provider
+            cabbyMenu = new CabbyMainMenu(Constants.NAME, Constants.VERSION, gameStateProvider);
             cabbyMenu.RegisterCategory("Player", PlayerPatch.AddPanels);
             cabbyMenu.RegisterCategory("Teleport", TeleportPatch.AddPanels);
             cabbyMenu.RegisterCategory("Inventory", InventoryPatch.AddPanels);
@@ -69,6 +80,7 @@ namespace CabbyCodes
         /// <summary>
         /// Called every frame. Updates the mod menu and handles user input.
         /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "Unity lifecycle method called by Unity engine")]
         private void Update()
         {
             cabbyMenu.Update();

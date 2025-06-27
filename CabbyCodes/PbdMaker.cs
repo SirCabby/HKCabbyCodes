@@ -1,4 +1,4 @@
-namespace CabbyMenu
+namespace CabbyCodes
 {
     /// <summary>
     /// Utility class for creating and managing PersistentBoolData objects for scene state management.

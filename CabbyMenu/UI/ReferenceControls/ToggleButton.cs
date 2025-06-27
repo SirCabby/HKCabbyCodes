@@ -21,7 +21,7 @@ namespace CabbyMenu.UI.ReferenceControls
         {
             this.IsOn = IsOn;
 
-            (toggleButton, GameObjectMod toggleButtonGoMod, _) = ButtonFactory.Build();
+            (toggleButton, toggleButtonGoMod, _) = ButtonFactory.Build();
             toggleButtonGoMod.SetName("Toggle Button");
             toggleButton.GetComponent<Button>().onClick.AddListener(Toggle);
 

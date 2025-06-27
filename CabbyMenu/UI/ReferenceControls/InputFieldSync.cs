@@ -1,12 +1,12 @@
-using CabbyMenu.SyncedReferences;
-using UnityEngine.UI;
-using UnityEngine;
-using CabbyMenu.UI.Modders;
-using CabbyMenu.Types;
-using System.ComponentModel;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Text;
+using UnityEngine;
+using UnityEngine.UI;
+using CabbyMenu.SyncedReferences;
+using CabbyMenu.Types;
+using CabbyMenu.UI.Modders;
 
 namespace CabbyMenu.UI.ReferenceControls
 {
