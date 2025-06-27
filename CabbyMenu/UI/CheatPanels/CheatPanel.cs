@@ -20,27 +20,27 @@ namespace CabbyMenu.UI.CheatPanels
         /// <summary>
         /// First color in the alternating panel color scheme.
         /// </summary>
-        protected static Color color1 = new(0.8f, 0.8f, 0.8f);
+        protected static Color color1 = Constants.PANEL_COLOR_1;
 
         /// <summary>
         /// Second color in the alternating panel color scheme.
         /// </summary>
-        protected static Color color2 = new(0.6f, 0.6f, 0.6f);
+        protected static Color color2 = Constants.PANEL_COLOR_2;
 
         /// <summary>
         /// Color used for warning messages.
         /// </summary>
-        public static readonly Color warningColor = new(1, 0.5f, 0);
+        public static readonly Color warningColor = Constants.WARNING_COLOR;
 
         /// <summary>
         /// Color used for header panels.
         /// </summary>
-        public static readonly Color headerColor = new(0.2f, 0.8f, 0.2f);
+        public static readonly Color headerColor = Constants.HEADER_COLOR;
 
         /// <summary>
         /// Color used for sub-header panels.
         /// </summary>
-        public static readonly Color subHeaderColor = new(0.5f, 0.5f, 0.8f);
+        public static readonly Color subHeaderColor = Constants.SUB_HEADER_COLOR;
 
         /// <summary>
         /// The main GameObject for this cheat panel.
@@ -71,8 +71,8 @@ namespace CabbyMenu.UI.CheatPanels
             isOdd = !isOdd;
 
             HorizontalLayoutGroup cheatLayoutGroup = cheatPanel.AddComponent<HorizontalLayoutGroup>();
-            cheatLayoutGroup.padding = new RectOffset(20, 20, 20, 20);
-            cheatLayoutGroup.spacing = 50;
+            cheatLayoutGroup.padding = new RectOffset(Constants.CHEAT_PANEL_PADDING, Constants.CHEAT_PANEL_PADDING, Constants.CHEAT_PANEL_PADDING, Constants.CHEAT_PANEL_PADDING);
+            cheatLayoutGroup.spacing = Constants.CHEAT_PANEL_SPACING;
             cheatLayoutGroup.childForceExpandHeight = false;
             cheatLayoutGroup.childForceExpandWidth = false;
             cheatLayoutGroup.childControlHeight = true;
@@ -87,8 +87,8 @@ namespace CabbyMenu.UI.CheatPanels
             new Fitter(cheatTextObj).Attach(cheatPanel);
 
             LayoutElement textLayout = cheatTextObj.AddComponent<LayoutElement>();
-            textLayout.flexibleWidth = 1;
-            textLayout.flexibleHeight = 1;
+            textLayout.flexibleWidth = Constants.FLEXIBLE_LAYOUT_VALUE;
+            textLayout.flexibleHeight = Constants.FLEXIBLE_LAYOUT_VALUE;
 
             ContentSizeFitter textContentSizeFitter = cheatTextObj.AddComponent<ContentSizeFitter>();
             textContentSizeFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;

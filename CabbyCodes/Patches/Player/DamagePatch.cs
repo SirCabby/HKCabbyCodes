@@ -38,7 +38,7 @@ namespace CabbyCodes.Patches.Player
         //HealthManager.Hit();
         public static bool Hit_Override(HitInstance hitInstance, HealthManager __instance)
         {
-            hitInstance.DamageDealt = 9999;
+            hitInstance.DamageDealt = Constants.ONE_HIT_KILL_DAMAGE;
             hitInstance.IgnoreInvulnerable = true;
 
             if (!__instance.isDead)

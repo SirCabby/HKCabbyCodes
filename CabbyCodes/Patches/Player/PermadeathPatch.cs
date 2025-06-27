@@ -7,7 +7,7 @@ namespace CabbyCodes.Patches
     {
         public bool Get()
         {
-            return PlayerData.instance.permadeathMode == 1;
+            return PlayerData.instance.permadeathMode == Constants.PERMADEATH_MODE_ENABLED;
         }
 
         public void Set(bool value)

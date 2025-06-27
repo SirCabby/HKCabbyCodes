@@ -12,11 +12,13 @@ namespace CabbyMenu.UI.ReferenceControls
 {
     public class InputFieldSync<T>
     {
-        private static readonly Color selectedColor = new(1, 1, 0.56f, 1);
+        private static readonly Color selectedColor = Constants.SELECTED_COLOR;
 
         private readonly GameObject inputFieldGo;
         private readonly InputField inputField;
         private readonly ISyncedReference<T> InputValue;
+        private readonly KeyCodeMap.ValidChars validChars;
+        private readonly int characterLimit;
 
         /// <summary>
         /// Action for logging error messages. Can be set by the consuming project.
@@ -33,9 +35,11 @@ namespace CabbyMenu.UI.ReferenceControls
         /// </summary>
         public static Action<InputFieldStatus> RegisterInputFieldSync { get; set; } = null;
 
-        public InputFieldSync(ISyncedReference<T> inputValue, KeyCodeMap.ValidChars validChars, Vector2 size, int characterLimit = 0)
+        public InputFieldSync(ISyncedReference<T> inputValue, KeyCodeMap.ValidChars validChars, Vector2 size, int characterLimit = Constants.DEFAULT_CHARACTER_LIMIT)
         {
             InputValue = inputValue;
+            this.validChars = validChars;
+            this.characterLimit = characterLimit;
 
             try
             {
@@ -88,7 +92,7 @@ namespace CabbyMenu.UI.ReferenceControls
                         Text textComponent = textTransform.GetComponent<Text>();
                         if (textComponent != null)
                         {
-                            new TextMod(textComponent).SetFontStyle(FontStyle.Bold).SetFontSize(36).SetAlignment(TextAnchor.MiddleLeft);
+                            new TextMod(textComponent).SetFontStyle(FontStyle.Bold).SetFontSize(Constants.DEFAULT_FONT_SIZE).SetAlignment(TextAnchor.MiddleLeft);
                         }
                     }
                 }
@@ -159,19 +163,19 @@ namespace CabbyMenu.UI.ReferenceControls
                     return;
                 }
 
-                T result = (T)TypeDescriptor.GetConverter(typeof(T)).ConvertFromString(text);
-                if (result != null)
+                try
                 {
-                    InputValue.Set(result);
+                    T convertedValue = (T)Convert.ChangeType(text, typeof(T));
+                    InputValue.Set(convertedValue);
                 }
-                else
+                catch (System.Exception)
                 {
-                    WarningLogger($"Failed to convert text '{text}' to type {typeof(T).Name}");
+                    WarningLogger("Failed to convert text '" + text + "' to type " + typeof(T).Name);
                 }
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
-                ErrorLogger($"Error in InputFieldSync.Submit: {ex.Message}");
+                ErrorLogger("Error in InputFieldSync.Submit: " + ex.Message);
             }
         }
 
@@ -224,6 +228,16 @@ namespace CabbyMenu.UI.ReferenceControls
             {
                 WarningLogger($"Error setting input field selection: {ex.Message}");
             }
+        }
+
+        public T Get()
+        {
+            return InputValue.Get();
+        }
+
+        public void Set(T value)
+        {
+            InputValue.Set(value);
         }
     }
 }

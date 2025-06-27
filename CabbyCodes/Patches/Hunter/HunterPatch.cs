@@ -38,7 +38,7 @@ namespace CabbyCodes.Patches.Hunter
 
         private static InputFieldPanel<int> BuildCheatPanel(string targetName)
         {
-            InputFieldPanel<int> panel = new(new HunterPatch(targetName), CabbyMenu.KeyCodeMap.ValidChars.Numeric, 2, 200, targetName);
+            InputFieldPanel<int> panel = new(new HunterPatch(targetName), CabbyMenu.KeyCodeMap.ValidChars.Numeric, 2, Constants.HUNTER_INPUT_WIDTH, targetName);
             PanelAdder.AddToggleButton(panel, 0, new HunterKilledPatch(targetName));
 
             return panel;
@@ -57,7 +57,7 @@ namespace CabbyCodes.Patches.Hunter
                 }
 
                 CabbyCodesPlugin.cabbyMenu.UpdateCheatPanels();
-            }, "Unlock All", "Update all entries", 200);
+            }, "Unlock All", "Update all entries", Constants.HUNTER_UNLOCK_BUTTON_WIDTH);
 
             // Lock all toggle
             PanelAdder.AddButton(buttonPanel, 1, () =>
@@ -68,7 +68,7 @@ namespace CabbyCodes.Patches.Hunter
                 }
 
                 CabbyCodesPlugin.cabbyMenu.UpdateCheatPanels();
-            }, "Lock All", new Vector2(160, 60));
+            }, "Lock All", new Vector2(Constants.HUNTER_LOCK_BUTTON_WIDTH, Constants.DEFAULT_PANEL_HEIGHT));
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(buttonPanel);
 
             // Set kills remaining 0
@@ -80,7 +80,7 @@ namespace CabbyCodes.Patches.Hunter
                 }
 
                 CabbyCodesPlugin.cabbyMenu.UpdateCheatPanels();
-            }, "0", "All Entries: Set kills remaining", 120);
+            }, "0", "All Entries: Set kills remaining", Constants.HUNTER_ZERO_BUTTON_WIDTH);
 
             // Set kills remaining 1
             PanelAdder.AddButton(setPanel, 1, () =>
@@ -91,7 +91,7 @@ namespace CabbyCodes.Patches.Hunter
                 }
 
                 CabbyCodesPlugin.cabbyMenu.UpdateCheatPanels();
-            }, "1", new Vector2(120, 60));
+            }, "1", new Vector2(Constants.HUNTER_ONE_BUTTON_WIDTH, Constants.DEFAULT_PANEL_HEIGHT));
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(setPanel);
 
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("<ON> to unlock entry, kills left to unlock notes (0 = unlocked)").SetColor(CheatPanel.subHeaderColor));

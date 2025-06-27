@@ -31,7 +31,7 @@ namespace CabbyCodes.Patches
                 harmony.Patch(mOriginal, prefix: new HarmonyMethod(typeof(CommonPatches).GetMethod("Prefix_SkipOriginal")));
                 harmony.Patch(mOriginal2, prefix: new HarmonyMethod(typeof(CommonPatches).GetMethod("Prefix_SkipOriginal")));
                 harmony.Patch(mOriginal3, prefix: new HarmonyMethod(typeof(CommonPatches).GetMethod("Prefix_SkipOriginal")));
-                PlayerData.instance.AddMPCharge(999);
+                PlayerData.instance.AddMPCharge(Constants.INFINITE_SOUL_CHARGE);
             }
             else
             {

@@ -8,7 +8,7 @@ namespace CabbyMenu.UI.CheatPanels
 {
     public class DropdownPanel : CheatPanel
     {
-        private static readonly Vector2 middle = new(0.5f, 0.5f);
+        private static readonly Vector2 middle = Constants.MIDDLE_ANCHOR_VECTOR;
 
         private readonly DropDownSync dropdown;
 
@@ -21,11 +21,11 @@ namespace CabbyMenu.UI.CheatPanels
             dropdownPanel.transform.SetAsFirstSibling();
 
             LayoutElement dropdownPanelLayout = dropdownPanel.AddComponent<LayoutElement>();
-            dropdownPanelLayout.flexibleHeight = 1;
+            dropdownPanelLayout.flexibleHeight = Constants.FLEXIBLE_LAYOUT_VALUE;
             dropdownPanelLayout.minWidth = width;
 
             dropdown = new(syncedValueReference);
-            new DropdownMod(dropdown.GetGameObject()).SetOptions(syncedValueReference.GetValueList()).SetSize(new Vector2(width, Constants.DEFAULT_PANEL_HEIGHT), 10).SetFontSize(36);
+            new DropdownMod(dropdown.GetGameObject()).SetOptions(syncedValueReference.GetValueList()).SetSize(new Vector2(width, Constants.DEFAULT_PANEL_HEIGHT), Constants.DROPDOWN_SHOW_SIZE).SetFontSize(Constants.DEFAULT_FONT_SIZE);
             new Fitter(dropdown.GetGameObject()).Attach(dropdownPanel).Anchor(middle, middle);
             dropdown.Update();
         }

@@ -19,7 +19,7 @@ namespace CabbyCodes.Patches.Inventory.Currency
 
         public static void AddPanel()
         {
-            InputFieldPanel<int> panel = new(new RancidEggPatch(), CabbyMenu.KeyCodeMap.ValidChars.Numeric, 2, 120, "Rancid Eggs (0-80)");
+            InputFieldPanel<int> panel = new(new RancidEggPatch(), CabbyMenu.KeyCodeMap.ValidChars.Numeric, 2, Constants.PANEL_WIDTH_120, "Rancid Eggs (0-80)");
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(panel);
         }
     }

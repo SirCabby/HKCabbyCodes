@@ -23,7 +23,7 @@ namespace CabbyCodes.Patches.Inventory.Currency
 
         public static void AddPanel()
         {
-            InputFieldPanel<int> panel = new(new GeoValuePatch(), CabbyMenu.KeyCodeMap.ValidChars.Numeric, 7, CabbyMenu.Constants.DEFAULT_PANEL_WIDTH, "Geo (0-9999999)");
+            InputFieldPanel<int> panel = new(new GeoValuePatch(), CabbyMenu.KeyCodeMap.ValidChars.Numeric, 4, Constants.PANEL_WIDTH_120, "Geo (0-999999)");
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(panel);
         }
     }

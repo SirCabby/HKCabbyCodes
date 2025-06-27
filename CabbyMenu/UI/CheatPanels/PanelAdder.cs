@@ -11,9 +11,9 @@ namespace CabbyMenu.UI.CheatPanels
 {
     public class PanelAdder
     {
-        private static readonly Vector2 defaultIconSize = new(60, 60);
-        private static readonly Vector2 defaultToggleButtonSize = new(120, 60);
-        private static readonly Vector2 middle = new(0.5f, 0.5f);
+        private static readonly Vector2 defaultIconSize = Constants.DEFAULT_ICON_SIZE_VECTOR;
+        private static readonly Vector2 defaultToggleButtonSize = Constants.DEFAULT_PANEL_SIZE;
+        private static readonly Vector2 middle = Constants.MIDDLE_ANCHOR_VECTOR;
 
         public static GameObject AddButton(CheatPanel panel, int siblingIndex, UnityAction action, string buttonText, Vector2 size)
         {
@@ -24,7 +24,7 @@ namespace CabbyMenu.UI.CheatPanels
             buttonPanel.transform.SetSiblingIndex(siblingIndex);
 
             var buttonPanelLayout = buttonPanel.AddComponent<LayoutElement>();
-            buttonPanelLayout.flexibleHeight = 1;
+            buttonPanelLayout.flexibleHeight = Constants.FLEXIBLE_LAYOUT_VALUE;
             buttonPanelLayout.minWidth = size.x;
 
             (GameObject button, _, _) = ButtonFactory.Build(buttonText);
@@ -43,7 +43,7 @@ namespace CabbyMenu.UI.CheatPanels
             buttonPanel.transform.SetSiblingIndex(siblingIndex);
 
             LayoutElement buttonPanelLayout = buttonPanel.AddComponent<LayoutElement>();
-            buttonPanelLayout.flexibleHeight = 1;
+            buttonPanelLayout.flexibleHeight = Constants.FLEXIBLE_LAYOUT_VALUE;
             buttonPanelLayout.minWidth = defaultToggleButtonSize.x;
 
             ToggleButton toggleButton = new(syncedReference);
@@ -62,7 +62,7 @@ namespace CabbyMenu.UI.CheatPanels
             imagePanel.transform.SetSiblingIndex(siblingIndex);
 
             LayoutElement imagePanelLayout = imagePanel.AddComponent<LayoutElement>();
-            imagePanelLayout.flexibleHeight = 1;
+            imagePanelLayout.flexibleHeight = Constants.FLEXIBLE_LAYOUT_VALUE;
             imagePanelLayout.minWidth = defaultIconSize.x;
 
             GameObject icon = DefaultControls.CreateImage(new DefaultControls.Resources());

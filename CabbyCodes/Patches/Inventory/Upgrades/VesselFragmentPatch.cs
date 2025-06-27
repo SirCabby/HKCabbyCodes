@@ -19,7 +19,7 @@ namespace CabbyCodes.Patches.Inventory.Upgrades
 
         public static void AddPanel()
         {
-            InputFieldPanel<int> panel = new(new VesselFragmentPatch(), CabbyMenu.KeyCodeMap.ValidChars.Numeric, CabbyMenu.Constants.DEFAULT_CHARACTER_LIMIT, CabbyMenu.Constants.DEFAULT_PANEL_WIDTH, "Vessel Fragments (0-2)");
+            InputFieldPanel<int> panel = new(new VesselFragmentPatch(), CabbyMenu.KeyCodeMap.ValidChars.Numeric, 1, Constants.PANEL_WIDTH_120, "Vessel Fragments (0-2)");
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(panel);
         }
     }

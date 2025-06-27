@@ -16,12 +16,12 @@ namespace CabbyMenu.UI.Factories
         /// <returns>A tuple containing the GameObject, GameObjectMod, and TextMod for the created text element.</returns>
         public static (GameObject gameObject, GameObjectMod gameObjectMod, TextMod textMod) Build(string text = "")
         {
-            GameObject buildInstance = DefaultControls.CreateText(new DefaultControls.Resources());
-            TextMod textMod = new(buildInstance.GetComponent<Text>());
-            textMod.SetText(text).SetFontSize(36).SetColor(Color.black);
+            GameObject textGameObject = DefaultControls.CreateText(new DefaultControls.Resources());
+            GameObjectMod gameObjectMod = new GameObjectMod(textGameObject);
+            TextMod textMod = new TextMod(textGameObject.GetComponent<Text>());
+            textMod.SetText(text).SetFontSize(Constants.DEFAULT_FONT_SIZE).SetColor(Constants.BLACK_COLOR);
 
-            (GameObject gameObject, GameObjectMod gameObjectMod) = GameObjectFactory.Build(buildInstance);
-            return (gameObject, gameObjectMod, textMod);
+            return (textGameObject, gameObjectMod, textMod);
         }
     }
 }

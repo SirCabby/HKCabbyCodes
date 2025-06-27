@@ -23,7 +23,7 @@ namespace CabbyCodes.Patches.Inventory.Currency
 
         public static void AddPanel()
         {
-            InputFieldPanel<int> panel = new(new WanderersJournalPatch(), CabbyMenu.KeyCodeMap.ValidChars.Numeric, 2, 120, "Wanderer's Journals (0-14)");
+            InputFieldPanel<int> panel = new(new WanderersJournalPatch(), CabbyMenu.KeyCodeMap.ValidChars.Numeric, 2, Constants.PANEL_WIDTH_120, "Wanderer's Journals (0-14)");
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(panel);
         }
     }

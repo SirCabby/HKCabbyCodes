@@ -12,7 +12,7 @@ namespace CabbyCodes.Patches
     public class CharmPatch : ISyncedReference<bool>
     {
         private static readonly string gotCharmName = "gotCharm_";
-        private static readonly Color unearnedColor = new(0.57f, 0.57f, 0.57f, 0.57f);
+        private static readonly Color unearnedColor = Constants.UNEARNED_COLOR;
         public static readonly List<Charm> charms = BuildCharmList();
 
         private readonly int charmIndex;

@@ -18,7 +18,7 @@ namespace CabbyMenu.UI
         /// <summary>
         /// Default size for cheat panels.
         /// </summary>
-        private static readonly Vector2 cheatPanelSize = new(0, 50);
+        private static readonly Vector2 cheatPanelSize = new(0, Constants.CHEAT_PANEL_HEIGHT);
 
         /// <summary>
         /// The name of the mod.
@@ -54,7 +54,7 @@ namespace CabbyMenu.UI
         /// <summary>
         /// Timestamp of the last selection.
         /// </summary>
-        private float lastSelectedTime = 0;
+        private float lastSelectedTime = Constants.DEFAULT_FLOAT_VALUE;
 
         /// <summary>
         /// Timer for handling click events.
@@ -337,34 +337,34 @@ namespace CabbyMenu.UI
 
             CanvasScaler canvasScalar = rootGameObject.AddComponent<CanvasScaler>();
             canvasScalar.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-            canvasScalar.referenceResolution = new Vector2(2560, 1440);
+            canvasScalar.referenceResolution = new Vector2(Constants.REFERENCE_RESOLUTION_WIDTH, Constants.REFERENCE_RESOLUTION_HEIGHT);
 
             // Menu Button
             (GameObject menuButton, GameObjectMod menuButtonGoMod, _) = ButtonFactory.Build("Code Menu");
             menuButtonGoMod.SetName("Open Menu Button");
             menuButton.GetComponent<Button>().onClick.AddListener(OnMenuButtonClicked);
-            new Fitter(menuButton).Attach(canvas).Anchor(new Vector2(0.07f, 0.92f), new Vector2(0.12f, 0.95f));
+            new Fitter(menuButton).Attach(canvas).Anchor(new Vector2(Constants.MENU_BUTTON_MIN_X, Constants.MENU_BUTTON_MIN_Y), new Vector2(Constants.MENU_BUTTON_MAX_X, Constants.MENU_BUTTON_MAX_Y));
 
             // Setup Menu Panel
             menuPanel = DefaultControls.CreatePanel(new DefaultControls.Resources());
             menuPanel.name = "Menu Panel";
             new Fitter(menuPanel).Attach(canvas);
-            new ImageMod(menuPanel.GetComponent<Image>()).SetColor(new Color(0, 0, 0, 0.8f));
+            new ImageMod(menuPanel.GetComponent<Image>()).SetColor(Constants.MENU_PANEL_COLOR);
             menuPanelGoMod = new GameObjectMod(menuPanel).SetActive(false);
 
             // Category Select Text
             (GameObject categoryTextObj, GameObjectMod categoryTextGoMod, TextMod categoryTextMod) = TextFactory.Build("Select Category");
-            categoryTextGoMod.SetName("Category Text").SetOutline(Color.black);
-            categoryTextMod.SetColor(Color.white);
-            new Fitter(categoryTextObj).Attach(menuPanel).Anchor(new Vector2(0.11f, 0.74f), new Vector2(0.11f, 0.74f)).Size(new Vector2(400, 100));
+            categoryTextGoMod.SetName("Category Text").SetOutline(Constants.BLACK_COLOR);
+            categoryTextMod.SetColor(Constants.WHITE_COLOR);
+            new Fitter(categoryTextObj).Attach(menuPanel).Anchor(new Vector2(Constants.CATEGORY_TEXT_X, Constants.CATEGORY_TEXT_Y), new Vector2(Constants.CATEGORY_TEXT_X, Constants.CATEGORY_TEXT_Y)).Size(new Vector2(Constants.CATEGORY_TEXT_WIDTH, Constants.CATEGORY_TEXT_HEIGHT));
 
             // Category Dropdown
-            Vector2 categorySize = new(280, 60);
+            Vector2 categorySize = new(Constants.CATEGORY_DROPDOWN_WIDTH, Constants.CATEGORY_DROPDOWN_HEIGHT);
             (GameObject categoryDropdownGameObject, GameObjectMod categoryDropdownGoMod, DropdownMod categoryDropdownMod) = DropdownFactory.Build();
             categoryDropdownGoMod.SetName("Category Dropdown");
-            int showSize = Math.Min(9, registeredCategories.Count);
-            categoryDropdownMod.SetSize(categorySize, showSize).SetFontSize(36);
-            new Fitter(categoryDropdownGameObject).Attach(menuPanel).Anchor(new Vector2(0.08f, 0.72f), new Vector2(0.08f, 0.72f));
+            int showSize = Math.Min(Constants.MAX_CATEGORY_SHOW_SIZE, registeredCategories.Count);
+            categoryDropdownMod.SetSize(categorySize, showSize).SetFontSize(Constants.DEFAULT_FONT_SIZE);
+            new Fitter(categoryDropdownGameObject).Attach(menuPanel).Anchor(new Vector2(Constants.CATEGORY_DROPDOWN_X, Constants.CATEGORY_DROPDOWN_Y), new Vector2(Constants.CATEGORY_DROPDOWN_X, Constants.CATEGORY_DROPDOWN_Y));
 
             categoryDropdown = categoryDropdownGameObject.GetComponent<Dropdown>();
             categoryDropdown.onValueChanged.AddListener(OnCategorySelected);
@@ -380,9 +380,9 @@ namespace CabbyMenu.UI
             // Cheat Scrollable
             GameObject cheatScrollable = DefaultControls.CreateScrollView(new DefaultControls.Resources());
             cheatScrollable.name = "Cheat Scrollable";
-            cheatScrollable.GetComponent<Image>().color = Color.blue;
+            cheatScrollable.GetComponent<Image>().color = Constants.BLUE_COLOR;
             cheatScrollable.GetComponent<ScrollRect>().scrollSensitivity = categorySize.y;
-            new Fitter(cheatScrollable).Attach(menuPanel).Anchor(new Vector2(0.17f, 0.05f), new Vector2(0.8f, 0.9f)).Size(Vector2.zero);
+            new Fitter(cheatScrollable).Attach(menuPanel).Anchor(new Vector2(Constants.CHEAT_SCROLLABLE_MIN_X, Constants.CHEAT_SCROLLABLE_MIN_Y), new Vector2(Constants.CHEAT_SCROLLABLE_MAX_X, Constants.CHEAT_SCROLLABLE_MAX_Y)).Size(Vector2.zero);
             new ScrollBarMod(cheatScrollable.transform.Find("Scrollbar Vertical").gameObject.GetComponent<Scrollbar>()).SetDefaults();
 
             ScrollRect cheatScrollRect = cheatScrollable.GetComponent<ScrollRect>();
@@ -390,8 +390,8 @@ namespace CabbyMenu.UI
 
             cheatContent = cheatScrollable.transform.Find("Viewport").Find("Content").gameObject;
             VerticalLayoutGroup cheatLayoutGroup = cheatContent.AddComponent<VerticalLayoutGroup>();
-            cheatLayoutGroup.padding = new RectOffset(10, 10, 10, 10);
-            cheatLayoutGroup.spacing = 10;
+            cheatLayoutGroup.padding = new RectOffset(Constants.CHEAT_CONTENT_PADDING, Constants.CHEAT_CONTENT_PADDING, Constants.CHEAT_CONTENT_PADDING, Constants.CHEAT_CONTENT_PADDING);
+            cheatLayoutGroup.spacing = Constants.CHEAT_CONTENT_SPACING;
             cheatLayoutGroup.childForceExpandHeight = false;
             cheatLayoutGroup.childControlHeight = false;
 
@@ -400,22 +400,22 @@ namespace CabbyMenu.UI
 
             // Title Text
             (GameObject titleText, GameObjectMod titleGoMod, TextMod titleTextMod) = TextFactory.Build(name);
-            titleGoMod.SetName("Title Text").SetOutline(Color.black);
-            titleTextMod.SetFontStyle(FontStyle.BoldAndItalic).SetFontSize(60).SetColor(Color.white);
-            new Fitter(titleText).Attach(menuPanel).Anchor(new Vector2(0.5f, 0.93f), new Vector2(0.5f, 0.93f)).Size(new Vector2(400, 100));
+            titleGoMod.SetName("Title Text").SetOutline(Constants.BLACK_COLOR);
+            titleTextMod.SetFontStyle(FontStyle.BoldAndItalic).SetFontSize(Constants.TITLE_FONT_SIZE).SetColor(Constants.WHITE_COLOR);
+            new Fitter(titleText).Attach(menuPanel).Anchor(new Vector2(Constants.TITLE_TEXT_X, Constants.TITLE_TEXT_Y), new Vector2(Constants.TITLE_TEXT_X, Constants.TITLE_TEXT_Y)).Size(new Vector2(Constants.TITLE_TEXT_WIDTH, Constants.TITLE_TEXT_HEIGHT));
 
             // Close Button
             (GameObject closeMenuButton, GameObjectMod closeMenuButtonGoMod, TextMod closeMenuButtonTextMod) = ButtonFactory.Build("Close");
             closeMenuButtonGoMod.SetName("Close Button");
-            closeMenuButtonTextMod.SetFontSize(46);
+            closeMenuButtonTextMod.SetFontSize(Constants.CLOSE_BUTTON_FONT_SIZE);
             closeMenuButton.GetComponent<Button>().onClick.AddListener(OnMenuButtonClicked);
-            new Fitter(closeMenuButton).Attach(menuPanel).Anchor(new Vector2(0.87f, 0.68f), new Vector2(0.92f, 0.7f));
+            new Fitter(closeMenuButton).Attach(menuPanel).Anchor(new Vector2(Constants.CLOSE_BUTTON_MIN_X, Constants.CLOSE_BUTTON_MIN_Y), new Vector2(Constants.CLOSE_BUTTON_MAX_X, Constants.CLOSE_BUTTON_MAX_Y));
 
             // Version Text
             (GameObject versionTextObj, GameObjectMod versionTextGoMod, TextMod versionTextMod) = TextFactory.Build("v" + version);
-            versionTextGoMod.SetName("Version Text").SetOutline(Color.black);
-            versionTextMod.SetFontStyle(FontStyle.BoldAndItalic).SetColor(Color.white);
-            new Fitter(versionTextObj).Attach(menuPanel).Anchor(new Vector2(0.95f, 0.05f), new Vector2(0.95f, 0.1f)).Size(new Vector2(400, 100));
+            versionTextGoMod.SetName("Version Text").SetOutline(Constants.BLACK_COLOR);
+            versionTextMod.SetFontStyle(FontStyle.BoldAndItalic).SetColor(Constants.WHITE_COLOR);
+            new Fitter(versionTextObj).Attach(menuPanel).Anchor(new Vector2(Constants.VERSION_TEXT_X, Constants.VERSION_TEXT_MIN_Y), new Vector2(Constants.VERSION_TEXT_X, Constants.VERSION_TEXT_MAX_Y)).Size(new Vector2(Constants.VERSION_TEXT_WIDTH, Constants.VERSION_TEXT_HEIGHT));
 
             OnCategorySelected(0);
         }

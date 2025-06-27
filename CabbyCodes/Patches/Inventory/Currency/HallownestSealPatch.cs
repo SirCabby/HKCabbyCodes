@@ -23,7 +23,7 @@ namespace CabbyCodes.Patches.Inventory.Currency
 
         public static void AddPanel()
         {
-            InputFieldPanel<int> panel = new(new HallownestSealPatch(), CabbyMenu.KeyCodeMap.ValidChars.Numeric, 2, 120, "Hallownest Seals (0-17)");
+            InputFieldPanel<int> panel = new(new HallownestSealPatch(), CabbyMenu.KeyCodeMap.ValidChars.Numeric, 2, Constants.PANEL_WIDTH_120, "Hallownest Seals (0-17)");
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(panel);
         }
     }

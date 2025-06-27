@@ -9,7 +9,6 @@ using BepInEx.Configuration;
 using UnityEngine.UI;
 using System.Linq;
 using CabbyCodes.Types;
-using CabbyMenu;
 
 namespace CabbyCodes.Patches
 {
@@ -64,7 +63,7 @@ namespace CabbyCodes.Patches
         private static readonly List<TeleportLocation> teleportLocations = new()
         {
             new("", "<Select Location>", Vector2.zero),
-            new("Town", "Starting Town", new Vector2(136, 12)),
+            new("Town", "Starting Town", new Vector2(Constants.TOWN_X_POSITION, Constants.TOWN_Y_POSITION)),
         };
 
         /// <summary>
@@ -141,7 +140,7 @@ namespace CabbyCodes.Patches
                     }
                 }
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 CabbyCodesPlugin.BLogger.LogWarning($"Failed to load teleport locations from config: {ex.Message}");
             }
@@ -265,7 +264,7 @@ namespace CabbyCodes.Patches
                 savedLocationsEntry.Value = string.Join(",", locationNames);
                 CabbyCodesPlugin.configFile.Save();
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 CabbyCodesPlugin.BLogger.LogWarning($"Failed to update saved locations list: {ex.Message}");
             }
@@ -276,7 +275,7 @@ namespace CabbyCodes.Patches
         /// </summary>
         private static void AddPanel()
         {
-            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new DropdownPanel(new TeleportPatch(), 400, "Select Area to Teleport"));
+            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new DropdownPanel(new TeleportPatch(), Constants.TELEPORT_DROPDOWN_WIDTH, "Select Area to Teleport"));
         }
 
         /// <summary>
@@ -293,7 +292,7 @@ namespace CabbyCodes.Patches
         /// <param name="location">The teleport location to create a panel for.</param>
         private static void AddCustomPanel(TeleportLocation location)
         {
-            ButtonPanel buttonPanel = new(() => { DoTeleport(location); }, "Teleport", location.DisplayName, 160);
+            ButtonPanel buttonPanel = new(() => { DoTeleport(location); }, "Teleport", location.DisplayName, Constants.TELEPORT_BUTTON_WIDTH);
 
             GameObject destroyButton = PanelAdder.AddDestroyPanelButton(buttonPanel, buttonPanel.cheatPanel.transform.childCount, () =>
             {
@@ -311,13 +310,13 @@ namespace CabbyCodes.Patches
 
                         CabbyCodesPlugin.BLogger.LogDebug($"Removed teleport location: {customLocation.SceneName}");
                     }
-                    catch (System.Exception ex)
+                    catch (Exception ex)
                     {
                         CabbyCodesPlugin.BLogger.LogWarning($"Failed to remove teleport location from config: {customLocation.SceneName} - {ex.Message}");
                     }
                 }
-            }, "X", new Vector2(60, 60));
-            destroyButton.transform.Find("Button").gameObject.GetComponent<Image>().color = new Color(1, 0.5f, 0.5f);
+            }, "X", new Vector2(Constants.TELEPORT_DESTROY_BUTTON_SIZE, Constants.TELEPORT_DESTROY_BUTTON_SIZE));
+            destroyButton.transform.Find("Button").gameObject.GetComponent<Image>().color = Constants.DESTROY_BUTTON_COLOR;
 
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(buttonPanel);
         }

@@ -22,15 +22,15 @@ namespace CabbyCodes.Patches.Inventory.Items
 
         public void Set(int value)
         {
-            if (value == 2)
-            {
-                PlayerData.instance.hasXunFlower = true;
-                PlayerData.instance.xunFlowerBroken = false;
-            }
-            else if (value == 1)
+            if (value == Constants.DELICATE_FLOWER_BROKEN_STATE)
             {
                 PlayerData.instance.hasXunFlower = true;
                 PlayerData.instance.xunFlowerBroken = true;
+            }
+            else if (value == Constants.DELICATE_FLOWER_RETURNED_STATE)
+            {
+                PlayerData.instance.hasXunFlower = true;
+                PlayerData.instance.xunFlowerBroken = false;
             }
             else
             {

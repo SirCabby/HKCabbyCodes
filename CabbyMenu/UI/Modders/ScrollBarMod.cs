@@ -5,8 +5,8 @@ namespace CabbyMenu.UI.Modders
 {
     public class ScrollBarMod
     {
-        private static readonly Color normalColor = new(0.3f, 0.3f, 1, 1);
-        private static readonly Color highlightColor = new(0, 0, 1, 1);
+        private static readonly Color normalColor = Constants.NORMAL_SCROLLBAR_COLOR;
+        private static readonly Color highlightColor = Constants.HIGHLIGHT_SCROLLBAR_COLOR;
 
         private readonly Scrollbar scrollbar;
 

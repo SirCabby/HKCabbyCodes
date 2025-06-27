@@ -8,10 +8,11 @@ namespace CabbyMenu.UI.ReferenceControls
 {
     public class ToggleButton
     {
-        private static readonly Color onColor = new(0, 0.8f, 1, 1);
+        private static readonly Color onColor = Constants.ON_COLOR;
         private static readonly Color offColor = Color.white;
 
         private readonly GameObject toggleButton;
+        private readonly GameObjectMod toggleButtonGoMod;
         private readonly TextMod textMod;
         private readonly ImageMod imageMod;
         public ISyncedReference<bool> IsOn { get; private set; }

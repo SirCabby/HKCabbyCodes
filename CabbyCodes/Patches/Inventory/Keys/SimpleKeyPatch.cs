@@ -19,7 +19,7 @@ namespace CabbyCodes.Patches.Inventory.Keys
 
         public static void AddPanel()
         {
-            InputFieldPanel<int> panel = new(new SimpleKeyPatch(), CabbyMenu.KeyCodeMap.ValidChars.Numeric, 1, 120, "Simple Keys (0-4)");
+            InputFieldPanel<int> panel = new(new SimpleKeyPatch(), CabbyMenu.KeyCodeMap.ValidChars.Numeric, 1, Constants.PANEL_WIDTH_120, "Simple Keys (0-4)");
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(panel);
         }
     }

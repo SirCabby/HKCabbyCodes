@@ -19,7 +19,7 @@ namespace CabbyCodes.Patches.Inventory.Upgrades
 
         public static void AddPanel()
         {
-            InputFieldPanel<int> panel = new(new MaskShardPatch(), CabbyMenu.KeyCodeMap.ValidChars.Numeric, 1, 120, "Mask Shards (0-3)");
+            InputFieldPanel<int> panel = new(new MaskShardPatch(), CabbyMenu.KeyCodeMap.ValidChars.Numeric, 1, Constants.PANEL_WIDTH_120, "Mask Shards (0-4)");
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(panel);
         }
     }

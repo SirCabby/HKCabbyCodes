@@ -8,8 +8,8 @@ namespace CabbyMenu.UI.CheatPanels
 {
     public class TogglePanel : CheatPanel
     {
-        private static readonly Vector2 defaultSize = new(120, 60);
-        private static readonly Vector2 middle = new(0.5f, 0.5f);
+        private static readonly Vector2 defaultSize = Constants.DEFAULT_PANEL_SIZE;
+        private static readonly Vector2 middle = Constants.MIDDLE_ANCHOR_VECTOR;
 
         private readonly ToggleButton toggleButton;
 
@@ -22,7 +22,7 @@ namespace CabbyMenu.UI.CheatPanels
             buttonPanel.transform.SetAsFirstSibling();
 
             LayoutElement buttonPanelLayout = buttonPanel.AddComponent<LayoutElement>();
-            buttonPanelLayout.flexibleHeight = 1;
+            buttonPanelLayout.flexibleHeight = Constants.FLEXIBLE_LAYOUT_VALUE;
             buttonPanelLayout.minWidth = defaultSize.x;
 
             toggleButton = new(syncedReference);

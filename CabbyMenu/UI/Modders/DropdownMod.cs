@@ -18,7 +18,7 @@ namespace CabbyMenu.UI.Modders
             return dropdownGameObject;
         }
 
-        public DropdownMod SetSize(Vector2 size, int showSize = 5)
+        public DropdownMod SetSize(Vector2 size, int showSize = Constants.DROPDOWN_SHOW_SIZE)
         {
             new Fitter(dropdownGameObject).Size(size);
 

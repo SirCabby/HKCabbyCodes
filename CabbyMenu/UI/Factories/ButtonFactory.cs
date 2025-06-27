@@ -18,7 +18,7 @@ namespace CabbyMenu.UI.Factories
         {
             GameObject buildInstance = DefaultControls.CreateButton(new DefaultControls.Resources());
             TextMod textMod = new(buildInstance.GetComponentInChildren<Text>());
-            textMod.SetText(text).SetFontSize(36).SetColor(Color.black);
+            textMod.SetText(text).SetFontSize(Constants.DEFAULT_FONT_SIZE).SetColor(Constants.BLACK_COLOR);
 
             (GameObject gameObject, GameObjectMod gameObjectMod) = GameObjectFactory.Build(buildInstance);
             return (gameObject, gameObjectMod, textMod);
