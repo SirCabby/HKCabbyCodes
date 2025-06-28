@@ -21,6 +21,10 @@ CabbyMenu is designed as a **standalone library** that can be referenced by othe
 - **ValidationUtils**: Input validation utilities
 - **Constants**: Centralized UI constants (panel sizes, character limits, etc.)
 
+### Game State Management
+- **IGameStateProvider**: Interface for determining when the menu should be visible
+- **ShouldShowMenu()**: Method that controls menu visibility based on game state
+
 ### UI Components
 - **CheatPanel**: Base class for all cheat panels
 - **ButtonPanel**: Panel with clickable buttons
@@ -133,6 +137,50 @@ var charLimit = Constants.DEFAULT_CHARACTER_LIMIT; // 1
 var clickDelay = Constants.CLICK_TIMER_DELAY;     // 0.2
 ```
 
+### Using Game State Management
+The `IGameStateProvider` interface allows you to control when the menu should be visible based on game state. This keeps the UI library independent of game-specific assemblies.
+
+#### Implementing IGameStateProvider
+```csharp
+using CabbyMenu.Types;
+
+public class MyGameStateProvider : IGameStateProvider
+{
+    public bool ShouldShowMenu()
+    {
+        // Example: Show menu when game is paused
+        return GameManager.instance != null && GameManager.instance.IsGamePaused();
+        
+        // Example: Show menu when a specific key is pressed
+        // return Input.GetKey(KeyCode.F1);
+        
+        // Example: Show menu in specific game states
+        // return GameManager.instance.gameState == GameState.PAUSED;
+    }
+}
+```
+
+#### Using with CabbyMainMenu
+```csharp
+using CabbyMenu.UI;
+using CabbyMenu.Types;
+
+// Create your game state provider
+var gameStateProvider = new MyGameStateProvider();
+
+// Initialize the menu with the provider
+var cabbyMenu = new CabbyMainMenu("My Mod", "1.0.0", gameStateProvider);
+
+// The menu will automatically show/hide based on your provider
+cabbyMenu.Update(); // Called every frame
+```
+
+#### Menu Visibility Behavior
+- **When `ShouldShowMenu()` returns `true`**: The menu button becomes visible and interactive
+- **When `ShouldShowMenu()` returns `false`**: The entire menu system is hidden and deactivated
+- **Automatic cleanup**: When the menu is hidden, it automatically resets to a clean state
+- **Performance optimized**: The menu only renders when it should be visible
+
 ## 🏛️ Architecture
 
 ### Namespace Structure
@@ -143,7 +191,7 @@ var clickDelay = Constants.CLICK_TIMER_DELAY;     // 0.2
 - `CabbyMenu.UI.Factories`: UI element factories
 - `CabbyMenu.UI.Modders`: UI component modifiers
 - `CabbyMenu.SyncedReferences`: Data synchronization interfaces
-- `CabbyMenu.Types`: Type definitions
+- `CabbyMenu.Types`: Type definitions (including IGameStateProvider)
 - `CabbyMenu.Debug`: Debug utilities
 
 ### Project Structure
@@ -154,12 +202,14 @@ CabbyMenu/
 │   ├── ReferenceControls/ # Synchronized controls
 │   ├── Factories/        # UI element factories
 │   ├── Modders/          # UI component modifiers
-│   └── CabbyMenu.cs      # Main menu system
+│   └── CabbyMainMenu.cs  # Main menu system
 ├── SyncedReferences/     # Data synchronization
 │   ├── ISyncedReference.cs
 │   ├── ISyncedValueList.cs
 │   └── BoxedReference.cs
 ├── Types/                # Type definitions
+│   ├── IGameStateProvider.cs
+│   └── InputFieldStatus.cs
 ├── Debug/                # Debug utilities
 ├── Constants.cs          # UI constants
 └── README.md            # This file
@@ -225,6 +275,7 @@ To add new UI components:
 - Follow the existing naming conventions
 - Add XML documentation to public methods
 - Test components thoroughly before committing
+- Implement `IGameStateProvider` for proper menu visibility control
 
 ## 📦 Distribution
 
@@ -256,4 +307,4 @@ To add new UI components:
 
 ## 📄 License
 
-This library is provided as-is for use in Hollow Knight mods. Feel free to use, modify, and distribute as needed. 
+This library is provided as-is for use in Hollow Knight mods. Feel free to use, modify, and distribute as needed.
