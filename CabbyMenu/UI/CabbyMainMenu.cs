@@ -389,60 +389,6 @@ namespace CabbyMenu.UI
 
             categoryDropdown = customDropdown;
 
-            // Test Button for Dropdown Debugging
-            (GameObject testButton, GameObjectMod testButtonGoMod, TextMod testButtonTextMod) = ButtonFactory.BuildDefault("Test Dropdown");
-            testButtonGoMod.SetName("Test Dropdown Button");
-            testButtonTextMod.SetFontSize(Constants.DEFAULT_FONT_SIZE);
-            testButton.GetComponent<Button>().onClick.AddListener(() =>
-            {
-                if (categoryDropdown != null)
-                {
-                    UnityEngine.Debug.Log("Test button clicked - calling ForceVisible on dropdown");
-                    categoryDropdown.ForceVisible();
-                }
-                else
-                {
-                    UnityEngine.Debug.LogError("categoryDropdown is null when test button clicked!");
-                }
-            });
-            new Fitter(testButton).Attach(menuPanel).Anchor(new Vector2(Constants.CATEGORY_DROPDOWN_X, Constants.CATEGORY_DROPDOWN_Y - 0.1f), new Vector2(Constants.CATEGORY_DROPDOWN_X, Constants.CATEGORY_DROPDOWN_Y - 0.1f)).Size(new Vector2(Constants.CATEGORY_DROPDOWN_WIDTH, 40f));
-
-            // Debug Box Test Button
-            (GameObject debugBoxButton, GameObjectMod debugBoxButtonGoMod, TextMod debugBoxButtonTextMod) = ButtonFactory.BuildDefault("Debug Boxes");
-            debugBoxButtonGoMod.SetName("Debug Box Button");
-            debugBoxButtonTextMod.SetFontSize(Constants.DEFAULT_FONT_SIZE);
-            debugBoxButton.GetComponent<Button>().onClick.AddListener(() =>
-            {
-                if (categoryDropdown != null)
-                {
-                    UnityEngine.Debug.Log("Debug box button clicked - creating debug boxes");
-                    categoryDropdown.CreateDebugBoxes();
-                }
-                else
-                {
-                    UnityEngine.Debug.LogError("categoryDropdown is null when debug box button clicked!");
-                }
-            });
-            new Fitter(debugBoxButton).Attach(menuPanel).Anchor(new Vector2(Constants.CATEGORY_DROPDOWN_X, Constants.CATEGORY_DROPDOWN_Y - 0.15f), new Vector2(Constants.CATEGORY_DROPDOWN_X, Constants.CATEGORY_DROPDOWN_Y - 0.15f)).Size(new Vector2(Constants.CATEGORY_DROPDOWN_WIDTH, 40f));
-
-            // Remove Debug Boxes Button
-            (GameObject removeDebugBoxButton, GameObjectMod removeDebugBoxButtonGoMod, TextMod removeDebugBoxButtonTextMod) = ButtonFactory.BuildDefault("Remove Boxes");
-            removeDebugBoxButtonGoMod.SetName("Remove Debug Box Button");
-            removeDebugBoxButtonTextMod.SetFontSize(Constants.DEFAULT_FONT_SIZE);
-            removeDebugBoxButton.GetComponent<Button>().onClick.AddListener(() =>
-            {
-                if (categoryDropdown != null)
-                {
-                    UnityEngine.Debug.Log("Remove debug box button clicked - removing debug boxes");
-                    categoryDropdown.RemoveDebugBoxes();
-                }
-                else
-                {
-                    UnityEngine.Debug.LogError("categoryDropdown is null when remove debug box button clicked!");
-                }
-            });
-            new Fitter(removeDebugBoxButton).Attach(menuPanel).Anchor(new Vector2(Constants.CATEGORY_DROPDOWN_X, Constants.CATEGORY_DROPDOWN_Y - 0.2f), new Vector2(Constants.CATEGORY_DROPDOWN_X, Constants.CATEGORY_DROPDOWN_Y - 0.2f)).Size(new Vector2(Constants.CATEGORY_DROPDOWN_WIDTH, 40f));
-
             // Cheat Scrollable
             GameObject cheatScrollable = DefaultControls.CreateScrollView(new DefaultControls.Resources());
             cheatScrollable.name = "Cheat Scrollable";

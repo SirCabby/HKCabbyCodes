@@ -155,14 +155,6 @@ namespace CabbyMenu.UI.ReferenceControls
             Image panelImage = dropdownPanel.AddComponent<Image>();
             panelImage.color = new Color(0.1f, 0.1f, 0.1f, 0.9f);
 
-            // Add click handler to panel background to close dropdown
-            Button panelButton = dropdownPanel.AddComponent<Button>();
-            panelButton.onClick.AddListener(() =>
-            {
-                UnityEngine.Debug.Log("Panel background clicked - closing dropdown");
-                HideDropdown();
-            });
-
             UnityEngine.Debug.Log($"Panel RectTransform - anchorMin: {panelRect.anchorMin}, anchorMax: {panelRect.anchorMax}, sizeDelta: {panelRect.sizeDelta}, anchoredPosition: {panelRect.anchoredPosition}");
 
             // Create scroll rect
@@ -211,15 +203,26 @@ namespace CabbyMenu.UI.ReferenceControls
             VerticalLayoutGroup contentLayout = content.AddComponent<VerticalLayoutGroup>();
             ContentSizeFitter contentFitter = content.AddComponent<ContentSizeFitter>();
 
-            // Configure content
+            // Configure content - anchor to stretch across viewport width and position at top
             contentRect.anchorMin = new Vector2(0, 1);
             contentRect.anchorMax = new Vector2(1, 1);
             contentRect.sizeDelta = new Vector2(0, 0);
             contentRect.anchoredPosition = Vector2.zero;
 
-            // Temporarily disable layout system to manually position buttons
+            // Configure layout group for proper button positioning
             contentLayout.enabled = false;
+            contentLayout.spacing = 0f;
+            contentLayout.padding = new RectOffset(0, 0, 0, 0);
+            contentLayout.childAlignment = TextAnchor.UpperCenter;
+            contentLayout.childControlWidth = true;
+            contentLayout.childControlHeight = false;
+            contentLayout.childForceExpandWidth = true;
+            contentLayout.childForceExpandHeight = false;
+
+            // Configure content size fitter
             contentFitter.enabled = false;
+            contentFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
+            contentFitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
 
             UnityEngine.Debug.Log("Layout system disabled - using manual positioning");
 
@@ -363,17 +366,23 @@ namespace CabbyMenu.UI.ReferenceControls
                 RectTransform optionRect = optionObj.AddComponent<RectTransform>();
                 Image optionImage = optionObj.AddComponent<Image>();
                 Button optionButton = optionObj.AddComponent<Button>();
+                LayoutElement optionLayout = optionObj.AddComponent<LayoutElement>();
 
-                // Configure rect transform - position within viewport bounds
+                // Configure layout element for proper sizing
+                optionLayout.preferredHeight = 30f;
+                optionLayout.minHeight = 30f;
+                optionLayout.flexibleWidth = 1f;
+                optionLayout.minWidth = 0f;
+
+                // Configure rect transform - let layout system handle positioning
                 optionRect.anchorMin = new Vector2(0, 1);
                 optionRect.anchorMax = new Vector2(1, 1);
                 optionRect.sizeDelta = new Vector2(0, 30f);
-                optionRect.anchoredPosition = new Vector2(0, -i * 30f); // Stack downward from top
+                optionRect.anchoredPosition = new Vector2(0, -i * 30f);
 
                 // Configure image
                 optionImage.color = new Color(0.2f, 0.2f, 0.2f, 1f);
                 UnityEngine.Debug.Log($"Set option {i} button color to: {optionImage.color}");
-                UnityEngine.Debug.Log($"Option {i} positioned at anchoredPosition: {optionRect.anchoredPosition}");
 
                 // Create text component
                 GameObject textObj = new GameObject("Text");
@@ -591,21 +600,17 @@ namespace CabbyMenu.UI.ReferenceControls
                 }
             }
 
-            // Ensure all option buttons are visible and properly positioned
+            // Ensure all option buttons are visible
             for (int i = 0; i < optionButtons.Count; i++)
             {
                 if (optionButtons[i] != null)
                 {
                     optionButtons[i].SetActive(true);
 
-                    // Ensure button is properly sized and positioned
+                    // Ensure button is properly positioned
                     RectTransform buttonRect = optionButtons[i].GetComponent<RectTransform>();
                     if (buttonRect != null)
                     {
-                        // Set button to fill content width and have fixed height
-                        buttonRect.anchorMin = new Vector2(0, 1);
-                        buttonRect.anchorMax = new Vector2(1, 1);
-                        buttonRect.sizeDelta = new Vector2(0, 30f);
                         buttonRect.anchoredPosition = new Vector2(0, -i * 30f);
                     }
 
@@ -880,120 +885,8 @@ namespace CabbyMenu.UI.ReferenceControls
             }
         }
 
-        public void ForceVisible()
-        {
-            UnityEngine.Debug.Log("ForceVisible called - making dropdown panel bright and visible for testing");
-
-            if (dropdownPanel != null)
-            {
-                Image panelImage = dropdownPanel.GetComponent<Image>();
-                if (panelImage != null)
-                {
-                    panelImage.color = Color.red;
-                    UnityEngine.Debug.Log($"Panel image set to bright red: {panelImage.color}");
-                }
-            }
-
-            if (scrollRect != null)
-            {
-                Image scrollImage = scrollRect.GetComponent<Image>();
-                if (scrollImage != null)
-                {
-                    scrollImage.color = Color.blue;
-                    UnityEngine.Debug.Log($"Scroll view image set to bright blue: {scrollImage.color}");
-                }
-
-                if (scrollRect.viewport != null)
-                {
-                    Image viewportImage = scrollRect.viewport.GetComponent<Image>();
-                    if (viewportImage != null)
-                    {
-                        viewportImage.color = Color.green;
-                        UnityEngine.Debug.Log($"Viewport image set to bright green: {viewportImage.color}");
-                    }
-                }
-
-                if (scrollRect.content != null)
-                {
-                    Image contentImage = scrollRect.content.GetComponent<Image>();
-                    if (contentImage != null)
-                    {
-                        contentImage.color = Color.yellow;
-                        UnityEngine.Debug.Log($"Content image set to bright yellow: {contentImage.color}");
-                    }
-                }
-            }
-
-            // Make all option buttons bright cyan
-            foreach (var button in optionButtons)
-            {
-                if (button != null && button.gameObject != null)
-                {
-                    Image buttonImage = button.GetComponent<Image>();
-                    if (buttonImage != null)
-                    {
-                        buttonImage.color = Color.cyan;
-                        UnityEngine.Debug.Log($"Option button {button.name} set to bright cyan: {buttonImage.color}");
-                    }
-                }
-            }
-
-            UnityEngine.Debug.Log("ForceVisible completed - dropdown should now be brightly colored and visible");
-        }
-
-        public void DebugState()
-        {
-            UnityEngine.Debug.Log("=== CustomDropdown Debug State ===");
-            UnityEngine.Debug.Log($"- mainButton: {(mainButton != null ? "exists" : "null")}");
-            UnityEngine.Debug.Log($"- mainButtonImage: {(mainButtonImage != null ? "exists" : "null")}");
-            UnityEngine.Debug.Log($"- dropdownPanel: {(dropdownPanel != null ? "exists" : "null")}");
-            UnityEngine.Debug.Log($"- options count: {options.Count}");
-            UnityEngine.Debug.Log($"- isOpen: {isOpen}");
-            UnityEngine.Debug.Log($"- selectedIndex: {selectedIndex}");
-            UnityEngine.Debug.Log($"- button interactable: {(mainButton != null ? mainButton.interactable.ToString() : "N/A")}");
-            UnityEngine.Debug.Log($"- button targetGraphic: {(mainButton != null && mainButton.targetGraphic != null ? "set" : "null")}");
-            UnityEngine.Debug.Log($"- dropdownPanel active: {(dropdownPanel != null ? dropdownPanel.activeSelf.ToString() : "N/A")}");
-            UnityEngine.Debug.Log($"- dropdownPanel parent: {(dropdownPanel != null ? dropdownPanel.transform.parent?.name : "N/A")}");
-            UnityEngine.Debug.Log($"- dropdownPanel position: {(dropdownPanel != null ? dropdownPanel.transform.position.ToString() : "N/A")}");
-            UnityEngine.Debug.Log($"- dropdownPanel localPosition: {(dropdownPanel != null ? dropdownPanel.transform.localPosition.ToString() : "N/A")}");
-
-            if (dropdownPanel != null)
-            {
-                Image panelImage = dropdownPanel.GetComponent<Image>();
-                UnityEngine.Debug.Log($"- panelImage enabled: {(panelImage != null ? panelImage.enabled.ToString() : "N/A")}");
-                UnityEngine.Debug.Log($"- panelImage color: {(panelImage != null ? panelImage.color.ToString() : "N/A")}");
-
-                RectTransform panelRect = dropdownPanel.GetComponent<RectTransform>();
-                UnityEngine.Debug.Log($"- panelRect sizeDelta: {(panelRect != null ? panelRect.sizeDelta.ToString() : "N/A")}");
-                UnityEngine.Debug.Log($"- panelRect anchoredPosition: {(panelRect != null ? panelRect.anchoredPosition.ToString() : "N/A")}");
-                UnityEngine.Debug.Log($"- panelRect anchorMin: {(panelRect != null ? panelRect.anchorMin.ToString() : "N/A")}");
-                UnityEngine.Debug.Log($"- panelRect anchorMax: {(panelRect != null ? panelRect.anchorMax.ToString() : "N/A")}");
-                UnityEngine.Debug.Log($"- panelRect pivot: {(panelRect != null ? panelRect.pivot.ToString() : "N/A")}");
-
-                if (panelRect != null)
-                {
-                    Vector3[] corners = new Vector3[4];
-                    panelRect.GetWorldCorners(corners);
-                    UnityEngine.Debug.Log($"- panelRect world corners: {corners[0]}, {corners[1]}, {corners[2]}, {corners[3]}");
-                }
-            }
-
-            // Canvas info
-            Canvas mainCanvas = GetComponentInParent<Canvas>();
-            UnityEngine.Debug.Log($"- mainCanvas: {(mainCanvas != null ? mainCanvas.name : "null")}");
-            UnityEngine.Debug.Log($"- canvas renderMode: {(mainCanvas != null ? mainCanvas.renderMode.ToString() : "N/A")}");
-            UnityEngine.Debug.Log($"- canvas scaleFactor: {(mainCanvas != null ? mainCanvas.scaleFactor.ToString() : "N/A")}");
-            UnityEngine.Debug.Log($"- canvas referencePixelsPerUnit: {(mainCanvas != null ? mainCanvas.referencePixelsPerUnit.ToString() : "N/A")}");
-            UnityEngine.Debug.Log($"- canvas camera: {(mainCanvas != null ? (mainCanvas.worldCamera != null ? mainCanvas.worldCamera.name : "null") : "N/A")} ({(mainCanvas != null ? mainCanvas.renderMode.ToString() : "N/A")} mode)");
-
-            // Screen info
-            UnityEngine.Debug.Log($"- Screen width: {Screen.width}, height: {Screen.height}");
-            UnityEngine.Debug.Log($"- Screen currentResolution: {Screen.currentResolution.width} x {Screen.currentResolution.height} @ {Screen.currentResolution.refreshRate}Hz");
-        }
-
         private void LogDebugState()
         {
-            DebugState();
         }
 
         // Compatibility methods for external calls
@@ -1003,7 +896,5 @@ namespace CabbyMenu.UI.ReferenceControls
         public void SetFontSize(int size) { /* TODO: implement if needed */ }
         public void SetColors(Color color) { /* TODO: implement if needed */ }
         public void SetColors(Color normal, Color hover, Color pressed) { /* TODO: implement if needed */ }
-        public void CreateDebugBoxes() { /* TODO: implement if needed */ }
-        public void RemoveDebugBoxes() { /* TODO: implement if needed */ }
     }
 }
