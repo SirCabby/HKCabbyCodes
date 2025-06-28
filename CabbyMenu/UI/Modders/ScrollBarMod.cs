@@ -7,6 +7,7 @@ namespace CabbyMenu.UI.Modders
     {
         private static readonly Color normalColor = Constants.NORMAL_SCROLLBAR_COLOR;
         private static readonly Color highlightColor = Constants.HIGHLIGHT_SCROLLBAR_COLOR;
+        private static readonly Color pressedColor = Constants.PRESSED_SCROLLBAR_COLOR;
 
         private readonly Scrollbar scrollbar;
 
@@ -25,6 +26,7 @@ namespace CabbyMenu.UI.Modders
             ColorBlock scrollBarColors = scrollbar.colors;
             scrollBarColors.normalColor = normalColor;
             scrollBarColors.highlightedColor = highlightColor;
+            scrollBarColors.pressedColor = pressedColor;
             scrollbar.colors = scrollBarColors;
 
             return this;

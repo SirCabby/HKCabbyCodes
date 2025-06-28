@@ -65,8 +65,9 @@ namespace CabbyMenu
         // Colors
         public static readonly UnityEngine.Color ON_COLOR = new(0f, 0.8f, 1f, 1f);
         public static readonly UnityEngine.Color SELECTED_COLOR = new(1f, 1f, 0.56f, 1f);
-        public static readonly UnityEngine.Color NORMAL_SCROLLBAR_COLOR = new(0.6f, 0.6f, 0.6f, 1f);
-        public static readonly UnityEngine.Color HIGHLIGHT_SCROLLBAR_COLOR = new(0.8f, 0.8f, 0.8f, 1f);
+        public static readonly UnityEngine.Color NORMAL_SCROLLBAR_COLOR = new(0.4f, 0.4f, 0.4f, 1f);
+        public static readonly UnityEngine.Color HIGHLIGHT_SCROLLBAR_COLOR = new(0.6f, 0.6f, 0.6f, 1f);
+        public static readonly UnityEngine.Color PRESSED_SCROLLBAR_COLOR = new(0.2f, 0.2f, 0.2f, 1f);
         public static readonly UnityEngine.Color PANEL_COLOR_1 = new(0.8f, 0.8f, 0.8f, 1f);
         public static readonly UnityEngine.Color PANEL_COLOR_2 = new(0.6f, 0.6f, 0.6f, 1f);
         public static readonly UnityEngine.Color WARNING_COLOR = new(1f, 0.5f, 0f, 1f);
