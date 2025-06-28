@@ -151,15 +151,26 @@ Before building the project, you need to obtain the following DLL files and plac
 
 #### Required Files:
 - **Assembly-CSharp.dll** - Main game assembly (from Hollow Knight installation)
+- **PlayMaker.dll** - PlayMaker FSM library (from Hollow Knight installation)
+- **UnityExplorer.STANDALONE.Mono.dll** - UnityExplorer in-game inspector (from UnityExplorer release) *(optional, see note below)*
 
 #### File Structure:
 ```
 CabbyCodes/
 └── lib/
     ├── Assembly-CSharp.dll
+    ├── PlayMaker.dll
+    ├── UnityExplorer.STANDALONE.Mono.dll
 ```
 
-**Note**: These files are excluded from version control due to licensing restrictions. You must obtain them manually before building the project.
+**Note**: These files are excluded from version control due to licensing restrictions. You must obtain them manually before building and debugging the project.
+
+**UnityExplorer is optional:**
+- If you do **not** want to use UnityExplorer, you can comment out the following line in `CabbyCodes/CabbyCodesPlugin.cs` (inside the `Start` method):
+  ```csharp
+  UnityExplorer.ExplorerStandalone.CreateInstance();
+  ```
+- This will allow you to build and run the mod without needing `UnityExplorer.STANDALONE.Mono.dll` in your `lib` folder.
 
 ### 🔧 Optional / Useful Files
 
