@@ -21,7 +21,7 @@ namespace CabbyMenu.UI.ReferenceControls
             // Set initial value
             customDropdown.SetValue(SelectedValue.Get());
             // Listen for value changes
-            customDropdown.OnValueChanged += DropdownSelect;
+            customDropdown.onValueChanged.AddListener(DropdownSelect);
         }
 
         public GameObject GetGameObject()

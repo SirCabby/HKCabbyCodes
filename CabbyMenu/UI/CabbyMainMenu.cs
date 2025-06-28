@@ -385,7 +385,7 @@ namespace CabbyMenu.UI
                 options.Add(category);
             }
             customDropdown.SetOptions(options);
-            customDropdown.OnValueChanged += OnCategorySelected;
+            customDropdown.onValueChanged.AddListener(OnCategorySelected);
 
             categoryDropdown = customDropdown;
 
