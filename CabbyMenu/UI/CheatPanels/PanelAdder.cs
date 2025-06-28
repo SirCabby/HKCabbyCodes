@@ -27,7 +27,7 @@ namespace CabbyMenu.UI.CheatPanels
             buttonPanelLayout.flexibleHeight = Constants.FLEXIBLE_LAYOUT_VALUE;
             buttonPanelLayout.minWidth = size.x;
 
-            (GameObject button, _, _) = ButtonFactory.Build(buttonText);
+            (GameObject button, _, _) = ButtonFactory.BuildDefault(buttonText);
             button.GetComponent<Button>().onClick.AddListener(action);
             new Fitter(button).Attach(buttonPanel).Anchor(middle, middle).Size(size);
 

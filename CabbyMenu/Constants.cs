@@ -73,10 +73,17 @@ namespace CabbyMenu
         public static readonly UnityEngine.Color HEADER_COLOR = new(0.2f, 0.8f, 0.2f, 1f);
         public static readonly UnityEngine.Color SUB_HEADER_COLOR = new(0.5f, 0.5f, 0.8f, 1f);
         public static readonly UnityEngine.Color MENU_PANEL_COLOR = new(0f, 0f, 0f, 0.8f);
-        public static readonly UnityEngine.Color BLACK_COLOR = UnityEngine.Color.black;
-        public static readonly UnityEngine.Color WHITE_COLOR = UnityEngine.Color.white;
-        public static readonly UnityEngine.Color CLEAR_COLOR = UnityEngine.Color.clear;
-        public static readonly UnityEngine.Color BLUE_COLOR = UnityEngine.Color.blue;
+
+        // Button Colors
+        public static readonly UnityEngine.Color BUTTON_PRIMARY_NORMAL = new(0.2f, 0.4f, 0.8f, 1f);
+        public static readonly UnityEngine.Color BUTTON_PRIMARY_HOVER = new(0.3f, 0.5f, 0.9f, 1f);
+        public static readonly UnityEngine.Color BUTTON_PRIMARY_PRESSED = new(0.1f, 0.3f, 0.7f, 1f);
+        public static readonly UnityEngine.Color BUTTON_SUCCESS_NORMAL = new(0.2f, 0.7f, 0.3f, 1f);
+        public static readonly UnityEngine.Color BUTTON_SUCCESS_HOVER = new(0.3f, 0.8f, 0.4f, 1f);
+        public static readonly UnityEngine.Color BUTTON_SUCCESS_PRESSED = new(0.1f, 0.6f, 0.2f, 1f);
+        public static readonly UnityEngine.Color BUTTON_DANGER_NORMAL = new(0.8f, 0.2f, 0.2f, 1f);
+        public static readonly UnityEngine.Color BUTTON_DANGER_HOVER = new(0.9f, 0.3f, 0.3f, 1f);
+        public static readonly UnityEngine.Color BUTTON_DANGER_PRESSED = new(0.7f, 0.1f, 0.1f, 1f);
 
         // UI Vector2 Constants
         public static readonly UnityEngine.Vector2 MIDDLE_ANCHOR_VECTOR = new(MIDDLE_ANCHOR, MIDDLE_ANCHOR);

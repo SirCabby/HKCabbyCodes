@@ -20,7 +20,7 @@ namespace CabbyMenu.UI.CheatPanels
 
             GameObject buttonPanel = DefaultControls.CreatePanel(new DefaultControls.Resources());
             buttonPanel.name = "Button Panel";
-            new ImageMod(buttonPanel.GetComponent<Image>()).SetColor(Constants.CLEAR_COLOR);
+            new ImageMod(buttonPanel.GetComponent<Image>()).SetColor(Color.clear);
             new Fitter(buttonPanel).Attach(cheatPanel);
             buttonPanel.transform.SetAsFirstSibling();
 
@@ -28,7 +28,7 @@ namespace CabbyMenu.UI.CheatPanels
             buttonPanelLayout.flexibleHeight = Constants.FLEXIBLE_LAYOUT_VALUE;
             buttonPanelLayout.minWidth = width;
 
-            (button, _, _) = ButtonFactory.Build(buttonText);
+            (button, _, _) = ButtonFactory.BuildDefault(buttonText);
             button.GetComponent<Button>().onClick.AddListener(DoAction);
             new Fitter(button).Attach(buttonPanel).Anchor(middle, middle).Size(new Vector2(width, Constants.DEFAULT_PANEL_HEIGHT));
         }

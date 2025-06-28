@@ -19,7 +19,7 @@ namespace CabbyMenu.UI.Factories
             GameObject textGameObject = DefaultControls.CreateText(new DefaultControls.Resources());
             GameObjectMod gameObjectMod = new GameObjectMod(textGameObject);
             TextMod textMod = new TextMod(textGameObject.GetComponent<Text>());
-            textMod.SetText(text).SetFontSize(Constants.DEFAULT_FONT_SIZE).SetColor(Constants.BLACK_COLOR);
+            textMod.SetText(text).SetFontSize(Constants.DEFAULT_FONT_SIZE).SetColor(Color.black);
 
             return (textGameObject, gameObjectMod, textMod);
         }
