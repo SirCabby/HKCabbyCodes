@@ -72,7 +72,7 @@ namespace CabbyCodes
         public const float TOWN_Y_POSITION = 12f;
 
         // Colors
-        public static readonly UnityEngine.Color DESTROY_BUTTON_COLOR = new(1f, 0.5f, 0.5f, 1f);
+        public static readonly UnityEngine.Color DESTROY_BUTTON_COLOR = new(1f, 0.2f, 0.2f, 1f);
         public static readonly UnityEngine.Color UNEARNED_COLOR = new(0.57f, 0.57f, 0.57f, 0.57f);
         public static readonly UnityEngine.Color NORMAL_SCROLLBAR_COLOR = new(0.3f, 0.3f, 1f, 1f);
         public static readonly UnityEngine.Color HIGHLIGHT_SCROLLBAR_COLOR = new(0f, 0f, 1f, 1f);

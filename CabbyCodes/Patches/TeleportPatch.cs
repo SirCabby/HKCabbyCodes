@@ -316,7 +316,6 @@ namespace CabbyCodes.Patches
                     }
                 }
             }, "X", new Vector2(Constants.TELEPORT_DESTROY_BUTTON_SIZE, Constants.TELEPORT_DESTROY_BUTTON_SIZE));
-            destroyButton.transform.Find("Button").gameObject.GetComponent<Image>().color = Constants.DESTROY_BUTTON_COLOR;
 
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(buttonPanel);
         }

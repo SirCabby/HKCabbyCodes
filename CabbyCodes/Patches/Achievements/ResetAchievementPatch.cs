@@ -3,14 +3,9 @@ using CabbyMenu.UI.CheatPanels;
 
 namespace CabbyCodes.Patches.Achievements
 {
-    public class ResetAchievementPatch : ISyncedReference<bool>
+    public class ResetAchievementPatch
     {
-        public bool Get()
-        {
-            return false;
-        }
-
-        public void Set(bool value)
+        public static void ResetAllAchievements()
         {
             AchievementHandler achievementHandler = UnityEngine.Object.FindObjectOfType<AchievementHandler>();
             achievementHandler.ResetAllAchievements();
@@ -18,7 +13,7 @@ namespace CabbyCodes.Patches.Achievements
 
         public static void AddPanel()
         {
-            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new TogglePanel(new ResetAchievementPatch(), "Reset <ALL> Achievements to off. Requires Restart."));
+            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new ButtonPanel(ResetAllAchievements, "Reset ALL Achievements", "Reset all achievements to off. Requires Restart.", ButtonStyle.Danger));
         }
     }
 }
