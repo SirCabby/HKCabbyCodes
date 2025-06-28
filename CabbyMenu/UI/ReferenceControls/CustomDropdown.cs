@@ -153,7 +153,7 @@ namespace CabbyMenu.UI.ReferenceControls
 
             // Add panel image
             Image panelImage = dropdownPanel.AddComponent<Image>();
-            panelImage.color = new Color(0.1f, 0.1f, 0.1f, 0.9f);
+            panelImage.color = Constants.DROPDOWN_PANEL_BACKGROUND;
 
             UnityEngine.Debug.Log($"Panel RectTransform - anchorMin: {panelRect.anchorMin}, anchorMax: {panelRect.anchorMax}, sizeDelta: {panelRect.sizeDelta}, anchoredPosition: {panelRect.anchoredPosition}");
 
@@ -371,17 +371,18 @@ namespace CabbyMenu.UI.ReferenceControls
                 // Configure layout element for proper sizing
                 optionLayout.preferredHeight = 30f;
                 optionLayout.minHeight = 30f;
-                optionLayout.flexibleWidth = 1f;
+                optionLayout.flexibleWidth = 0f;
                 optionLayout.minWidth = 0f;
+                optionLayout.preferredWidth = 180f; // Fixed width for option buttons
 
                 // Configure rect transform - let layout system handle positioning
                 optionRect.anchorMin = new Vector2(0, 1);
                 optionRect.anchorMax = new Vector2(1, 1);
-                optionRect.sizeDelta = new Vector2(0, 30f);
+                optionRect.sizeDelta = new Vector2(-20f, 30f); // 10px margin on each side (170px wide)
                 optionRect.anchoredPosition = new Vector2(0, -i * 30f);
 
                 // Configure image
-                optionImage.color = new Color(0.2f, 0.2f, 0.2f, 1f);
+                optionImage.color = Constants.DROPDOWN_OPTION_BACKGROUND;
                 UnityEngine.Debug.Log($"Set option {i} button color to: {optionImage.color}");
 
                 // Create text component
@@ -535,7 +536,7 @@ namespace CabbyMenu.UI.ReferenceControls
             if (panelImage != null)
             {
                 panelImage.enabled = true;
-                panelImage.color = new Color(0.1f, 0.1f, 0.1f, 0.9f);
+                panelImage.color = Constants.DROPDOWN_PANEL_BACKGROUND;
                 UnityEngine.Debug.Log($"Panel image enabled with color: {panelImage.color}");
             }
 
@@ -589,13 +590,14 @@ namespace CabbyMenu.UI.ReferenceControls
                 {
                     // Force content to have proper size for the options
                     float contentHeight = options.Count * 30f;
-                    contentRect.sizeDelta = new Vector2(0, contentHeight);
+                    float contentWidth = 190f; // Match viewport width exactly
+                    contentRect.sizeDelta = new Vector2(contentWidth, contentHeight);
 
                     // Ensure content is positioned at the top of the viewport
                     contentRect.anchoredPosition = Vector2.zero;
 
                     UnityEngine.Debug.Log($"Content sizing - sizeDelta: {contentRect.sizeDelta}, anchorMin: {contentRect.anchorMin}, anchorMax: {contentRect.anchorMax}");
-                    UnityEngine.Debug.Log($"Content height for {options.Count} options: {contentHeight}, width: {contentRect.sizeDelta.x}");
+                    UnityEngine.Debug.Log($"Content height for {options.Count} options: {contentHeight}, width: {contentWidth}");
                     UnityEngine.Debug.Log($"Content anchoredPosition: {contentRect.anchoredPosition}");
                 }
             }
@@ -618,7 +620,7 @@ namespace CabbyMenu.UI.ReferenceControls
                     if (buttonImage != null)
                     {
                         buttonImage.enabled = true;
-                        buttonImage.color = new Color(0.2f, 0.2f, 0.2f, 1f);
+                        buttonImage.color = Constants.DROPDOWN_OPTION_BACKGROUND;
                         UnityEngine.Debug.Log($"Button Option_{i} - active: {optionButtons[i].activeSelf}, image enabled: {buttonImage.enabled}, color: {buttonImage.color}, alpha: {buttonImage.color.a}");
                     }
                 }

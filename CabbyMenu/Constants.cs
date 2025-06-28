@@ -99,6 +99,8 @@ namespace CabbyMenu
         public static readonly UnityEngine.Color DROPDOWN_ITEM_NORMAL = new(0f, 0f, 0f, 1f);
         public static readonly UnityEngine.Color DROPDOWN_ITEM_HOVER = new(0f, 0f, 0f, 1f);
         public static readonly UnityEngine.Color DROPDOWN_ITEM_PRESSED = new(0f, 0f, 0f, 1f);
+        public static readonly UnityEngine.Color DROPDOWN_PANEL_BACKGROUND = new(0.1f, 0.1f, 0.1f, 0.9f);
+        public static readonly UnityEngine.Color DROPDOWN_OPTION_BACKGROUND = new(0.7f, 0.7f, 0.7f, 1f);
 
         // Scrollable Area Colors
         public static readonly UnityEngine.Color CHEAT_SCROLLABLE_BACKGROUND = new(0.1f, 0.1f, 0.1f, 0.3f);
