@@ -11,6 +11,7 @@ namespace CabbyMenu.UI.ReferenceControls
         #region Constants
         private const float OPTION_HEIGHT = 30f;
         private const float OPTION_MARGIN = 10f;
+        private const float OPTION_GAP = 3f; // Gap between option buttons
         private const float PANEL_MARGIN = 20f;
         private const float MAIN_BUTTON_WIDTH = 200f;
         private const float MAIN_BUTTON_HEIGHT = 60f;
@@ -19,9 +20,6 @@ namespace CabbyMenu.UI.ReferenceControls
         private const float BUTTON_GAP = 2f;
         private const int MAX_VISIBLE_OPTIONS = 8;
         #endregion
-
-        [Header("Debug Options")]
-        [SerializeField] private bool useMinimalTestCase = false; // Set to true to bypass ScrollView complexity
 
         [Header("Custom Dropdown Settings")]
         [SerializeField] private Button mainButton;
@@ -315,12 +313,6 @@ namespace CabbyMenu.UI.ReferenceControls
 
         #region Public Interface Methods
 
-        public void EnableMinimalTestCase()
-        {
-            useMinimalTestCase = true;
-            UnityEngine.Debug.Log("Minimal test case enabled via code");
-        }
-
         public void SetOptions(List<string> options)
         {
             this.options = new List<string>(options);
@@ -462,7 +454,8 @@ namespace CabbyMenu.UI.ReferenceControls
             rectTransform.anchorMin = new Vector2(0, 1);
             rectTransform.anchorMax = new Vector2(1, 1);
             rectTransform.sizeDelta = new Vector2(-OPTION_MARGIN, OPTION_HEIGHT); // Small margin on sides only
-            rectTransform.anchoredPosition = new Vector2(0, -index * OPTION_HEIGHT);
+            // Start with OPTION_GAP at the top, then position each element with gaps between them
+            rectTransform.anchoredPosition = new Vector2(0, -OPTION_GAP - index * (OPTION_HEIGHT + OPTION_GAP));
         }
 
         private void CreateOptionText(GameObject parent, string text)
@@ -574,12 +567,18 @@ namespace CabbyMenu.UI.ReferenceControls
             // Get the main button's position and size
             RectTransform mainRect = GetComponent<RectTransform>();
 
+            // Calculate panel height including gaps
+            // Add OPTION_GAP at the top and bottom to match gaps between elements
+            float totalOptionHeight = Mathf.Min(options.Count, MAX_VISIBLE_OPTIONS) * OPTION_HEIGHT;
+            float totalGapHeight = Mathf.Min(options.Count - 1, MAX_VISIBLE_OPTIONS - 1) * OPTION_GAP;
+            float panelHeight = totalOptionHeight + totalGapHeight + OPTION_MARGIN + 2 * OPTION_GAP;
+
             // Match the main button's anchor, pivot, and width
             RectTransform panelRect = dropdownPanel.GetComponent<RectTransform>();
             panelRect.anchorMin = mainRect.anchorMin;
             panelRect.anchorMax = mainRect.anchorMax;
             panelRect.pivot = new Vector2(0.5f, 1f); // Top center
-            panelRect.sizeDelta = new Vector2(mainRect.sizeDelta.x, Mathf.Min(options.Count * OPTION_HEIGHT + OPTION_MARGIN, MAX_VISIBLE_OPTIONS * OPTION_HEIGHT + OPTION_MARGIN));
+            panelRect.sizeDelta = new Vector2(mainRect.sizeDelta.x, panelHeight);
             panelRect.anchoredPosition = new Vector2(0, -mainRect.sizeDelta.y); // Directly below
 
             // Move the panel to the correct world position
@@ -593,13 +592,6 @@ namespace CabbyMenu.UI.ReferenceControls
         private void ShowDropdownPanel()
         {
             if (dropdownPanel == null) return;
-
-            // MINIMAL TEST CASE - Bypass ScrollView complexity
-            if (useMinimalTestCase)
-            {
-                ShowMinimalTestCase();
-                return;
-            }
 
             // Get panel rect transform
             RectTransform panelRect = dropdownPanel.GetComponent<RectTransform>();
@@ -707,8 +699,9 @@ namespace CabbyMenu.UI.ReferenceControls
             RectTransform contentRect = content.GetComponent<RectTransform>();
             if (contentRect != null)
             {
-                // Calculate content size based on number of options
-                float contentHeight = options.Count * OPTION_HEIGHT;
+                // Calculate content size based on number of options plus gaps
+                // Add OPTION_GAP at the top and bottom to match gaps between elements
+                float contentHeight = options.Count * OPTION_HEIGHT + (options.Count - 1) * OPTION_GAP + 2 * OPTION_GAP;
 
                 // Configure content to stretch across viewport width and position at top
                 contentRect.anchorMin = new Vector2(0, 1);
@@ -746,8 +739,9 @@ namespace CabbyMenu.UI.ReferenceControls
                         buttonRect.anchorMax = new Vector2(1, 1);
                         buttonRect.sizeDelta = new Vector2(-OPTION_MARGIN, OPTION_HEIGHT); // Small margin on sides only
 
-                        // Position buttons sequentially from top to bottom
-                        buttonRect.anchoredPosition = new Vector2(0, -i * OPTION_HEIGHT);
+                        // Position buttons sequentially from top to bottom with gap
+                        // Start with OPTION_GAP at the top, then position each element with gaps between them
+                        buttonRect.anchoredPosition = new Vector2(0, -OPTION_GAP - i * (OPTION_HEIGHT + OPTION_GAP));
 
                         UnityEngine.Debug.Log($"Option button {i} repositioned - anchorMin: {buttonRect.anchorMin}, anchorMax: {buttonRect.anchorMax}, sizeDelta: {buttonRect.sizeDelta}, anchoredPosition: {buttonRect.anchoredPosition}");
                     }
@@ -837,80 +831,6 @@ namespace CabbyMenu.UI.ReferenceControls
 
                 UnityEngine.Debug.Log($"Scroll rect re-enabled - viewport: {scrollRectComponent.viewport?.name}, content: {scrollRectComponent.content?.name}");
             }
-        }
-
-        #endregion
-
-        #region Minimal Test Case
-
-        private void ShowMinimalTestCase()
-        {
-            UnityEngine.Debug.Log("=== MINIMAL TEST CASE - BYPASSING SCROLLVIEW ===");
-
-            // Get panel rect transform
-            RectTransform panelRect = dropdownPanel.GetComponent<RectTransform>();
-
-            // Ensure the panel is active
-            dropdownPanel.SetActive(true);
-
-            // Position panel below main button
-            RectTransform mainRect = GetComponent<RectTransform>();
-            panelRect.anchorMin = mainRect.anchorMin;
-            panelRect.anchorMax = mainRect.anchorMax;
-            panelRect.pivot = new Vector2(0.5f, 1f);
-            panelRect.sizeDelta = new Vector2(mainRect.sizeDelta.x, options.Count * OPTION_HEIGHT + OPTION_MARGIN);
-            panelRect.anchoredPosition = new Vector2(0, -mainRect.sizeDelta.y - BUTTON_GAP);
-
-            UnityEngine.Debug.Log($"Minimal Panel - sizeDelta: {panelRect.sizeDelta}, anchoredPosition: {panelRect.anchoredPosition}");
-
-            // Clear any existing children (except the scroll view components we want to ignore)
-            for (int i = dropdownPanel.transform.childCount - 1; i >= 0; i--)
-            {
-                Transform child = dropdownPanel.transform.GetChild(i);
-                if (child.name != "ScrollView" && child.name != "Viewport" && child.name != "Content")
-                {
-                    DestroyImmediate(child.gameObject);
-                }
-            }
-
-            // Create option buttons directly in the panel
-            for (int i = 0; i < options.Count; i++)
-            {
-                CreateMinimalOptionButton(i);
-            }
-
-            // Ensure proper z-order
-            dropdownPanel.transform.SetAsLastSibling();
-
-            UnityEngine.Debug.Log("=== MINIMAL TEST CASE COMPLETE ===");
-        }
-
-        private void CreateMinimalOptionButton(int index)
-        {
-            GameObject optionObj = new GameObject($"MinimalOption_{index}");
-            optionObj.transform.SetParent(dropdownPanel.transform, false);
-            optionObj.SetActive(true);
-
-            RectTransform optionRect = optionObj.AddComponent<RectTransform>();
-            Image optionImage = optionObj.AddComponent<Image>();
-            Button optionButton = optionObj.AddComponent<Button>();
-
-            // Configure button to stretch across panel width
-            optionRect.anchorMin = new Vector2(0, 1);
-            optionRect.anchorMax = new Vector2(1, 1);
-            optionRect.sizeDelta = new Vector2(-PANEL_MARGIN, OPTION_HEIGHT);
-            optionRect.anchoredPosition = new Vector2(0, -index * OPTION_HEIGHT - OPTION_MARGIN);
-
-            optionImage.color = Constants.DROPDOWN_OPTION_BACKGROUND;
-
-            // Create text
-            CreateOptionText(optionObj, options[index]);
-
-            // Add click handler
-            int capturedIndex = index; // Capture the index
-            optionButton.onClick.AddListener(() => OnOptionSelected(capturedIndex));
-
-            UnityEngine.Debug.Log($"Minimal Option {index} - anchoredPosition: {optionRect.anchoredPosition}, sizeDelta: {optionRect.sizeDelta}");
         }
 
         #endregion
