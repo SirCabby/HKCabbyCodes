@@ -64,6 +64,11 @@ namespace CabbyMenu
 
         // Colors
         public static readonly UnityEngine.Color ON_COLOR = new(0f, 0.8f, 1f, 1f);
+        public static readonly UnityEngine.Color ON_HOVER_COLOR = new(0.3f, 1f, 1f, 1f);
+        public static readonly UnityEngine.Color ON_PRESSED_COLOR = new(0f, 0.6f, 0.8f, 1f);
+        public static readonly UnityEngine.Color OFF_COLOR = new(0.6f, 0.6f, 0.6f, 1f);
+        public static readonly UnityEngine.Color OFF_HOVER_COLOR = new(0.8f, 0.8f, 0.8f, 1f);
+        public static readonly UnityEngine.Color OFF_PRESSED_COLOR = new(0.4f, 0.4f, 0.4f, 1f);
         public static readonly UnityEngine.Color SELECTED_COLOR = new(1f, 1f, 0.56f, 1f);
         public static readonly UnityEngine.Color NORMAL_SCROLLBAR_COLOR = new(0.4f, 0.4f, 0.4f, 1f);
         public static readonly UnityEngine.Color HIGHLIGHT_SCROLLBAR_COLOR = new(0.6f, 0.6f, 0.6f, 1f);
@@ -78,14 +83,14 @@ namespace CabbyMenu
 
         // Button Colors
         public static readonly UnityEngine.Color BUTTON_PRIMARY_NORMAL = new(0.2f, 0.4f, 0.8f, 1f);
-        public static readonly UnityEngine.Color BUTTON_PRIMARY_HOVER = new(0.3f, 0.5f, 0.9f, 1f);
-        public static readonly UnityEngine.Color BUTTON_PRIMARY_PRESSED = new(0.1f, 0.3f, 0.7f, 1f);
+        public static readonly UnityEngine.Color BUTTON_PRIMARY_HOVER = new(0.4f, 0.6f, 1f, 1f);
+        public static readonly UnityEngine.Color BUTTON_PRIMARY_PRESSED = new(0.1f, 0.2f, 0.6f, 1f);
         public static readonly UnityEngine.Color BUTTON_SUCCESS_NORMAL = new(0.2f, 0.7f, 0.3f, 1f);
-        public static readonly UnityEngine.Color BUTTON_SUCCESS_HOVER = new(0.3f, 0.8f, 0.4f, 1f);
-        public static readonly UnityEngine.Color BUTTON_SUCCESS_PRESSED = new(0.1f, 0.6f, 0.2f, 1f);
+        public static readonly UnityEngine.Color BUTTON_SUCCESS_HOVER = new(0.4f, 0.9f, 0.5f, 1f);
+        public static readonly UnityEngine.Color BUTTON_SUCCESS_PRESSED = new(0.1f, 0.5f, 0.1f, 1f);
         public static readonly UnityEngine.Color BUTTON_DANGER_NORMAL = new(0.8f, 0.2f, 0.2f, 1f);
-        public static readonly UnityEngine.Color BUTTON_DANGER_HOVER = new(0.9f, 0.3f, 0.3f, 1f);
-        public static readonly UnityEngine.Color BUTTON_DANGER_PRESSED = new(0.7f, 0.1f, 0.1f, 1f);
+        public static readonly UnityEngine.Color BUTTON_DANGER_HOVER = new(1f, 0.4f, 0.4f, 1f);
+        public static readonly UnityEngine.Color BUTTON_DANGER_PRESSED = new(0.6f, 0.1f, 0.1f, 1f);
 
         // UI Vector2 Constants
         public static readonly UnityEngine.Vector2 MIDDLE_ANCHOR_VECTOR = new(MIDDLE_ANCHOR, MIDDLE_ANCHOR);
