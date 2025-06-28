@@ -19,6 +19,7 @@ namespace CabbyMenu.UI.ReferenceControls
         private const float FONT_SIZE_RATIO = 0.6f;
         private const float BUTTON_GAP = 2f;
         private const int MAX_VISIBLE_OPTIONS = 8;
+        private const float SCROLLBAR_WIDTH = 10f; // Width of the scrollbar
         #endregion
 
         [Header("Custom Dropdown Settings")]
@@ -31,6 +32,7 @@ namespace CabbyMenu.UI.ReferenceControls
         [SerializeField] private GameObject scrollView;
         [SerializeField] private GameObject viewport;
         [SerializeField] private GameObject content;
+        [SerializeField] private GameObject scrollbar;
 
         // Private fields
         private List<string> options = new List<string>();
@@ -208,12 +210,16 @@ namespace CabbyMenu.UI.ReferenceControls
             // Create content
             content = CreateContent();
 
+            // Create scrollbar
+            scrollbar = CreateScrollbar();
+
             // Connect scroll rect components
             ScrollRect scrollRectComponent = scrollView.GetComponent<ScrollRect>();
             scrollRectComponent.viewport = viewport.GetComponent<RectTransform>();
             scrollRectComponent.content = content.GetComponent<RectTransform>();
+            scrollRectComponent.verticalScrollbar = scrollbar.GetComponent<Scrollbar>();
 
-            UnityEngine.Debug.Log($"Scroll view created - viewport: {viewport.name}, content: {content.name}");
+            UnityEngine.Debug.Log($"Scroll view created - viewport: {viewport.name}, content: {content.name}, scrollbar: {scrollbar.name}");
         }
 
         private GameObject CreateScrollView()
@@ -259,11 +265,11 @@ namespace CabbyMenu.UI.ReferenceControls
             Image viewportImage = viewportObj.AddComponent<Image>();
             Mask viewportMask = viewportObj.AddComponent<Mask>();
 
-            // Configure viewport - top-aligned, fill horizontally, fixed height
-            viewportRect.anchorMin = new Vector2(0, 1);
-            viewportRect.anchorMax = new Vector2(1, 1);
-            viewportRect.pivot = new Vector2(0.5f, 1f);
-            viewportRect.sizeDelta = new Vector2(0, -OPTION_MARGIN); // Fill panel, minus margin if needed
+            // Configure viewport - leave space for scrollbar on the right
+            viewportRect.anchorMin = Vector2.zero;
+            viewportRect.anchorMax = Vector2.one;
+            viewportRect.pivot = new Vector2(0.5f, 0.5f);
+            viewportRect.sizeDelta = new Vector2(-SCROLLBAR_WIDTH, 0); // Leave space for scrollbar
             viewportRect.anchoredPosition = Vector2.zero;
 
             viewportImage.color = new Color(0.2f, 0.2f, 0.2f, 0.9f);
@@ -307,6 +313,59 @@ namespace CabbyMenu.UI.ReferenceControls
             UnityEngine.Debug.Log("Layout system disabled - using manual positioning");
 
             return contentObj;
+        }
+
+        private GameObject CreateScrollbar()
+        {
+            GameObject scrollbarObj = new GameObject("Scrollbar");
+            scrollbarObj.transform.SetParent(dropdownPanel.transform, false);
+
+            RectTransform scrollbarRect = scrollbarObj.AddComponent<RectTransform>();
+            Scrollbar scrollbarComponent = scrollbarObj.AddComponent<Scrollbar>();
+            Image scrollbarImage = scrollbarObj.AddComponent<Image>();
+
+            // Configure scrollbar
+            scrollbarRect.anchorMin = new Vector2(1, 0);
+            scrollbarRect.anchorMax = new Vector2(1, 1);
+            scrollbarRect.sizeDelta = new Vector2(SCROLLBAR_WIDTH, 0); // Use constant for width
+            scrollbarRect.anchoredPosition = Vector2.zero;
+
+            // Configure scrollbar image (background)
+            scrollbarImage.color = new Color(0.3f, 0.3f, 0.3f, 0.8f);
+            scrollbarComponent.targetGraphic = scrollbarImage;
+
+            scrollbarComponent.value = 1f; // Start at top
+            scrollbarComponent.direction = Scrollbar.Direction.BottomToTop;
+
+            // Create scrollbar handle (the draggable part)
+            CreateScrollbarHandle(scrollbarObj, scrollbarComponent);
+
+            return scrollbarObj;
+        }
+
+        private void CreateScrollbarHandle(GameObject scrollbarObj, Scrollbar scrollbarComponent)
+        {
+            GameObject handleObj = new GameObject("Handle");
+            handleObj.transform.SetParent(scrollbarObj.transform, false);
+
+            RectTransform handleRect = handleObj.AddComponent<RectTransform>();
+            Image handleImage = handleObj.AddComponent<Image>();
+            Button handleButton = handleObj.AddComponent<Button>();
+
+            // Configure handle rect transform
+            handleRect.anchorMin = Vector2.zero;
+            handleRect.anchorMax = Vector2.one;
+            handleRect.sizeDelta = Vector2.zero;
+            handleRect.anchoredPosition = Vector2.zero;
+
+            // Configure handle image
+            handleImage.color = new Color(0.6f, 0.6f, 0.6f, 1f);
+            handleButton.targetGraphic = handleImage;
+
+            // Set the handle for the scrollbar
+            scrollbarComponent.handleRect = handleRect;
+
+            UnityEngine.Debug.Log($"Created scrollbar handle with color: {handleImage.color}");
         }
 
         #endregion
@@ -664,10 +723,10 @@ namespace CabbyMenu.UI.ReferenceControls
                 RectTransform viewportRect = viewport.GetComponent<RectTransform>();
                 if (viewportRect != null)
                 {
-                    // Set viewport to fill the entire panel
+                    // Set viewport to fill the panel but leave space for scrollbar
                     viewportRect.anchorMin = Vector2.zero;
                     viewportRect.anchorMax = Vector2.one;
-                    viewportRect.sizeDelta = Vector2.zero;
+                    viewportRect.sizeDelta = new Vector2(-SCROLLBAR_WIDTH, 0); // Leave space for scrollbar
                     viewportRect.anchoredPosition = Vector2.zero;
 
                     UnityEngine.Debug.Log($"Viewport configured - anchorMin: {viewportRect.anchorMin}, anchorMax: {viewportRect.anchorMax}, sizeDelta: {viewportRect.sizeDelta}, anchoredPosition: {viewportRect.anchoredPosition}");
@@ -688,6 +747,47 @@ namespace CabbyMenu.UI.ReferenceControls
                     viewportMask.showMaskGraphic = false;
 
                     UnityEngine.Debug.Log($"Viewport mask - enabled: {viewportMask.enabled}, showMaskGraphic: {viewportMask.showMaskGraphic}, graphic: {viewportMask.graphic?.name}");
+                }
+            }
+
+            // Configure scrollbar
+            if (scrollbar != null)
+            {
+                RectTransform scrollbarRect = scrollbar.GetComponent<RectTransform>();
+                Scrollbar scrollbarComponent = scrollbar.GetComponent<Scrollbar>();
+                Image scrollbarImage = scrollbar.GetComponent<Image>();
+
+                if (scrollbarRect != null && scrollbarComponent != null)
+                {
+                    // Position scrollbar on the right side of the panel
+                    scrollbarRect.anchorMin = new Vector2(1, 0);
+                    scrollbarRect.anchorMax = new Vector2(1, 1);
+                    scrollbarRect.sizeDelta = new Vector2(SCROLLBAR_WIDTH, 0); // Use constant for width
+                    scrollbarRect.anchoredPosition = Vector2.zero;
+
+                    // Ensure scrollbar is visible and properly connected
+                    scrollbar.SetActive(true);
+                    scrollbarComponent.enabled = true;
+
+                    // Ensure scrollbar image is visible
+                    if (scrollbarImage != null)
+                    {
+                        scrollbarImage.enabled = true;
+                        scrollbarImage.color = new Color(0.3f, 0.3f, 0.3f, 0.8f);
+                    }
+
+                    // Ensure handle is properly configured
+                    if (scrollbarComponent.handleRect != null)
+                    {
+                        Image handleImage = scrollbarComponent.handleRect.GetComponent<Image>();
+                        if (handleImage != null)
+                        {
+                            handleImage.enabled = true;
+                            handleImage.color = new Color(0.6f, 0.6f, 0.6f, 1f);
+                        }
+                    }
+
+                    UnityEngine.Debug.Log($"Scrollbar configured - sizeDelta: {scrollbarRect.sizeDelta}, enabled: {scrollbarComponent.enabled}, handle: {scrollbarComponent.handleRect?.name}");
                 }
             }
         }
@@ -790,6 +890,12 @@ namespace CabbyMenu.UI.ReferenceControls
                 UnityEngine.Debug.Log($"Brought content to front: {content.name}");
             }
 
+            if (scrollbar != null)
+            {
+                scrollbar.transform.SetAsLastSibling();
+                UnityEngine.Debug.Log($"Brought scrollbar to front: {scrollbar.name}");
+            }
+
             // Ensure dropdown panel is at the front
             dropdownPanel.transform.SetAsLastSibling();
             UnityEngine.Debug.Log($"Dropdown panel visibility ensured - active: {dropdownPanel.activeSelf}, sibling index: {dropdownPanel.transform.GetSiblingIndex()}");
@@ -805,6 +911,17 @@ namespace CabbyMenu.UI.ReferenceControls
                     // Reset to top position (normalizedPosition.y = 1 for top)
                     scrollRectComponent.normalizedPosition = new Vector2(0, 1);
                     UnityEngine.Debug.Log($"Reset scroll position to top - normalizedPosition: {scrollRectComponent.normalizedPosition}");
+                }
+            }
+
+            // Reset scrollbar value to top
+            if (scrollbar != null)
+            {
+                Scrollbar scrollbarComponent = scrollbar.GetComponent<Scrollbar>();
+                if (scrollbarComponent != null)
+                {
+                    scrollbarComponent.value = 1f; // 1 = top, 0 = bottom
+                    UnityEngine.Debug.Log($"Reset scrollbar value to top: {scrollbarComponent.value}");
                 }
             }
         }
@@ -823,13 +940,35 @@ namespace CabbyMenu.UI.ReferenceControls
                 scrollRectComponent.viewport = viewportRect;
                 scrollRectComponent.content = contentRect;
 
-                UnityEngine.Debug.Log($"Verified scroll rect connections - viewport: {scrollRectComponent.viewport?.name}, content: {scrollRectComponent.content?.name}");
+                // Ensure scrollbar is connected
+                if (scrollbar != null)
+                {
+                    Scrollbar scrollbarComponent = scrollbar.GetComponent<Scrollbar>();
+                    if (scrollbarComponent != null)
+                    {
+                        scrollRectComponent.verticalScrollbar = scrollbarComponent;
+                        UnityEngine.Debug.Log($"Connected scrollbar to ScrollRect: {scrollbar.name}");
+                    }
+                }
+
+                UnityEngine.Debug.Log($"Verified scroll rect connections - viewport: {scrollRectComponent.viewport?.name}, content: {scrollRectComponent.content?.name}, scrollbar: {scrollRectComponent.verticalScrollbar?.name}");
 
                 // Force the scroll rect to update its internal state
                 scrollRectComponent.enabled = false;
                 scrollRectComponent.enabled = true;
 
                 UnityEngine.Debug.Log($"Scroll rect re-enabled - viewport: {scrollRectComponent.viewport?.name}, content: {scrollRectComponent.content?.name}");
+
+                // Check scroll rect viewport and content references
+                UnityEngine.Debug.Log($"ScrollRect viewport reference: {scrollRectComponent.viewport?.name}");
+                UnityEngine.Debug.Log($"ScrollRect content reference: {scrollRectComponent.content?.name}");
+
+                // Check scrollbar connection
+                UnityEngine.Debug.Log($"ScrollRect vertical scrollbar reference: {scrollRectComponent.verticalScrollbar?.name}");
+                if (scrollbar != null)
+                {
+                    UnityEngine.Debug.Log($"Scrollbar is connected to ScrollRect: {scrollRectComponent.verticalScrollbar == scrollbar.GetComponent<Scrollbar>()}");
+                }
             }
         }
 
@@ -899,6 +1038,31 @@ namespace CabbyMenu.UI.ReferenceControls
                 UnityEngine.Debug.Log($"Content - sizeDelta: {contentRect.sizeDelta}, anchoredPosition: {contentRect.anchoredPosition}");
             }
 
+            // Scrollbar positions
+            if (scrollbar != null)
+            {
+                RectTransform scrollbarRect = scrollbar.GetComponent<RectTransform>();
+                Scrollbar scrollbarComponent = scrollbar.GetComponent<Scrollbar>();
+                Vector3 scrollbarWorldPos = scrollbarRect.position;
+                Vector3 scrollbarScreenPos = RectTransformUtility.WorldToScreenPoint(null, scrollbarWorldPos);
+                UnityEngine.Debug.Log($"Scrollbar - World: {scrollbarWorldPos}, Screen: {scrollbarScreenPos}, Local: {scrollbarRect.localPosition}");
+                UnityEngine.Debug.Log($"Scrollbar - sizeDelta: {scrollbarRect.sizeDelta}, anchoredPosition: {scrollbarRect.anchoredPosition}");
+                UnityEngine.Debug.Log($"Scrollbar - value: {scrollbarComponent.value}, enabled: {scrollbarComponent.enabled}");
+
+                // Log handle information
+                if (scrollbarComponent.handleRect != null)
+                {
+                    RectTransform handleRect = scrollbarComponent.handleRect;
+                    Image handleImage = handleRect.GetComponent<Image>();
+                    UnityEngine.Debug.Log($"Scrollbar Handle - name: {handleRect.name}, enabled: {handleImage?.enabled}, color: {handleImage?.color}");
+                    UnityEngine.Debug.Log($"Scrollbar Handle - sizeDelta: {handleRect.sizeDelta}, anchoredPosition: {handleRect.anchoredPosition}");
+                }
+                else
+                {
+                    UnityEngine.Debug.Log("Scrollbar Handle - NOT FOUND!");
+                }
+            }
+
             // Option button positions (first few)
             for (int i = 0; i < Mathf.Min(3, optionButtons.Count); i++)
             {
@@ -937,6 +1101,13 @@ namespace CabbyMenu.UI.ReferenceControls
                 // Check scroll rect viewport and content references
                 UnityEngine.Debug.Log($"ScrollRect viewport reference: {scrollRectComponent.viewport?.name}");
                 UnityEngine.Debug.Log($"ScrollRect content reference: {scrollRectComponent.content?.name}");
+
+                // Check scrollbar connection
+                UnityEngine.Debug.Log($"ScrollRect vertical scrollbar reference: {scrollRectComponent.verticalScrollbar?.name}");
+                if (scrollbar != null)
+                {
+                    UnityEngine.Debug.Log($"Scrollbar is connected to ScrollRect: {scrollRectComponent.verticalScrollbar == scrollbar.GetComponent<Scrollbar>()}");
+                }
             }
 
             UnityEngine.Debug.Log("=== END POSITION ANALYSIS ===");
