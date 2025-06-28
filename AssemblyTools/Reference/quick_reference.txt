@@ -1,0 +1,105 @@
+QUICK REFERENCE - Assembly-CSharp.dll Classes
+
+CORE GAME CLASSES:
+==================
+
+HeroController - Main player controller, handles movement, abilities, damage
+GameManager - Overall game state management, scene loading, progression
+PlayerData - Save data and game state storage, all progress data
+GameCameras - Camera management, HUD and main camera control
+HeroControllerStates - Player state tracking (facing, on ground, etc.)
+GlobalEnums - Game enums and constants
+
+PLAYERDATA METHODS:
+===================
+
+GetPlayerDataBool(string) - Get boolean value
+SetPlayerDataBoolTrue(string) - Set boolean to true
+SetPlayerDataBoolFalse(string) - Set boolean to false
+GetPlayerDataInt(string) - Get integer value
+SetPlayerDataInt(string, int) - Set integer value
+IncrementPlayerDataInt(string) - Increment integer
+DecrementPlayerDataInt(string) - Decrement integer
+GetPlayerDataFloat(string) - Get float value
+SetPlayerDataFloat(string, float) - Set float value
+GetPlayerDataString(string) - Get string value
+SetPlayerDataString(string, string) - Set string value
+GetPlayerDataVector3(string) - Get Vector3 value
+SetPlayerDataVector3(string, Vector3) - Set Vector3 value
+
+HEROCONTROLLER EVENTS:
+======================
+
+OnTakenDamage - Fired when player takes damage
+OnDeath - Fired when player dies
+heroInPosition - Fired when hero reaches position
+
+COMBAT & DAMAGE:
+================
+
+HitInstance - Damage instance information
+HitTaker - Interface for objects that can take damage
+IHitResponder - Interface for objects that respond to hits
+AttackTypes - Enum for different attack types
+SpecialTypes - Enum for special abilities
+
+GAME OBJECTS:
+=============
+
+Bullet - Projectile class
+Explosion - Explosion effect class
+Turret - Turret enemy class
+GrimmEnemyRange - Grimm enemy behavior
+
+UI & LOCALIZATION:
+==================
+
+UIWindowBase - Base class for UI windows
+LocalizedTextMesh - Localized text component
+LocalizationSettings - Localization configuration
+ChangeFontByLanguage - Font scaling by language
+
+PLAYMAKER ACTIONS:
+==================
+
+GetPlayerDataBool - Retrieve boolean from PlayerData
+SetPlayerDataBool - Set boolean in PlayerData
+GetPlayerDataInt - Retrieve integer from PlayerData
+SetPlayerDataInt - Set integer in PlayerData
+GetPlayerDataFloat - Retrieve float from PlayerData
+SetPlayerDataFloat - Set float in PlayerData
+GetPlayerDataString - Retrieve string from PlayerData
+SetPlayerDataString - Set string in PlayerData
+GetPlayerDataVector3 - Retrieve Vector3 from PlayerData
+SetPlayerDataVector3 - Set Vector3 in PlayerData
+IncrementPlayerDataInt - Increment integer in PlayerData
+DecrementPlayerDataInt - Decrement integer in PlayerData
+PlayerDataIntAdd - Add to integer in PlayerData
+PlayerDataBoolTest - Test boolean value
+PlayerDataBoolAllTrue - Check if all booleans are true
+PlayerDataBoolTrueAndFalse - Check specific boolean combinations
+
+COMMON PATCH TARGETS:
+=====================
+
+1. HeroController - Player ability modifications
+2. PlayerData - Save data manipulation
+3. GameManager - Game state changes
+4. GameCameras - Camera behavior modifications
+
+SINGLETON PATTERN:
+==================
+
+HeroController._instance - Static singleton instance
+GameManager - Uses singleton pattern
+Many core classes use singleton for global access
+
+HARMONY PATCH EXAMPLES:
+========================
+
+[HarmonyPatch(typeof(HeroController), "TakeDamage")]
+[HarmonyPatch(typeof(PlayerData), "GetPlayerDataBool")]
+[HarmonyPatch(typeof(GameManager), "SetGameState")]
+[HarmonyPatch(typeof(GameCameras), "SetCameraTarget")]
+
+This quick reference should help with identifying the right classes and methods to patch for various modding needs. 

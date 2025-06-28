@@ -64,6 +64,44 @@ HKCabbyCodes/
 - Hollow Knight (Steam version)
 - BepInEx 6.0 or later
 
+### Required Library Files
+
+Before building the project, you need to obtain the following DLL files and place them in the `CabbyCodes/lib/` directory:
+
+#### Required Files:
+- **Assembly-CSharp.dll** - Main game assembly (from Hollow Knight installation)
+- **PlayMaker.dll** - PlayMaker framework (from Hollow Knight installation)
+- **UnityExplorer.STANDALONE.Mono.dll** - Unity Explorer library
+- **UniverseLib.Mono.dll** - UniverseLib framework
+
+#### How to Obtain:
+
+**From Hollow Knight Installation:**
+1. Navigate to your Hollow Knight installation directory
+2. Go to `Hollow Knight_Data/Managed/`
+3. Copy `Assembly-CSharp.dll` and `PlayMaker.dll` to `CabbyCodes/lib/`
+
+**From Modding Community:**
+- **UnityExplorer**: Download from [UnityExplorer releases](https://github.com/sinai-dev/UnityExplorer/releases)
+- **UniverseLib**: Download from [UniverseLib releases](https://github.com/sinai-dev/UniverseLib/releases)
+
+**Alternative Method:**
+If you have other Hollow Knight mods installed, you can copy these files from:
+- `BepInEx/plugins/` (if already installed by other mods)
+- `BepInEx/unmanaged/` (if placed there by other mods)
+
+#### File Structure:
+```
+CabbyCodes/
+└── lib/
+    ├── Assembly-CSharp.dll
+    ├── PlayMaker.dll
+    ├── UnityExplorer.STANDALONE.Mono.dll
+    └── UniverseLib.Mono.dll
+```
+
+**Note**: These files are excluded from version control due to licensing restrictions. You must obtain them manually before building the project.
+
 ### Installation Steps
 1. **Install BepInEx**:
    - Download BepInEx 6.0+ from [GitHub](https://github.com/BepInEx/BepInEx/releases)
