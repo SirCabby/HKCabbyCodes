@@ -178,10 +178,11 @@ namespace CabbyMenu.UI.ReferenceControls
 
             // Configure panel rect transform
             RectTransform panelRect = panel.AddComponent<RectTransform>();
-            panelRect.anchorMin = new Vector2(0.1f, 0.6f);
-            panelRect.anchorMax = new Vector2(0.1f, 0.6f);
+            // Align to top center of parent canvas
+            panelRect.anchorMin = new Vector2(0.5f, 1f);
+            panelRect.anchorMax = new Vector2(0.5f, 1f);
             panelRect.sizeDelta = new Vector2(280f, 100f);
-            panelRect.anchoredPosition = Vector2.zero;
+            panelRect.anchoredPosition = new Vector2(0, 0); // Will be positioned below button later
             panelRect.pivot = new Vector2(0.5f, 1f); // Top-center pivot for proper dropdown positioning
 
             UnityEngine.Debug.Log($"Panel created as child of parent: {parentCanvas.name}");
@@ -260,10 +261,11 @@ namespace CabbyMenu.UI.ReferenceControls
             Image viewportImage = viewportObj.AddComponent<Image>();
             Mask viewportMask = viewportObj.AddComponent<Mask>();
 
-            // Configure viewport
-            viewportRect.anchorMin = Vector2.zero;
-            viewportRect.anchorMax = Vector2.one;
-            viewportRect.sizeDelta = Vector2.zero;
+            // Configure viewport - top-aligned, fill horizontally, fixed height
+            viewportRect.anchorMin = new Vector2(0, 1);
+            viewportRect.anchorMax = new Vector2(1, 1);
+            viewportRect.pivot = new Vector2(0.5f, 1f);
+            viewportRect.sizeDelta = new Vector2(0, -OPTION_MARGIN); // Fill panel, minus margin if needed
             viewportRect.anchoredPosition = Vector2.zero;
 
             viewportImage.color = new Color(0.2f, 0.2f, 0.2f, 0.9f);
@@ -282,9 +284,10 @@ namespace CabbyMenu.UI.ReferenceControls
             VerticalLayoutGroup contentLayout = contentObj.AddComponent<VerticalLayoutGroup>();
             ContentSizeFitter contentFitter = contentObj.AddComponent<ContentSizeFitter>();
 
-            // Configure content - anchor to stretch across viewport width and position at top
+            // Configure content - top-aligned, fill horizontally
             contentRect.anchorMin = new Vector2(0, 1);
             contentRect.anchorMax = new Vector2(1, 1);
+            contentRect.pivot = new Vector2(0.5f, 1f);
             contentRect.sizeDelta = new Vector2(0, 0);
             contentRect.anchoredPosition = Vector2.zero;
 
@@ -418,6 +421,9 @@ namespace CabbyMenu.UI.ReferenceControls
             Button optionButton = optionObj.AddComponent<Button>();
             LayoutElement optionLayout = optionObj.AddComponent<LayoutElement>();
 
+            // Set pivot to top center for proper vertical stacking
+            optionRect.pivot = new Vector2(0.5f, 1f); // Center X, Top Y
+
             // Configure layout element for proper sizing
             ConfigureOptionLayoutElement(optionLayout);
 
@@ -452,10 +458,10 @@ namespace CabbyMenu.UI.ReferenceControls
 
         private void ConfigureOptionRectTransform(RectTransform rectTransform, int index)
         {
-            // Configure rect transform - let layout system handle positioning
+            // Configure rect transform - anchor to top and stretch across width
             rectTransform.anchorMin = new Vector2(0, 1);
             rectTransform.anchorMax = new Vector2(1, 1);
-            rectTransform.sizeDelta = new Vector2(-OPTION_MARGIN * 2, OPTION_HEIGHT); // 10px margin on each side (170px wide)
+            rectTransform.sizeDelta = new Vector2(-OPTION_MARGIN, OPTION_HEIGHT); // Small margin on sides only
             rectTransform.anchoredPosition = new Vector2(0, -index * OPTION_HEIGHT);
         }
 
@@ -604,31 +610,20 @@ namespace CabbyMenu.UI.ReferenceControls
             // Configure panel components
             ConfigurePanelComponents(panelRect);
 
-            // Configure scroll view components
-            if (viewport != null)
-            {
-                RectTransform viewportRect = viewport.GetComponent<RectTransform>();
-                viewportRect.anchorMin = Vector2.zero;
-                viewportRect.anchorMax = Vector2.one;
-                viewportRect.sizeDelta = Vector2.zero;
-                viewportRect.anchoredPosition = Vector2.zero;
-                // Match width to panel
-                viewportRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, panelRect.sizeDelta.x);
-            }
-            if (content != null)
-            {
-                RectTransform contentRect = content.GetComponent<RectTransform>();
-                contentRect.anchorMin = new Vector2(0, 1);
-                contentRect.anchorMax = new Vector2(1, 1);
-                contentRect.pivot = new Vector2(0.5f, 1f);
-                contentRect.sizeDelta = new Vector2(0, options.Count * OPTION_HEIGHT);
-                contentRect.anchoredPosition = Vector2.zero;
-                // Match width to panel
-                contentRect.SetSizeWithCurrentAnchors(RectTransform.Axis.Horizontal, panelRect.sizeDelta.x);
-            }
+            // Configure scroll view components with proper positioning
+            ConfigureScrollViewComponents(panelRect);
+
+            // Verify and fix scroll rect connections
+            VerifyScrollRectConnections();
+
+            // Configure content sizing and positioning
+            ConfigureContentSizing();
 
             // Ensure all option buttons are visible and properly positioned
             ConfigureOptionButtons();
+
+            // Reset scroll position to top
+            ResetScrollPosition();
 
             // Ensure proper z-order
             EnsureProperZOrder();
@@ -660,22 +655,30 @@ namespace CabbyMenu.UI.ReferenceControls
                 if (scrollRectComponent != null)
                 {
                     scrollRectComponent.enabled = true;
+                    scrollRectComponent.horizontal = false;
+                    scrollRectComponent.vertical = true;
+                    scrollRectComponent.movementType = ScrollRect.MovementType.Clamped;
+                    scrollRectComponent.inertia = false;
+                    scrollRectComponent.scrollSensitivity = 10f;
+                    scrollRectComponent.elasticity = 0f; // Prevent over-scrolling
+
                     UnityEngine.Debug.Log($"Scroll view state - enabled: {scrollRectComponent.enabled}, viewport: {scrollRectComponent.viewport?.name}, content: {scrollRectComponent.content?.name}");
                 }
             }
 
-            // Configure viewport properly FIRST
+            // Configure viewport properly - fill the entire panel
             if (viewport != null)
             {
                 RectTransform viewportRect = viewport.GetComponent<RectTransform>();
                 if (viewportRect != null)
                 {
-                    // Set viewport to fill the panel with small margins
-                    viewportRect.sizeDelta = new Vector2(panelRect.sizeDelta.x - OPTION_MARGIN, panelRect.sizeDelta.y - OPTION_MARGIN);
+                    // Set viewport to fill the entire panel
+                    viewportRect.anchorMin = Vector2.zero;
+                    viewportRect.anchorMax = Vector2.one;
+                    viewportRect.sizeDelta = Vector2.zero;
                     viewportRect.anchoredPosition = Vector2.zero;
 
-                    UnityEngine.Debug.Log($"Viewport state - active: {viewport.activeSelf}, sizeDelta: {viewportRect.sizeDelta}, anchoredPosition: {viewportRect.anchoredPosition}");
-                    UnityEngine.Debug.Log($"Set viewport sizeDelta to: {viewportRect.sizeDelta}");
+                    UnityEngine.Debug.Log($"Viewport configured - anchorMin: {viewportRect.anchorMin}, anchorMax: {viewportRect.anchorMax}, sizeDelta: {viewportRect.sizeDelta}, anchoredPosition: {viewportRect.anchoredPosition}");
                 }
 
                 Image viewportImage = viewport.GetComponent<Image>();
@@ -691,7 +694,8 @@ namespace CabbyMenu.UI.ReferenceControls
                 {
                     viewportMask.enabled = true;
                     viewportMask.showMaskGraphic = false;
-                    UnityEngine.Debug.Log($"Viewport mask - enabled: {viewportMask.enabled}, showMaskGraphic: {viewportMask.showMaskGraphic}");
+
+                    UnityEngine.Debug.Log($"Viewport mask - enabled: {viewportMask.enabled}, showMaskGraphic: {viewportMask.showMaskGraphic}, graphic: {viewportMask.graphic?.name}");
                 }
             }
         }
@@ -706,20 +710,21 @@ namespace CabbyMenu.UI.ReferenceControls
                 // Calculate content size based on number of options
                 float contentHeight = options.Count * OPTION_HEIGHT;
 
-                // Get panel width to match content width exactly
-                RectTransform dropdownPanelRect = dropdownPanel.GetComponent<RectTransform>();
-                float contentWidth = dropdownPanelRect.sizeDelta.x - PANEL_MARGIN; // 10px margin on each side
-
                 // Configure content to stretch across viewport width and position at top
                 contentRect.anchorMin = new Vector2(0, 1);
                 contentRect.anchorMax = new Vector2(1, 1);
                 contentRect.pivot = new Vector2(0.5f, 1f);
-                contentRect.sizeDelta = new Vector2(-PANEL_MARGIN, contentHeight); // Use negative sizeDelta for margins (20px on each side)
-                contentRect.anchoredPosition = Vector2.zero; // Let viewport handle positioning
+                contentRect.sizeDelta = new Vector2(0, contentHeight);
+
+                // Position content at the top of the viewport
+                contentRect.anchoredPosition = Vector2.zero;
 
                 UnityEngine.Debug.Log($"Content sizing - sizeDelta: {contentRect.sizeDelta}, anchorMin: {contentRect.anchorMin}, anchorMax: {contentRect.anchorMax}");
-                UnityEngine.Debug.Log($"Content height for {options.Count} options: {contentHeight}, width: {contentWidth}");
+                UnityEngine.Debug.Log($"Content height for {options.Count} options: {contentHeight}");
                 UnityEngine.Debug.Log($"Content anchoredPosition: {contentRect.anchoredPosition}");
+
+                // Force layout update to ensure proper positioning
+                LayoutRebuilder.ForceRebuildLayoutImmediate(contentRect);
             }
         }
 
@@ -736,10 +741,10 @@ namespace CabbyMenu.UI.ReferenceControls
                     RectTransform buttonRect = optionButtons[i].GetComponent<RectTransform>();
                     if (buttonRect != null)
                     {
-                        // Configure button to stretch across content width with margins
+                        // Configure button to stretch across content width
                         buttonRect.anchorMin = new Vector2(0, 1);
                         buttonRect.anchorMax = new Vector2(1, 1);
-                        buttonRect.sizeDelta = new Vector2(-OPTION_MARGIN, OPTION_HEIGHT); // 5px margin on each side
+                        buttonRect.sizeDelta = new Vector2(-OPTION_MARGIN, OPTION_HEIGHT); // Small margin on sides only
 
                         // Position buttons sequentially from top to bottom
                         buttonRect.anchoredPosition = new Vector2(0, -i * OPTION_HEIGHT);
@@ -794,6 +799,44 @@ namespace CabbyMenu.UI.ReferenceControls
             // Ensure dropdown panel is at the front
             dropdownPanel.transform.SetAsLastSibling();
             UnityEngine.Debug.Log($"Dropdown panel visibility ensured - active: {dropdownPanel.activeSelf}, sibling index: {dropdownPanel.transform.GetSiblingIndex()}");
+        }
+
+        private void ResetScrollPosition()
+        {
+            if (scrollView != null)
+            {
+                ScrollRect scrollRectComponent = scrollView.GetComponent<ScrollRect>();
+                if (scrollRectComponent != null)
+                {
+                    // Reset to top position (normalizedPosition.y = 1 for top)
+                    scrollRectComponent.normalizedPosition = new Vector2(0, 1);
+                    UnityEngine.Debug.Log($"Reset scroll position to top - normalizedPosition: {scrollRectComponent.normalizedPosition}");
+                }
+            }
+        }
+
+        private void VerifyScrollRectConnections()
+        {
+            if (scrollView == null || viewport == null || content == null) return;
+
+            ScrollRect scrollRectComponent = scrollView.GetComponent<ScrollRect>();
+            if (scrollRectComponent != null)
+            {
+                // Ensure viewport and content are properly connected
+                RectTransform viewportRect = viewport.GetComponent<RectTransform>();
+                RectTransform contentRect = content.GetComponent<RectTransform>();
+
+                scrollRectComponent.viewport = viewportRect;
+                scrollRectComponent.content = contentRect;
+
+                UnityEngine.Debug.Log($"Verified scroll rect connections - viewport: {scrollRectComponent.viewport?.name}, content: {scrollRectComponent.content?.name}");
+
+                // Force the scroll rect to update its internal state
+                scrollRectComponent.enabled = false;
+                scrollRectComponent.enabled = true;
+
+                UnityEngine.Debug.Log($"Scroll rect re-enabled - viewport: {scrollRectComponent.viewport?.name}, content: {scrollRectComponent.content?.name}");
+            }
         }
 
         #endregion
@@ -878,6 +921,9 @@ namespace CabbyMenu.UI.ReferenceControls
         {
             UnityEngine.Debug.Log("=== DETAILED POSITION ANALYSIS ===");
 
+            // Check parent canvas configuration
+            CheckParentCanvasConfiguration();
+
             // Main button positions
             RectTransform mainRect = GetComponent<RectTransform>();
             Vector3 mainWorldPos = mainRect.position;
@@ -901,6 +947,14 @@ namespace CabbyMenu.UI.ReferenceControls
                 Vector3 scrollScreenPos = RectTransformUtility.WorldToScreenPoint(null, scrollWorldPos);
                 UnityEngine.Debug.Log($"ScrollView - World: {scrollWorldPos}, Screen: {scrollScreenPos}, Local: {scrollRectTransform.localPosition}");
                 UnityEngine.Debug.Log($"ScrollView - sizeDelta: {scrollRectTransform.sizeDelta}, anchoredPosition: {scrollRectTransform.anchoredPosition}");
+
+                // Log scroll rect properties
+                if (scrollRectComponent != null)
+                {
+                    UnityEngine.Debug.Log($"ScrollRect - normalizedPosition: {scrollRectComponent.normalizedPosition}, velocity: {scrollRectComponent.velocity}");
+                    UnityEngine.Debug.Log($"ScrollRect - horizontal: {scrollRectComponent.horizontal}, vertical: {scrollRectComponent.vertical}");
+                    UnityEngine.Debug.Log($"ScrollRect - movementType: {scrollRectComponent.movementType}, elasticity: {scrollRectComponent.elasticity}");
+                }
             }
 
             // Viewport positions
@@ -959,107 +1013,37 @@ namespace CabbyMenu.UI.ReferenceControls
                 Vector3 viewportCenter = viewportRect.position;
                 Vector3 contentCenter = contentRect.position;
                 UnityEngine.Debug.Log($"Viewport center: {viewportCenter}, Content center: {contentCenter}");
+
+                // Check scroll rect viewport and content references
+                UnityEngine.Debug.Log($"ScrollRect viewport reference: {scrollRectComponent.viewport?.name}");
+                UnityEngine.Debug.Log($"ScrollRect content reference: {scrollRectComponent.content?.name}");
             }
 
             UnityEngine.Debug.Log("=== END POSITION ANALYSIS ===");
         }
 
-        private void CheckPanelVisibility()
+        private void CheckParentCanvasConfiguration()
         {
-            if (dropdownPanel == null) return;
-
-            RectTransform panelRect = dropdownPanel.GetComponent<RectTransform>();
-            if (panelRect == null) return;
-
-            // Get world corners
-            Vector3[] corners = new Vector3[4];
-            panelRect.GetWorldCorners(corners);
-
-            UnityEngine.Debug.Log($"Panel world corners: {corners[0]}, {corners[1]}, {corners[2]}, {corners[3]}");
-
-            // Check if any corner is on screen
-            bool anyCornerOnScreen = false;
-            for (int i = 0; i < 4; i++)
+            Canvas parentCanvas = dropdownPanel.GetComponentInParent<Canvas>();
+            if (parentCanvas != null)
             {
-                Vector3 screenPoint = Camera.main != null ? Camera.main.WorldToScreenPoint(corners[i]) : corners[i];
-                if (screenPoint.x >= 0 && screenPoint.x <= Screen.width &&
-                    screenPoint.y >= 0 && screenPoint.y <= Screen.height)
+                UnityEngine.Debug.Log($"Parent Canvas - name: {parentCanvas.name}, renderMode: {parentCanvas.renderMode}");
+                UnityEngine.Debug.Log($"Parent Canvas - worldCamera: {parentCanvas.worldCamera?.name}, planeDistance: {parentCanvas.planeDistance}");
+                UnityEngine.Debug.Log($"Parent Canvas - sortingOrder: {parentCanvas.sortingOrder}, targetDisplay: {parentCanvas.targetDisplay}");
+
+                // Check if canvas is using screen space overlay or camera
+                if (parentCanvas.renderMode == RenderMode.ScreenSpaceOverlay)
                 {
-                    anyCornerOnScreen = true;
-                    break;
+                    UnityEngine.Debug.Log("Canvas is using ScreenSpaceOverlay mode");
                 }
-            }
-
-            UnityEngine.Debug.Log($"Panel visibility check - any corner on screen: {anyCornerOnScreen}");
-
-            // Check panel's local position and size
-            UnityEngine.Debug.Log($"Panel local position: {dropdownPanel.transform.localPosition}");
-            UnityEngine.Debug.Log($"Panel local scale: {dropdownPanel.transform.localScale}");
-            UnityEngine.Debug.Log($"Panel sizeDelta: {panelRect.sizeDelta}");
-            UnityEngine.Debug.Log($"Panel anchoredPosition: {panelRect.anchoredPosition}");
-
-            // Check if panel is active in hierarchy
-            UnityEngine.Debug.Log($"Panel active in hierarchy: {dropdownPanel.activeInHierarchy}");
-            UnityEngine.Debug.Log($"Panel active self: {dropdownPanel.activeSelf}");
-
-            // Check canvas group alpha if it exists
-            CanvasGroup canvasGroup = dropdownPanel.GetComponent<CanvasGroup>();
-            if (canvasGroup != null)
-            {
-                UnityEngine.Debug.Log($"Canvas group alpha: {canvasGroup.alpha}, interactable: {canvasGroup.interactable}, blocksRaycasts: {canvasGroup.blocksRaycasts}");
-            }
-        }
-
-        private void LogZAndScreenPositions()
-        {
-            // Main button
-            RectTransform mainRect = GetComponent<RectTransform>();
-            Vector3 mainWorld = mainRect.position;
-            Vector3 mainScreen = RectTransformUtility.WorldToScreenPoint(null, mainWorld);
-            UnityEngine.Debug.Log($"MainButton z: {mainWorld.z}, screen: {mainScreen}");
-
-            // Main button text
-            if (mainButtonText != null)
-            {
-                RectTransform textRect = mainButtonText.GetComponent<RectTransform>();
-                Vector3 textWorld = textRect.position;
-                Vector3 textScreen = RectTransformUtility.WorldToScreenPoint(null, textWorld);
-                UnityEngine.Debug.Log($"MainButtonText z: {textWorld.z}, screen: {textScreen}");
-            }
-
-            // Dropdown panel
-            if (dropdownPanel != null)
-            {
-                RectTransform panelRect = dropdownPanel.GetComponent<RectTransform>();
-                Vector3 panelWorld = panelRect.position;
-                Vector3 panelScreen = RectTransformUtility.WorldToScreenPoint(null, panelWorld);
-                UnityEngine.Debug.Log($"DropdownPanel z: {panelWorld.z}, screen: {panelScreen}");
-            }
-
-            // Scroll view
-            if (scrollView != null)
-            {
-                RectTransform scrollRectT = scrollView.GetComponent<RectTransform>();
-                Vector3 scrollWorld = scrollRectT.position;
-                Vector3 scrollScreen = RectTransformUtility.WorldToScreenPoint(null, scrollWorld);
-                UnityEngine.Debug.Log($"ScrollView z: {scrollWorld.z}, screen: {scrollScreen}");
-            }
-
-            // Viewport
-            if (scrollView != null && viewport != null)
-            {
-                RectTransform viewportRect = viewport.GetComponent<RectTransform>();
-                Vector3 viewportWorld = viewportRect.position;
-                Vector3 viewportScreen = RectTransformUtility.WorldToScreenPoint(null, viewportWorld);
-                UnityEngine.Debug.Log($"Viewport z: {viewportWorld.z}, screen: {viewportScreen}");
-            }
-
-            // Content
-            if (content != null)
-            {
-                Vector3 contentWorld = content.GetComponent<RectTransform>().position;
-                Vector3 contentScreen = RectTransformUtility.WorldToScreenPoint(null, contentWorld);
-                UnityEngine.Debug.Log($"Content z: {contentWorld.z}, screen: {contentScreen}");
+                else if (parentCanvas.renderMode == RenderMode.ScreenSpaceCamera)
+                {
+                    UnityEngine.Debug.Log($"Canvas is using ScreenSpaceCamera mode with camera: {parentCanvas.worldCamera?.name}");
+                }
+                else if (parentCanvas.renderMode == RenderMode.WorldSpace)
+                {
+                    UnityEngine.Debug.Log("Canvas is using WorldSpace mode");
+                }
             }
         }
 
