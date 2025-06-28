@@ -21,7 +21,7 @@ namespace CabbyCodes.Patches.Charms
     public class CharmPatch : ISyncedReference<bool>
     {
         private static readonly string gotCharmName = "gotCharm_";
-        private static readonly Color unearnedColor = Constants.UNEARNED_COLOR;
+        private static readonly Color unearnedColor = CabbyMenu.Constants.UNEARNED_COLOR;
         public static readonly List<Charm> charms = BuildCharmList();
 
         private readonly int charmIndex;

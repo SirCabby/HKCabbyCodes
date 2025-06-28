@@ -7,7 +7,7 @@ namespace CabbyCodes.Patches.Achievements
 {
     public class AchievementPatch : ISyncedReference<bool>
     {
-        private static readonly Color unearnedColor = Constants.UNEARNED_COLOR;
+        private static readonly Color unearnedColor = CabbyMenu.Constants.UNEARNED_COLOR;
 
         private readonly Achievement achievement;
         private TogglePanel parent;
