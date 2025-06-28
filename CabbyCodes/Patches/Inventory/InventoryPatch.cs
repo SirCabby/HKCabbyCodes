@@ -4,10 +4,11 @@ using CabbyCodes.Patches.Inventory.Items;
 using CabbyCodes.Patches.Inventory.Keys;
 using CabbyCodes.Patches.Inventory.Map;
 using CabbyCodes.Patches.Inventory.NailArts;
-using CabbyCodes.Patches.Inventory.PowerUps;
-using CabbyCodes.Patches.Inventory.Spells;
 using CabbyCodes.Patches.Inventory.Upgrades;
+using CabbyCodes.Patches.Inventory.Spells;
 using CabbyMenu.UI.CheatPanels;
+using CabbyMenu.SyncedReferences;
+using CabbyMenu;
 
 namespace CabbyCodes.Patches.Inventory
 {

@@ -2,8 +2,9 @@ using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
 using CabbyMenu.UI.Modders;
 using System.Collections.Generic;
+using CabbyMenu;
 
-namespace CabbyCodes.Patches
+namespace CabbyCodes.Patches.Charms
 {
     public class GrimmChildLevelPatch : ISyncedValueList
     {

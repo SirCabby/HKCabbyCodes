@@ -4,8 +4,9 @@ using CabbyMenu.UI.CheatPanels;
 using System;
 using CabbyCodes.Types;
 using CabbyMenu;
+using System.Collections.Generic;
 
-namespace CabbyCodes.Patches
+namespace CabbyCodes.Patches.Charms
 {
     public class CharmCostPatch : ISyncedReference<bool>
     {

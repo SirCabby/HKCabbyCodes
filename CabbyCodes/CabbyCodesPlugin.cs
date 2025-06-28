@@ -8,6 +8,8 @@ using CabbyCodes.Patches.Flags;
 using CabbyCodes.Patches.Hunter;
 using CabbyCodes.Patches.Inventory;
 using CabbyCodes.Patches.Maps;
+using CabbyCodes.Patches.Player;
+using CabbyCodes.Patches.Charms;
 using CabbyMenu.UI;
 
 namespace CabbyCodes

@@ -3,7 +3,7 @@ using CabbyMenu.UI.CheatPanels;
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace CabbyCodes.Patches
+namespace CabbyCodes.Patches.Maps
 {
     public class MapRoomPatch : ISyncedReference<bool>
     {

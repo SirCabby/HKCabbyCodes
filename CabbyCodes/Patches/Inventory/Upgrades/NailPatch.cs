@@ -1,8 +1,9 @@
 using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
 using System.Collections.Generic;
+using CabbyMenu;
 
-namespace CabbyCodes.Patches.Inventory.PowerUps
+namespace CabbyCodes.Patches.Inventory.Upgrades
 {
     public class NailPatch : ISyncedValueList
     {

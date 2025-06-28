@@ -1,7 +1,7 @@
 using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
 
-namespace CabbyCodes.Patches.Inventory.Items
+namespace CabbyCodes.Patches.Inventory.Map
 {
     public class VendorPinPatch : ISyncedReference<bool>
     {

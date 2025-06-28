@@ -1,7 +1,7 @@
 using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
 
-namespace CabbyCodes.Patches
+namespace CabbyCodes.Patches.Player
 {
     public class JumpPatch : ISyncedReference<bool>
     {

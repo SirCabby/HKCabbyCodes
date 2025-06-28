@@ -1,12 +1,10 @@
 using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
-using System;
 using System.Reflection;
 using HarmonyLib;
-using UnityEngine;
 using CabbyMenu;
 
-namespace CabbyCodes.Patches
+namespace CabbyCodes.Patches.Player
 {
     public class InvulPatch : ISyncedReference<bool>
     {

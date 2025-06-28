@@ -2,7 +2,7 @@ using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
 using CabbyMenu;
 
-namespace CabbyCodes.Patches
+namespace CabbyCodes.Patches.Player
 {
     public class GeoValuePatch : ISyncedReference<int>
     {

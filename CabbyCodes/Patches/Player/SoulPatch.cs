@@ -6,7 +6,7 @@ using HarmonyLib;
 using UnityEngine;
 using CabbyMenu;
 
-namespace CabbyCodes.Patches
+namespace CabbyCodes.Patches.Player
 {
     public class SoulPatch : ISyncedReference<bool>
     {

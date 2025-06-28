@@ -1,7 +1,7 @@
 using CabbyCodes.Patches.Player;
 using CabbyMenu.UI.CheatPanels;
 
-namespace CabbyCodes.Patches
+namespace CabbyCodes.Patches.Player
 {
     /// <summary>
     /// Main player patch class that coordinates all player-related cheat panels.
