@@ -1,14 +1,12 @@
 using CabbyMenu.SyncedReferences;
-using CabbyMenu.UI.Factories;
-using CabbyMenu.UI.Modders;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace CabbyMenu.UI.ReferenceControls
 {
     public class DropDownSync
     {
         private readonly GameObject dropdownGo;
+        private readonly CustomDropdown customDropdown;
 
         public ISyncedReference<int> SelectedValue { get; private set; }
 
@@ -16,12 +14,14 @@ namespace CabbyMenu.UI.ReferenceControls
         {
             SelectedValue = selectedValue;
 
-            (dropdownGo, GameObjectMod dropdownGoMod, DropdownMod dropdownMod) = DropdownFactory.Build();
-            dropdownGoMod.SetName("DropDownSync");
+            // Create a new GameObject and add CustomDropdown
+            dropdownGo = new GameObject("DropDownSync");
+            customDropdown = dropdownGo.AddComponent<CustomDropdown>();
 
-            Dropdown dropdown = dropdownGo.GetComponent<Dropdown>();
-
-            dropdown.onValueChanged.AddListener(DropdownSelect);
+            // Set initial value
+            customDropdown.SetValue(SelectedValue.Get());
+            // Listen for value changes
+            customDropdown.OnValueChanged += DropdownSelect;
         }
 
         public GameObject GetGameObject()
@@ -36,7 +36,7 @@ namespace CabbyMenu.UI.ReferenceControls
 
         public void Update()
         {
-            dropdownGo.GetComponent<Dropdown>().value = SelectedValue.Get();
+            customDropdown.SetValue(SelectedValue.Get());
         }
     }
 }

@@ -7,6 +7,7 @@ using CabbyMenu.Types;
 using CabbyMenu.UI.CheatPanels;
 using CabbyMenu.UI.Factories;
 using CabbyMenu.UI.Modders;
+using CabbyMenu.UI.ReferenceControls;
 
 namespace CabbyMenu.UI
 {
@@ -96,7 +97,7 @@ namespace CabbyMenu.UI
         /// <summary>
         /// Dropdown for category selection.
         /// </summary>
-        Dropdown categoryDropdown;
+        CustomDropdown categoryDropdown;
 
         /// <summary>
         /// GameObject containing the cheat content area.
@@ -278,8 +279,11 @@ namespace CabbyMenu.UI
             else if (rootGameObject != null && rootGoMod.IsActive())
             {
                 rootGoMod.SetActive(false);
-                categoryDropdown.value = 0;
-                OnCategorySelected(0);
+                if (categoryDropdown != null)
+                {
+                    categoryDropdown.SetValue(0);
+                    OnCategorySelected(0);
+                }
                 lastSelected = null;
 
                 // Reset the menu on unpausing
@@ -316,9 +320,9 @@ namespace CabbyMenu.UI
             CheatPanel.ResetPattern();
 
             // Build selected cheat panels
-            if (arg0 < categoryDropdown.options.Count)
+            if (categoryDropdown != null && arg0 < categoryDropdown.Options.Count)
             {
-                registeredCategories[categoryDropdown.options[arg0].text]();
+                registeredCategories[categoryDropdown.Options[arg0]]();
             }
 
             lastSelected = null;
@@ -367,27 +371,82 @@ namespace CabbyMenu.UI
 
             // Category Dropdown
             Vector2 categorySize = new(Constants.CATEGORY_DROPDOWN_WIDTH, Constants.CATEGORY_DROPDOWN_HEIGHT);
-            (GameObject categoryDropdownGameObject, GameObjectMod categoryDropdownGoMod, DropdownMod categoryDropdownMod) = DropdownFactory.Build();
-            categoryDropdownGoMod.SetName("Category Dropdown");
+            (GameObject categoryDropdownGameObject, CustomDropdown customDropdown) = DropdownFactory.Build();
+            categoryDropdownGameObject.name = "Category Dropdown";
             int showSize = Math.Min(Constants.MAX_CATEGORY_SHOW_SIZE, registeredCategories.Count);
-            categoryDropdownMod.SetSize(categorySize, showSize).SetFontSize(Constants.DEFAULT_FONT_SIZE);
+            customDropdown.SetSize(categorySize.x, categorySize.y);
+            customDropdown.SetFontSize(Constants.DEFAULT_FONT_SIZE);
             new Fitter(categoryDropdownGameObject).Attach(menuPanel).Anchor(new Vector2(Constants.CATEGORY_DROPDOWN_X, Constants.CATEGORY_DROPDOWN_Y), new Vector2(Constants.CATEGORY_DROPDOWN_X, Constants.CATEGORY_DROPDOWN_Y));
 
-            categoryDropdown = categoryDropdownGameObject.GetComponent<Dropdown>();
-            categoryDropdown.onValueChanged.AddListener(OnCategorySelected);
-
             // Populate Registered Categories
-            List<Dropdown.OptionData> options = new();
+            List<string> options = new();
             foreach (string category in registeredCategories.Keys)
             {
-                options.Add(new Dropdown.OptionData(category));
+                options.Add(category);
             }
-            categoryDropdown.options = options;
+            customDropdown.SetOptions(options);
+            customDropdown.OnValueChanged += OnCategorySelected;
+
+            categoryDropdown = customDropdown;
+
+            // Test Button for Dropdown Debugging
+            (GameObject testButton, GameObjectMod testButtonGoMod, TextMod testButtonTextMod) = ButtonFactory.BuildDefault("Test Dropdown");
+            testButtonGoMod.SetName("Test Dropdown Button");
+            testButtonTextMod.SetFontSize(Constants.DEFAULT_FONT_SIZE);
+            testButton.GetComponent<Button>().onClick.AddListener(() =>
+            {
+                if (categoryDropdown != null)
+                {
+                    UnityEngine.Debug.Log("Test button clicked - calling ForceVisible on dropdown");
+                    categoryDropdown.ForceVisible();
+                }
+                else
+                {
+                    UnityEngine.Debug.LogError("categoryDropdown is null when test button clicked!");
+                }
+            });
+            new Fitter(testButton).Attach(menuPanel).Anchor(new Vector2(Constants.CATEGORY_DROPDOWN_X, Constants.CATEGORY_DROPDOWN_Y - 0.1f), new Vector2(Constants.CATEGORY_DROPDOWN_X, Constants.CATEGORY_DROPDOWN_Y - 0.1f)).Size(new Vector2(Constants.CATEGORY_DROPDOWN_WIDTH, 40f));
+
+            // Debug Box Test Button
+            (GameObject debugBoxButton, GameObjectMod debugBoxButtonGoMod, TextMod debugBoxButtonTextMod) = ButtonFactory.BuildDefault("Debug Boxes");
+            debugBoxButtonGoMod.SetName("Debug Box Button");
+            debugBoxButtonTextMod.SetFontSize(Constants.DEFAULT_FONT_SIZE);
+            debugBoxButton.GetComponent<Button>().onClick.AddListener(() =>
+            {
+                if (categoryDropdown != null)
+                {
+                    UnityEngine.Debug.Log("Debug box button clicked - creating debug boxes");
+                    categoryDropdown.CreateDebugBoxes();
+                }
+                else
+                {
+                    UnityEngine.Debug.LogError("categoryDropdown is null when debug box button clicked!");
+                }
+            });
+            new Fitter(debugBoxButton).Attach(menuPanel).Anchor(new Vector2(Constants.CATEGORY_DROPDOWN_X, Constants.CATEGORY_DROPDOWN_Y - 0.15f), new Vector2(Constants.CATEGORY_DROPDOWN_X, Constants.CATEGORY_DROPDOWN_Y - 0.15f)).Size(new Vector2(Constants.CATEGORY_DROPDOWN_WIDTH, 40f));
+
+            // Remove Debug Boxes Button
+            (GameObject removeDebugBoxButton, GameObjectMod removeDebugBoxButtonGoMod, TextMod removeDebugBoxButtonTextMod) = ButtonFactory.BuildDefault("Remove Boxes");
+            removeDebugBoxButtonGoMod.SetName("Remove Debug Box Button");
+            removeDebugBoxButtonTextMod.SetFontSize(Constants.DEFAULT_FONT_SIZE);
+            removeDebugBoxButton.GetComponent<Button>().onClick.AddListener(() =>
+            {
+                if (categoryDropdown != null)
+                {
+                    UnityEngine.Debug.Log("Remove debug box button clicked - removing debug boxes");
+                    categoryDropdown.RemoveDebugBoxes();
+                }
+                else
+                {
+                    UnityEngine.Debug.LogError("categoryDropdown is null when remove debug box button clicked!");
+                }
+            });
+            new Fitter(removeDebugBoxButton).Attach(menuPanel).Anchor(new Vector2(Constants.CATEGORY_DROPDOWN_X, Constants.CATEGORY_DROPDOWN_Y - 0.2f), new Vector2(Constants.CATEGORY_DROPDOWN_X, Constants.CATEGORY_DROPDOWN_Y - 0.2f)).Size(new Vector2(Constants.CATEGORY_DROPDOWN_WIDTH, 40f));
 
             // Cheat Scrollable
             GameObject cheatScrollable = DefaultControls.CreateScrollView(new DefaultControls.Resources());
             cheatScrollable.name = "Cheat Scrollable";
-            cheatScrollable.GetComponent<Image>().color = Color.blue;
+            cheatScrollable.GetComponent<Image>().color = Constants.CHEAT_SCROLLABLE_BACKGROUND;
             cheatScrollable.GetComponent<ScrollRect>().scrollSensitivity = categorySize.y;
             new Fitter(cheatScrollable).Attach(menuPanel).Anchor(new Vector2(Constants.CHEAT_SCROLLABLE_MIN_X, Constants.CHEAT_SCROLLABLE_MIN_Y), new Vector2(Constants.CHEAT_SCROLLABLE_MAX_X, Constants.CHEAT_SCROLLABLE_MAX_Y)).Size(Vector2.zero);
             new ScrollBarMod(cheatScrollable.transform.Find("Scrollbar Vertical").gameObject.GetComponent<Scrollbar>()).SetDefaults();

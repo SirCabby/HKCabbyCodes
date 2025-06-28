@@ -92,6 +92,17 @@ namespace CabbyMenu
         public static readonly UnityEngine.Color BUTTON_DANGER_HOVER = new(1f, 0.4f, 0.4f, 1f);
         public static readonly UnityEngine.Color BUTTON_DANGER_PRESSED = new(0.6f, 0.1f, 0.1f, 1f);
 
+        // Dropdown Colors
+        public static readonly UnityEngine.Color DROPDOWN_NORMAL = new(0.7f, 0.7f, 0.7f, 1f);
+        public static readonly UnityEngine.Color DROPDOWN_HOVER = new(1f, 1f, 1f, 1f);
+        public static readonly UnityEngine.Color DROPDOWN_PRESSED = new(0.4f, 0.4f, 0.4f, 1f);
+        public static readonly UnityEngine.Color DROPDOWN_ITEM_NORMAL = new(0f, 0f, 0f, 1f);
+        public static readonly UnityEngine.Color DROPDOWN_ITEM_HOVER = new(0f, 0f, 0f, 1f);
+        public static readonly UnityEngine.Color DROPDOWN_ITEM_PRESSED = new(0f, 0f, 0f, 1f);
+
+        // Scrollable Area Colors
+        public static readonly UnityEngine.Color CHEAT_SCROLLABLE_BACKGROUND = new(0.1f, 0.1f, 0.1f, 0.3f);
+
         // UI Vector2 Constants
         public static readonly UnityEngine.Vector2 MIDDLE_ANCHOR_VECTOR = new(MIDDLE_ANCHOR, MIDDLE_ANCHOR);
         public static readonly UnityEngine.Vector2 DEFAULT_PANEL_SIZE = new(DEFAULT_PANEL_WIDTH, DEFAULT_PANEL_HEIGHT);

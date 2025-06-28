@@ -1,25 +1,22 @@
-using UnityEngine.UI;
 using UnityEngine;
-using CabbyMenu.UI.Modders;
+using CabbyMenu.UI.ReferenceControls;
 
 namespace CabbyMenu.UI.Factories
 {
     /// <summary>
-    /// Factory class for creating and configuring dropdown UI elements.
+    /// Factory class for creating and configuring custom dropdown UI elements.
     /// </summary>
     public class DropdownFactory
     {
         /// <summary>
-        /// Builds a dropdown GameObject with default styling and scrollbar configuration.
+        /// Builds a custom dropdown GameObject with default styling.
         /// </summary>
-        /// <returns>A tuple containing the GameObject, GameObjectMod, and DropdownMod for the created dropdown.</returns>
-        public static (GameObject gameObject, GameObjectMod gameObjectMod, DropdownMod dropdownMod) Build()
+        /// <returns>A tuple containing the GameObject and CustomDropdown for the created dropdown.</returns>
+        public static (GameObject gameObject, CustomDropdown customDropdown) Build()
         {
-            GameObject buildInstance = DefaultControls.CreateDropdown(new DefaultControls.Resources());
-            new ScrollBarMod(buildInstance.transform.Find("Template").Find("Scrollbar").gameObject.GetComponent<Scrollbar>()).SetDefaults();
-
-            (GameObject gameObject, GameObjectMod gameObjectMod) = GameObjectFactory.Build(buildInstance);
-            return (gameObject, gameObjectMod, new DropdownMod(buildInstance));
+            GameObject dropdownGO = new GameObject("CustomDropdown");
+            CustomDropdown customDropdown = dropdownGO.AddComponent<CustomDropdown>();
+            return (dropdownGO, customDropdown);
         }
     }
 }
