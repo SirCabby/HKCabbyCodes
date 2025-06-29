@@ -41,7 +41,7 @@ namespace CabbyCodes.Patches.Inventory.Items
 
         public List<string> GetValueList()
         {
-            return new()
+            return new List<string>
             {
                 "NONE", "Ruined Flower", "Delicate Flower"
             };
@@ -49,8 +49,8 @@ namespace CabbyCodes.Patches.Inventory.Items
 
         public static void AddPanel()
         {
-            DelicateFlowerPatch patch = new();
-            DropdownPanel dropdownPanel = new(patch, 350, "Delicate Flower");
+            DelicateFlowerPatch patch = new DelicateFlowerPatch();
+            DropdownPanel dropdownPanel = new DropdownPanel(patch, 350, "Delicate Flower");
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(dropdownPanel);
         }
     }

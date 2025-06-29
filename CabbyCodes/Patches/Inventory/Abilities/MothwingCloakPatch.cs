@@ -41,7 +41,7 @@ namespace CabbyCodes.Patches.Inventory.Abilities
 
         public List<string> GetValueList()
         {
-            return new()
+            return new List<string>
             {
                 "NONE", "Mothwing Cloak", "Shade Cloak"
             };
@@ -49,8 +49,8 @@ namespace CabbyCodes.Patches.Inventory.Abilities
 
         public static void AddPanel()
         {
-            MothwingCloakPatch patch = new();
-            DropdownPanel dropdownPanel = new(patch, 350, "Mothwing Cloak / Shade Cloak");
+            MothwingCloakPatch patch = new MothwingCloakPatch();
+            DropdownPanel dropdownPanel = new DropdownPanel(patch, 350, "Mothwing Cloak / Shade Cloak");
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(dropdownPanel);
         }
     }

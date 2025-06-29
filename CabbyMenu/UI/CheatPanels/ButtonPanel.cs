@@ -59,12 +59,15 @@ namespace CabbyMenu.UI.CheatPanels
         /// </summary>
         private static Func<string, (GameObject, GameObjectMod, TextMod)> GetButtonFactory(ButtonStyle style)
         {
-            return style switch
+            switch (style)
             {
-                ButtonStyle.Danger => ButtonFactory.BuildDanger,
-                ButtonStyle.Success => ButtonFactory.BuildSuccess,
-                _ => ButtonFactory.BuildDefault
-            };
+                case ButtonStyle.Danger:
+                    return ButtonFactory.BuildDanger;
+                case ButtonStyle.Success:
+                    return ButtonFactory.BuildSuccess;
+                default:
+                    return ButtonFactory.BuildDefault;
+            }
         }
 
         public ButtonPanel SetButtonSize(int width)

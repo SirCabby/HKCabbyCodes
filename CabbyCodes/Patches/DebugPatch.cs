@@ -27,7 +27,7 @@ namespace CabbyCodes.Patches
             {
                 GameMap gm = GameManager._instance.gameMap.GetComponent<GameMap>();
                 Vector3 heroPos = ((GameObject)heroFieldInfo.GetValue(gm)).transform.position;
-                CabbyCodesPlugin.BLogger.LogInfo($"Location: {heroPos.x}, {heroPos.y}");
+                CabbyCodesPlugin.BLogger.LogInfo(string.Format("Location: {0}, {1}", heroPos.x, heroPos.y));
                 CabbyCodesPlugin.BLogger.LogInfo(string.Format("Scene: {0}", GameManager.GetBaseSceneName(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name)));
             }, "Print", "General Info"));
 
@@ -64,14 +64,14 @@ namespace CabbyCodes.Patches
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new ButtonPanel(() =>
             {
                 CabbyCodesPlugin.BLogger.LogInfo("SceneData:");
-                Dictionary<string, List<string>> sceneValues = new();
+                Dictionary<string, List<string>> sceneValues = new Dictionary<string, List<string>>();
 
                 // Build bools
                 foreach (PersistentBoolData pbd in SceneData.instance.persistentBoolItems)
                 {
                     if (!sceneValues.ContainsKey(pbd.sceneName))
                     {
-                        sceneValues.Add(pbd.sceneName, new());
+                        sceneValues.Add(pbd.sceneName, new List<string>());
                     }
 
                     sceneValues[pbd.sceneName].Add(pbd.id + " - " + pbd.activated);
@@ -82,7 +82,7 @@ namespace CabbyCodes.Patches
                 {
                     if (!sceneValues.ContainsKey(pid.sceneName))
                     {
-                        sceneValues.Add(pid.sceneName, new());
+                        sceneValues.Add(pid.sceneName, new List<string>());
                     }
 
                     sceneValues[pid.sceneName].Add(pid.id + " - " + pid.value);

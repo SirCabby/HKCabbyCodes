@@ -48,7 +48,7 @@ namespace CabbyCodes.Patches.Charms
 
         public List<string> GetValueList()
         {
-            return new()
+            return new List<string>
             {
                 "NONE", "Kingsoul", "Void Heart"
             };
@@ -56,8 +56,8 @@ namespace CabbyCodes.Patches.Charms
 
         public static void AddPanel()
         {
-            RoyalCharmPatch patch = new();
-            DropdownPanel dropdownPanel = new(patch, 230, "40: Kingsoul / Void Heart");
+            RoyalCharmPatch patch = new RoyalCharmPatch();
+            DropdownPanel dropdownPanel = new DropdownPanel(patch, 230, "40: Kingsoul / Void Heart");
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(dropdownPanel);
         }
     }

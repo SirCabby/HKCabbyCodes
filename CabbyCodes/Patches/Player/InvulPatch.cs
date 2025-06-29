@@ -10,7 +10,7 @@ namespace CabbyCodes.Patches.Player
     {
         public const string key = "Invul_Patch";
         private static readonly BoxedReference value = CodeState.Get(key, false);
-        private static readonly Harmony harmony = new(key);
+        private static readonly Harmony harmony = new Harmony(key);
         private static readonly MethodInfo mOriginal = AccessTools.Method(typeof(PlayerData), nameof(PlayerData.TakeHealth));
         private static readonly MethodInfo mOriginal2 = AccessTools.Method(typeof(PlayerData), nameof(PlayerData.WouldDie));
 

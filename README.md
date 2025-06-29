@@ -145,6 +145,23 @@ HKCabbyCodes/
 └── CabbyCodes.sln       # Solution file
 ```
 
+### 🔧 Development Requirements
+
+#### .NET Framework and SDK
+- **Target Framework**: .NET Framework 4.7.2 (required for compatibility with nuget dependencies and BepInEx version 6)
+- **SDK Version**: .NET 9.0.301 (latest available, .NET 5.0+ is compatible)
+- **Language Version**: C# 7.3 (latest supported by .NET Framework 4.7.2)
+
+#### Required Tools
+- **Visual Studio 2019/2022** or **Visual Studio Code** with C# extension
+- **.NET 9.0 SDK** (for building with latest tooling)
+- **Git** for version control
+
+#### Configuration Files
+- **global.json**: Specifies SDK version 9.0.301
+- **CabbyCodes.csproj**: Targets `net472` with `LangVersion` set to `7.3`
+- **CabbyMenu.csproj**: Targets `net472` with `LangVersion` set to `7.3`
+
 ### 📚 Required Library Files
 
 Before building the project, you need to obtain the following DLL files and place them in the `CabbyCodes/lib/` directory:

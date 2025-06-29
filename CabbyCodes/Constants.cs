@@ -72,9 +72,9 @@ namespace CabbyCodes
         public const float TOWN_Y_POSITION = 12f;
 
         // Common Vector2 Constants
-        public static readonly UnityEngine.Vector2 MIDDLE_ANCHOR_VECTOR = new(0.5f, 0.5f);
-        public static readonly UnityEngine.Vector2 DEFAULT_PANEL_SIZE = new(120, 60);
-        public static readonly UnityEngine.Vector2 DEFAULT_ICON_SIZE = new(60, 60);
+        public static readonly UnityEngine.Vector2 MIDDLE_ANCHOR_VECTOR = new UnityEngine.Vector2(0.5f, 0.5f);
+        public static readonly UnityEngine.Vector2 DEFAULT_PANEL_SIZE = new UnityEngine.Vector2(120, 60);
+        public static readonly UnityEngine.Vector2 DEFAULT_ICON_SIZE = new UnityEngine.Vector2(60, 60);
 
         // Boolean/Int Defaults
         public const int PERMADEATH_MODE_ENABLED = 1;

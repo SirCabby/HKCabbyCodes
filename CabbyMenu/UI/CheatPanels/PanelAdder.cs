@@ -56,7 +56,7 @@ namespace CabbyMenu.UI.CheatPanels
             buttonPanelLayout.flexibleHeight = Constants.FLEXIBLE_LAYOUT_VALUE;
             buttonPanelLayout.minWidth = defaultToggleButtonSize.x;
 
-            ToggleButton toggleButton = new(syncedReference);
+            ToggleButton toggleButton = new ToggleButton(syncedReference);
             new Fitter(toggleButton.GetGameObject()).Attach(buttonPanel).Anchor(middle, middle).Size(defaultToggleButtonSize);
             panel.updateActions.Add(toggleButton.Update);
 

@@ -11,7 +11,7 @@ namespace CabbyMenu
         /// <summary>
         /// Dictionary storing boxed references with string keys.
         /// </summary>
-        private static readonly Dictionary<string, BoxedReference> boxes = new();
+        private static readonly Dictionary<string, BoxedReference> boxes = new Dictionary<string, BoxedReference>();
 
         /// <summary>
         /// Gets or creates a boxed reference for the specified key.

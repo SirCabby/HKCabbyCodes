@@ -20,7 +20,7 @@ namespace CabbyCodes.Patches.Inventory.Upgrades
 
         public List<string> GetValueList()
         {
-            return new()
+            return new List<string>
             {
                 "Old Nail", "Sharpened Nail", "Channelled Nail", "Coiled Nail", "Pure Nail"
             };
@@ -28,7 +28,7 @@ namespace CabbyCodes.Patches.Inventory.Upgrades
 
         public static void AddPanel()
         {
-            InputFieldPanel<int> panel = new(new NailPatch(), CabbyMenu.KeyCodeMap.ValidChars.Numeric, 1, Constants.PANEL_WIDTH_120, "Nail Upgrades (0-4)");
+            InputFieldPanel<int> panel = new InputFieldPanel<int>(new NailPatch(), CabbyMenu.KeyCodeMap.ValidChars.Numeric, 1, Constants.PANEL_WIDTH_120, "Nail Upgrades (0-4)");
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(panel);
         }
     }

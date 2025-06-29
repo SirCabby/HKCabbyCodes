@@ -40,9 +40,9 @@ namespace CabbyCodes.Patches.Achievements
         private static TogglePanel BuildAchievementPanel(Achievement achievement)
         {
             string text = Language.Language.Get(achievement.localizedTitle, "Achievements") + ": " + Language.Language.Get(achievement.localizedText, "Achievements");
-            AchievementPatch patch = new(achievement);
+            AchievementPatch patch = new AchievementPatch(achievement);
 
-            TogglePanel togglePanel = new(patch, text);
+            TogglePanel togglePanel = new TogglePanel(patch, text);
             (_, ImageMod spriteImageMod) = PanelAdder.AddSprite(togglePanel, achievement.earnedIcon, 1);
             patch.SetCheatPanel(togglePanel);
 

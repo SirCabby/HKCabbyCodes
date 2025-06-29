@@ -24,7 +24,7 @@ namespace CabbyMenu.UI.CheatPanels
             dropdownPanelLayout.flexibleHeight = Constants.FLEXIBLE_LAYOUT_VALUE;
             dropdownPanelLayout.minWidth = width;
 
-            dropdown = new(syncedValueReference);
+            dropdown = new DropDownSync(syncedValueReference);
             var customDropdown = dropdown.GetGameObject().GetComponent<CustomDropdown>();
             customDropdown.SetOptions(syncedValueReference.GetValueList());
             customDropdown.SetSize(width, Constants.DEFAULT_PANEL_HEIGHT);

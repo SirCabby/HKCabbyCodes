@@ -18,12 +18,12 @@ namespace CabbyCodes.Patches.Player
             PlayerData.instance.maxHealthBase = value;
             PlayerData.instance.maxHealth = value;
 
-            CabbyCodesPlugin.BLogger.LogDebug($"Health updated to {value}");
+            CabbyCodesPlugin.BLogger.LogDebug(string.Format("Health updated to {0}", value));
         }
 
         public static void AddPanel()
         {
-            InputFieldPanel<int> panel = new(new HealthPatch(), KeyCodeMap.ValidChars.Numeric, CabbyMenu.Constants.DEFAULT_CHARACTER_LIMIT, CabbyMenu.Constants.DEFAULT_PANEL_WIDTH, "Max Health (5-9)");
+            InputFieldPanel<int> panel = new InputFieldPanel<int>(new HealthPatch(), KeyCodeMap.ValidChars.Numeric, CabbyMenu.Constants.DEFAULT_CHARACTER_LIMIT, CabbyMenu.Constants.DEFAULT_PANEL_WIDTH, "Max Health (5-9)");
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(panel);
         }
     }

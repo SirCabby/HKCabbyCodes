@@ -18,7 +18,7 @@ namespace CabbyCodes.Patches.Inventory.Spells
 
         public List<string> GetValueList()
         {
-            return new()
+            return new List<string>
             {
                 "NONE", "Howling Wraiths", "Abyss Shriek"
             };
@@ -26,8 +26,8 @@ namespace CabbyCodes.Patches.Inventory.Spells
 
         public static void AddPanel()
         {
-            HowlingWraithsPatch patch = new();
-            DropdownPanel dropdownPanel = new(patch, 350, "Howling Wraiths / Abyss Shriek");
+            HowlingWraithsPatch patch = new HowlingWraithsPatch();
+            DropdownPanel dropdownPanel = new DropdownPanel(patch, 350, "Howling Wraiths / Abyss Shriek");
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(dropdownPanel);
         }
     }

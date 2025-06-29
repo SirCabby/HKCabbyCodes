@@ -23,7 +23,7 @@ namespace CabbyCodes.Patches.Charms
 
         public List<string> GetValueList()
         {
-            return new()
+            return new List<string>
             {
                 "1", "2", "3", "4", "CM"
             };
@@ -32,8 +32,8 @@ namespace CabbyCodes.Patches.Charms
         public static void AddPanel()
         {
             int charmId = 40;
-            GrimmChildLevelPatch patch = new();
-            DropdownPanel dropdownPanel = new(patch, 120, "39: Grimm Child Level (1-4) or Carefree Melody");
+            GrimmChildLevelPatch patch = new GrimmChildLevelPatch();
+            DropdownPanel dropdownPanel = new DropdownPanel(patch, 120, "39: Grimm Child Level (1-4) or Carefree Melody");
 
             (_, ImageMod spriteImageMod) = PanelAdder.AddSprite(dropdownPanel, CharmIconList.Instance.GetSprite(charmId), 1);
 

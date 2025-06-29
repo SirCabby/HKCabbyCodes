@@ -18,7 +18,7 @@ namespace CabbyCodes.Patches.Inventory.Spells
 
         public List<string> GetValueList()
         {
-            return new()
+            return new List<string>
             {
                 "NONE", "Vengeful Spirit", "Shade Soul"
             };
@@ -26,8 +26,8 @@ namespace CabbyCodes.Patches.Inventory.Spells
 
         public static void AddPanel()
         {
-            VengefulSpiritPatch patch = new();
-            DropdownPanel dropdownPanel = new(patch, 350, "Vengeful Spirit / Shade Soul");
+            VengefulSpiritPatch patch = new VengefulSpiritPatch();
+            DropdownPanel dropdownPanel = new DropdownPanel(patch, 350, "Vengeful Spirit / Shade Soul");
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(dropdownPanel);
         }
     }

@@ -38,7 +38,7 @@ namespace CabbyCodes.Patches.Hunter
 
         private static InputFieldPanel<int> BuildCheatPanel(string targetName)
         {
-            InputFieldPanel<int> panel = new(new HunterPatch(targetName), CabbyMenu.KeyCodeMap.ValidChars.Numeric, 2, Constants.HUNTER_INPUT_WIDTH, targetName);
+            InputFieldPanel<int> panel = new InputFieldPanel<int>(new HunterPatch(targetName), CabbyMenu.KeyCodeMap.ValidChars.Numeric, 2, Constants.HUNTER_INPUT_WIDTH, targetName);
             PanelAdder.AddToggleButton(panel, 0, new HunterKilledPatch(targetName));
 
             return panel;
@@ -49,7 +49,7 @@ namespace CabbyCodes.Patches.Hunter
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Hunter's Journal Entries").SetColor(CheatPanel.headerColor));
 
             // Unlock All toggle
-            ButtonPanel buttonPanel = new(() =>
+            ButtonPanel buttonPanel = new ButtonPanel(() =>
             {
                 foreach (string targetName in hunterTargets)
                 {
@@ -72,7 +72,7 @@ namespace CabbyCodes.Patches.Hunter
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(buttonPanel);
 
             // Set kills remaining 0
-            ButtonPanel setPanel = new(() =>
+            ButtonPanel setPanel = new ButtonPanel(() =>
             {
                 foreach (string targetName in hunterTargets)
                 {

@@ -8,7 +8,7 @@ namespace CabbyCodes.Patches.Maps
     public class MapRoomPatch : ISyncedReference<bool>
     {
         public static readonly Dictionary<string, List<string>> roomsInMaps = BuildMapRoomDict();
-        private static readonly Vector2 buttonSize = new(120, 60);
+        private static readonly Vector2 buttonSize = new Vector2(120, 60);
 
         private readonly string roomName;
 
@@ -58,7 +58,7 @@ namespace CabbyCodes.Patches.Maps
             foreach (KeyValuePair<string, List<string>> kvp in roomsInMaps)
             {
                 CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Area: " + kvp.Key).SetColor(CheatPanel.subHeaderColor));
-                ButtonPanel toggleAllPanel = new(() => ToggleAllRooms(kvp.Key, true), "ON", "Toggle All Rooms");
+                ButtonPanel toggleAllPanel = new ButtonPanel(() => ToggleAllRooms(kvp.Key, true), "ON", "Toggle All Rooms");
                 PanelAdder.AddButton(toggleAllPanel, 1, () => ToggleAllRooms(kvp.Key, false), "OFF", buttonSize);
                 CabbyCodesPlugin.cabbyMenu.AddCheatPanel(toggleAllPanel);
 
@@ -71,11 +71,11 @@ namespace CabbyCodes.Patches.Maps
 
         private static Dictionary<string, List<string>> BuildMapRoomDict()
         {
-            return new()
+            return new Dictionary<string, List<string>>
             {
                 {
                     "Dirtmouth",
-                    new()
+                    new List<string>
                     {
                         "Town",
                         "Tutorial_01"
@@ -83,7 +83,7 @@ namespace CabbyCodes.Patches.Maps
                 },
                 {
                     "Abyss",
-                    new()
+                    new List<string>
                     {
                         "Abyss_03",
                         "Abyss_04",
@@ -107,7 +107,7 @@ namespace CabbyCodes.Patches.Maps
                 },
                 {
                     "City",
-                    new()
+                    new List<string>
                     {
                         "Crossroads_49b",
                         "Ruins1_01",
@@ -156,7 +156,7 @@ namespace CabbyCodes.Patches.Maps
                 },
                 {
                     "Cliffs",
-                    new()
+                    new List<string>
                     {
                         "Cliffs_01",
                         "Cliffs_01_b",
@@ -172,7 +172,7 @@ namespace CabbyCodes.Patches.Maps
                 },
                 {
                     "Crossroads",
-                    new()
+                    new List<string>
                     {
                         "Crossroads_01",
                         "Crossroads_02",
@@ -217,7 +217,7 @@ namespace CabbyCodes.Patches.Maps
                 },
                 {
                     "Mines",
-                    new()
+                    new List<string>
                     {
                         "Mines_01",
                         "Mines_02",
@@ -251,7 +251,7 @@ namespace CabbyCodes.Patches.Maps
                 },
                 {
                     "Deepnest",
-                    new()
+                    new List<string>
                     {
                         "Abyss_03_b",
                         "Deepnest_01b",
@@ -287,7 +287,7 @@ namespace CabbyCodes.Patches.Maps
                 },
                 {
                     "FogCanyon",
-                    new()
+                    new List<string>
                     {
                         "Fungus3_01",
                         "Fungus3_02",
@@ -306,7 +306,7 @@ namespace CabbyCodes.Patches.Maps
                 },
                 {
                     "FungalWastes",
-                    new()
+                    new List<string>
                     {
                         "Deepnest_01",
                         "Fungus2_01",
@@ -345,7 +345,7 @@ namespace CabbyCodes.Patches.Maps
                 },
                 {
                     "Greenpath",
-                    new()
+                    new List<string>
                     {
                         "Fungus1_01",
                         "Fungus1_01b",
@@ -384,7 +384,7 @@ namespace CabbyCodes.Patches.Maps
                 },
                 {
                     "Outskirts",
-                    new()
+                    new List<string>
                     {
                         "Abyss_03_c",
                         "Deepnest_East_01",
@@ -419,7 +419,7 @@ namespace CabbyCodes.Patches.Maps
                 },
                 {
                     "RoyalGardens",
-                    new()
+                    new List<string>
                     {
                         "Deepnest_43",
                         "Deepnest_43_b",
@@ -449,7 +449,7 @@ namespace CabbyCodes.Patches.Maps
                 },
                 {
                     "RestingGrounds",
-                    new()
+                    new List<string>
                     {
                         "Crossroads_46b",
                         "Crossroads_50",
@@ -470,7 +470,7 @@ namespace CabbyCodes.Patches.Maps
                 },
                 {
                     "Waterways",
-                    new()
+                    new List<string>
                     {
                         "Abyss_01",
                         "Abyss_02",

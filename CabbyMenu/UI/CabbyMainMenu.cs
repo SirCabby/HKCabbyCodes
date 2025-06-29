@@ -19,7 +19,7 @@ namespace CabbyMenu.UI
         /// <summary>
         /// Default size for cheat panels.
         /// </summary>
-        private static readonly Vector2 cheatPanelSize = new(0, Constants.CHEAT_PANEL_HEIGHT);
+        private static readonly Vector2 cheatPanelSize = new Vector2(0, Constants.CHEAT_PANEL_HEIGHT);
 
         /// <summary>
         /// The name of the mod.
@@ -39,18 +39,18 @@ namespace CabbyMenu.UI
         /// <summary>
         /// Dictionary mapping category names to their panel creation actions.
         /// </summary>
-        private readonly Dictionary<string, Action> registeredCategories = new();
+        private readonly Dictionary<string, Action> registeredCategories = new Dictionary<string, Action>();
 
         /// <summary>
         /// List of currently active cheat panels.
         /// </summary>
-        private readonly List<CheatPanel> contentCheatPanels = new();
+        private readonly List<CheatPanel> contentCheatPanels = new List<CheatPanel>();
 
         // Manage InputFieldSync updates
         /// <summary>
         /// List of registered input fields for synchronization.
         /// </summary>
-        private readonly List<InputFieldStatus> registeredInputs = new();
+        private readonly List<InputFieldStatus> registeredInputs = new List<InputFieldStatus>();
 
         /// <summary>
         /// The last selected input field.
@@ -370,7 +370,7 @@ namespace CabbyMenu.UI
             new Fitter(categoryTextObj).Attach(menuPanel).Anchor(new Vector2(Constants.CATEGORY_TEXT_X, Constants.CATEGORY_TEXT_Y), new Vector2(Constants.CATEGORY_TEXT_X, Constants.CATEGORY_TEXT_Y)).Size(new Vector2(Constants.CATEGORY_TEXT_WIDTH, Constants.CATEGORY_TEXT_HEIGHT));
 
             // Category Dropdown
-            Vector2 categorySize = new(Constants.CATEGORY_DROPDOWN_WIDTH, Constants.CATEGORY_DROPDOWN_HEIGHT);
+            Vector2 categorySize = new Vector2(Constants.CATEGORY_DROPDOWN_WIDTH, Constants.CATEGORY_DROPDOWN_HEIGHT);
             (GameObject categoryDropdownGameObject, CustomDropdown customDropdown) = DropdownFactory.Build();
             categoryDropdownGameObject.name = "Category Dropdown";
             int showSize = Math.Min(Constants.MAX_CATEGORY_SHOW_SIZE, registeredCategories.Count);
@@ -379,7 +379,7 @@ namespace CabbyMenu.UI
             new Fitter(categoryDropdownGameObject).Attach(menuPanel).Anchor(new Vector2(Constants.CATEGORY_DROPDOWN_X, Constants.CATEGORY_DROPDOWN_Y), new Vector2(Constants.CATEGORY_DROPDOWN_X, Constants.CATEGORY_DROPDOWN_Y));
 
             // Populate Registered Categories
-            List<string> options = new();
+            List<string> options = new List<string>();
             foreach (string category in registeredCategories.Keys)
             {
                 options.Add(category);

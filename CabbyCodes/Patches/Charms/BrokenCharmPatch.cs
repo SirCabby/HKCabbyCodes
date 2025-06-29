@@ -34,10 +34,10 @@ namespace CabbyCodes.Patches.Charms
             for (int i = 23; i < 26; i++)
             {
                 Charm charm = CharmPatch.charms.Single(x => x.id == i);
-                BrokenCharmPatch patch = new(charm.id);
+                BrokenCharmPatch patch = new BrokenCharmPatch(charm.id);
 
                 int index = CharmPatch.charms.IndexOf(charm) + 1;
-                TogglePanel togglePanel = new(patch, index + ": " + charm.name + " is Broken");
+                TogglePanel togglePanel = new TogglePanel(patch, index + ": " + charm.name + " is Broken");
                 (_, ImageMod spriteImageMod) = PanelAdder.AddSprite(togglePanel, CharmIconList.Instance.GetSprite(charm.id), 1);
 
                 togglePanel.updateActions.Add(() =>

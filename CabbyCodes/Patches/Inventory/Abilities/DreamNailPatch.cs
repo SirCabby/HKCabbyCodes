@@ -41,7 +41,7 @@ namespace CabbyCodes.Patches.Inventory.Abilities
 
         public List<string> GetValueList()
         {
-            return new()
+            return new List<string>
             {
                 "NONE", "Dream Nail", "Awoken Dream Nail"
             };
@@ -49,8 +49,8 @@ namespace CabbyCodes.Patches.Inventory.Abilities
 
         public static void AddPanel()
         {
-            DreamNailPatch patch = new();
-            DropdownPanel dropdownPanel = new(patch, 350, "Dream Nail / Awoken Dream Nail");
+            DreamNailPatch patch = new DreamNailPatch();
+            DropdownPanel dropdownPanel = new DropdownPanel(patch, 350, "Dream Nail / Awoken Dream Nail");
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(dropdownPanel);
         }
     }

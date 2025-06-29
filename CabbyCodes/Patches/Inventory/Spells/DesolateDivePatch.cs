@@ -18,7 +18,7 @@ namespace CabbyCodes.Patches.Inventory.Spells
 
         public List<string> GetValueList()
         {
-            return new()
+            return new List<string>
             {
                 "NONE", "Desolate Dive", "Descending Dark"
             };
@@ -26,8 +26,8 @@ namespace CabbyCodes.Patches.Inventory.Spells
 
         public static void AddPanel()
         {
-            DesolateDivePatch patch = new();
-            DropdownPanel dropdownPanel = new(patch, 350, "Desolate Dive / Descending Dark");
+            DesolateDivePatch patch = new DesolateDivePatch();
+            DropdownPanel dropdownPanel = new DropdownPanel(patch, 350, "Desolate Dive / Descending Dark");
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(dropdownPanel);
         }
     }

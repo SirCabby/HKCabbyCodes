@@ -34,7 +34,7 @@ all: build
 
 # Build the project
 .PHONY: build
-build: restore format 
+build: restore 
 	@echo "Building $(PROJECT_NAME) solution..."
 	dotnet build $(SOLUTION_FILE) --configuration $(CONFIGURATION) --no-restore
 	@echo "Build completed successfully!"
@@ -184,10 +184,3 @@ package: build
 	@if [ -f README.md ]; then cp README.md dist/; fi
 	@cd dist && zip -r "../$(PROJECT_NAME)-$(shell date +%Y%m%d).zip" .
 	@echo "Package created: $(PROJECT_NAME)-$(shell date +%Y%m%d).zip"
-
-# Format code
-.PHONY: format
-format:
-	@echo "Formatting code..."
-	dotnet format $(SOLUTION_FILE)
-	@echo "Code formatting completed!" 

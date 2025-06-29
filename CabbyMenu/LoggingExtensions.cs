@@ -74,9 +74,9 @@ namespace CabbyMenu
         {
             if (logger != null && ex != null)
             {
-                string contextInfo = string.IsNullOrEmpty(context) ? "" : $"Context: {context}. ";
-                logger.Log(LogLevel.Error, $"{contextInfo}Exception: {ex.Message}");
-                logger.Log(LogLevel.Error, $"Stack Trace: {ex.StackTrace}");
+                string contextInfo = string.IsNullOrEmpty(context) ? "" : string.Format("Context: {0}. ", context);
+                logger.Log(LogLevel.Error, string.Format("{0}Exception: {1}", contextInfo, ex.Message));
+                logger.Log(LogLevel.Error, string.Format("Stack Trace: {0}", ex.StackTrace));
             }
         }
 
@@ -90,7 +90,7 @@ namespace CabbyMenu
         {
             if (logger != null)
             {
-                logger.Log(LogLevel.Debug, $"Performance: {operation} took {elapsedMs:F2}ms");
+                logger.Log(LogLevel.Debug, string.Format("Performance: {0} took {1:F2}ms", operation, elapsedMs));
             }
         }
 
@@ -104,8 +104,8 @@ namespace CabbyMenu
         {
             if (logger != null)
             {
-                string paramInfo = parameters.Length > 0 ? $" with params: [{string.Join(", ", parameters)}]" : "";
-                logger.Log(LogLevel.Debug, $"Entering method: {methodName}{paramInfo}");
+                string paramInfo = parameters.Length > 0 ? string.Format(" with params: [{0}]", string.Join(", ", parameters)) : "";
+                logger.Log(LogLevel.Debug, string.Format("Entering method: {0}{1}", methodName, paramInfo));
             }
         }
 
@@ -119,8 +119,8 @@ namespace CabbyMenu
         {
             if (logger != null)
             {
-                string resultInfo = result != null ? $" with result: {result}" : "";
-                logger.Log(LogLevel.Debug, $"Exiting method: {methodName}{resultInfo}");
+                string resultInfo = result != null ? string.Format(" with result: {0}", result) : "";
+                logger.Log(LogLevel.Debug, string.Format("Exiting method: {0}{1}", methodName, resultInfo));
             }
         }
     }

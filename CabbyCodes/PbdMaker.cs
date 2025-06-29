@@ -14,7 +14,7 @@ namespace CabbyCodes
         /// <returns>A PersistentBoolData object that can be used to track state.</returns>
         public static PersistentBoolData GetPbd(string id, string sceneName, bool semiPersistent = false)
         {
-            PersistentBoolData pbd = new()
+            PersistentBoolData pbd = new PersistentBoolData
             {
                 id = id,
                 sceneName = sceneName,

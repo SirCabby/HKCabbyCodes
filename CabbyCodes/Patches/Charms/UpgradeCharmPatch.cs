@@ -48,10 +48,10 @@ namespace CabbyCodes.Patches.Charms
                 }
 
                 Charm charm = CharmPatch.charms.Single(x => x.id == i);
-                UpgradeCharmPatch patch = new(charmBool);
+                UpgradeCharmPatch patch = new UpgradeCharmPatch(charmBool);
 
                 int index = CharmPatch.charms.IndexOf(charm) + 1;
-                TogglePanel togglePanel = new(patch, index + ": " + charm.name + " is Unbreakable");
+                TogglePanel togglePanel = new TogglePanel(patch, index + ": " + charm.name + " is Unbreakable");
                 (_, ImageMod spriteImageMod) = PanelAdder.AddSprite(togglePanel, CharmIconList.Instance.GetSprite(charm.id), 1);
 
                 togglePanel.updateActions.Add(() =>

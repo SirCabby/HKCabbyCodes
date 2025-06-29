@@ -10,12 +10,12 @@ namespace CabbyMenu.SyncedReferences
         /// Gets the current value from the game data.
         /// </summary>
         /// <returns>The current value.</returns>
-        public T Get();
+        T Get();
 
         /// <summary>
         /// Sets the value in the game data.
         /// </summary>
         /// <param name="value">The value to set.</param>
-        public void Set(T value);
+        void Set(T value);
     }
 }

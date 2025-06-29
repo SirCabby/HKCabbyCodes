@@ -103,10 +103,10 @@ namespace CabbyCodes.Patches.Charms
             for (int i = 0; i < charms.Count; i++)
             {
                 Charm charm = charms[i];
-                CharmPatch patch = new(charm.id);
+                CharmPatch patch = new CharmPatch(charm.id);
 
                 int index = i + 1;
-                TogglePanel togglePanel = new(patch, index + ": " + charm.name);
+                TogglePanel togglePanel = new TogglePanel(patch, index + ": " + charm.name);
                 (_, ImageMod spriteImageMod) = PanelAdder.AddSprite(togglePanel, CharmIconList.Instance.GetSprite(charm.id), 1);
                 patch.SetCheatPanel(togglePanel);
 
@@ -138,51 +138,48 @@ namespace CabbyCodes.Patches.Charms
 
         private static List<Charm> BuildCharmList()
         {
-            List<Charm> result = new()
+            List<Charm> result = new List<Charm>
             {
-                new( 2, "Wayward Compass"),
-                new( 1, "Gathering Swarm"),
-                new( 4, "Stalward Shell"),
-                new(20, "Soul Catcher"),
-                new(19, "Shaman Stone"),
-                new(21, "Soul Eater"),
-                new(31, "Dashmaster"),
-                new(37, "Sprintmaster"),
-                new( 3, "Grubsong"),
-                new(35, "Grubberfly's Elegy"),
-
-                new(23, "Fragile Heart"),
-                new(24, "Fragile Greed"),
-                new(25, "Fragile Strength"),
-                new(33, "Spell Twister"),
-                new(14, "Steady Body"),
-                new(15, "Heavy Blow"),
-                new(32, "Quickslash"),
-                new(18, "Longnail"),
-                new(13, "Mark of Pride"),
-                new( 6, "Fury of the Fallen"),
-
-                new(12, "Thorns of Agony"),
-                new( 5, "Baldur Shell"),
-                new(11, "Flukenest"),
-                new(10, "Defender's Crest"),
-                new(22, "Glowing Womb"),
-                new( 7, "Quick Focus"),
-                new(34, "Deep Focus"),
-                new( 8, "Lifeblood Heart"),
-                new( 9, "Lifeblood Core"),
-                new(27, "Joni's Blessing"),
-
-                new(29, "Hiveblood"),
-                new(17, "Spore Shroom"),
-                new(16, "Sharp Shadow"),
-                new(28, "Shape of Unn"),
-                new(26, "Nailmaster's Glory"),
-                new(39, "Weaversong"),
-                new(30, "Dream Wielder"),
-                new(38, "Dreamshield"),
-                new(40, "Grimmchild")
-                //new(36, "Kingsoul / Void Heart")
+                new Charm( 2, "Wayward Compass"),
+                new Charm( 1, "Gathering Swarm"),
+                new Charm( 4, "Stalward Shell"),
+                new Charm(20, "Soul Catcher"),
+                new Charm(19, "Shaman Stone"),
+                new Charm(21, "Soul Eater"),
+                new Charm(31, "Dashmaster"),
+                new Charm(37, "Sprintmaster"),
+                new Charm( 3, "Grubsong"),
+                new Charm(35, "Grubberfly's Elegy"),
+                new Charm(23, "Fragile Heart"),
+                new Charm(24, "Fragile Greed"),
+                new Charm(25, "Fragile Strength"),
+                new Charm(33, "Spell Twister"),
+                new Charm(14, "Steady Body"),
+                new Charm(15, "Heavy Blow"),
+                new Charm(32, "Quickslash"),
+                new Charm(18, "Longnail"),
+                new Charm(13, "Mark of Pride"),
+                new Charm( 6, "Fury of the Fallen"),
+                new Charm(12, "Thorns of Agony"),
+                new Charm( 5, "Baldur Shell"),
+                new Charm(11, "Flukenest"),
+                new Charm(10, "Defender's Crest"),
+                new Charm(22, "Glowing Womb"),
+                new Charm( 7, "Quick Focus"),
+                new Charm(34, "Deep Focus"),
+                new Charm( 8, "Lifeblood Heart"),
+                new Charm( 9, "Lifeblood Core"),
+                new Charm(27, "Joni's Blessing"),
+                new Charm(29, "Hiveblood"),
+                new Charm(17, "Spore Shroom"),
+                new Charm(16, "Sharp Shadow"),
+                new Charm(28, "Shape of Unn"),
+                new Charm(26, "Nailmaster's Glory"),
+                new Charm(39, "Weaversong"),
+                new Charm(30, "Dream Wielder"),
+                new Charm(38, "Dreamshield"),
+                new Charm(40, "Grimmchild")
+                //new Charm(36, "Kingsoul / Void Heart")
             };
 
             return result;

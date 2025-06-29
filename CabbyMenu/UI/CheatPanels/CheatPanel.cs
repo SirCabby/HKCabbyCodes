@@ -55,7 +55,7 @@ namespace CabbyMenu.UI.CheatPanels
         /// <summary>
         /// List of actions to execute during panel updates.
         /// </summary>
-        public readonly List<Action> updateActions = new();
+        public readonly List<Action> updateActions = new List<Action>();
 
         /// <summary>
         /// Initializes a new instance of the CheatPanel class.
@@ -82,7 +82,9 @@ namespace CabbyMenu.UI.CheatPanels
             panelContentSizeFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
 
             // Setup Text
-            (cheatTextObj, _, TextMod textMod) = TextFactory.Build(description);
+            var textFactoryResult = TextFactory.Build(description);
+            cheatTextObj = textFactoryResult.Item1;
+            TextMod textMod = textFactoryResult.Item3;
             textMod.SetAlignment(TextAnchor.MiddleLeft).SetFontStyle(FontStyle.Bold);
             new Fitter(cheatTextObj).Attach(cheatPanel);
 

@@ -11,6 +11,6 @@ namespace CabbyMenu.SyncedReferences
         /// Gets the list of string values that correspond to the integer values.
         /// </summary>
         /// <returns>A list of string representations for the available values.</returns>
-        public List<string> GetValueList();
+        List<string> GetValueList();
     }
 }

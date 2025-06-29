@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.Events;
 using System.Collections;
+using System.Linq;
 
 namespace CabbyMenu.UI.ReferenceControls
 {
@@ -34,17 +35,17 @@ namespace CabbyMenu.UI.ReferenceControls
         [SerializeField] private GameObject scrollbar;
 
         // Private fields
-        private List<string> options = [];
-        private readonly List<GameObject> optionButtons = [];
+        private List<string> options = new List<string>();
+        private readonly List<GameObject> optionButtons = new List<GameObject>();
         private bool isOpen;
         private int selectedIndex;
 
         // Events - Using UnityEvent for consistency
-        public UnityEvent<int> onValueChanged = new();
+        public UnityEvent<int> onValueChanged = new UnityEvent<int>();
 
         // Public properties
         public int Value => selectedIndex;
-        public List<string> Options => [.. options];
+        public List<string> Options => options.ToList();
 
         private void Awake()
         {
@@ -100,7 +101,7 @@ namespace CabbyMenu.UI.ReferenceControls
 
         private Text CreateTextComponent(string name, Transform parent)
         {
-            GameObject textObj = new(name);
+            GameObject textObj = new GameObject(name);
             textObj.transform.SetParent(parent);
 
             RectTransform textRect = textObj.AddComponent<RectTransform>();
@@ -165,7 +166,7 @@ namespace CabbyMenu.UI.ReferenceControls
 
         private GameObject CreateDropdownPanel(Canvas parentCanvas)
         {
-            GameObject panel = new("DropdownPanel");
+            GameObject panel = new GameObject("DropdownPanel");
             panel.transform.SetParent(parentCanvas.transform, false);
             UnityEngine.Debug.Log($"Created dropdownPanel GameObject: {panel.name}");
 
@@ -180,7 +181,7 @@ namespace CabbyMenu.UI.ReferenceControls
 
             // Position the panel relative to the button's world position
             Vector3 buttonWorldPos = mainRect.position;
-            Vector3 panelWorldPos = new(buttonWorldPos.x, buttonWorldPos.y - mainRect.sizeDelta.y / 2, buttonWorldPos.z);
+            Vector3 panelWorldPos = new Vector3(buttonWorldPos.x, buttonWorldPos.y - mainRect.sizeDelta.y / 2, buttonWorldPos.z);
             panelRect.position = panelWorldPos;
 
             panelRect.pivot = new Vector2(0.5f, 1f); // Top-center pivot for proper dropdown positioning
@@ -225,7 +226,7 @@ namespace CabbyMenu.UI.ReferenceControls
 
         private GameObject CreateScrollView()
         {
-            GameObject scrollViewObj = new("ScrollView");
+            GameObject scrollViewObj = new GameObject("ScrollView");
             scrollViewObj.transform.SetParent(dropdownPanel.transform, false);
 
             RectTransform scrollRect = scrollViewObj.AddComponent<RectTransform>();
@@ -259,7 +260,7 @@ namespace CabbyMenu.UI.ReferenceControls
 
         private GameObject CreateViewport()
         {
-            GameObject viewportObj = new("Viewport");
+            GameObject viewportObj = new GameObject("Viewport");
             viewportObj.transform.SetParent(scrollView.transform, false);
 
             RectTransform viewportRect = viewportObj.AddComponent<RectTransform>();
@@ -300,7 +301,7 @@ namespace CabbyMenu.UI.ReferenceControls
 
         private GameObject CreateContent()
         {
-            GameObject contentObj = new("Content");
+            GameObject contentObj = new GameObject("Content");
             contentObj.transform.SetParent(viewport.transform, false);
 
             RectTransform contentRect = contentObj.AddComponent<RectTransform>();
@@ -336,7 +337,7 @@ namespace CabbyMenu.UI.ReferenceControls
 
         private GameObject CreateScrollbar()
         {
-            GameObject scrollbarObj = new("Scrollbar");
+            GameObject scrollbarObj = new GameObject("Scrollbar");
             scrollbarObj.transform.SetParent(dropdownPanel.transform, false);
 
             RectTransform scrollbarRect = scrollbarObj.AddComponent<RectTransform>();
@@ -365,7 +366,7 @@ namespace CabbyMenu.UI.ReferenceControls
 
         private void CreateScrollbarHandle(GameObject scrollbarObj, Scrollbar scrollbarComponent)
         {
-            GameObject handleObj = new("Handle");
+            GameObject handleObj = new GameObject("Handle");
             handleObj.transform.SetParent(scrollbarObj.transform, false);
 
             RectTransform handleRect = handleObj.AddComponent<RectTransform>();
@@ -390,7 +391,7 @@ namespace CabbyMenu.UI.ReferenceControls
 
         public void SetOptions(List<string> options)
         {
-            this.options = [.. options];
+            this.options = options.ToList();
             UnityEngine.Debug.Log($"SetOptions called with {options.Count} options");
 
             // Update the main button text to show the first option
@@ -470,7 +471,7 @@ namespace CabbyMenu.UI.ReferenceControls
         private void CreateSingleOptionButton(int index)
         {
             // Create parent panel that is 15 pixels wider than the button
-            GameObject parentPanel = new($"OptionPanel_{index}");
+            GameObject parentPanel = new GameObject($"OptionPanel_{index}");
             parentPanel.transform.SetParent(content.transform, false);
             parentPanel.SetActive(true);
 
@@ -489,7 +490,7 @@ namespace CabbyMenu.UI.ReferenceControls
             parentPanelImage.color = new Color(0, 0, 0, 0);
 
             // Create option button from scratch since we don't have a template
-            GameObject optionObj = new($"Option_{index}");
+            GameObject optionObj = new GameObject($"Option_{index}");
             optionObj.transform.SetParent(parentPanel.transform, false);
             optionObj.SetActive(true);
 
@@ -548,7 +549,7 @@ namespace CabbyMenu.UI.ReferenceControls
 
         private void CreateOptionText(GameObject parent, string text)
         {
-            GameObject textObj = new("Text");
+            GameObject textObj = new GameObject("Text");
             textObj.transform.SetParent(parent.transform, false);
 
             RectTransform textRect = textObj.AddComponent<RectTransform>();
@@ -744,7 +745,7 @@ namespace CabbyMenu.UI.ReferenceControls
 
             // Position the panel relative to the button's world position
             Vector3 buttonWorldPos = mainRect.position;
-            Vector3 panelWorldPos = new(buttonWorldPos.x, buttonWorldPos.y - mainRect.sizeDelta.y / 2, buttonWorldPos.z);
+            Vector3 panelWorldPos = new Vector3(buttonWorldPos.x, buttonWorldPos.y - mainRect.sizeDelta.y / 2, buttonWorldPos.z);
             panelRect.position = panelWorldPos;
 
             // Force layout update to ensure proper positioning

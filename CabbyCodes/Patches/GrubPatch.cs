@@ -18,7 +18,7 @@ namespace CabbyCodes.Patches
         /// <summary>
         /// List of scenes that contain grubs.
         /// </summary>
-        private static readonly List<string> grubScenes = new()
+        private static readonly List<string> grubScenes = new List<string>()
         {
             "Abyss_17",
             "Abyss_19",

@@ -12,7 +12,7 @@ namespace CabbyCodes.Patches.Player
     {
         public const string key = "Damage_Patch";
         private static readonly BoxedReference value = CodeState.Get(key, false);
-        private static readonly Harmony harmony = new(key);
+        private static readonly Harmony harmony = new Harmony(key);
         private static readonly MethodInfo mOriginal1 = AccessTools.Method(typeof(HealthManager), nameof(HealthManager.Hit), new System.Type[] { typeof(HitInstance) });
         private static readonly MethodInfo mOriginal2 = typeof(HealthManager).GetMethod("TakeDamage", BindingFlags.NonPublic | BindingFlags.Instance);
 

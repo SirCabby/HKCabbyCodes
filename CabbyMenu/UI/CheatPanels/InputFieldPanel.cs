@@ -1,6 +1,7 @@
 using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.ReferenceControls;
 using UnityEngine.UI;
+using UnityEngine;
 
 namespace CabbyMenu.UI.CheatPanels
 {
@@ -10,7 +11,7 @@ namespace CabbyMenu.UI.CheatPanels
 
         public InputFieldPanel(ISyncedReference<T> syncedReference, KeyCodeMap.ValidChars validChars, int characterLimit, int width, string description) : base(description)
         {
-            inputFieldSync = new(syncedReference, validChars, new(width, Constants.DEFAULT_PANEL_HEIGHT), characterLimit);
+            inputFieldSync = new InputFieldSync<T>(syncedReference, validChars, new Vector2(width, Constants.DEFAULT_PANEL_HEIGHT), characterLimit);
             new Fitter(inputFieldSync.GetGameObject()).Attach(cheatPanel);
             inputFieldSync.GetGameObject().transform.SetAsFirstSibling();
             updateActions.Add(inputFieldSync.Update);

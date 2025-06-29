@@ -48,7 +48,7 @@ namespace CabbyCodes
         {
             BLogger = Logger;
             BLogger.LogInfo("Plugin cabby.cabbycodes is loaded!");
-            BLogger.LogInfo($"Config location: {Config.ConfigFilePath}");
+            BLogger.LogInfo(string.Format("Config location: {0}", Config.ConfigFilePath));
             configFile = Config;
         }
 

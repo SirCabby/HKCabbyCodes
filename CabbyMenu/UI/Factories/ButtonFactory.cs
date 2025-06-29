@@ -44,7 +44,7 @@ namespace CabbyMenu.UI.Factories
             outline.effectColor = new Color(0f, 0f, 0f, 0.3f);
             outline.effectDistance = new Vector2(2f, 2f);
 
-            TextMod textMod = new(buildInstance.GetComponentInChildren<Text>());
+            TextMod textMod = new TextMod(buildInstance.GetComponentInChildren<Text>());
             textMod.SetText(text)
                    .SetFontSize(Constants.DEFAULT_FONT_SIZE)
                    .SetColor(Color.white);

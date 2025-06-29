@@ -30,7 +30,7 @@ namespace CabbyCodes.Patches
         /// <summary>
         /// Harmony instance for patching game methods.
         /// </summary>
-        private static readonly Harmony harmony = new(key);
+        private static readonly Harmony harmony = new Harmony(key);
 
         /// <summary>
         /// Method info for the original EnterHero method.
@@ -60,10 +60,10 @@ namespace CabbyCodes.Patches
         /// <summary>
         /// List of predefined teleport locations.
         /// </summary>
-        private static readonly List<TeleportLocation> teleportLocations = new()
+        private static readonly List<TeleportLocation> teleportLocations = new List<TeleportLocation>
         {
-            new("", "<Select Location>", Vector2.zero),
-            new("Town", "Starting Town", new Vector2(Constants.TOWN_X_POSITION, Constants.TOWN_Y_POSITION)),
+            new TeleportLocation("", "<Select Location>", Vector2.zero),
+            new TeleportLocation("Town", "Starting Town", new Vector2(Constants.TOWN_X_POSITION, Constants.TOWN_Y_POSITION)),
         };
 
         /// <summary>
@@ -97,7 +97,7 @@ namespace CabbyCodes.Patches
         /// <returns>A list of display names for available teleport locations.</returns>
         public List<string> GetValueList()
         {
-            List<string> result = new();
+            List<string> result = new List<string>();
             foreach (TeleportLocation loc in teleportLocations)
             {
                 result.Add(loc.DisplayName);
@@ -111,7 +111,7 @@ namespace CabbyCodes.Patches
         /// <returns>A list of custom teleport locations loaded from configuration.</returns>
         private static List<TeleportLocation> InitTeleportLocations()
         {
-            List<TeleportLocation> result = new();
+            List<TeleportLocation> result = new List<TeleportLocation>();
 
             try
             {
@@ -133,7 +133,7 @@ namespace CabbyCodes.Patches
 
                             if (!string.IsNullOrEmpty(locationEntry.Value))
                             {
-                                ConfigDefinition configDef = new(key, locationName);
+                                ConfigDefinition configDef = new ConfigDefinition(key, locationName);
                                 result.Add(new CustomTeleportLocation(configDef, locationEntry));
                             }
                         }
@@ -142,10 +142,10 @@ namespace CabbyCodes.Patches
             }
             catch (Exception ex)
             {
-                CabbyCodesPlugin.BLogger.LogWarning($"Failed to load teleport locations from config: {ex.Message}");
+                CabbyCodesPlugin.BLogger.LogWarning(string.Format("Failed to load teleport locations from config: {0}", ex.Message));
             }
 
-            CabbyCodesPlugin.BLogger.LogDebug($"Loaded {result.Count} custom teleport locations");
+            CabbyCodesPlugin.BLogger.LogDebug(string.Format("Loaded {0} custom teleport locations", result.Count));
             return result;
         }
 
@@ -155,13 +155,13 @@ namespace CabbyCodes.Patches
         /// <param name="teleportLocation">The location to teleport to.</param>
         public static void DoTeleport(TeleportLocation teleportLocation)
         {
-            CabbyCodesPlugin.BLogger.LogInfo($"Teleporting to [{teleportLocation.SceneName}] ({teleportLocation.Location.x}, {teleportLocation.Location.y})");
+            CabbyCodesPlugin.BLogger.LogInfo(string.Format("Teleporting to [{0}] ({1}, {2})", teleportLocation.SceneName, teleportLocation.Location.x, teleportLocation.Location.y));
 
             MethodInfo runPrefix = typeof(CabbyMenu.CommonPatches).GetMethod(nameof(CabbyMenu.CommonPatches.Prefix_RunOriginal));
             harmony.Patch(mOriginal, prefix: new HarmonyMethod(runPrefix), postfix: new HarmonyMethod(postMethod));
 
             GameManager gm = GameManager._instance;
-            originalDreamGateLoc = new(gm.playerData.dreamGateX, gm.playerData.dreamGateY);
+            originalDreamGateLoc = new Vector2(gm.playerData.dreamGateX, gm.playerData.dreamGateY);
             gm.playerData.dreamGateX = teleportLocation.Location.x;
             gm.playerData.dreamGateY = teleportLocation.Location.y;
 
@@ -206,7 +206,7 @@ namespace CabbyCodes.Patches
             GameMap gm = GameManager._instance.gameMap.GetComponent<GameMap>();
             Vector3 heroPos = ((GameObject)heroFieldInfo.GetValue(gm)).transform.position;
             string sceneName = GameManager.GetBaseSceneName(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
-            Vector2 teleportLocation = new((int)Math.Round(heroPos.x), (int)Math.Ceiling(heroPos.y));
+            Vector2 teleportLocation = new Vector2((int)Math.Round(heroPos.x), (int)Math.Ceiling(heroPos.y));
 
             List<TeleportLocation> teleportLocations = savedTeleports;
             bool locationFound = false;
@@ -229,19 +229,19 @@ namespace CabbyCodes.Patches
 
                 if (configEntry != null)
                 {
-                    ConfigDefinition configDef = new(key, sceneName);
-                    CustomTeleportLocation loc = new(configDef, configEntry);
+                    ConfigDefinition configDef = new ConfigDefinition(key, sceneName);
+                    CustomTeleportLocation loc = new CustomTeleportLocation(configDef, configEntry);
                     teleportLocations.Add(loc);
                     AddCustomPanel(loc);
 
                     // Update the list of saved locations
                     UpdateSavedLocationsList();
 
-                    CabbyCodesPlugin.BLogger.LogDebug($"Saved new teleport location: {sceneName} at ({teleportLocation.x}, {teleportLocation.y})");
+                    CabbyCodesPlugin.BLogger.LogDebug(string.Format("Saved new teleport location: {0} at ({1}, {2})", sceneName, teleportLocation.x, teleportLocation.y));
                 }
                 else
                 {
-                    CabbyCodesPlugin.BLogger.LogWarning($"Failed to create config entry for teleport location: {sceneName}");
+                    CabbyCodesPlugin.BLogger.LogWarning(string.Format("Failed to create config entry for teleport location: {0}", sceneName));
                 }
             }
         }
@@ -266,7 +266,7 @@ namespace CabbyCodes.Patches
             }
             catch (Exception ex)
             {
-                CabbyCodesPlugin.BLogger.LogWarning($"Failed to update saved locations list: {ex.Message}");
+                CabbyCodesPlugin.BLogger.LogWarning(string.Format("Failed to update saved locations list: {0}", ex.Message));
             }
         }
 
@@ -292,7 +292,7 @@ namespace CabbyCodes.Patches
         /// <param name="location">The teleport location to create a panel for.</param>
         private static void AddCustomPanel(TeleportLocation location)
         {
-            ButtonPanel buttonPanel = new(() => { DoTeleport(location); }, "Teleport", location.DisplayName, Constants.TELEPORT_BUTTON_WIDTH);
+            ButtonPanel buttonPanel = new ButtonPanel(() => { DoTeleport(location); }, "Teleport", location.DisplayName, Constants.TELEPORT_BUTTON_WIDTH);
 
             GameObject destroyButton = PanelAdder.AddDestroyPanelButton(buttonPanel, buttonPanel.cheatPanel.transform.childCount, () =>
             {
@@ -308,11 +308,11 @@ namespace CabbyCodes.Patches
                         // Update the saved locations list
                         UpdateSavedLocationsList();
 
-                        CabbyCodesPlugin.BLogger.LogDebug($"Removed teleport location: {customLocation.SceneName}");
+                        CabbyCodesPlugin.BLogger.LogDebug(string.Format("Removed teleport location: {0}", customLocation.SceneName));
                     }
                     catch (Exception ex)
                     {
-                        CabbyCodesPlugin.BLogger.LogWarning($"Failed to remove teleport location from config: {customLocation.SceneName} - {ex.Message}");
+                        CabbyCodesPlugin.BLogger.LogWarning(string.Format("Failed to remove teleport location from config: {0} - {1}", customLocation.SceneName, ex.Message));
                     }
                 }
             }, "X", new Vector2(Constants.TELEPORT_DESTROY_BUTTON_SIZE, Constants.TELEPORT_DESTROY_BUTTON_SIZE));

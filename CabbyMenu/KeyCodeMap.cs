@@ -32,80 +32,120 @@ namespace CabbyMenu
         /// <summary>
         /// Dictionary mapping all KeyCodes to their character representations.
         /// </summary>
-        private static readonly Dictionary<KeyCode, char> _keyCodeMap = new()
-        {
-            // Numeric keys
-            { KeyCode.Keypad0, '0' },
-            { KeyCode.Keypad1, '1' },
-            { KeyCode.Keypad2, '2' },
-            { KeyCode.Keypad3, '3' },
-            { KeyCode.Keypad4, '4' },
-            { KeyCode.Keypad5, '5' },
-            { KeyCode.Keypad6, '6' },
-            { KeyCode.Keypad7, '7' },
-            { KeyCode.Keypad8, '8' },
-            { KeyCode.Keypad9, '9' },
-            { KeyCode.Alpha0, '0' },
-            { KeyCode.Alpha1, '1' },
-            { KeyCode.Alpha2, '2' },
-            { KeyCode.Alpha3, '3' },
-            { KeyCode.Alpha4, '4' },
-            { KeyCode.Alpha5, '5' },
-            { KeyCode.Alpha6, '6' },
-            { KeyCode.Alpha7, '7' },
-            { KeyCode.Alpha8, '8' },
-            { KeyCode.Alpha9, '9' },
-            
-            // Alphabetic keys
-            { KeyCode.A, 'A' },
-            { KeyCode.B, 'B' },
-            { KeyCode.C, 'C' },
-            { KeyCode.D, 'D' },
-            { KeyCode.E, 'E' },
-            { KeyCode.F, 'F' },
-            { KeyCode.G, 'G' },
-            { KeyCode.H, 'H' },
-            { KeyCode.I, 'I' },
-            { KeyCode.J, 'J' },
-            { KeyCode.K, 'K' },
-            { KeyCode.L, 'L' },
-            { KeyCode.M, 'M' },
-            { KeyCode.N, 'N' },
-            { KeyCode.O, 'O' },
-            { KeyCode.P, 'P' },
-            { KeyCode.Q, 'Q' },
-            { KeyCode.R, 'R' },
-            { KeyCode.S, 'S' },
-            { KeyCode.T, 'T' },
-            { KeyCode.U, 'U' },
-            { KeyCode.V, 'V' },
-            { KeyCode.W, 'W' },
-            { KeyCode.X, 'X' },
-            { KeyCode.Y, 'Y' },
-            { KeyCode.Z, 'Z' }
-        };
+        private static readonly Dictionary<KeyCode, char> _keyCodeMap = new Dictionary<KeyCode, char>();
 
         /// <summary>
         /// HashSet of numeric KeyCodes for fast lookup.
         /// </summary>
-        private static readonly HashSet<KeyCode> _numericKeys = new()
-        {
-            KeyCode.Keypad0, KeyCode.Keypad1, KeyCode.Keypad2, KeyCode.Keypad3, KeyCode.Keypad4,
-            KeyCode.Keypad5, KeyCode.Keypad6, KeyCode.Keypad7, KeyCode.Keypad8, KeyCode.Keypad9,
-            KeyCode.Alpha0, KeyCode.Alpha1, KeyCode.Alpha2, KeyCode.Alpha3, KeyCode.Alpha4,
-            KeyCode.Alpha5, KeyCode.Alpha6, KeyCode.Alpha7, KeyCode.Alpha8, KeyCode.Alpha9
-        };
+        private static readonly HashSet<KeyCode> _numericKeys = new HashSet<KeyCode>();
 
         /// <summary>
         /// HashSet of alphabetic KeyCodes for fast lookup.
         /// </summary>
-        private static readonly HashSet<KeyCode> _alphaKeys = new()
+        private static readonly HashSet<KeyCode> _alphaKeys = new HashSet<KeyCode>();
+
+        static KeyCodeMap()
         {
-            KeyCode.A, KeyCode.B, KeyCode.C, KeyCode.D, KeyCode.E, KeyCode.F, KeyCode.G, KeyCode.H,
-            KeyCode.I, KeyCode.J, KeyCode.K, KeyCode.L, KeyCode.M, KeyCode.N, KeyCode.O, KeyCode.P,
-            KeyCode.Q, KeyCode.R, KeyCode.S, KeyCode.T, KeyCode.U, KeyCode.V, KeyCode.W, KeyCode.X,
-            KeyCode.Y, KeyCode.Z
-        };
+            // Numeric keys
+            _keyCodeMap.Add(KeyCode.Keypad0, '0');
+            _keyCodeMap.Add(KeyCode.Keypad1, '1');
+            _keyCodeMap.Add(KeyCode.Keypad2, '2');
+            _keyCodeMap.Add(KeyCode.Keypad3, '3');
+            _keyCodeMap.Add(KeyCode.Keypad4, '4');
+            _keyCodeMap.Add(KeyCode.Keypad5, '5');
+            _keyCodeMap.Add(KeyCode.Keypad6, '6');
+            _keyCodeMap.Add(KeyCode.Keypad7, '7');
+            _keyCodeMap.Add(KeyCode.Keypad8, '8');
+            _keyCodeMap.Add(KeyCode.Keypad9, '9');
+            _keyCodeMap.Add(KeyCode.Alpha0, '0');
+            _keyCodeMap.Add(KeyCode.Alpha1, '1');
+            _keyCodeMap.Add(KeyCode.Alpha2, '2');
+            _keyCodeMap.Add(KeyCode.Alpha3, '3');
+            _keyCodeMap.Add(KeyCode.Alpha4, '4');
+            _keyCodeMap.Add(KeyCode.Alpha5, '5');
+            _keyCodeMap.Add(KeyCode.Alpha6, '6');
+            _keyCodeMap.Add(KeyCode.Alpha7, '7');
+            _keyCodeMap.Add(KeyCode.Alpha8, '8');
+            _keyCodeMap.Add(KeyCode.Alpha9, '9');
+
+            // Alphabetic keys
+            _keyCodeMap.Add(KeyCode.A, 'A');
+            _keyCodeMap.Add(KeyCode.B, 'B');
+            _keyCodeMap.Add(KeyCode.C, 'C');
+            _keyCodeMap.Add(KeyCode.D, 'D');
+            _keyCodeMap.Add(KeyCode.E, 'E');
+            _keyCodeMap.Add(KeyCode.F, 'F');
+            _keyCodeMap.Add(KeyCode.G, 'G');
+            _keyCodeMap.Add(KeyCode.H, 'H');
+            _keyCodeMap.Add(KeyCode.I, 'I');
+            _keyCodeMap.Add(KeyCode.J, 'J');
+            _keyCodeMap.Add(KeyCode.K, 'K');
+            _keyCodeMap.Add(KeyCode.L, 'L');
+            _keyCodeMap.Add(KeyCode.M, 'M');
+            _keyCodeMap.Add(KeyCode.N, 'N');
+            _keyCodeMap.Add(KeyCode.O, 'O');
+            _keyCodeMap.Add(KeyCode.P, 'P');
+            _keyCodeMap.Add(KeyCode.Q, 'Q');
+            _keyCodeMap.Add(KeyCode.R, 'R');
+            _keyCodeMap.Add(KeyCode.S, 'S');
+            _keyCodeMap.Add(KeyCode.T, 'T');
+            _keyCodeMap.Add(KeyCode.U, 'U');
+            _keyCodeMap.Add(KeyCode.V, 'V');
+            _keyCodeMap.Add(KeyCode.W, 'W');
+            _keyCodeMap.Add(KeyCode.X, 'X');
+            _keyCodeMap.Add(KeyCode.Y, 'Y');
+            _keyCodeMap.Add(KeyCode.Z, 'Z');
+
+            // Numeric KeyCodes
+            _numericKeys.Add(KeyCode.Keypad0);
+            _numericKeys.Add(KeyCode.Keypad1);
+            _numericKeys.Add(KeyCode.Keypad2);
+            _numericKeys.Add(KeyCode.Keypad3);
+            _numericKeys.Add(KeyCode.Keypad4);
+            _numericKeys.Add(KeyCode.Keypad5);
+            _numericKeys.Add(KeyCode.Keypad6);
+            _numericKeys.Add(KeyCode.Keypad7);
+            _numericKeys.Add(KeyCode.Keypad8);
+            _numericKeys.Add(KeyCode.Keypad9);
+            _numericKeys.Add(KeyCode.Alpha0);
+            _numericKeys.Add(KeyCode.Alpha1);
+            _numericKeys.Add(KeyCode.Alpha2);
+            _numericKeys.Add(KeyCode.Alpha3);
+            _numericKeys.Add(KeyCode.Alpha4);
+            _numericKeys.Add(KeyCode.Alpha5);
+            _numericKeys.Add(KeyCode.Alpha6);
+            _numericKeys.Add(KeyCode.Alpha7);
+            _numericKeys.Add(KeyCode.Alpha8);
+            _numericKeys.Add(KeyCode.Alpha9);
+
+            // Alphabetic KeyCodes
+            _alphaKeys.Add(KeyCode.A);
+            _alphaKeys.Add(KeyCode.B);
+            _alphaKeys.Add(KeyCode.C);
+            _alphaKeys.Add(KeyCode.D);
+            _alphaKeys.Add(KeyCode.E);
+            _alphaKeys.Add(KeyCode.F);
+            _alphaKeys.Add(KeyCode.G);
+            _alphaKeys.Add(KeyCode.H);
+            _alphaKeys.Add(KeyCode.I);
+            _alphaKeys.Add(KeyCode.J);
+            _alphaKeys.Add(KeyCode.K);
+            _alphaKeys.Add(KeyCode.L);
+            _alphaKeys.Add(KeyCode.M);
+            _alphaKeys.Add(KeyCode.N);
+            _alphaKeys.Add(KeyCode.O);
+            _alphaKeys.Add(KeyCode.P);
+            _alphaKeys.Add(KeyCode.Q);
+            _alphaKeys.Add(KeyCode.R);
+            _alphaKeys.Add(KeyCode.S);
+            _alphaKeys.Add(KeyCode.T);
+            _alphaKeys.Add(KeyCode.U);
+            _alphaKeys.Add(KeyCode.V);
+            _alphaKeys.Add(KeyCode.W);
+            _alphaKeys.Add(KeyCode.X);
+            _alphaKeys.Add(KeyCode.Y);
+            _alphaKeys.Add(KeyCode.Z);
+        }
 
         /// <summary>
         /// Gets the character representation of the currently pressed key based on the valid character type.
@@ -114,14 +154,20 @@ namespace CabbyMenu
         /// <returns>The character representation of the pressed key, or null if no valid key is pressed.</returns>
         public static char? GetChar(ValidChars validChars)
         {
-            // Determine which keys to check based on validChars
-            HashSet<KeyCode> keysToCheck = validChars switch
+            HashSet<KeyCode> keysToCheck;
+            switch (validChars)
             {
-                ValidChars.Alpha => _alphaKeys,
-                ValidChars.Numeric => _numericKeys,
-                ValidChars.AlphaNumeric => null, // null means check all keys
-                _ => null
-            };
+                case ValidChars.Alpha:
+                    keysToCheck = _alphaKeys;
+                    break;
+                case ValidChars.Numeric:
+                    keysToCheck = _numericKeys;
+                    break;
+                case ValidChars.AlphaNumeric:
+                default:
+                    keysToCheck = null; // null means check all keys
+                    break;
+            }
 
             // If AlphaNumeric or default, check all keys in the map
             if (keysToCheck == null)
