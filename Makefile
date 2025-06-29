@@ -4,7 +4,6 @@
 # Configuration
 PROJECT_NAME = CabbyCodes
 SOLUTION_FILE = CabbyCodes.sln
-PROJECT_FILE = CabbyCodes/CabbyCodes.csproj
 TARGET_FRAMEWORK = net472
 CONFIGURATION = Release
 PLATFORM = Any CPU
@@ -18,11 +17,9 @@ BUILD_DIR = CabbyCodes/bin/$(CONFIGURATION)/$(TARGET_FRAMEWORK)
 OBJ_DIR = CabbyCodes/obj/$(CONFIGURATION)/$(TARGET_FRAMEWORK)
 CABBYMENU_BUILD_DIR = CabbyMenu/bin/$(CONFIGURATION)/$(TARGET_FRAMEWORK)
 CABBYMENU_OBJ_DIR = CabbyMenu/obj/$(CONFIGURATION)/$(TARGET_FRAMEWORK)
-OUTPUT_DIR = $(BUILD_DIR)
-DLL_NAME = $(PROJECT_NAME).dll
 
 # Hollow Knight installation path (modify as needed)
-HOLLOW_KNIGHT_PATH = "C:\Program Files (x86)\Steam\steamapps\common\Hollow Knight"
+HOLLOW_KNIGHT_PATH = C:\Program Files (x86)\Steam\steamapps\common\Hollow Knight
 BEPINEX_PLUGINS_PATH = $(HOLLOW_KNIGHT_PATH)\BepInEx\plugins
 
 # .NET SDK version (from global.json)
@@ -71,20 +68,20 @@ restore:
 clean:
 	@echo "Cleaning build artifacts..."
 	dotnet clean $(SOLUTION_FILE)
-	rm -rf $(BUILD_DIR)
-	rm -rf $(OBJ_DIR)
-	rm -rf $(CABBYMENU_BUILD_DIR)
-	rm -rf $(CABBYMENU_OBJ_DIR)
+	@if exist $(BUILD_DIR) rmdir /s /q $(BUILD_DIR)
+	@if exist $(OBJ_DIR) rmdir /s /q $(OBJ_DIR)
+	@if exist $(CABBYMENU_BUILD_DIR) rmdir /s /q $(CABBYMENU_BUILD_DIR)
+	@if exist $(CABBYMENU_OBJ_DIR) rmdir /s /q $(CABBYMENU_OBJ_DIR)
 	@echo "Clean completed!"
 
 # Deep clean (removes all build artifacts and temporary files)
 .PHONY: clean-all
 clean-all: clean
 	@echo "Performing deep clean..."
-	rm -rf CabbyCodes/bin/
-	rm -rf CabbyCodes/obj/
-	rm -rf CabbyMenu/bin/
-	rm -rf CabbyMenu/obj/
+	@if exist CabbyCodes\bin rmdir /s /q CabbyCodes\bin
+	@if exist CabbyCodes\obj rmdir /s /q CabbyCodes\obj
+	@if exist CabbyMenu\bin rmdir /s /q CabbyMenu\bin
+	@if exist CabbyMenu\obj rmdir /s /q CabbyMenu\obj
 	@echo "Deep clean completed!"
 
 # Clean individual projects
@@ -92,16 +89,16 @@ clean-all: clean
 clean-cabbycodes:
 	@echo "Cleaning CabbyCodes project..."
 	dotnet clean $(CABBYCODES_PROJECT)
-	rm -rf $(BUILD_DIR)
-	rm -rf $(OBJ_DIR)
+	@if exist $(BUILD_DIR) rmdir /s /q $(BUILD_DIR)
+	@if exist $(OBJ_DIR) rmdir /s /q $(OBJ_DIR)
 	@echo "CabbyCodes clean completed!"
 
 .PHONY: clean-cabbymenu
 clean-cabbymenu:
 	@echo "Cleaning CabbyMenu project..."
 	dotnet clean $(CABBYMENU_PROJECT)
-	rm -rf $(CABBYMENU_BUILD_DIR)
-	rm -rf $(CABBYMENU_OBJ_DIR)
+	@if exist $(CABBYMENU_BUILD_DIR) rmdir /s /q $(CABBYMENU_BUILD_DIR)
+	@if exist $(CABBYMENU_OBJ_DIR) rmdir /s /q $(CABBYMENU_OBJ_DIR)
 	@echo "CabbyMenu clean completed!"
 
 # Run tests (if any)
@@ -115,22 +112,27 @@ test:
 .PHONY: publish
 publish: build
 	@echo "Publishing $(PROJECT_NAME)..."
-	dotnet publish $(PROJECT_FILE) --configuration $(CONFIGURATION) --output $(OUTPUT_DIR)
+	dotnet publish $(CABBYCODES_PROJECT) --configuration $(CONFIGURATION) --output $(BUILD_DIR)
 	@echo "Publish completed!"
 
 # Deploy to Hollow Knight (copy DLL to BepInEx plugins folder)
 .PHONY: deploy
 deploy: build
-	@echo "Deploying $(PROJECT_NAME) to Hollow Knight..."
-	@if exist "$(BEPINEX_PLUGINS_PATH)" ( \
-		copy "$(OUTPUT_DIR)\$(DLL_NAME)" "$(BEPINEX_PLUGINS_PATH)\" >nul && \
-		copy "$(CABBYMENU_BUILD_DIR)\CabbyMenu.dll" "$(BEPINEX_PLUGINS_PATH)\" >nul && \
-		echo Deployed CabbyCodes.dll and CabbyMenu.dll to $(BEPINEX_PLUGINS_PATH) \
-	) else ( \
-		echo Error: BepInEx plugins directory not found at $(BEPINEX_PLUGINS_PATH) && \
-		echo Please ensure Hollow Knight is installed and BepInEx is set up correctly. && \
-		exit /b 1 \
-	)
+	@echo Deploying $(PROJECT_NAME) to Hollow Knight...
+	@if not exist "$(BUILD_DIR)" echo Error: Output directory "$(BUILD_DIR)" does not exist. && exit /b 1
+	@if not exist "$(CABBYMENU_BUILD_DIR)" echo Error: CabbyMenu output directory "$(CABBYMENU_BUILD_DIR)" does not exist. && exit /b 1
+	@if not exist "$(BEPINEX_PLUGINS_PATH)" echo Error: BepInEx plugins directory "$(BEPINEX_PLUGINS_PATH)" not found. Please ensure Hollow Knight is installed and BepInEx is set up correctly. && exit /b 1
+	@if not exist "$(BUILD_DIR)\$(PROJECT_NAME).dll" echo Error: $(PROJECT_NAME).dll not found at "$(BUILD_DIR)\$(PROJECT_NAME).dll" && exit /b 1
+	@if not exist "$(CABBYMENU_BUILD_DIR)\CabbyMenu.dll" echo Error: CabbyMenu.dll not found at "$(CABBYMENU_BUILD_DIR)\CabbyMenu.dll" && exit /b 1
+	@if exist "$(BEPINEX_PLUGINS_PATH)\$(PROJECT_NAME).dll" del /f /q "$(BEPINEX_PLUGINS_PATH)\$(PROJECT_NAME).dll"
+	@if exist "$(BEPINEX_PLUGINS_PATH)\CabbyMenu.dll" del /f /q "$(BEPINEX_PLUGINS_PATH)\CabbyMenu.dll"
+	@if exist "$(BEPINEX_PLUGINS_PATH)\$(PROJECT_NAME).dll" ( echo Warning: $(PROJECT_NAME).dll still exists after delete! )
+	@if exist "$(BEPINEX_PLUGINS_PATH)\CabbyMenu.dll" ( echo Warning: CabbyMenu.dll still exists after delete! )
+	@copy /Y "$(BUILD_DIR)\$(PROJECT_NAME).dll" "$(BEPINEX_PLUGINS_PATH)\$(PROJECT_NAME).dll"
+	@copy /Y "$(CABBYMENU_BUILD_DIR)\CabbyMenu.dll" "$(BEPINEX_PLUGINS_PATH)\CabbyMenu.dll"
+	@if exist "$(BEPINEX_PLUGINS_PATH)\$(PROJECT_NAME).dll" ( echo $(PROJECT_NAME).dll successfully copied to plugins folder. ) else ( echo Error: $(PROJECT_NAME).dll was not copied! )
+	@if exist "$(BEPINEX_PLUGINS_PATH)\CabbyMenu.dll" ( echo CabbyMenu.dll successfully copied to plugins folder. ) else ( echo Error: CabbyMenu.dll was not copied! )
+	@echo Deploy complete.
 
 # Deploy and run Hollow Knight
 .PHONY: run
@@ -158,7 +160,7 @@ info:
 	@echo "  - CabbyCodes: $(CABBYCODES_PROJECT)"
 	@echo "  - CabbyMenu: $(CABBYMENU_PROJECT)"
 	@echo "Build Directory: $(BUILD_DIR)"
-	@echo "Output DLL: $(OUTPUT_DIR)/$(DLL_NAME)"
+	@echo "Output DLL: $(BUILD_DIR)/$(PROJECT_NAME).dll"
 
 # Help target
 .PHONY: help
@@ -180,14 +182,15 @@ help:
 	@echo "  run              - Deploy and run Hollow Knight"
 	@echo "  check-sdk        - Check .NET SDK version"
 	@echo "  info             - Show project information"
+	@echo "  package          - Package the mod for distribution"
 	@echo "  help             - Show this help message"
 
 # Package the mod (create a zip file for distribution)
 .PHONY: package
 package: build
 	@echo "Packaging $(PROJECT_NAME)..."
-	@mkdir -p dist
-	@cp "$(OUTPUT_DIR)/$(DLL_NAME)" dist/
-	@if [ -f README.md ]; then cp README.md dist/; fi
-	@cd dist && zip -r "../$(PROJECT_NAME)-$(shell date +%Y%m%d).zip" .
-	@echo "Package created: $(PROJECT_NAME)-$(shell date +%Y%m%d).zip"
+	@if not exist dist mkdir dist
+	@copy /Y "$(BUILD_DIR)\$(PROJECT_NAME).dll" dist\
+	@if exist README.md copy /Y README.md dist\
+	@powershell -Command "Compress-Archive -Path dist\* -DestinationPath './$(PROJECT_NAME)-$(Get-Date -Format yyyyMMdd).zip' -Force"
+	@echo "Package created: $(PROJECT_NAME)-(date in zip filename)"
