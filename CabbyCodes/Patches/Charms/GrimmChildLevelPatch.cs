@@ -2,7 +2,6 @@ using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
 using CabbyMenu.UI.Modders;
 using System.Collections.Generic;
-using CabbyMenu;
 
 namespace CabbyCodes.Patches.Charms
 {
@@ -23,10 +22,10 @@ namespace CabbyCodes.Patches.Charms
 
         public List<string> GetValueList()
         {
-            return new()
-            {
+            return
+            [
                 "1", "2", "3", "4", "CM"
-            };
+            ];
         }
 
         public static void AddPanel()

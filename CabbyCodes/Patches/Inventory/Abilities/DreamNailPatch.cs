@@ -41,10 +41,10 @@ namespace CabbyCodes.Patches.Inventory.Abilities
 
         public List<string> GetValueList()
         {
-            return new()
-            {
+            return
+            [
                 "NONE", "Dream Nail", "Awoken Dream Nail"
-            };
+            ];
         }
 
         public static void AddPanel()

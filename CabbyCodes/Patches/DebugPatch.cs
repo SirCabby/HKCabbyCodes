@@ -64,14 +64,14 @@ namespace CabbyCodes.Patches
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new ButtonPanel(() =>
             {
                 CabbyCodesPlugin.BLogger.LogInfo("SceneData:");
-                Dictionary<string, List<string>> sceneValues = new();
+                Dictionary<string, List<string>> sceneValues = [];
 
                 // Build bools
                 foreach (PersistentBoolData pbd in SceneData.instance.persistentBoolItems)
                 {
                     if (!sceneValues.ContainsKey(pbd.sceneName))
                     {
-                        sceneValues.Add(pbd.sceneName, new());
+                        sceneValues.Add(pbd.sceneName, []);
                     }
 
                     sceneValues[pbd.sceneName].Add(pbd.id + " - " + pbd.activated);
@@ -82,7 +82,7 @@ namespace CabbyCodes.Patches
                 {
                     if (!sceneValues.ContainsKey(pid.sceneName))
                     {
-                        sceneValues.Add(pid.sceneName, new());
+                        sceneValues.Add(pid.sceneName, []);
                     }
 
                     sceneValues[pid.sceneName].Add(pid.id + " - " + pid.value);

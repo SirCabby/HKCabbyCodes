@@ -7,8 +7,6 @@ using CabbyCodes.Patches.Inventory.NailArts;
 using CabbyCodes.Patches.Inventory.Upgrades;
 using CabbyCodes.Patches.Inventory.Spells;
 using CabbyMenu.UI.CheatPanels;
-using CabbyMenu.SyncedReferences;
-using CabbyMenu;
 
 namespace CabbyCodes.Patches.Inventory
 {

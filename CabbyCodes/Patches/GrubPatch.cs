@@ -1,7 +1,6 @@
 using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
 using System.Collections.Generic;
-using CabbyMenu;
 
 namespace CabbyCodes.Patches
 {
@@ -18,8 +17,8 @@ namespace CabbyCodes.Patches
         /// <summary>
         /// List of scenes that contain grubs.
         /// </summary>
-        private static readonly List<string> grubScenes = new()
-        {
+        private static readonly List<string> grubScenes =
+        [
             "Abyss_17",
             "Abyss_19",
             "Crossroads_03",
@@ -64,7 +63,7 @@ namespace CabbyCodes.Patches
             "Waterways_04",
             "Waterways_13",
             "Waterways_14",
-        };
+        ];
 
         /// <summary>
         /// The scene name this grub patch is associated with.

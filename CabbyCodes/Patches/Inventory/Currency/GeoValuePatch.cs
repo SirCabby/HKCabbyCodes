@@ -1,6 +1,5 @@
 using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
-using System;
 using CabbyMenu;
 
 namespace CabbyCodes.Patches.Inventory.Currency

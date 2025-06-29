@@ -1,7 +1,6 @@
 using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
 using System.Collections.Generic;
-using CabbyMenu;
 
 namespace CabbyCodes.Patches.Inventory.Upgrades
 {
@@ -20,10 +19,10 @@ namespace CabbyCodes.Patches.Inventory.Upgrades
 
         public List<string> GetValueList()
         {
-            return new()
-            {
+            return
+            [
                 "Old Nail", "Sharpened Nail", "Channelled Nail", "Coiled Nail", "Pure Nail"
-            };
+            ];
         }
 
         public static void AddPanel()
