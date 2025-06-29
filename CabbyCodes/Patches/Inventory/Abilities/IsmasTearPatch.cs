@@ -1,3 +1,4 @@
+using CabbyCodes.Patches.Inventory.NailArts;
 using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
 

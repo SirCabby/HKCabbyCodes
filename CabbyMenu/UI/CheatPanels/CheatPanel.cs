@@ -55,7 +55,7 @@ namespace CabbyMenu.UI.CheatPanels
         /// <summary>
         /// List of actions to execute during panel updates.
         /// </summary>
-        public readonly List<Action> updateActions = [];
+        public readonly List<Action> updateActions = new();
 
         /// <summary>
         /// Initializes a new instance of the CheatPanel class.

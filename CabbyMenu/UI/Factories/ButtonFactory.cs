@@ -90,17 +90,17 @@ namespace CabbyMenu.UI.Factories
         private static Sprite GetRoundedSprite()
         {
             int size = 128; // Increased texture size for better quality
-            Texture2D texture = new(size, size);
+            Texture2D texture = new Texture2D(size, size);
 
             // Use a smaller radius percentage for better scaling across different button sizes
             float radius = size * 0.06f; // 6% of size for corner radius
-            Vector2 center = new(size / 2f, size / 2f);
+            Vector2 center = new Vector2(size / 2f, size / 2f);
 
             for (int x = 0; x < size; x++)
             {
                 for (int y = 0; y < size; y++)
                 {
-                    Vector2 pixelPos = new(x, y);
+                    Vector2 pixelPos = new Vector2(x, y);
                     Color pixelColor = Color.white;
 
                     // Check if pixel is in a corner that needs to be rounded

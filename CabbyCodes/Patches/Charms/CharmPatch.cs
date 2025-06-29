@@ -1,4 +1,15 @@
+using CabbyCodes.Patches.Charms;
+using CabbyCodes.Patches.Inventory;
+using CabbyCodes.Patches.Inventory.Abilities;
+using CabbyCodes.Patches.Inventory.Spells;
+using CabbyCodes.Patches.Inventory.NailArts;
+using CabbyCodes.Patches.Inventory.Upgrades;
+using CabbyCodes.Patches.Inventory.Items;
+using CabbyCodes.Patches.Inventory.Keys;
+using CabbyCodes.Patches.Inventory.Currency;
+using CabbyCodes.Patches.Inventory.Map;
 using CabbyMenu.SyncedReferences;
+using CabbyMenu.Types;
 using CabbyMenu.UI.CheatPanels;
 using CabbyMenu.UI.Modders;
 using System.Collections.Generic;
@@ -127,8 +138,8 @@ namespace CabbyCodes.Patches.Charms
 
         private static List<Charm> BuildCharmList()
         {
-            List<Charm> result =
-            [
+            List<Charm> result = new()
+            {
                 new( 2, "Wayward Compass"),
                 new( 1, "Gathering Swarm"),
                 new( 4, "Stalward Shell"),
@@ -172,7 +183,7 @@ namespace CabbyCodes.Patches.Charms
                 new(38, "Dreamshield"),
                 new(40, "Grimmchild")
                 //new(36, "Kingsoul / Void Heart")
-            ];
+            };
 
             return result;
         }

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 using BepInEx.Configuration;
+using UnityEngine.UI;
 using System.Linq;
 using CabbyCodes.Types;
 
@@ -59,11 +60,11 @@ namespace CabbyCodes.Patches
         /// <summary>
         /// List of predefined teleport locations.
         /// </summary>
-        private static readonly List<TeleportLocation> teleportLocations =
-        [
+        private static readonly List<TeleportLocation> teleportLocations = new()
+        {
             new("", "<Select Location>", Vector2.zero),
             new("Town", "Starting Town", new Vector2(Constants.TOWN_X_POSITION, Constants.TOWN_Y_POSITION)),
-        ];
+        };
 
         /// <summary>
         /// Original dream gate location for restoration after teleport.
@@ -96,7 +97,7 @@ namespace CabbyCodes.Patches
         /// <returns>A list of display names for available teleport locations.</returns>
         public List<string> GetValueList()
         {
-            List<string> result = [];
+            List<string> result = new();
             foreach (TeleportLocation loc in teleportLocations)
             {
                 result.Add(loc.DisplayName);
@@ -110,7 +111,7 @@ namespace CabbyCodes.Patches
         /// <returns>A list of custom teleport locations loaded from configuration.</returns>
         private static List<TeleportLocation> InitTeleportLocations()
         {
-            List<TeleportLocation> result = [];
+            List<TeleportLocation> result = new();
 
             try
             {

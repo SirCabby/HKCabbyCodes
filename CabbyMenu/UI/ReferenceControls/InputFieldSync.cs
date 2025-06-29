@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using CabbyMenu.SyncedReferences;
@@ -30,7 +31,7 @@ namespace CabbyMenu.UI.ReferenceControls
         /// <summary>
         /// Action for registering input field sync. Can be set by the consuming project.
         /// </summary>
-        public static Action<InputFieldStatus> RegisterInputFieldSync { get; set; }
+        public static Action<InputFieldStatus> RegisterInputFieldSync { get; set; } = null;
 
         public InputFieldSync(ISyncedReference<T> inputValue, KeyCodeMap.ValidChars validChars, Vector2 size, int characterLimit = Constants.DEFAULT_CHARACTER_LIMIT)
         {

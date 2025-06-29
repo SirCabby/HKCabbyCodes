@@ -41,10 +41,10 @@ namespace CabbyCodes.Patches.Inventory.Abilities
 
         public List<string> GetValueList()
         {
-            return
-            [
+            return new()
+            {
                 "NONE", "Mothwing Cloak", "Shade Cloak"
-            ];
+            };
         }
 
         public static void AddPanel()

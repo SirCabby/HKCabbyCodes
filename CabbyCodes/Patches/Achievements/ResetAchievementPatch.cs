@@ -1,3 +1,4 @@
+using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
 
 namespace CabbyCodes.Patches.Achievements

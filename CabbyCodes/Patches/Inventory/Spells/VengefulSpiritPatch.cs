@@ -18,10 +18,10 @@ namespace CabbyCodes.Patches.Inventory.Spells
 
         public List<string> GetValueList()
         {
-            return
-            [
+            return new()
+            {
                 "NONE", "Vengeful Spirit", "Shade Soul"
-            ];
+            };
         }
 
         public static void AddPanel()

@@ -88,24 +88,24 @@ namespace CabbyMenu
         /// <summary>
         /// HashSet of numeric KeyCodes for fast lookup.
         /// </summary>
-        private static readonly HashSet<KeyCode> _numericKeys =
-        [
+        private static readonly HashSet<KeyCode> _numericKeys = new()
+        {
             KeyCode.Keypad0, KeyCode.Keypad1, KeyCode.Keypad2, KeyCode.Keypad3, KeyCode.Keypad4,
             KeyCode.Keypad5, KeyCode.Keypad6, KeyCode.Keypad7, KeyCode.Keypad8, KeyCode.Keypad9,
             KeyCode.Alpha0, KeyCode.Alpha1, KeyCode.Alpha2, KeyCode.Alpha3, KeyCode.Alpha4,
             KeyCode.Alpha5, KeyCode.Alpha6, KeyCode.Alpha7, KeyCode.Alpha8, KeyCode.Alpha9
-        ];
+        };
 
         /// <summary>
         /// HashSet of alphabetic KeyCodes for fast lookup.
         /// </summary>
-        private static readonly HashSet<KeyCode> _alphaKeys =
-        [
+        private static readonly HashSet<KeyCode> _alphaKeys = new()
+        {
             KeyCode.A, KeyCode.B, KeyCode.C, KeyCode.D, KeyCode.E, KeyCode.F, KeyCode.G, KeyCode.H,
             KeyCode.I, KeyCode.J, KeyCode.K, KeyCode.L, KeyCode.M, KeyCode.N, KeyCode.O, KeyCode.P,
             KeyCode.Q, KeyCode.R, KeyCode.S, KeyCode.T, KeyCode.U, KeyCode.V, KeyCode.W, KeyCode.X,
             KeyCode.Y, KeyCode.Z
-        ];
+        };
 
         /// <summary>
         /// Gets the character representation of the currently pressed key based on the valid character type.

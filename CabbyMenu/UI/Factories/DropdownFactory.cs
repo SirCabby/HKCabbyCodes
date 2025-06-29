@@ -14,7 +14,7 @@ namespace CabbyMenu.UI.Factories
         /// <returns>A tuple containing the GameObject and CustomDropdown for the created dropdown.</returns>
         public static (GameObject gameObject, CustomDropdown customDropdown) Build()
         {
-            GameObject dropdownGO = new("CustomDropdown");
+            GameObject dropdownGO = new GameObject("CustomDropdown");
             CustomDropdown customDropdown = dropdownGO.AddComponent<CustomDropdown>();
             return (dropdownGO, customDropdown);
         }

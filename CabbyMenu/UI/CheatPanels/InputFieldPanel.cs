@@ -6,7 +6,7 @@ namespace CabbyMenu.UI.CheatPanels
 {
     public class InputFieldPanel<T> : CheatPanel
     {
-        private readonly InputFieldSync<T> inputFieldSync;
+        private InputFieldSync<T> inputFieldSync;
 
         public InputFieldPanel(ISyncedReference<T> syncedReference, KeyCodeMap.ValidChars validChars, int characterLimit, int width, string description) : base(description)
         {

@@ -1,7 +1,10 @@
 using CabbyMenu.SyncedReferences;
+using CabbyMenu.Types;
 using CabbyMenu.UI.CheatPanels;
+using System;
 using CabbyCodes.Types;
 using CabbyMenu;
+using System.Collections.Generic;
 
 namespace CabbyCodes.Patches.Charms
 {

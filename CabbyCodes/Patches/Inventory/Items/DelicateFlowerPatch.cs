@@ -41,10 +41,10 @@ namespace CabbyCodes.Patches.Inventory.Items
 
         public List<string> GetValueList()
         {
-            return
-            [
+            return new()
+            {
                 "NONE", "Ruined Flower", "Delicate Flower"
-            ];
+            };
         }
 
         public static void AddPanel()

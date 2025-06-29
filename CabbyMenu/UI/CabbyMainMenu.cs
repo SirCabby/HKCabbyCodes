@@ -39,18 +39,18 @@ namespace CabbyMenu.UI
         /// <summary>
         /// Dictionary mapping category names to their panel creation actions.
         /// </summary>
-        private readonly Dictionary<string, Action> registeredCategories = [];
+        private readonly Dictionary<string, Action> registeredCategories = new();
 
         /// <summary>
         /// List of currently active cheat panels.
         /// </summary>
-        private readonly List<CheatPanel> contentCheatPanels = [];
+        private readonly List<CheatPanel> contentCheatPanels = new();
 
         // Manage InputFieldSync updates
         /// <summary>
         /// List of registered input fields for synchronization.
         /// </summary>
-        private readonly List<InputFieldStatus> registeredInputs = [];
+        private readonly List<InputFieldStatus> registeredInputs = new();
 
         /// <summary>
         /// The last selected input field.
@@ -82,7 +82,7 @@ namespace CabbyMenu.UI
         /// <summary>
         /// Whether the menu is currently open.
         /// </summary>
-        private bool isMenuOpen;
+        private bool isMenuOpen = false;
 
         /// <summary>
         /// The main menu panel GameObject.
@@ -379,7 +379,11 @@ namespace CabbyMenu.UI
             new Fitter(categoryDropdownGameObject).Attach(menuPanel).Anchor(new Vector2(Constants.CATEGORY_DROPDOWN_X, Constants.CATEGORY_DROPDOWN_Y), new Vector2(Constants.CATEGORY_DROPDOWN_X, Constants.CATEGORY_DROPDOWN_Y));
 
             // Populate Registered Categories
-            List<string> options = [.. registeredCategories.Keys];
+            List<string> options = new();
+            foreach (string category in registeredCategories.Keys)
+            {
+                options.Add(category);
+            }
             customDropdown.SetOptions(options);
             customDropdown.onValueChanged.AddListener(OnCategorySelected);
 
