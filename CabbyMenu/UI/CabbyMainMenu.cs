@@ -138,6 +138,15 @@ namespace CabbyMenu.UI
         }
 
         /// <summary>
+        /// Gets all registered input fields.
+        /// </summary>
+        /// <returns>A read-only list of registered input fields.</returns>
+        public System.Collections.Generic.IReadOnlyList<InputFieldStatus> GetRegisteredInputs()
+        {
+            return registeredInputs.AsReadOnly();
+        }
+
+        /// <summary>
         /// Clears all registered input fields.
         /// </summary>
         private void ClearInputFields()
@@ -226,30 +235,29 @@ namespace CabbyMenu.UI
                 // Handle keyboard input for selected input field
                 if (Input.anyKeyDown && lastSelected != null)
                 {
-                    char? keyPressed = KeyCodeMap.GetChar(lastSelected.ValidChars);
-                    if (keyPressed.HasValue)
+                    // Handle arrow keys for cursor movement
+                    if (Input.GetKeyDown(KeyCode.LeftArrow))
                     {
-                        InputField inputField = lastSelected.InputFieldGo.GetComponent<InputField>();
-                        if (inputField.text == "0")
-                        {
-                            inputField.text = keyPressed.Value.ToString();
-                        }
-                        else if (inputField.text.Length == inputField.characterLimit)
-                        {
-                            inputField.text = inputField.text.Substring(0, inputField.text.Length - 1) + keyPressed.Value.ToString();
-                        }
-                        else
-                        {
-                            inputField.text += keyPressed.Value;
-                        }
+                        lastSelected.MoveCursor(-1);
                     }
-
-                    if (Input.GetKeyDown(KeyCode.Backspace))
+                    else if (Input.GetKeyDown(KeyCode.RightArrow))
                     {
-                        InputField inputField = lastSelected.InputFieldGo.GetComponent<InputField>();
-                        if (inputField.text.Length > 0)
+                        lastSelected.MoveCursor(1);
+                    }
+                    else
+                    {
+                        // Handle character input
+                        char? keyPressed = KeyCodeMap.GetChar(lastSelected.ValidChars);
+                        if (keyPressed.HasValue)
                         {
-                            inputField.text = inputField.text.Substring(0, inputField.text.Length - 1);
+                            InputField inputField = lastSelected.InputFieldGo.GetComponent<InputField>();
+                            lastSelected.InsertCharacter(keyPressed.Value, inputField.characterLimit);
+                        }
+
+                        // Handle backspace
+                        if (Input.GetKeyDown(KeyCode.Backspace))
+                        {
+                            lastSelected.DeleteCharacter();
                         }
                     }
 

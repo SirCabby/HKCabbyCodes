@@ -50,6 +50,11 @@ namespace CabbyMenu.Types
         private float selectionTime = 0f;
 
         /// <summary>
+        /// The current cursor position within the input field text.
+        /// </summary>
+        public int CursorPosition { get; set; } = 0;
+
+        /// <summary>
         /// Initializes a new instance of the InputFieldStatus class.
         /// </summary>
         /// <param name="inputFieldGo">The GameObject containing the input field.</param>
@@ -83,6 +88,19 @@ namespace CabbyMenu.Types
                 if (selected)
                 {
                     selectionTime = Time.time;
+                    // Reset cursor position to end of text when selected
+                    InputField inputField = GetInputField();
+                    if (inputField != null)
+                    {
+                        CursorPosition = inputField.text.Length;
+                        // Update Unity's InputField cursor position immediately
+                        inputField.selectionAnchorPosition = CursorPosition;
+                        inputField.selectionFocusPosition = CursorPosition;
+                        inputField.caretPosition = CursorPosition;
+                        
+                        // Force cursor to reset blink cycle
+                        ForceCursorBlinkReset();
+                    }
                 }
                 
                 // Call the OnSelected callback to update the InputFieldSync
@@ -129,6 +147,130 @@ namespace CabbyMenu.Types
         public int GetIndex()
         {
             return InputFieldGo.transform.GetParent().GetSiblingIndex();
+        }
+
+        /// <summary>
+        /// Forces the cursor to reset its blink cycle immediately.
+        /// </summary>
+        private void ForceCursorBlinkReset()
+        {
+            InputField inputField = GetInputField();
+            if (inputField != null)
+            {
+                // Temporarily hide the cursor by setting selection to -1
+                inputField.selectionAnchorPosition = -1;
+                inputField.selectionFocusPosition = -1;
+                
+                // Force a frame update
+                inputField.ForceLabelUpdate();
+                
+                // Immediately restore the cursor position
+                inputField.selectionAnchorPosition = CursorPosition;
+                inputField.selectionFocusPosition = CursorPosition;
+                inputField.caretPosition = CursorPosition;
+            }
+        }
+
+        /// <summary>
+        /// Moves the cursor position by the specified offset, ensuring it stays within bounds.
+        /// </summary>
+        /// <param name="offset">The offset to move the cursor by (positive for right, negative for left).</param>
+        public void MoveCursor(int offset)
+        {
+            InputField inputField = GetInputField();
+            if (inputField != null)
+            {
+                int newPosition = CursorPosition + offset;
+                CursorPosition = Mathf.Clamp(newPosition, 0, inputField.text.Length);
+                
+                // Update Unity's InputField cursor position immediately
+                inputField.selectionAnchorPosition = CursorPosition;
+                inputField.selectionFocusPosition = CursorPosition;
+                inputField.caretPosition = CursorPosition;
+                
+                // Force cursor to reset blink cycle
+                ForceCursorBlinkReset();
+            }
+        }
+
+        /// <summary>
+        /// Sets the cursor position to a specific index, ensuring it stays within bounds.
+        /// </summary>
+        /// <param name="position">The new cursor position.</param>
+        public void SetCursorPosition(int position)
+        {
+            InputField inputField = GetInputField();
+            if (inputField != null)
+            {
+                CursorPosition = Mathf.Clamp(position, 0, inputField.text.Length);
+                
+                // Update Unity's InputField cursor position immediately
+                inputField.selectionAnchorPosition = CursorPosition;
+                inputField.selectionFocusPosition = CursorPosition;
+                inputField.caretPosition = CursorPosition;
+                
+                // Force cursor to reset blink cycle
+                ForceCursorBlinkReset();
+            }
+        }
+
+        /// <summary>
+        /// Inserts a character at the current cursor position.
+        /// </summary>
+        /// <param name="character">The character to insert.</param>
+        /// <param name="characterLimit">The maximum number of characters allowed.</param>
+        public void InsertCharacter(char character, int characterLimit)
+        {
+            InputField inputField = GetInputField();
+            if (inputField != null)
+            {
+                string text = inputField.text;
+                
+                // If at character limit, replace the character at cursor position
+                if (text.Length >= characterLimit && CursorPosition < text.Length)
+                {
+                    text = text.Substring(0, CursorPosition) + character + text.Substring(CursorPosition + 1);
+                }
+                // Otherwise insert at cursor position
+                else if (text.Length < characterLimit)
+                {
+                    text = text.Substring(0, CursorPosition) + character + text.Substring(CursorPosition);
+                }
+                
+                inputField.text = text;
+                CursorPosition++;
+                
+                // Update Unity's InputField cursor position immediately
+                inputField.selectionAnchorPosition = CursorPosition;
+                inputField.selectionFocusPosition = CursorPosition;
+                inputField.caretPosition = CursorPosition;
+                
+                // Force cursor to reset blink cycle
+                ForceCursorBlinkReset();
+            }
+        }
+
+        /// <summary>
+        /// Deletes the character at the current cursor position (backspace).
+        /// </summary>
+        public void DeleteCharacter()
+        {
+            InputField inputField = GetInputField();
+            if (inputField != null && CursorPosition > 0)
+            {
+                string text = inputField.text;
+                text = text.Substring(0, CursorPosition - 1) + text.Substring(CursorPosition);
+                inputField.text = text;
+                CursorPosition--;
+                
+                // Update Unity's InputField cursor position immediately
+                inputField.selectionAnchorPosition = CursorPosition;
+                inputField.selectionFocusPosition = CursorPosition;
+                inputField.caretPosition = CursorPosition;
+                
+                // Force cursor to reset blink cycle
+                ForceCursorBlinkReset();
+            }
         }
     }
 }

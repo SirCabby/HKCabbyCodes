@@ -16,6 +16,7 @@ namespace CabbyMenu.UI.ReferenceControls
         private readonly ISyncedReference<T> InputValue;
         private readonly KeyCodeMap.ValidChars validChars;
         private readonly int characterLimit;
+        private InputFieldStatus inputFieldStatus;
 
         /// <summary>
         /// Action for registering input field sync. Can be set by the consuming project.
@@ -49,7 +50,9 @@ namespace CabbyMenu.UI.ReferenceControls
             Transform textTransform = inputFieldGo.transform.Find("Text");
             Text textComponent = textTransform.GetComponent<Text>();
             new TextMod(textComponent).SetFontStyle(FontStyle.Bold).SetFontSize(Constants.DEFAULT_FONT_SIZE).SetAlignment(TextAnchor.MiddleLeft);
-            RegisterInputFieldSync(new InputFieldStatus(inputFieldGo, SetSelected, Submit, Cancel, validChars));
+            
+            inputFieldStatus = new InputFieldStatus(inputFieldGo, SetSelected, Submit, Cancel, validChars);
+            RegisterInputFieldSync(inputFieldStatus);
         }
 
         public GameObject GetGameObject()
@@ -79,7 +82,22 @@ namespace CabbyMenu.UI.ReferenceControls
         public void SetSelected(bool isSelected)
         {
             if (isSelected)
+            {
                 inputField.ActivateInputField();
+                // Set cursor position to end of text when selected
+                if (inputFieldStatus != null)
+                {
+                    inputFieldStatus.SetCursorPosition(inputField.text.Length);
+                }
+                else
+                {
+                    // Fallback: directly set Unity's cursor position immediately
+                    int endPosition = inputField.text.Length;
+                    inputField.selectionAnchorPosition = endPosition;
+                    inputField.selectionFocusPosition = endPosition;
+                    inputField.caretPosition = endPosition;
+                }
+            }
             else
                 inputField.DeactivateInputField();
 
