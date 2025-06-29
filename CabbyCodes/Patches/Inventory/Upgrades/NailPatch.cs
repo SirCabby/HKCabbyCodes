@@ -14,7 +14,7 @@ namespace CabbyCodes.Patches.Inventory.Upgrades
 
         public void Set(int value)
         {
-            value = CabbyMenu.ValidationUtils.ValidateRange(value, 0, Constants.MAX_NAIL_UPGRADES, nameof(value));
+            value = ValidationUtils.ValidateRange(value, 0, Constants.MAX_NAIL_UPGRADES, nameof(value));
             PlayerData.instance.nailSmithUpgrades = value;
         }
 
@@ -28,7 +28,7 @@ namespace CabbyCodes.Patches.Inventory.Upgrades
 
         public static void AddPanel()
         {
-            InputFieldPanel<int> panel = new InputFieldPanel<int>(new NailPatch(), CabbyMenu.KeyCodeMap.ValidChars.Numeric, 1, Constants.PANEL_WIDTH_120, "Nail Upgrades (0-4)");
+            InputFieldPanel<int> panel = new InputFieldPanel<int>(new NailPatch(), KeyCodeMap.ValidChars.Numeric, 1, Constants.PANEL_WIDTH_120, "Nail Upgrades (0-4)");
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(panel);
         }
     }

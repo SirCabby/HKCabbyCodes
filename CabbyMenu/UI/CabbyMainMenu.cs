@@ -58,11 +58,6 @@ namespace CabbyMenu.UI
         private InputFieldStatus lastSelected;
 
         /// <summary>
-        /// The timestamp of the last selected input field.
-        /// </summary>
-        private float lastSelectedTime = Constants.DEFAULT_FLOAT_VALUE;
-
-        /// <summary>
         /// The root GameObject for the menu canvas.
         /// </summary>
         private GameObject rootGameObject;
@@ -147,6 +142,15 @@ namespace CabbyMenu.UI
         /// </summary>
         private void ClearInputFields()
         {
+            // Clear Unity's internal focus on all input fields before clearing the list
+            foreach (InputFieldStatus input in registeredInputs)
+            {
+                if (input?.InputFieldGo != null)
+                {
+                    InputField inputField = input.InputFieldGo.GetComponent<InputField>();
+                    inputField?.DeactivateInputField();
+                }
+            }
             registeredInputs.Clear();
         }
 
@@ -198,29 +202,25 @@ namespace CabbyMenu.UI
                     {
                         lastSelected?.Submit();
                         lastSelected = clickedInput;
-                        lastSelectedTime = clickedInput.GetSelectedTime();
 
                         // Set Unity's selected GameObject for keyboard input
-                        if (EventSystem.current != null)
-                        {
-                            EventSystem.current.SetSelectedGameObject(clickedInput.InputFieldGo);
-                        }
+                        EventSystem.current?.SetSelectedGameObject(clickedInput.InputFieldGo);
                     }
                     else if (clickedInput == null && lastSelected != null)
                     {
                         // Clicked outside any input field, deselect current
                         lastSelected.Submit();
                         lastSelected = null;
+                        
+                        // Clear Unity's EventSystem selection
+                        EventSystem.current?.SetSelectedGameObject(null);
                     }
                     else if (clickedInput == lastSelected)
                     {
                     }
 
                     // Update selection states
-                    foreach (InputFieldStatus input in registeredInputs)
-                    {
-                        input.SetSelected(input == lastSelected);
-                    }
+                    SetInputFieldSelection(lastSelected);
                 }
 
                 // Handle keyboard input for selected input field
@@ -242,8 +242,6 @@ namespace CabbyMenu.UI
                         {
                             inputField.text += keyPressed.Value;
                         }
-
-                        lastSelectedTime = lastSelected.GetSelectedTime();
                     }
 
                     if (Input.GetKeyDown(KeyCode.Backspace))
@@ -253,19 +251,26 @@ namespace CabbyMenu.UI
                         {
                             inputField.text = inputField.text.Substring(0, inputField.text.Length - 1);
                         }
-                        lastSelectedTime = lastSelected.GetSelectedTime();
                     }
 
                     if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
                     {
                         lastSelected.Submit();
                         lastSelected = null;
+                        
+                        // Clear Unity's EventSystem selection
+                        EventSystem.current?.SetSelectedGameObject(null);
+                        SetInputFieldSelection(lastSelected);
                     }
 
                     if (Input.GetKeyDown(KeyCode.Escape))
                     {
                         lastSelected.Cancel();
                         lastSelected = null;
+                        
+                        // Clear Unity's EventSystem selection
+                        EventSystem.current?.SetSelectedGameObject(null);
+                        SetInputFieldSelection(lastSelected);
                     }
                 }
                 else if (Input.anyKeyDown && lastSelected == null)
@@ -281,6 +286,10 @@ namespace CabbyMenu.UI
                     OnCategorySelected(0);
                 }
                 lastSelected = null;
+                
+                // Clear Unity's EventSystem selection when menu is hidden
+                EventSystem.current?.SetSelectedGameObject(null);
+                SetInputFieldSelection(lastSelected);
 
                 // Reset the menu on unpausing
                 if (isMenuOpen)
@@ -322,6 +331,10 @@ namespace CabbyMenu.UI
             }
 
             lastSelected = null;
+            
+            // Clear Unity's EventSystem selection when changing categories
+            EventSystem.current?.SetSelectedGameObject(null);
+            SetInputFieldSelection(lastSelected);
         }
 
         /// <summary>
@@ -332,7 +345,7 @@ namespace CabbyMenu.UI
             if (rootGameObject != null) return;
 
             // Ensure EventSystem exists
-            if (GameObject.FindObjectOfType<EventSystem>() == null)
+            if (UnityEngine.Object.FindObjectOfType<EventSystem>() == null)
             {
                 GameObject eventSystem = new GameObject("EventSystem");
                 eventSystem.AddComponent<EventSystem>();
@@ -450,6 +463,20 @@ namespace CabbyMenu.UI
             if (rectTransform == null) return false;
 
             return RectTransformUtility.RectangleContainsScreenPoint(rectTransform, mousePosition);
+        }
+
+        /// <summary>
+        /// Sets selection state for all input fields, ensuring only one is selected.
+        /// </summary>
+        /// <param name="selected">The input field to select, or null to deselect all.</param>
+        private void SetInputFieldSelection(InputFieldStatus selected)
+        {
+            foreach (var input in registeredInputs)
+            {
+                bool shouldBeSelected = input == selected;
+                UnityEngine.Debug.Log($"Setting {input.InputFieldGo?.name} selected={shouldBeSelected}");
+                input.SetSelected(shouldBeSelected);
+            }
         }
     }
 }

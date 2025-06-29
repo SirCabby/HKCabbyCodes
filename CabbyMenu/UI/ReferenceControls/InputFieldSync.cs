@@ -33,6 +33,9 @@ namespace CabbyMenu.UI.ReferenceControls
             inputField = inputFieldGo.GetComponent<InputField>();
             inputField.characterLimit = characterLimit;
 
+            // Ensure input field starts in deactivated state to prevent initial focus issues
+            inputField.DeactivateInputField();
+
             inputField.onEndEdit.AddListener((text) => {
                 Submit();
             });
@@ -75,6 +78,12 @@ namespace CabbyMenu.UI.ReferenceControls
 
         public void SetSelected(bool isSelected)
         {
+            if (isSelected)
+                inputField.ActivateInputField();
+            else
+                inputField.DeactivateInputField();
+
+            // Set color after focus change
             Image imageComponent = inputFieldGo.GetComponent<Image>();
             imageComponent.color = isSelected ? selectedColor : Color.white;
         }

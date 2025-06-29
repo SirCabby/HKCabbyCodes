@@ -16,10 +16,7 @@ namespace CabbyMenu
         /// <param name="args">Format arguments.</param>
         public static void LogDebug(this ManualLogSource logger, string message, params object[] args)
         {
-            if (logger != null)
-            {
-                logger.Log(LogLevel.Debug, string.Format(message, args));
-            }
+            logger?.Log(LogLevel.Debug, string.Format(message, args));
         }
 
         /// <summary>
@@ -30,10 +27,7 @@ namespace CabbyMenu
         /// <param name="args">Format arguments.</param>
         public static void LogInfo(this ManualLogSource logger, string message, params object[] args)
         {
-            if (logger != null)
-            {
-                logger.Log(LogLevel.Info, string.Format(message, args));
-            }
+            logger?.Log(LogLevel.Info, string.Format(message, args));
         }
 
         /// <summary>
@@ -44,10 +38,7 @@ namespace CabbyMenu
         /// <param name="args">Format arguments.</param>
         public static void LogWarning(this ManualLogSource logger, string message, params object[] args)
         {
-            if (logger != null)
-            {
-                logger.Log(LogLevel.Warning, string.Format(message, args));
-            }
+            logger?.Log(LogLevel.Warning, string.Format(message, args));
         }
 
         /// <summary>
@@ -58,10 +49,7 @@ namespace CabbyMenu
         /// <param name="args">Format arguments.</param>
         public static void LogError(this ManualLogSource logger, string message, params object[] args)
         {
-            if (logger != null)
-            {
-                logger.Log(LogLevel.Error, string.Format(message, args));
-            }
+            logger?.Log(LogLevel.Error, string.Format(message, args));
         }
 
         /// <summary>
@@ -88,10 +76,7 @@ namespace CabbyMenu
         /// <param name="elapsedMs">Elapsed time in milliseconds.</param>
         public static void LogPerformance(this ManualLogSource logger, string operation, double elapsedMs)
         {
-            if (logger != null)
-            {
-                logger.Log(LogLevel.Debug, string.Format("Performance: {0} took {1:F2}ms", operation, elapsedMs));
-            }
+            logger?.Log(LogLevel.Debug, string.Format("Performance: {0} took {1:F2}ms", operation, elapsedMs));
         }
 
         /// <summary>

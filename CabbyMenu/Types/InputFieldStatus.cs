@@ -84,6 +84,9 @@ namespace CabbyMenu.Types
                 {
                     selectionTime = Time.time;
                 }
+                
+                // Call the OnSelected callback to update the InputFieldSync
+                OnSelected?.Invoke(selected);
             }
         }
 
