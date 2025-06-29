@@ -1,0 +1,104 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Cursor Rules for CabbyCodes - Hollow Knight Mod
+
+## Project Context
+This is a Hollow Knight mod project called "CabbyCodes" that provides various cheats and modifications to the game. The project consists of:
+
+- **CabbyCodes**: Main mod DLL with patches for game mechanics, inventory, player stats, etc.
+- **CabbyMenu**: UI system for the in-game cheat menu
+- **AssemblyTools**: Tools for analyzing game assemblies and finding missing references
+
+## Environment
+- **Operating System**: Windows 10/11
+- **Shell**: Windows Command Prompt (cmd.exe) preferred over PowerShell unless PowerShell-specific features are required
+- **Development**: Visual Studio or VS Code on Windows
+- **Game**: Hollow Knight installed via Steam on Windows
+
+## Key Technologies
+- **.NET SDK**: 9.0.301 (specified in global.json)
+- **Target Framework**: .NET Framework 4.7.2 (net472)
+- **C# Language Version**: 7.3
+- **BepInEx**: 6.0.0-be.* (modding framework)
+- **HarmonyX**: 2.10.2 (for runtime patching)
+- **Unity**: 2018.3.5.1 (UI components), 2020.2 (modules)
+- **Unity Engine**: Hollow Knight is a Unity game
+
+## Important Files to Consider
+- `README.md` - Project overview and documentation
+- `Makefile` - Build and deployment scripts
+- `global.json` - .NET SDK version specification (9.0.301)
+- `CabbyCodes.sln` - Solution file
+- `CabbyCodes/CabbyCodes.csproj` - Main project file
+- `CabbyMenu/CabbyMenu.csproj` - UI project file
+
+## Common Tasks
+- Building and deploying the mod to Hollow Knight
+- Adding new patches for game mechanics
+- Modifying the in-game cheat menu
+- Analyzing game assemblies for new features
+
+## Code Style
+- Follow C# 7.3 conventions
+- Use meaningful names for patches and classes
+- Add comments for complex game mechanics
+- Keep patches focused and single-purpose
+- Target .NET Framework 4.7.2 compatibility
+
+## Naming Conventions
+- **Classes**: PascalCase (e.g., `PlayerPatch`, `InventoryPatch`)
+- **Methods**: PascalCase (e.g., `ApplyPatch`, `GetPlayerHealth`)
+- **Variables**: camelCase (e.g., `playerHealth`, `maxSoul`)
+- **Constants**: UPPER_SNAKE_CASE (e.g., `MAX_HEALTH`, `DEFAULT_GEO`)
+- **Files**: Match class names (e.g., `PlayerPatch.cs` for `PlayerPatch` class)
+- **Namespaces**: Match project structure (e.g., `CabbyCodes.Patches.Player`)
+
+## File Organization
+- Keep patches organized by category in `CabbyCodes/Patches/`
+- UI components go in `CabbyMenu/UI/`
+- Types and interfaces in `Types/` folders
+- Use subdirectories for related functionality (e.g., `Patches/Inventory/Abilities/`)
+- Ensure non-zero and non-string constants go in Constants files.  Game specific constants go in CabbyCodes Constants and Menu specific constants go in CabbyMenu Constants
+
+## Debugging & Logging
+- Ask user for logs if needed to understand what is happening during testing
+- Include meaningful log messages for debugging that capture many related fields in the various unity components
+- Don't use try-catch blocks around game API calls
+- Log both success and failure cases for troubleshooting
+- Use Makefile build target to test compiling
+
+## Performance Considerations
+- Minimize allocations in hot paths
+- Cache frequently accessed game objects
+- Use `[HarmonyPatch]` attributes efficiently
+- Avoid expensive operations in Update loops
+
+## Command Preferences
+- Use Windows Command Prompt (`cmd`) commands when possible
+- Only use PowerShell when specific PowerShell features are required
+- Use `dir` instead of `ls` for directory listing
+- Use `copy` instead of `cp` for file copying
+- Use `del` instead of `rm` for file deletion
+- Use `mkdir` instead of `mkdir -p` for directory creation
+- Don't use `&&` as it won't work properly
+- When querying git for information, output it to file in the /Output folder and read from file
+
+## Documentation Standards
+- Add XML documentation for public methods
+- Include usage examples in comments
+- Document any game-specific knowledge or workarounds
+- Keep README.md updated with new features
+
+## When Asked About:
+- **Build issues**: Check Makefile, global.json, and project files
+- **Game mechanics**: Look at existing patches in CabbyCodes/Patches/
+- **UI changes**: Check CabbyMenu/UI/ directory
+- **Building**: Use the Makefile build target
+- **Deployment**: Use the Makefile deploy target
+- **Windows-specific issues**: Consider Windows paths, registry, and Windows-specific tools
+- **.NET version issues**: Ensure compatibility with .NET Framework 4.7.2 and C# 7.3
+
+- **Performance issues**: Check for allocations, caching, and hot path optimization
