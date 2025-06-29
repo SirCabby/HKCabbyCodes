@@ -13,14 +13,16 @@ namespace CabbyMenu.UI.ReferenceControls
         private const float OPTION_MARGIN = 10f;
         private const float OPTION_GAP = 3f; // Gap between option buttons
         private const float PANEL_MARGIN = 20f;
-        private const float MAIN_BUTTON_WIDTH = 200f;
-        private const float MAIN_BUTTON_HEIGHT = 60f;
         private const float DEFAULT_FONT_SIZE = 14f;
         private const float FONT_SIZE_RATIO = 0.6f;
         private const float BUTTON_GAP = 2f;
         private const int MAX_VISIBLE_OPTIONS = 8;
         private const float SCROLLBAR_WIDTH = 10f; // Width of the scrollbar
         #endregion
+
+        // Instance variables for customizable size
+        private float mainButtonWidth = 200f;
+        private float mainButtonHeight = 60f;
 
         [Header("Custom Dropdown Settings")]
         [SerializeField] private Button mainButton;
@@ -133,7 +135,7 @@ namespace CabbyMenu.UI.ReferenceControls
             RectTransform mainRect = GetComponent<RectTransform>();
             if (mainRect != null)
             {
-                mainRect.sizeDelta = new Vector2(MAIN_BUTTON_WIDTH, MAIN_BUTTON_HEIGHT);
+                mainRect.sizeDelta = new Vector2(mainButtonWidth, mainButtonHeight);
                 mainRect.anchorMin = new Vector2(0.1f, 0.7f);
                 mainRect.anchorMax = new Vector2(0.1f, 0.7f);
                 mainRect.pivot = new Vector2(0.5f, 0.5f);
@@ -522,8 +524,8 @@ namespace CabbyMenu.UI.ReferenceControls
             layoutElement.preferredHeight = OPTION_HEIGHT;
             layoutElement.minHeight = OPTION_HEIGHT;
             layoutElement.flexibleWidth = 0f;
-            layoutElement.minWidth = MAIN_BUTTON_WIDTH - 15f; // 185px
-            layoutElement.preferredWidth = MAIN_BUTTON_WIDTH - 15f; // 185px
+            layoutElement.minWidth = mainButtonWidth - 15f; // 185px
+            layoutElement.preferredWidth = mainButtonWidth - 15f; // 185px
         }
 
         private void ConfigureOptionRectTransform(RectTransform rectTransform, int index)
@@ -532,7 +534,7 @@ namespace CabbyMenu.UI.ReferenceControls
             rectTransform.anchorMin = new Vector2(0, 0.5f); // Left, center Y
             rectTransform.anchorMax = new Vector2(0, 0.5f); // Left, center Y
             rectTransform.pivot = new Vector2(0, 0.5f); // Left, center Y
-            rectTransform.sizeDelta = new Vector2(MAIN_BUTTON_WIDTH - 15f, OPTION_HEIGHT); // 185px width, 30px height
+            rectTransform.sizeDelta = new Vector2(mainButtonWidth - 15f, OPTION_HEIGHT); // 185px width, 30px height
             rectTransform.anchoredPosition = new Vector2(0, 0); // Left-aligned within parent
         }
 
@@ -606,7 +608,7 @@ namespace CabbyMenu.UI.ReferenceControls
                                     buttonRect.anchorMin = new Vector2(0, 0.5f); // Left, center Y
                                     buttonRect.anchorMax = new Vector2(0, 0.5f); // Left, center Y
                                     buttonRect.pivot = new Vector2(0, 0.5f); // Left, center Y
-                                    buttonRect.sizeDelta = new Vector2(MAIN_BUTTON_WIDTH - 15f, OPTION_HEIGHT); // 185px width, full height
+                                    buttonRect.sizeDelta = new Vector2(mainButtonWidth - 15f, OPTION_HEIGHT); // 185px width, full height
                                     buttonRect.anchoredPosition = new Vector2(0, 0); // Left-aligned within parent
 
                                     UnityEngine.Debug.Log($"Option button {i} configured - anchorMin: {buttonRect.anchorMin}, anchorMax: {buttonRect.anchorMax}, sizeDelta: {buttonRect.sizeDelta}, anchoredPosition: {buttonRect.anchoredPosition}");
@@ -1242,8 +1244,18 @@ namespace CabbyMenu.UI.ReferenceControls
 
         // These methods are stubs for external compatibility - implement if needed
         public void SetValue(int value) { /* TODO: implement if needed */ }
-        public void SetSize(float width) { /* TODO: implement if needed */ }
-        public void SetSize(float width, float height) { /* TODO: implement if needed */ }
+        public void SetSize(float width) { SetSize(width, mainButtonHeight); }
+        public void SetSize(float width, float height)
+        {
+            mainButtonWidth = width;
+            mainButtonHeight = height;
+
+            // Update the main button layout
+            ConfigureMainButtonLayout();
+
+            // Update the main button text if it exists
+            UpdateMainButtonText();
+        }
         public void SetFontSize(int size) { /* TODO: implement if needed */ }
         public void SetColors(Color color) { /* TODO: implement if needed */ }
         public void SetColors(Color normal, Color hover, Color pressed) { /* TODO: implement if needed */ }

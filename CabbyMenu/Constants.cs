@@ -20,7 +20,7 @@ namespace CabbyMenu
         public const int CHEAT_PANEL_HEIGHT = 50;
         public const int CATEGORY_TEXT_WIDTH = 400;
         public const int CATEGORY_TEXT_HEIGHT = 100;
-        public const int CATEGORY_DROPDOWN_WIDTH = 280;
+        public const int CATEGORY_DROPDOWN_WIDTH = 300;
         public const int CATEGORY_DROPDOWN_HEIGHT = 60;
         public const int TITLE_TEXT_WIDTH = 400;
         public const int TITLE_TEXT_HEIGHT = 100;
