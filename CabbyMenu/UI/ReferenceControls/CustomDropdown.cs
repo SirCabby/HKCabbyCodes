@@ -344,12 +344,12 @@ namespace CabbyMenu.UI.ReferenceControls
             Scrollbar scrollbarComponent = scrollbarObj.AddComponent<Scrollbar>();
             Image scrollbarImage = scrollbarObj.AddComponent<Image>();
 
-            // Configure scrollbar
+            // Configure scrollbar - align to right edge of panel
             scrollbarRect.anchorMin = new Vector2(1, 0);
             scrollbarRect.anchorMax = new Vector2(1, 1);
             scrollbarRect.sizeDelta = new Vector2(SCROLLBAR_WIDTH, 0); // Use constant for width
             scrollbarRect.anchoredPosition = Vector2.zero;
-            scrollbarRect.pivot = new Vector2(0.5f, 1f); // Match panel's top-center pivot
+            scrollbarRect.pivot = new Vector2(1f, 1f); // Right-top pivot to align with right edge
 
             // Configure scrollbar image (background)
             scrollbarImage.color = new Color(0.3f, 0.3f, 0.3f, 0.8f);
@@ -920,7 +920,7 @@ namespace CabbyMenu.UI.ReferenceControls
                     scrollbarRect.anchorMax = new Vector2(1, 1);
                     scrollbarRect.sizeDelta = new Vector2(SCROLLBAR_WIDTH, 0);
                     scrollbarRect.anchoredPosition = Vector2.zero;
-                    scrollbarRect.pivot = new Vector2(0.5f, 1f); // Match panel's top-center pivot
+                    scrollbarRect.pivot = new Vector2(1f, 1f); // Right-top pivot to align with right edge
 
                     // Ensure scrollbar is visible and properly connected
                     scrollbar.SetActive(true);
