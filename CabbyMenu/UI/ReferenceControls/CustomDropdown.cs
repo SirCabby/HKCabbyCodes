@@ -3,13 +3,14 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using UnityEngine.Events;
+using System.Collections;
 
 namespace CabbyMenu.UI.ReferenceControls
 {
     public class CustomDropdown : MonoBehaviour, IPointerClickHandler
     {
         #region Constants
-        private const float OPTION_HEIGHT = 30f;
+        private const float OPTION_HEIGHT = 40f;
         private const float OPTION_MARGIN = 10f;
         private const float OPTION_GAP = 3f; // Gap between option buttons
         private const float PANEL_MARGIN = 20f;
@@ -178,18 +179,26 @@ namespace CabbyMenu.UI.ReferenceControls
             panel.transform.SetParent(parentCanvas.transform, false);
             UnityEngine.Debug.Log($"Created dropdownPanel GameObject: {panel.name}");
 
-            // Configure panel rect transform
+            // Configure panel rect transform - use absolute positioning relative to button
             RectTransform panelRect = panel.AddComponent<RectTransform>();
-            // Align to top center of parent canvas
-            panelRect.anchorMin = new Vector2(0.5f, 1f);
-            panelRect.anchorMax = new Vector2(0.5f, 1f);
-            panelRect.sizeDelta = new Vector2(280f, 100f);
-            panelRect.anchoredPosition = new Vector2(0, 0); // Will be positioned below button later
+            RectTransform mainRect = GetComponent<RectTransform>();
+
+            // Use absolute positioning (0,0) anchors so we can position relative to the button
+            panelRect.anchorMin = Vector2.zero; // Bottom-left
+            panelRect.anchorMax = Vector2.zero; // Bottom-left
+            panelRect.sizeDelta = new Vector2(mainRect.sizeDelta.x, 100f); // Same width as button, temporary height
+
+            // Position the panel relative to the button's world position
+            Vector3 buttonWorldPos = mainRect.position;
+            Vector3 panelWorldPos = new Vector3(buttonWorldPos.x, buttonWorldPos.y - mainRect.sizeDelta.y / 2, buttonWorldPos.z);
+            panelRect.position = panelWorldPos;
+
             panelRect.pivot = new Vector2(0.5f, 1f); // Top-center pivot for proper dropdown positioning
 
             UnityEngine.Debug.Log($"Panel created as child of parent: {parentCanvas.name}");
             UnityEngine.Debug.Log($"Panel created with RectTransform: anchorMin={panelRect.anchorMin}, anchorMax={panelRect.anchorMax}, sizeDelta={panelRect.sizeDelta}");
             UnityEngine.Debug.Log($"Panel creation complete - active: {panel.activeSelf}, parent: {panel.transform.parent?.name}");
+            UnityEngine.Debug.Log($"Button world position: {buttonWorldPos}, Panel world position: {panelWorldPos}");
 
             // Add panel image
             Image panelImage = panel.AddComponent<Image>();
@@ -269,14 +278,33 @@ namespace CabbyMenu.UI.ReferenceControls
 
             // Configure viewport - leave space for scrollbar on the right
             viewportRect.anchorMin = Vector2.zero;
-            viewportRect.anchorMax = Vector2.one;
-            viewportRect.pivot = new Vector2(0.5f, 0.5f);
-            viewportRect.sizeDelta = new Vector2(-SCROLLBAR_WIDTH, 0); // Leave space for scrollbar
+            viewportRect.anchorMax = new Vector2(0.97f, 1f); // Leave space for scrollbar
+            viewportRect.sizeDelta = Vector2.zero; // Let anchors control sizing
             viewportRect.anchoredPosition = Vector2.zero;
+            viewportRect.pivot = new Vector2(0.5f, 1f); // Match panel's top-center pivot
 
+            // Force layout update to ensure proper sizing
+            LayoutRebuilder.ForceRebuildLayoutImmediate(viewportRect);
+
+            UnityEngine.Debug.Log($"Viewport configured - anchorMin: {viewportRect.anchorMin}, anchorMax: {viewportRect.anchorMax}, sizeDelta: {viewportRect.sizeDelta}, anchoredPosition: {viewportRect.anchoredPosition}");
+
+            // Additional debugging for viewport rect calculation
+            UnityEngine.Debug.Log($"Viewport rect - width: {viewportRect.rect.width}, height: {viewportRect.rect.height}");
+            UnityEngine.Debug.Log($"Viewport world bounds - min: {viewportRect.rect.min}, max: {viewportRect.rect.max}");
+
+            // Check ScrollView height
+            RectTransform scrollViewRect = scrollView.GetComponent<RectTransform>();
+            UnityEngine.Debug.Log($"ScrollView rect - width: {scrollViewRect.rect.width}, height: {scrollViewRect.rect.height}");
+            UnityEngine.Debug.Log($"ScrollView sizeDelta: {scrollViewRect.sizeDelta}");
+
+            // Configure viewport image for visible background
             viewportImage.color = new Color(0.2f, 0.2f, 0.2f, 0.9f);
-            viewportMask.showMaskGraphic = false;
+            viewportImage.enabled = true;
+            viewportImage.raycastTarget = false; // Don't block raycasts
+
+            // Configure mask
             viewportMask.enabled = true;
+            viewportMask.showMaskGraphic = false;
 
             return viewportObj;
         }
@@ -331,6 +359,7 @@ namespace CabbyMenu.UI.ReferenceControls
             scrollbarRect.anchorMax = new Vector2(1, 1);
             scrollbarRect.sizeDelta = new Vector2(SCROLLBAR_WIDTH, 0); // Use constant for width
             scrollbarRect.anchoredPosition = Vector2.zero;
+            scrollbarRect.pivot = new Vector2(0.5f, 1f); // Match panel's top-center pivot
 
             // Configure scrollbar image (background)
             scrollbarImage.color = new Color(0.3f, 0.3f, 0.3f, 0.8f);
@@ -476,7 +505,7 @@ namespace CabbyMenu.UI.ReferenceControls
             parentPanelRect.anchorMin = new Vector2(0, 1);
             parentPanelRect.anchorMax = new Vector2(1, 1);
             parentPanelRect.sizeDelta = new Vector2(0, OPTION_HEIGHT); // Stretch across width, fixed height
-            parentPanelRect.anchoredPosition = new Vector2(0, -OPTION_GAP - index * (OPTION_HEIGHT + OPTION_GAP));
+            parentPanelRect.anchoredPosition = new Vector2(0, -index * (OPTION_HEIGHT + OPTION_GAP));
             parentPanelRect.pivot = new Vector2(0.5f, 1f); // Center X, Top Y
 
             // Configure parent panel image (transparent background)
@@ -534,7 +563,7 @@ namespace CabbyMenu.UI.ReferenceControls
             rectTransform.anchorMin = new Vector2(0, 0.5f); // Left, center Y
             rectTransform.anchorMax = new Vector2(0, 0.5f); // Left, center Y
             rectTransform.pivot = new Vector2(0, 0.5f); // Left, center Y
-            rectTransform.sizeDelta = new Vector2(mainButtonWidth - 15f, OPTION_HEIGHT); // 185px width, 30px height
+            rectTransform.sizeDelta = new Vector2(mainButtonWidth - 15f, OPTION_HEIGHT); // 185px width, 40px height
             rectTransform.anchoredPosition = new Vector2(0, 0); // Left-aligned within parent
         }
 
@@ -583,8 +612,8 @@ namespace CabbyMenu.UI.ReferenceControls
                                 parentPanelRect.sizeDelta = new Vector2(0, OPTION_HEIGHT); // Stretch across width, fixed height
 
                                 // Position parent panels sequentially from top to bottom with gap
-                                // Start with OPTION_GAP at the top, then position each element with gaps between them
-                                parentPanelRect.anchoredPosition = new Vector2(0, -OPTION_GAP - i * (OPTION_HEIGHT + OPTION_GAP));
+                                // Start from top (0), then position each element downward with gaps between them
+                                parentPanelRect.anchoredPosition = new Vector2(0, -i * (OPTION_HEIGHT + OPTION_GAP));
 
                                 UnityEngine.Debug.Log($"Option parent panel {i} repositioned - anchorMin: {parentPanelRect.anchorMin}, anchorMax: {parentPanelRect.anchorMax}, sizeDelta: {parentPanelRect.sizeDelta}, anchoredPosition: {parentPanelRect.anchoredPosition}");
                             }
@@ -740,27 +769,28 @@ namespace CabbyMenu.UI.ReferenceControls
             // Get the main button's position and size
             RectTransform mainRect = GetComponent<RectTransform>();
 
-            // Calculate panel height including gaps
-            // Add OPTION_GAP at the top and bottom to match gaps between elements
-            float totalOptionHeight = Mathf.Min(options.Count, MAX_VISIBLE_OPTIONS) * OPTION_HEIGHT;
-            float totalGapHeight = Mathf.Min(options.Count - 1, MAX_VISIBLE_OPTIONS - 1) * OPTION_GAP;
-            float panelHeight = totalOptionHeight + totalGapHeight + OPTION_MARGIN + 2 * OPTION_GAP;
+            // Calculate panel height to match visible content height
+            // Use MAX_VISIBLE_OPTIONS to limit panel height, but content will be sized for all options
+            float panelHeight = Mathf.Min(options.Count, MAX_VISIBLE_OPTIONS) * OPTION_HEIGHT +
+                               Mathf.Min(options.Count - 1, MAX_VISIBLE_OPTIONS - 1) * OPTION_GAP +
+                               OPTION_MARGIN;
 
-            // Match the main button's anchor, pivot, and width
-            // The parent panels stretch across the full width, and buttons are left-aligned within them
+            // Update panel size and position - use absolute positioning
             RectTransform panelRect = dropdownPanel.GetComponent<RectTransform>();
-            panelRect.anchorMin = mainRect.anchorMin;
-            panelRect.anchorMax = mainRect.anchorMax;
-            panelRect.pivot = new Vector2(0.5f, 1f); // Top center
-            panelRect.sizeDelta = new Vector2(mainRect.sizeDelta.x, panelHeight); // Same width as button
-            panelRect.anchoredPosition = new Vector2(0, -mainRect.sizeDelta.y); // Directly below
+            panelRect.sizeDelta = new Vector2(mainRect.sizeDelta.x, panelHeight); // Same width as button, calculated height
 
-            // Move the panel to the correct world position
-            dropdownPanel.transform.position = mainRect.TransformPoint(new Vector3(0, -mainRect.sizeDelta.y, 0));
+            // Position the panel relative to the button's world position
+            Vector3 buttonWorldPos = mainRect.position;
+            Vector3 panelWorldPos = new Vector3(buttonWorldPos.x, buttonWorldPos.y - mainRect.sizeDelta.y / 2, buttonWorldPos.z);
+            panelRect.position = panelWorldPos;
+
+            // Force layout update to ensure proper positioning
+            LayoutRebuilder.ForceRebuildLayoutImmediate(panelRect);
 
             UnityEngine.Debug.Log($"[FIXED] Panel positioning - anchorMin: {panelRect.anchorMin}, anchorMax: {panelRect.anchorMax}, pivot: {panelRect.pivot}");
-            UnityEngine.Debug.Log($"[FIXED] Panel final - anchoredPosition: {panelRect.anchoredPosition}, sizeDelta: {panelRect.sizeDelta}");
-            UnityEngine.Debug.Log($"[FIXED] Panel matches main button width: {mainRect.sizeDelta.x}, height for {Mathf.Min(options.Count, MAX_VISIBLE_OPTIONS)} options: {panelRect.sizeDelta.y}");
+            UnityEngine.Debug.Log($"[FIXED] Panel final - world position: {panelRect.position}, sizeDelta: {panelRect.sizeDelta}");
+            UnityEngine.Debug.Log($"[FIXED] Panel matches main button width: {mainRect.sizeDelta.x}, height for {Mathf.Min(options.Count, MAX_VISIBLE_OPTIONS)} visible options: {panelRect.sizeDelta.y}");
+            UnityEngine.Debug.Log($"[FIXED] Button world position: {buttonWorldPos}, Panel world position: {panelWorldPos}");
         }
 
         private void ShowDropdownPanel()
@@ -841,6 +871,29 @@ namespace CabbyMenu.UI.ReferenceControls
 
                     UnityEngine.Debug.Log($"Scroll view state - enabled: {scrollRectComponent.enabled}, viewport: {scrollRectComponent.viewport?.name}, content: {scrollRectComponent.content?.name}");
                 }
+
+                // Ensure ScrollView is properly positioned within the panel
+                RectTransform scrollViewRect = scrollView.GetComponent<RectTransform>();
+                if (scrollViewRect != null)
+                {
+                    // Configure ScrollView to fill the entire panel from top to bottom
+                    scrollViewRect.anchorMin = Vector2.zero; // Bottom-left
+                    scrollViewRect.anchorMax = Vector2.one;  // Top-right
+                    scrollViewRect.sizeDelta = Vector2.zero; // No size offset
+                    scrollViewRect.anchoredPosition = Vector2.zero; // No position offset
+                    scrollViewRect.pivot = new Vector2(0.5f, 1f); // Match panel's top-center pivot
+
+                    // Force layout update to ensure proper positioning
+                    LayoutRebuilder.ForceRebuildLayoutImmediate(scrollViewRect);
+
+                    UnityEngine.Debug.Log($"ScrollView repositioned - anchorMin: {scrollViewRect.anchorMin}, anchorMax: {scrollViewRect.anchorMax}, sizeDelta: {scrollViewRect.sizeDelta}, anchoredPosition: {scrollViewRect.anchoredPosition}");
+                    UnityEngine.Debug.Log($"ScrollView local position after repositioning: {scrollViewRect.localPosition}");
+
+                    // Additional debug: Check if ScrollView fills the panel properly
+                    RectTransform dropdownPanelRectDebug = dropdownPanel.GetComponent<RectTransform>();
+                    UnityEngine.Debug.Log($"Panel size: {dropdownPanelRectDebug.sizeDelta}, ScrollView size: {scrollViewRect.sizeDelta}");
+                    UnityEngine.Debug.Log($"Panel pivot: {dropdownPanelRectDebug.pivot}, ScrollView pivot: {scrollViewRect.pivot}");
+                }
             }
 
             // Configure viewport properly - fill the entire panel
@@ -851,11 +904,24 @@ namespace CabbyMenu.UI.ReferenceControls
                 {
                     // Set viewport to fill the panel but leave space for scrollbar
                     viewportRect.anchorMin = Vector2.zero;
-                    viewportRect.anchorMax = Vector2.one;
-                    viewportRect.sizeDelta = new Vector2(-SCROLLBAR_WIDTH, 0); // Leave space for scrollbar
+                    viewportRect.anchorMax = new Vector2(0.97f, 1f); // Leave space for scrollbar
+                    viewportRect.sizeDelta = Vector2.zero; // Let anchors control sizing
                     viewportRect.anchoredPosition = Vector2.zero;
+                    viewportRect.pivot = new Vector2(0.5f, 1f); // Match panel's top-center pivot
+
+                    // Force layout update to ensure proper sizing
+                    LayoutRebuilder.ForceRebuildLayoutImmediate(viewportRect);
 
                     UnityEngine.Debug.Log($"Viewport configured - anchorMin: {viewportRect.anchorMin}, anchorMax: {viewportRect.anchorMax}, sizeDelta: {viewportRect.sizeDelta}, anchoredPosition: {viewportRect.anchoredPosition}");
+
+                    // Additional debugging for viewport rect calculation
+                    UnityEngine.Debug.Log($"Viewport rect - width: {viewportRect.rect.width}, height: {viewportRect.rect.height}");
+                    UnityEngine.Debug.Log($"Viewport world bounds - min: {viewportRect.rect.min}, max: {viewportRect.rect.max}");
+
+                    // Check ScrollView height
+                    RectTransform scrollViewRect = scrollView.GetComponent<RectTransform>();
+                    UnityEngine.Debug.Log($"ScrollView rect - width: {scrollViewRect.rect.width}, height: {scrollViewRect.rect.height}");
+                    UnityEngine.Debug.Log($"ScrollView sizeDelta: {scrollViewRect.sizeDelta}");
                 }
 
                 Image viewportImage = viewport.GetComponent<Image>();
@@ -874,6 +940,13 @@ namespace CabbyMenu.UI.ReferenceControls
 
                     UnityEngine.Debug.Log($"Viewport mask - enabled: {viewportMask.enabled}, showMaskGraphic: {viewportMask.showMaskGraphic}, graphic: {viewportMask.graphic?.name}");
                 }
+                else
+                {
+                    UnityEngine.Debug.LogError("Viewport mask component is null!");
+                }
+
+                // Force the viewport to update its mask
+                Canvas.ForceUpdateCanvases();
             }
 
             // Configure scrollbar
@@ -890,6 +963,7 @@ namespace CabbyMenu.UI.ReferenceControls
                     scrollbarRect.anchorMax = new Vector2(1, 1);
                     scrollbarRect.sizeDelta = new Vector2(SCROLLBAR_WIDTH, 0); // Use constant for width
                     scrollbarRect.anchoredPosition = Vector2.zero;
+                    scrollbarRect.pivot = new Vector2(0.5f, 1f); // Match panel's top-center pivot
 
                     // Ensure scrollbar is visible and properly connected
                     scrollbar.SetActive(true);
@@ -925,9 +999,9 @@ namespace CabbyMenu.UI.ReferenceControls
             RectTransform contentRect = content.GetComponent<RectTransform>();
             if (contentRect != null)
             {
-                // Calculate content size based on number of options plus gaps
-                // Add OPTION_GAP at the top and bottom to match gaps between elements
-                float contentHeight = options.Count * OPTION_HEIGHT + (options.Count - 1) * OPTION_GAP + 2 * OPTION_GAP;
+                // Calculate content size based on ALL options, not just visible ones
+                // This ensures scrolling works when there are more options than can fit
+                float contentHeight = options.Count * OPTION_HEIGHT + (options.Count - 1) * OPTION_GAP;
 
                 // Configure content to stretch across viewport width and position at top
                 contentRect.anchorMin = new Vector2(0, 1);
@@ -938,13 +1012,24 @@ namespace CabbyMenu.UI.ReferenceControls
                 // Position content at the top of the viewport
                 contentRect.anchoredPosition = Vector2.zero;
 
-                UnityEngine.Debug.Log($"Content sizing - sizeDelta: {contentRect.sizeDelta}, anchorMin: {contentRect.anchorMin}, anchorMax: {contentRect.anchorMax}");
-                UnityEngine.Debug.Log($"Content height for {options.Count} options: {contentHeight}");
-                UnityEngine.Debug.Log($"Content anchoredPosition: {contentRect.anchoredPosition}");
-
                 // Force layout update to ensure proper positioning
                 LayoutRebuilder.ForceRebuildLayoutImmediate(contentRect);
+
+                // Force another layout update after a frame to ensure all positioning is correct
+                StartCoroutine(ForceContentLayoutUpdate(contentRect));
+
+                UnityEngine.Debug.Log($"Content sizing - sizeDelta: {contentRect.sizeDelta}, anchorMin: {contentRect.anchorMin}, anchorMax: {contentRect.anchorMax}");
+                UnityEngine.Debug.Log($"Content height for {options.Count} total options: {contentHeight}");
+                UnityEngine.Debug.Log($"Content anchoredPosition: {contentRect.anchoredPosition}");
+                UnityEngine.Debug.Log($"Content local position: {contentRect.localPosition}");
             }
+        }
+
+        private IEnumerator ForceContentLayoutUpdate(RectTransform contentRect)
+        {
+            yield return null; // Wait for next frame
+            LayoutRebuilder.ForceRebuildLayoutImmediate(contentRect);
+            UnityEngine.Debug.Log($"Content layout updated after frame - local position: {contentRect.localPosition}");
         }
 
         private void EnsureProperZOrder()
@@ -1184,6 +1269,36 @@ namespace CabbyMenu.UI.ReferenceControls
                 RectTransform viewportRect = viewport.GetComponent<RectTransform>();
                 RectTransform contentRect = content.GetComponent<RectTransform>();
 
+                // Get world positions for gap analysis
+                Vector3 viewportWorldPos = viewportRect.position;
+                Vector3 contentWorldPos = contentRect.position;
+                Vector3 dropdownPanelWorldPos = dropdownPanel.GetComponent<RectTransform>().position;
+
+                // NEW: Parent-child relationship analysis
+                UnityEngine.Debug.Log("=== PARENT-CHILD RELATIONSHIP ANALYSIS ===");
+                UnityEngine.Debug.Log($"DropdownPanel parent: {dropdownPanel.transform.parent?.name}");
+                UnityEngine.Debug.Log($"ScrollView parent: {scrollView.transform.parent?.name}");
+                UnityEngine.Debug.Log($"Viewport parent: {viewport.transform.parent?.name}");
+                UnityEngine.Debug.Log($"Content parent: {content.transform.parent?.name}");
+
+                // Check local positions relative to parents
+                UnityEngine.Debug.Log($"ScrollView local position: {scrollView.transform.localPosition}");
+                UnityEngine.Debug.Log($"Viewport local position: {viewport.transform.localPosition}");
+                UnityEngine.Debug.Log($"Content local position: {content.transform.localPosition}");
+
+                // Check if ScrollView is properly positioned within panel
+                RectTransform scrollViewRect = scrollView.GetComponent<RectTransform>();
+                UnityEngine.Debug.Log($"ScrollView anchorMin: {scrollViewRect.anchorMin}, anchorMax: {scrollViewRect.anchorMax}");
+                UnityEngine.Debug.Log($"ScrollView sizeDelta: {scrollViewRect.sizeDelta}, anchoredPosition: {scrollViewRect.anchoredPosition}");
+
+                // Check if Viewport is properly positioned within ScrollView
+                UnityEngine.Debug.Log($"Viewport anchorMin: {viewportRect.anchorMin}, anchorMax: {viewportRect.anchorMax}");
+                UnityEngine.Debug.Log($"Viewport sizeDelta: {viewportRect.sizeDelta}, anchoredPosition: {viewportRect.anchoredPosition}");
+
+                // Check if Content is properly positioned within Viewport
+                UnityEngine.Debug.Log($"Content anchorMin: {contentRect.anchorMin}, anchorMax: {contentRect.anchorMax}");
+                UnityEngine.Debug.Log($"Content sizeDelta: {contentRect.sizeDelta}, anchoredPosition: {contentRect.anchoredPosition}");
+
                 // Check if viewport and content are in the same position
                 float viewportContentDistance = Vector3.Distance(viewportRect.position, contentRect.position);
                 UnityEngine.Debug.Log($"Distance between viewport and content: {viewportContentDistance}");
@@ -1197,6 +1312,24 @@ namespace CabbyMenu.UI.ReferenceControls
                 Vector3 viewportCenter = viewportRect.position;
                 Vector3 contentCenter = contentRect.position;
                 UnityEngine.Debug.Log($"Viewport center: {viewportCenter}, Content center: {contentCenter}");
+
+                // NEW: Detailed gap analysis
+                UnityEngine.Debug.Log("=== GAP ANALYSIS ===");
+                UnityEngine.Debug.Log($"Panel height: {dropdownPanelRect.sizeDelta.y}");
+                UnityEngine.Debug.Log($"Content height: {contentRect.sizeDelta.y}");
+                UnityEngine.Debug.Log($"Viewport height: {viewportRect.sizeDelta.y}");
+                UnityEngine.Debug.Log($"Panel top Y: {dropdownPanelWorldPos.y + dropdownPanelRect.sizeDelta.y / 2}");
+                UnityEngine.Debug.Log($"Panel bottom Y: {dropdownPanelWorldPos.y - dropdownPanelRect.sizeDelta.y / 2}");
+                UnityEngine.Debug.Log($"Content top Y: {contentWorldPos.y + contentRect.sizeDelta.y / 2}");
+                UnityEngine.Debug.Log($"Content bottom Y: {contentWorldPos.y - contentRect.sizeDelta.y / 2}");
+                UnityEngine.Debug.Log($"Viewport top Y: {viewportWorldPos.y + viewportRect.sizeDelta.y / 2}");
+                UnityEngine.Debug.Log($"Viewport bottom Y: {viewportWorldPos.y - viewportRect.sizeDelta.y / 2}");
+
+                // Calculate the actual gap
+                float panelTop = dropdownPanelWorldPos.y + dropdownPanelRect.sizeDelta.y / 2;
+                float contentTop = contentWorldPos.y + contentRect.sizeDelta.y / 2;
+                float gapAtTop = panelTop - contentTop;
+                UnityEngine.Debug.Log($"Gap at top of panel: {gapAtTop}");
 
                 // Check scroll rect viewport and content references
                 UnityEngine.Debug.Log($"ScrollRect viewport reference: {scrollRectComponent.viewport?.name}");
