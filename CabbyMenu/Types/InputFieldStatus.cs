@@ -1,5 +1,4 @@
 using System;
-using System.Reflection;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -10,11 +9,6 @@ namespace CabbyMenu.Types
     /// </summary>
     public class InputFieldStatus
     {
-        /// <summary>
-        /// Reflection field info for accessing the blink start time of input fields.
-        /// </summary>
-        private static readonly FieldInfo blinkStartTimeFieldInfo = typeof(InputField).GetField("m_BlinkStartTime", BindingFlags.NonPublic | BindingFlags.Instance);
-
         /// <summary>
         /// The GameObject containing the input field.
         /// </summary>
@@ -46,6 +40,16 @@ namespace CabbyMenu.Types
         public readonly Action Cancel;
 
         /// <summary>
+        /// Whether this input field is currently selected.
+        /// </summary>
+        private bool isSelected = false;
+
+        /// <summary>
+        /// The time when this input field was last selected.
+        /// </summary>
+        private float selectionTime = 0f;
+
+        /// <summary>
         /// Initializes a new instance of the InputFieldStatus class.
         /// </summary>
         /// <param name="inputFieldGo">The GameObject containing the input field.</param>
@@ -63,17 +67,37 @@ namespace CabbyMenu.Types
         }
 
         /// <summary>
+        /// Sets the selection state of the input field.
+        /// </summary>
+        /// <param name="selected">Whether the input field should be selected.</param>
+        public void SetSelected(bool selected)
+        {
+            if (InputFieldGo == null)
+            {
+                return;
+            }
+
+            if (selected != isSelected)
+            {
+                isSelected = selected;
+                if (selected)
+                {
+                    selectionTime = Time.time;
+                }
+            }
+        }
+
+        /// <summary>
         /// Checks if the input field was selected since the last update.
         /// </summary>
         /// <returns>True if the input field was selected, false otherwise.</returns>
         public bool WasSelected()
         {
-            if (GetSelectedTime() > LastUpdated)
+            if (isSelected && selectionTime > LastUpdated)
             {
-                LastUpdated = GetSelectedTime();
+                LastUpdated = selectionTime;
                 return true;
             }
-
             return false;
         }
 
@@ -83,7 +107,7 @@ namespace CabbyMenu.Types
         /// <returns>The selection timestamp.</returns>
         public float GetSelectedTime()
         {
-            return (float)blinkStartTimeFieldInfo.GetValue(GetInputField());
+            return selectionTime;
         }
 
         /// <summary>

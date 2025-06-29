@@ -66,6 +66,18 @@ namespace CabbyCodes
 
             // Initialize the menu with the game state provider
             cabbyMenu = new CabbyMainMenu(Constants.NAME, Constants.VERSION, gameStateProvider);
+            
+            // Set up input field registration for all used types
+            CabbyMenu.UI.ReferenceControls.InputFieldSync<int>.RegisterInputFieldSync = (inputFieldStatus) => {
+                cabbyMenu.RegisterInputFieldSync(inputFieldStatus);
+            };
+            CabbyMenu.UI.ReferenceControls.InputFieldSync<float>.RegisterInputFieldSync = (inputFieldStatus) => {
+                cabbyMenu.RegisterInputFieldSync(inputFieldStatus);
+            };
+            CabbyMenu.UI.ReferenceControls.InputFieldSync<string>.RegisterInputFieldSync = (inputFieldStatus) => {
+                cabbyMenu.RegisterInputFieldSync(inputFieldStatus);
+            };
+            
             cabbyMenu.RegisterCategory("Player", PlayerPatch.AddPanels);
             cabbyMenu.RegisterCategory("Teleport", TeleportPatch.AddPanels);
             cabbyMenu.RegisterCategory("Inventory", InventoryPatch.AddPanels);

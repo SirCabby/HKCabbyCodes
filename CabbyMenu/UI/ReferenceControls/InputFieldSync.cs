@@ -59,6 +59,15 @@ namespace CabbyMenu.UI.ReferenceControls
 
                 inputField.characterLimit = characterLimit;
 
+                // Set up Unity's built-in InputField events for direct handling
+                inputField.onEndEdit.AddListener((text) => {
+                    Submit();
+                });
+
+                inputField.onValueChanged.AddListener((text) => {
+                    // Value changed event
+                });
+
                 // Safely get the initial value
                 try
                 {
@@ -215,11 +224,6 @@ namespace CabbyMenu.UI.ReferenceControls
                 if (imageComponent != null)
                 {
                     imageComponent.color = isSelected ? selectedColor : Color.white;
-                }
-
-                if (!isSelected)
-                {
-                    inputField.DeactivateInputField();
                 }
             }
             catch (Exception ex)

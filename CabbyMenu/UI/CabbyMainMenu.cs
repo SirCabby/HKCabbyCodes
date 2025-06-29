@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Timers;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 using CabbyMenu.Types;
 using CabbyMenu.UI.CheatPanels;
 using CabbyMenu.UI.Factories;
@@ -58,18 +58,12 @@ namespace CabbyMenu.UI
         private InputFieldStatus lastSelected;
 
         /// <summary>
-        /// Timestamp of the last selection.
+        /// The timestamp of the last selected input field.
         /// </summary>
         private float lastSelectedTime = Constants.DEFAULT_FLOAT_VALUE;
 
         /// <summary>
-        /// Timer for handling click events.
-        /// </summary>
-        private readonly Timer clickTimer;
-
-        // Root Button
-        /// <summary>
-        /// The root GameObject for the menu system.
+        /// The root GameObject for the menu canvas.
         /// </summary>
         private GameObject rootGameObject;
 
@@ -115,10 +109,6 @@ namespace CabbyMenu.UI
             this.name = name;
             this.version = version;
             this.gameStateProvider = gameStateProvider ?? throw new ArgumentNullException(nameof(gameStateProvider));
-
-            clickTimer = new Timer(Constants.CLICK_TIMER_DELAY);
-            clickTimer.Elapsed += OnElapsedClickTimer;
-            clickTimer.AutoReset = false;
         }
 
         /// <summary>
@@ -161,41 +151,6 @@ namespace CabbyMenu.UI
         }
 
         /// <summary>
-        /// Handles click timer elapsed events to manage input field selection states.
-        /// </summary>
-        /// <param name="source">The source of the event.</param>
-        /// <param name="e">The elapsed event arguments.</param>
-        private void OnElapsedClickTimer(object source, ElapsedEventArgs e)
-        {
-            // Determine last selected
-            bool updateSelected = false;
-            foreach (InputFieldStatus input in registeredInputs)
-            {
-                float thisSelectedTime = input.GetSelectedTime();
-
-                if (input.WasSelected() && (thisSelectedTime > lastSelectedTime))
-                {
-                    lastSelected?.Submit();
-
-                    lastSelected = input;
-                    lastSelectedTime = thisSelectedTime;
-                    updateSelected = true;
-                }
-            }
-
-            foreach (InputFieldStatus input in registeredInputs)
-            {
-                if (input == lastSelected && !updateSelected)
-                {
-                    lastSelected.Submit();
-                    lastSelected = null;
-                }
-
-                input.OnSelected(input == lastSelected);
-            }
-        }
-
-        /// <summary>
         /// Updates all cheat panels.
         /// </summary>
         public void UpdateCheatPanels()
@@ -218,18 +173,57 @@ namespace CabbyMenu.UI
                     BuildCanvas();
                 }
 
-                if (!rootGoMod.IsActive())
+                if (rootGoMod != null && !rootGoMod.IsActive())
                 {
                     rootGoMod.SetActive(true);
                 }
 
-                if (Input.GetMouseButtonUp(0))
+                // Handle mouse clicks for input field selection
+                if (Input.GetMouseButtonDown(0))
                 {
-                    clickTimer.Stop();
-                    clickTimer.Start();
+                    Vector2 mousePosition = Input.mousePosition;
+                    InputFieldStatus clickedInput = null;
+
+                    foreach (InputFieldStatus input in registeredInputs)
+                    {
+                        if (IsMouseOverInputField(input, mousePosition))
+                        {
+                            clickedInput = input;
+                            break;
+                        }
+                    }
+
+                    // Update selection
+                    if (clickedInput != null && clickedInput != lastSelected)
+                    {
+                        lastSelected?.Submit();
+                        lastSelected = clickedInput;
+                        lastSelectedTime = clickedInput.GetSelectedTime();
+
+                        // Set Unity's selected GameObject for keyboard input
+                        if (EventSystem.current != null)
+                        {
+                            EventSystem.current.SetSelectedGameObject(clickedInput.InputFieldGo);
+                        }
+                    }
+                    else if (clickedInput == null && lastSelected != null)
+                    {
+                        // Clicked outside any input field, deselect current
+                        lastSelected.Submit();
+                        lastSelected = null;
+                    }
+                    else if (clickedInput == lastSelected)
+                    {
+                    }
+
+                    // Update selection states
+                    foreach (InputFieldStatus input in registeredInputs)
+                    {
+                        input.SetSelected(input == lastSelected);
+                    }
                 }
 
-                // keyboard inputs...
+                // Handle keyboard input for selected input field
                 if (Input.anyKeyDown && lastSelected != null)
                 {
                     char? keyPressed = KeyCodeMap.GetChar(lastSelected.ValidChars);
@@ -248,7 +242,6 @@ namespace CabbyMenu.UI
                         {
                             inputField.text += keyPressed.Value;
                         }
-
 
                         lastSelectedTime = lastSelected.GetSelectedTime();
                     }
@@ -275,8 +268,11 @@ namespace CabbyMenu.UI
                         lastSelected = null;
                     }
                 }
+                else if (Input.anyKeyDown && lastSelected == null)
+                {
+                }
             }
-            else if (rootGameObject != null && rootGoMod.IsActive())
+            else if (rootGameObject != null && rootGoMod != null && rootGoMod.IsActive())
             {
                 rootGoMod.SetActive(false);
                 if (categoryDropdown != null)
@@ -334,6 +330,14 @@ namespace CabbyMenu.UI
         private void BuildCanvas()
         {
             if (rootGameObject != null) return;
+
+            // Ensure EventSystem exists
+            if (GameObject.FindObjectOfType<EventSystem>() == null)
+            {
+                GameObject eventSystem = new GameObject("EventSystem");
+                eventSystem.AddComponent<EventSystem>();
+                eventSystem.AddComponent<StandaloneInputModule>();
+            }
 
             // Base Canvas
             rootGameObject = new GameObject("ModMenu")
@@ -430,6 +434,22 @@ namespace CabbyMenu.UI
             new Fitter(versionTextObj).Attach(menuPanel).Anchor(new Vector2(Constants.VERSION_TEXT_X, Constants.VERSION_TEXT_MIN_Y), new Vector2(Constants.VERSION_TEXT_X, Constants.VERSION_TEXT_MAX_Y)).Size(new Vector2(Constants.VERSION_TEXT_WIDTH, Constants.VERSION_TEXT_HEIGHT));
 
             OnCategorySelected(0);
+        }
+
+        /// <summary>
+        /// Checks if the mouse is over a specific input field.
+        /// </summary>
+        /// <param name="inputStatus">The input field status to check.</param>
+        /// <param name="mousePosition">The current mouse position.</param>
+        /// <returns>True if the mouse is over the input field, false otherwise.</returns>
+        private bool IsMouseOverInputField(InputFieldStatus inputStatus, Vector2 mousePosition)
+        {
+            if (inputStatus?.InputFieldGo == null) return false;
+
+            RectTransform rectTransform = inputStatus.InputFieldGo.GetComponent<RectTransform>();
+            if (rectTransform == null) return false;
+
+            return RectTransformUtility.RectangleContainsScreenPoint(rectTransform, mousePosition);
         }
     }
 }
