@@ -10,6 +10,7 @@ using CabbyCodes.Patches.Inventory;
 using CabbyCodes.Patches.Maps;
 using CabbyCodes.Patches.Player;
 using CabbyCodes.Patches.Charms;
+using CabbyCodes.Patches.Settings;
 using CabbyMenu.UI;
 
 namespace CabbyCodes
@@ -74,7 +75,11 @@ namespace CabbyCodes
             cabbyMenu.RegisterCategory("Hunter", HunterPatch.AddPanels);
             cabbyMenu.RegisterCategory("Flags", FlagsPatch.AddPanels);
             cabbyMenu.RegisterCategory("Achievements", AchievementPatch.AddPanels);
+            cabbyMenu.RegisterCategory("Settings", SettingsPatch.AddPanels);
             cabbyMenu.RegisterCategory("Debug", DebugPatch.AddPanels);
+
+            // Apply quick start patches
+            QuickStartPatch.ApplyPatches();
 
             BLogger.LogInfo("CabbyCodes menu initialized successfully");
         }
