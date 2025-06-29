@@ -6,6 +6,11 @@
     <LangVersion>7.3</LangVersion>
     <ImplicitUsings>disable</ImplicitUsings>
     <Nullable>disable</Nullable>
+    <StartupObject>AssemblyInspector.GameStartupAnalyzer</StartupObject>
   </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Text.Json" Version="6.0.0" />
+  </ItemGroup>
 
 </Project> 
