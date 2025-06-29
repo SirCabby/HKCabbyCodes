@@ -300,9 +300,9 @@ namespace CabbyMenu.UI.ReferenceControls
             contentLayout.spacing = 0f;
             contentLayout.padding = new RectOffset(0, 0, 0, 0);
             contentLayout.childAlignment = TextAnchor.UpperCenter;
-            contentLayout.childControlWidth = true;
+            contentLayout.childControlWidth = false;
             contentLayout.childControlHeight = false;
-            contentLayout.childForceExpandWidth = true;
+            contentLayout.childForceExpandWidth = false;
             contentLayout.childForceExpandHeight = false;
 
             // Configure content size fitter
@@ -461,9 +461,28 @@ namespace CabbyMenu.UI.ReferenceControls
 
         private void CreateSingleOptionButton(int index)
         {
+            // Create parent panel that is 15 pixels wider than the button
+            GameObject parentPanel = new GameObject($"OptionPanel_{index}");
+            parentPanel.transform.SetParent(content.transform, false);
+            parentPanel.SetActive(true);
+
+            // Add required components to parent panel
+            RectTransform parentPanelRect = parentPanel.AddComponent<RectTransform>();
+            Image parentPanelImage = parentPanel.AddComponent<Image>();
+
+            // Configure parent panel - stretch across full width, same height as button
+            parentPanelRect.anchorMin = new Vector2(0, 1);
+            parentPanelRect.anchorMax = new Vector2(1, 1);
+            parentPanelRect.sizeDelta = new Vector2(0, OPTION_HEIGHT); // Stretch across width, fixed height
+            parentPanelRect.anchoredPosition = new Vector2(0, -OPTION_GAP - index * (OPTION_HEIGHT + OPTION_GAP));
+            parentPanelRect.pivot = new Vector2(0.5f, 1f); // Center X, Top Y
+
+            // Configure parent panel image (transparent background)
+            parentPanelImage.color = new Color(0, 0, 0, 0); // Transparent
+
             // Create option button from scratch since we don't have a template
             GameObject optionObj = new GameObject($"Option_{index}");
-            optionObj.transform.SetParent(content.transform, false);
+            optionObj.transform.SetParent(parentPanel.transform, false);
             optionObj.SetActive(true);
 
             // Add required components
@@ -478,7 +497,7 @@ namespace CabbyMenu.UI.ReferenceControls
             // Configure layout element for proper sizing
             ConfigureOptionLayoutElement(optionLayout);
 
-            // Configure rect transform - let layout system handle positioning
+            // Configure rect transform - left-align within parent panel
             ConfigureOptionRectTransform(optionRect, index);
 
             // Configure image
@@ -492,10 +511,10 @@ namespace CabbyMenu.UI.ReferenceControls
             int capturedIndex = index; // Capture the index for the lambda
             optionButton.onClick.AddListener(() => OnOptionSelected(capturedIndex));
 
-            // Store the button reference
-            optionButtons.Add(optionObj);
+            // Store the parent panel reference (which contains the button)
+            optionButtons.Add(parentPanel);
 
-            UnityEngine.Debug.Log($"Created option button {index}: '{options[index]}' with proper layout configuration");
+            UnityEngine.Debug.Log($"Created option button {index}: '{options[index]}' with parent panel 15px wider and left-aligned");
         }
 
         private void ConfigureOptionLayoutElement(LayoutElement layoutElement)
@@ -503,18 +522,18 @@ namespace CabbyMenu.UI.ReferenceControls
             layoutElement.preferredHeight = OPTION_HEIGHT;
             layoutElement.minHeight = OPTION_HEIGHT;
             layoutElement.flexibleWidth = 0f;
-            layoutElement.minWidth = 0f;
-            layoutElement.preferredWidth = 180f; // Fixed width for option buttons
+            layoutElement.minWidth = MAIN_BUTTON_WIDTH - 15f; // 185px
+            layoutElement.preferredWidth = MAIN_BUTTON_WIDTH - 15f; // 185px
         }
 
         private void ConfigureOptionRectTransform(RectTransform rectTransform, int index)
         {
-            // Configure rect transform - anchor to top and stretch across width
-            rectTransform.anchorMin = new Vector2(0, 1);
-            rectTransform.anchorMax = new Vector2(1, 1);
-            rectTransform.sizeDelta = new Vector2(-OPTION_MARGIN, OPTION_HEIGHT); // Small margin on sides only
-            // Start with OPTION_GAP at the top, then position each element with gaps between them
-            rectTransform.anchoredPosition = new Vector2(0, -OPTION_GAP - index * (OPTION_HEIGHT + OPTION_GAP));
+            // Left-align, fixed width, vertically centered
+            rectTransform.anchorMin = new Vector2(0, 0.5f); // Left, center Y
+            rectTransform.anchorMax = new Vector2(0, 0.5f); // Left, center Y
+            rectTransform.pivot = new Vector2(0, 0.5f); // Left, center Y
+            rectTransform.sizeDelta = new Vector2(MAIN_BUTTON_WIDTH - 15f, OPTION_HEIGHT); // 185px width, 30px height
+            rectTransform.anchoredPosition = new Vector2(0, 0); // Left-aligned within parent
         }
 
         private void CreateOptionText(GameObject parent, string text)
@@ -535,6 +554,97 @@ namespace CabbyMenu.UI.ReferenceControls
             optionText.fontSize = (int)DEFAULT_FONT_SIZE;
             optionText.color = Color.black;
             optionText.alignment = TextAnchor.MiddleCenter;
+        }
+
+        private void ConfigureOptionButtons()
+        {
+            try
+            {
+                UnityEngine.Debug.Log("=== ConfigureOptionButtons called ===");
+
+                // Ensure all option buttons are visible and properly positioned
+                for (int i = 0; i < optionButtons.Count; i++)
+                {
+                    try
+                    {
+                        if (optionButtons[i] != null)
+                        {
+                            optionButtons[i].SetActive(true);
+
+                            // Configure parent panel to stretch across content width
+                            RectTransform parentPanelRect = optionButtons[i].GetComponent<RectTransform>();
+                            if (parentPanelRect != null)
+                            {
+                                // Configure parent panel to stretch across content width
+                                parentPanelRect.anchorMin = new Vector2(0, 1);
+                                parentPanelRect.anchorMax = new Vector2(1, 1);
+                                parentPanelRect.sizeDelta = new Vector2(0, OPTION_HEIGHT); // Stretch across width, fixed height
+
+                                // Position parent panels sequentially from top to bottom with gap
+                                // Start with OPTION_GAP at the top, then position each element with gaps between them
+                                parentPanelRect.anchoredPosition = new Vector2(0, -OPTION_GAP - i * (OPTION_HEIGHT + OPTION_GAP));
+
+                                UnityEngine.Debug.Log($"Option parent panel {i} repositioned - anchorMin: {parentPanelRect.anchorMin}, anchorMax: {parentPanelRect.anchorMax}, sizeDelta: {parentPanelRect.sizeDelta}, anchoredPosition: {parentPanelRect.anchoredPosition}");
+                            }
+
+                            // Debug: List all children of the parent panel
+                            UnityEngine.Debug.Log($"Parent panel {i} has {optionButtons[i].transform.childCount} children:");
+                            for (int j = 0; j < optionButtons[i].transform.childCount; j++)
+                            {
+                                Transform child = optionButtons[i].transform.GetChild(j);
+                                UnityEngine.Debug.Log($"  Child {j}: {child.name}");
+                            }
+
+                            // Configure the actual button within the parent panel
+                            Transform buttonTransform = optionButtons[i].transform.Find($"Option_{i}");
+                            if (buttonTransform != null)
+                            {
+                                RectTransform buttonRect = buttonTransform.GetComponent<RectTransform>();
+                                if (buttonRect != null)
+                                {
+                                    // Configure button to be left-aligned within parent panel with 185px width
+                                    buttonRect.anchorMin = new Vector2(0, 0.5f); // Left, center Y
+                                    buttonRect.anchorMax = new Vector2(0, 0.5f); // Left, center Y
+                                    buttonRect.pivot = new Vector2(0, 0.5f); // Left, center Y
+                                    buttonRect.sizeDelta = new Vector2(MAIN_BUTTON_WIDTH - 15f, OPTION_HEIGHT); // 185px width, full height
+                                    buttonRect.anchoredPosition = new Vector2(0, 0); // Left-aligned within parent
+
+                                    UnityEngine.Debug.Log($"Option button {i} configured - anchorMin: {buttonRect.anchorMin}, anchorMax: {buttonRect.anchorMax}, sizeDelta: {buttonRect.sizeDelta}, anchoredPosition: {buttonRect.anchoredPosition}");
+                                }
+                            }
+                            else
+                            {
+                                UnityEngine.Debug.LogError($"Button Option_{i} not found in parent panel {i}");
+                            }
+                        }
+                    }
+                    catch (System.Exception ex)
+                    {
+                        UnityEngine.Debug.LogError($"Exception in ConfigureOptionButtons for button {i}: {ex.Message}");
+                        UnityEngine.Debug.LogError($"Stack trace: {ex.StackTrace}");
+                    }
+                }
+
+                // Log option button configurations
+                for (int i = 0; i < Mathf.Min(optionButtons.Count, 3); i++) // Log first 3 buttons
+                {
+                    if (optionButtons[i] != null)
+                    {
+                        RectTransform parentPanelRect = optionButtons[i].GetComponent<RectTransform>();
+                        if (parentPanelRect != null)
+                        {
+                            UnityEngine.Debug.Log($"Option parent panel OptionPanel_{i} - anchorMin: {parentPanelRect.anchorMin}, anchorMax: {parentPanelRect.anchorMax}, sizeDelta: {parentPanelRect.sizeDelta}");
+                        }
+                    }
+                }
+
+                UnityEngine.Debug.Log("ConfigureOptionButtons completed successfully!");
+            }
+            catch (System.Exception ex)
+            {
+                UnityEngine.Debug.LogError($"Exception in ConfigureOptionButtons: {ex.Message}");
+                UnityEngine.Debug.LogError($"Stack trace: {ex.StackTrace}");
+            }
         }
 
         #endregion
@@ -598,6 +708,8 @@ namespace CabbyMenu.UI.ReferenceControls
 
             // Position and show the dropdown panel
             PositionDropdownPanel();
+
+            UnityEngine.Debug.Log("About to call ShowDropdownPanel from OpenDropdown...");
             ShowDropdownPanel();
 
             isOpen = true;
@@ -633,11 +745,12 @@ namespace CabbyMenu.UI.ReferenceControls
             float panelHeight = totalOptionHeight + totalGapHeight + OPTION_MARGIN + 2 * OPTION_GAP;
 
             // Match the main button's anchor, pivot, and width
+            // The parent panels stretch across the full width, and buttons are left-aligned within them
             RectTransform panelRect = dropdownPanel.GetComponent<RectTransform>();
             panelRect.anchorMin = mainRect.anchorMin;
             panelRect.anchorMax = mainRect.anchorMax;
             panelRect.pivot = new Vector2(0.5f, 1f); // Top center
-            panelRect.sizeDelta = new Vector2(mainRect.sizeDelta.x, panelHeight);
+            panelRect.sizeDelta = new Vector2(mainRect.sizeDelta.x, panelHeight); // Same width as button
             panelRect.anchoredPosition = new Vector2(0, -mainRect.sizeDelta.y); // Directly below
 
             // Move the panel to the correct world position
@@ -652,33 +765,44 @@ namespace CabbyMenu.UI.ReferenceControls
         {
             if (dropdownPanel == null) return;
 
+            UnityEngine.Debug.Log("=== ShowDropdownPanel started ===");
+
             // Get panel rect transform
             RectTransform panelRect = dropdownPanel.GetComponent<RectTransform>();
 
             // Ensure the panel is active
             dropdownPanel.SetActive(true);
 
+            UnityEngine.Debug.Log("About to call ConfigurePanelComponents...");
             // Configure panel components
             ConfigurePanelComponents(panelRect);
 
+            UnityEngine.Debug.Log("About to call ConfigureScrollViewComponents...");
             // Configure scroll view components with proper positioning
             ConfigureScrollViewComponents(panelRect);
 
+            UnityEngine.Debug.Log("About to call VerifyScrollRectConnections...");
             // Verify and fix scroll rect connections
             VerifyScrollRectConnections();
 
+            UnityEngine.Debug.Log("About to call ConfigureContentSizing...");
             // Configure content sizing and positioning
             ConfigureContentSizing();
+
+            UnityEngine.Debug.Log("About to call ConfigureOptionButtons...");
 
             // Ensure all option buttons are visible and properly positioned
             ConfigureOptionButtons();
 
+            UnityEngine.Debug.Log("About to call ResetScrollPosition...");
             // Reset scroll position to top
             ResetScrollPosition();
 
+            UnityEngine.Debug.Log("About to call EnsureProperZOrder...");
             // Ensure proper z-order
             EnsureProperZOrder();
 
+            UnityEngine.Debug.Log("About to call LogDetailedPositions...");
             // Log detailed position analysis
             LogDetailedPositions();
 
@@ -818,47 +942,6 @@ namespace CabbyMenu.UI.ReferenceControls
 
                 // Force layout update to ensure proper positioning
                 LayoutRebuilder.ForceRebuildLayoutImmediate(contentRect);
-            }
-        }
-
-        private void ConfigureOptionButtons()
-        {
-            // Ensure all option buttons are visible and properly positioned
-            for (int i = 0; i < optionButtons.Count; i++)
-            {
-                if (optionButtons[i] != null)
-                {
-                    optionButtons[i].SetActive(true);
-
-                    // Configure button to stretch across content width
-                    RectTransform buttonRect = optionButtons[i].GetComponent<RectTransform>();
-                    if (buttonRect != null)
-                    {
-                        // Configure button to stretch across content width
-                        buttonRect.anchorMin = new Vector2(0, 1);
-                        buttonRect.anchorMax = new Vector2(1, 1);
-                        buttonRect.sizeDelta = new Vector2(-OPTION_MARGIN, OPTION_HEIGHT); // Small margin on sides only
-
-                        // Position buttons sequentially from top to bottom with gap
-                        // Start with OPTION_GAP at the top, then position each element with gaps between them
-                        buttonRect.anchoredPosition = new Vector2(0, -OPTION_GAP - i * (OPTION_HEIGHT + OPTION_GAP));
-
-                        UnityEngine.Debug.Log($"Option button {i} repositioned - anchorMin: {buttonRect.anchorMin}, anchorMax: {buttonRect.anchorMax}, sizeDelta: {buttonRect.sizeDelta}, anchoredPosition: {buttonRect.anchoredPosition}");
-                    }
-                }
-            }
-
-            // Log option button configurations
-            for (int i = 0; i < Mathf.Min(optionButtons.Count, 3); i++) // Log first 3 buttons
-            {
-                if (optionButtons[i] != null)
-                {
-                    RectTransform buttonRect = optionButtons[i].GetComponent<RectTransform>();
-                    if (buttonRect != null)
-                    {
-                        UnityEngine.Debug.Log($"Option button Option_{i} - anchorMin: {buttonRect.anchorMin}, anchorMax: {buttonRect.anchorMax}, sizeDelta: {buttonRect.sizeDelta}");
-                    }
-                }
             }
         }
 
@@ -1068,11 +1151,26 @@ namespace CabbyMenu.UI.ReferenceControls
             {
                 if (optionButtons[i] != null)
                 {
-                    RectTransform buttonRect = optionButtons[i].GetComponent<RectTransform>();
-                    Vector3 buttonWorldPos = buttonRect.position;
-                    Vector3 buttonScreenPos = RectTransformUtility.WorldToScreenPoint(null, buttonWorldPos);
-                    UnityEngine.Debug.Log($"OptionButton_{i} - World: {buttonWorldPos}, Screen: {buttonScreenPos}, Local: {buttonRect.localPosition}");
-                    UnityEngine.Debug.Log($"OptionButton_{i} - sizeDelta: {buttonRect.sizeDelta}, anchoredPosition: {buttonRect.anchoredPosition}");
+                    RectTransform parentPanelRect = optionButtons[i].GetComponent<RectTransform>();
+                    Vector3 parentWorldPos = parentPanelRect.position;
+                    Vector3 parentScreenPos = RectTransformUtility.WorldToScreenPoint(null, parentWorldPos);
+                    UnityEngine.Debug.Log($"OptionParentPanel_{i} - World: {parentWorldPos}, Screen: {parentScreenPos}, Local: {parentPanelRect.localPosition}");
+                    UnityEngine.Debug.Log($"OptionParentPanel_{i} - sizeDelta: {parentPanelRect.sizeDelta}, anchoredPosition: {parentPanelRect.anchoredPosition}");
+
+                    // Also log the actual button within the parent panel
+                    Transform buttonTransform = optionButtons[i].transform.Find($"Option_{i}");
+                    if (buttonTransform != null)
+                    {
+                        RectTransform buttonRect = buttonTransform.GetComponent<RectTransform>();
+                        Vector3 buttonWorldPos = buttonRect.position;
+                        Vector3 buttonScreenPos = RectTransformUtility.WorldToScreenPoint(null, buttonWorldPos);
+                        UnityEngine.Debug.Log($"OptionButton_{i} - World: {buttonWorldPos}, Screen: {buttonScreenPos}, Local: {buttonRect.localPosition}");
+                        UnityEngine.Debug.Log($"OptionButton_{i} - sizeDelta: {buttonRect.sizeDelta}, anchoredPosition: {buttonRect.anchoredPosition}");
+                    }
+                    else
+                    {
+                        UnityEngine.Debug.Log($"OptionButton_{i} - NOT FOUND within parent panel");
+                    }
                 }
             }
 
