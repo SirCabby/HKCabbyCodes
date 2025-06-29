@@ -122,16 +122,22 @@ publish: build
 .PHONY: deploy
 deploy: build
 	@echo "Deploying $(PROJECT_NAME) to Hollow Knight..."
-	@powershell -Command "\
-if (Test-Path '$(BEPINEX_PLUGINS_PATH)') { \
-    Copy-Item '$(OUTPUT_DIR)/$(DLL_NAME)' '$(BEPINEX_PLUGINS_PATH)/' -Force; \
-    Copy-Item '$(CABBYMENU_BUILD_DIR)/CabbyMenu.dll' '$(BEPINEX_PLUGINS_PATH)/' -Force; \
-    Write-Host 'Deployed CabbyCodes.dll and CabbyMenu.dll to $(BEPINEX_PLUGINS_PATH)'; \
-} else { \
-    Write-Host 'Error: BepInEx plugins directory not found at $(BEPINEX_PLUGINS_PATH)'; \
-    Write-Host 'Please ensure Hollow Knight is installed and BepInEx is set up correctly.'; \
-    exit 1; \
-}"
+	@if exist "$(BEPINEX_PLUGINS_PATH)" ( \
+		copy "$(OUTPUT_DIR)\$(DLL_NAME)" "$(BEPINEX_PLUGINS_PATH)\" >nul && \
+		copy "$(CABBYMENU_BUILD_DIR)\CabbyMenu.dll" "$(BEPINEX_PLUGINS_PATH)\" >nul && \
+		echo Deployed CabbyCodes.dll and CabbyMenu.dll to $(BEPINEX_PLUGINS_PATH) \
+	) else ( \
+		echo Error: BepInEx plugins directory not found at $(BEPINEX_PLUGINS_PATH) && \
+		echo Please ensure Hollow Knight is installed and BepInEx is set up correctly. && \
+		exit /b 1 \
+	)
+
+# Deploy and run Hollow Knight
+.PHONY: run
+run: deploy
+	@echo Launching Hollow Knight via Steam...
+	@start "" "steam://rungameid/367520"
+	@echo Hollow Knight launched via Steam!
 
 # Check .NET SDK version
 .PHONY: check-sdk
@@ -171,6 +177,7 @@ help:
 	@echo "  test             - Run tests"
 	@echo "  publish          - Publish the project"
 	@echo "  deploy           - Deploy to Hollow Knight BepInEx plugins folder"
+	@echo "  run              - Deploy and run Hollow Knight"
 	@echo "  check-sdk        - Check .NET SDK version"
 	@echo "  info             - Show project information"
 	@echo "  help             - Show this help message"
