@@ -126,8 +126,8 @@ deploy: build
 	@if not exist "$(CABBYMENU_BUILD_DIR)\CabbyMenu.dll" echo Error: CabbyMenu.dll not found at "$(CABBYMENU_BUILD_DIR)\CabbyMenu.dll" && exit /b 1
 	@if exist "$(BEPINEX_PLUGINS_PATH)\$(PROJECT_NAME).dll" del /f /q "$(BEPINEX_PLUGINS_PATH)\$(PROJECT_NAME).dll"
 	@if exist "$(BEPINEX_PLUGINS_PATH)\CabbyMenu.dll" del /f /q "$(BEPINEX_PLUGINS_PATH)\CabbyMenu.dll"
-	@if exist "$(BEPINEX_PLUGINS_PATH)\$(PROJECT_NAME).dll" ( echo Warning: $(PROJECT_NAME).dll still exists after delete! )
-	@if exist "$(BEPINEX_PLUGINS_PATH)\CabbyMenu.dll" ( echo Warning: CabbyMenu.dll still exists after delete! )
+	@if exist "$(BEPINEX_PLUGINS_PATH)\$(PROJECT_NAME).dll" ( echo Error: $(PROJECT_NAME).dll still exists after delete! && exit /b 1 )
+	@if exist "$(BEPINEX_PLUGINS_PATH)\CabbyMenu.dll" ( echo Error: CabbyMenu.dll still exists after delete! && exit /b 1 )
 	@copy /Y "$(BUILD_DIR)\$(PROJECT_NAME).dll" "$(BEPINEX_PLUGINS_PATH)\$(PROJECT_NAME).dll"
 	@copy /Y "$(CABBYMENU_BUILD_DIR)\CabbyMenu.dll" "$(BEPINEX_PLUGINS_PATH)\CabbyMenu.dll"
 	@if exist "$(BEPINEX_PLUGINS_PATH)\$(PROJECT_NAME).dll" ( echo $(PROJECT_NAME).dll successfully copied to plugins folder. ) else ( echo Error: $(PROJECT_NAME).dll was not copied! )
