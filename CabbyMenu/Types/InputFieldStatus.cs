@@ -119,6 +119,8 @@ namespace CabbyMenu.Types
                 {
                     // Reset horizontal offset when losing focus to show the beginning of the text
                     ResetHorizontalOffset();
+                    // Update the display text to show the beginning characters
+                    UpdateDisplayText();
                 }
                 
                 // Call the OnSelected callback to update the InputFieldSync

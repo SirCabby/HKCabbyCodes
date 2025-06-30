@@ -79,6 +79,7 @@ namespace CabbyMenu.UI.ReferenceControls
                 // Reset horizontal offset when not selected to show the beginning of the text
                 if (inputFieldStatus != null)
                 {
+                    inputFieldStatus.ResetHorizontalOffset();
                     inputFieldStatus.SetCursorPositionDirectly(0);
                 }
             }
@@ -96,6 +97,13 @@ namespace CabbyMenu.UI.ReferenceControls
             
             // Update InputFieldStatus which will handle Unity InputField synchronization
             inputFieldStatus.SetFullText(validatedText);
+            
+            // Reset horizontal offset and cursor position to show the beginning characters
+            if (inputFieldStatus != null)
+            {
+                inputFieldStatus.ResetHorizontalOffset();
+                inputFieldStatus.SetCursorPositionDirectly(0);
+            }
         }
 
         public void Cancel()
@@ -105,6 +113,14 @@ namespace CabbyMenu.UI.ReferenceControls
             
             // Update InputFieldStatus which will handle Unity InputField synchronization
             inputFieldStatus.SetFullText(fullText);
+            
+            // Reset horizontal offset and cursor position to show the beginning characters
+            if (inputFieldStatus != null)
+            {
+                inputFieldStatus.ResetHorizontalOffset();
+                inputFieldStatus.SetCursorPositionDirectly(0);
+            }
+            
             // Don't call SetSelected here - the main menu handles selection state
         }
 
