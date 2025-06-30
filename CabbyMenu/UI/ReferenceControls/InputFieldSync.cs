@@ -77,6 +77,10 @@ namespace CabbyMenu.UI.ReferenceControls
             string text = inputField.text;
             T convertedValue = (T)Convert.ChangeType(text, typeof(T));
             InputValue.Set(convertedValue);
+            
+            // Immediately update the UI text to show the validated/capped value
+            // This ensures users see the actual value that was set, not what they typed
+            inputField.text = Convert.ToString(InputValue.Get());
         }
 
         public void Cancel()
