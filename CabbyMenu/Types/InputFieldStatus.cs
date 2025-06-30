@@ -154,6 +154,32 @@ namespace CabbyMenu.Types
         }
 
         /// <summary>
+        /// Synchronizes our selection state with Unity's InputField selection.
+        /// </summary>
+        public void SyncSelectionFromUnity()
+        {
+            InputField inputField = GetInputField();
+            if (inputField != null)
+            {
+                // Get Unity's current selection positions
+                int unityAnchorPos = inputField.selectionAnchorPosition;
+                int unityFocusPos = inputField.selectionFocusPosition;
+                
+                // Convert Unity's visible positions to full text positions
+                int fullTextAnchorPos = horizontalOffset + unityAnchorPos;
+                int fullTextFocusPos = horizontalOffset + unityFocusPos;
+                
+                // Ensure positions are within bounds
+                fullTextAnchorPos = Mathf.Clamp(fullTextAnchorPos, 0, fullText.Length);
+                fullTextFocusPos = Mathf.Clamp(fullTextFocusPos, 0, fullText.Length);
+                
+                // Update Unity's selection positions to reflect the full text positions
+                inputField.selectionAnchorPosition = unityAnchorPos;
+                inputField.selectionFocusPosition = unityFocusPos;
+            }
+        }
+
+        /// <summary>
         /// Checks if the input field was selected since the last update.
         /// </summary>
         /// <returns>True if the input field was selected, false otherwise.</returns>
@@ -385,6 +411,12 @@ namespace CabbyMenu.Types
         /// <param name="characterLimit">The maximum number of characters allowed.</param>
         public void InsertCharacter(char character, int characterLimit)
         {
+            // First, check if there's a text selection and handle it
+            if (ReplaceSelectedText(character, characterLimit))
+            {
+                return; // Selection was replaced, we're done
+            }
+            
             // Validate decimal point for decimal input fields
             if (character == '.' && ValidChars == KeyCodeMap.ValidChars.Decimal)
             {
@@ -448,6 +480,12 @@ namespace CabbyMenu.Types
         /// </summary>
         public void DeleteCharacter()
         {
+            // First, check if there's a text selection and handle it
+            if (DeleteSelectedText())
+            {
+                return; // Selection was deleted, we're done
+            }
+            
             if (CursorPosition > 0)
             {
                 fullText = fullText.Substring(0, CursorPosition - 1) + fullText.Substring(CursorPosition);
@@ -472,6 +510,12 @@ namespace CabbyMenu.Types
         /// </summary>
         public void DeleteForwardCharacter()
         {
+            // First, check if there's a text selection and handle it
+            if (DeleteSelectedText())
+            {
+                return; // Selection was deleted, we're done
+            }
+            
             if (CursorPosition < fullText.Length)
             {
                 fullText = fullText.Substring(0, CursorPosition) + fullText.Substring(CursorPosition + 1);
@@ -704,6 +748,139 @@ namespace CabbyMenu.Types
                     UnityEngine.Debug.Log($"Updated InputField text to: '{visibleText}'");
                 }
             }
+        }
+
+        /// <summary>
+        /// Gets the current text selection range from Unity's InputField.
+        /// </summary>
+        /// <returns>A tuple containing (start, end) positions, or null if no selection.</returns>
+        public (int start, int end)? GetTextSelection()
+        {
+            InputField inputField = GetInputField();
+            if (inputField == null) return null;
+
+            int anchorPos = inputField.selectionAnchorPosition;
+            int focusPos = inputField.selectionFocusPosition;
+
+            // If anchor and focus are the same, there's no selection
+            if (anchorPos == focusPos) return null;
+
+            // Convert visible positions to full text positions
+            int fullTextAnchorPos = horizontalOffset + anchorPos;
+            int fullTextFocusPos = horizontalOffset + focusPos;
+
+            // Ensure positions are within bounds
+            fullTextAnchorPos = Mathf.Clamp(fullTextAnchorPos, 0, fullText.Length);
+            fullTextFocusPos = Mathf.Clamp(fullTextFocusPos, 0, fullText.Length);
+
+            // Return start and end positions (start should be the smaller value)
+            int start = Mathf.Min(fullTextAnchorPos, fullTextFocusPos);
+            int end = Mathf.Max(fullTextAnchorPos, fullTextFocusPos);
+
+            return (start, end);
+        }
+
+        /// <summary>
+        /// Deletes the currently selected text.
+        /// </summary>
+        /// <returns>True if text was deleted, false if no selection.</returns>
+        public bool DeleteSelectedText()
+        {
+            var selection = GetTextSelection();
+            if (!selection.HasValue) return false;
+
+            int start = selection.Value.start;
+            int end = selection.Value.end;
+
+            // Remove the selected text
+            fullText = fullText.Substring(0, start) + fullText.Substring(end);
+            
+            // Set cursor position to the start of the deleted selection
+            CursorPosition = start;
+            
+            // Update the display text
+            UpdateDisplayText();
+            
+            // Update horizontal offset to ensure cursor is visible
+            UpdateHorizontalOffsetForCursor();
+            
+            // Update Unity's InputField cursor position immediately
+            UpdateUnityCursorPosition();
+            
+            // Clear the selection in Unity's InputField
+            InputField inputField = GetInputField();
+            if (inputField != null)
+            {
+                inputField.selectionAnchorPosition = inputField.caretPosition;
+                inputField.selectionFocusPosition = inputField.caretPosition;
+            }
+            
+            // Force cursor to reset blink cycle
+            ForceCursorBlinkReset();
+            
+            return true;
+        }
+
+        /// <summary>
+        /// Replaces the currently selected text with a new character.
+        /// </summary>
+        /// <param name="character">The character to insert.</param>
+        /// <param name="characterLimit">The maximum number of characters allowed.</param>
+        /// <returns>True if text was replaced, false if no selection.</returns>
+        public bool ReplaceSelectedText(char character, int characterLimit)
+        {
+            var selection = GetTextSelection();
+            if (!selection.HasValue) return false;
+
+            int start = selection.Value.start;
+            int end = selection.Value.end;
+            int selectionLength = end - start;
+
+            // Validate decimal point for decimal input fields
+            if (character == '.' && ValidChars == KeyCodeMap.ValidChars.Decimal)
+            {
+                if (!CanInsertDecimalPoint(fullText))
+                {
+                    return false;
+                }
+            }
+
+            // Calculate the new text length after replacement
+            int newLength = fullText.Length - selectionLength + 1;
+            
+            // Check if this would exceed the character limit
+            if (newLength > characterLimit)
+            {
+                return false;
+            }
+
+            // Replace the selected text with the new character
+            fullText = fullText.Substring(0, start) + character + fullText.Substring(end);
+            
+            // Set cursor position after the inserted character
+            CursorPosition = start + 1;
+            
+            // Update the display text
+            UpdateDisplayText();
+            
+            // Update horizontal offset to ensure cursor is visible
+            UpdateHorizontalOffsetForCursor();
+            
+            // Update Unity's InputField cursor position immediately
+            UpdateUnityCursorPosition();
+            
+            // Clear the selection in Unity's InputField
+            InputField inputField = GetInputField();
+            if (inputField != null)
+            {
+                inputField.selectionAnchorPosition = inputField.caretPosition;
+                inputField.selectionFocusPosition = inputField.caretPosition;
+            }
+            
+            // Force cursor to reset blink cycle
+            ForceCursorBlinkReset();
+            
+            return true;
         }
     }
 }

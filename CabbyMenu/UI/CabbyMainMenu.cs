@@ -258,6 +258,9 @@ namespace CabbyMenu.UI
                 // Handle keyboard input for selected input field
                 if (Input.anyKeyDown && lastSelected != null)
                 {
+                    // Sync selection state from Unity before processing input
+                    lastSelected.SyncSelectionFromUnity();
+                    
                     // Handle arrow keys for cursor movement
                     if (Input.GetKeyDown(KeyCode.LeftArrow))
                     {
@@ -561,8 +564,14 @@ namespace CabbyMenu.UI
                 // Update Unity's cursor position to match the visible cursor position
                 int visibleCursorPos = inputStatus.GetVisibleCursorPosition();
                 inputField.caretPosition = visibleCursorPos;
-                inputField.selectionAnchorPosition = visibleCursorPos;
-                inputField.selectionFocusPosition = visibleCursorPos;
+                
+                // Only update selection if there's no active selection (to preserve user's selection)
+                var selection = inputStatus.GetTextSelection();
+                if (!selection.HasValue)
+                {
+                    inputField.selectionAnchorPosition = visibleCursorPos;
+                    inputField.selectionFocusPosition = visibleCursorPos;
+                }
             }
         }
     }
