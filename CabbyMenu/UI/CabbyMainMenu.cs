@@ -141,7 +141,7 @@ namespace CabbyMenu.UI
         /// Gets all registered input fields.
         /// </summary>
         /// <returns>A read-only list of registered input fields.</returns>
-        public System.Collections.Generic.IReadOnlyList<InputFieldStatus> GetRegisteredInputs()
+        public IReadOnlyList<InputFieldStatus> GetRegisteredInputs()
         {
             return registeredInputs.AsReadOnly();
         }

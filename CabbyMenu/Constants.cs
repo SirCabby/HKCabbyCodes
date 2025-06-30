@@ -65,52 +65,52 @@ namespace CabbyMenu
         public const int CHEAT_CONTENT_SPACING = 10;
 
         // Colors
-        public static readonly UnityEngine.Color ON_COLOR = new UnityEngine.Color(0f, 0.8f, 1f, 1f);
-        public static readonly UnityEngine.Color ON_HOVER_COLOR = new UnityEngine.Color(0.3f, 1f, 1f, 1f);
-        public static readonly UnityEngine.Color ON_PRESSED_COLOR = new UnityEngine.Color(0f, 0.6f, 0.8f, 1f);
-        public static readonly UnityEngine.Color OFF_COLOR = new UnityEngine.Color(0.6f, 0.6f, 0.6f, 1f);
-        public static readonly UnityEngine.Color OFF_HOVER_COLOR = new UnityEngine.Color(0.8f, 0.8f, 0.8f, 1f);
-        public static readonly UnityEngine.Color OFF_PRESSED_COLOR = new UnityEngine.Color(0.4f, 0.4f, 0.4f, 1f);
-        public static readonly UnityEngine.Color SELECTED_COLOR = new UnityEngine.Color(1f, 1f, 0.56f, 1f);
-        public static readonly UnityEngine.Color NORMAL_SCROLLBAR_COLOR = new UnityEngine.Color(0.4f, 0.4f, 0.4f, 1f);
-        public static readonly UnityEngine.Color HIGHLIGHT_SCROLLBAR_COLOR = new UnityEngine.Color(0.6f, 0.6f, 0.6f, 1f);
-        public static readonly UnityEngine.Color PRESSED_SCROLLBAR_COLOR = new UnityEngine.Color(0.2f, 0.2f, 0.2f, 1f);
-        public static readonly UnityEngine.Color PANEL_COLOR_1 = new UnityEngine.Color(0.8f, 0.8f, 0.8f, 1f);
-        public static readonly UnityEngine.Color PANEL_COLOR_2 = new UnityEngine.Color(0.6f, 0.6f, 0.6f, 1f);
-        public static readonly UnityEngine.Color WARNING_COLOR = new UnityEngine.Color(1f, 0.5f, 0f, 1f);
-        public static readonly UnityEngine.Color HEADER_COLOR = new UnityEngine.Color(0.2f, 0.8f, 0.2f, 1f);
-        public static readonly UnityEngine.Color SUB_HEADER_COLOR = new UnityEngine.Color(0.5f, 0.5f, 0.8f, 1f);
-        public static readonly UnityEngine.Color MENU_PANEL_COLOR = new UnityEngine.Color(0f, 0f, 0f, 0.8f);
-        public static readonly UnityEngine.Color UNEARNED_COLOR = new UnityEngine.Color(0.57f, 0.57f, 0.57f, 0.57f);
+        public static readonly Color ON_COLOR = new Color(0f, 0.8f, 1f, 1f);
+        public static readonly Color ON_HOVER_COLOR = new Color(0.3f, 1f, 1f, 1f);
+        public static readonly Color ON_PRESSED_COLOR = new Color(0f, 0.6f, 0.8f, 1f);
+        public static readonly Color OFF_COLOR = new Color(0.6f, 0.6f, 0.6f, 1f);
+        public static readonly Color OFF_HOVER_COLOR = new Color(0.8f, 0.8f, 0.8f, 1f);
+        public static readonly Color OFF_PRESSED_COLOR = new Color(0.4f, 0.4f, 0.4f, 1f);
+        public static readonly Color SELECTED_COLOR = new Color(1f, 1f, 0.56f, 1f);
+        public static readonly Color NORMAL_SCROLLBAR_COLOR = new Color(0.4f, 0.4f, 0.4f, 1f);
+        public static readonly Color HIGHLIGHT_SCROLLBAR_COLOR = new Color(0.6f, 0.6f, 0.6f, 1f);
+        public static readonly Color PRESSED_SCROLLBAR_COLOR = new Color(0.2f, 0.2f, 0.2f, 1f);
+        public static readonly Color PANEL_COLOR_1 = new Color(0.8f, 0.8f, 0.8f, 1f);
+        public static readonly Color PANEL_COLOR_2 = new Color(0.6f, 0.6f, 0.6f, 1f);
+        public static readonly Color WARNING_COLOR = new Color(1f, 0.5f, 0f, 1f);
+        public static readonly Color HEADER_COLOR = new Color(0.2f, 0.8f, 0.2f, 1f);
+        public static readonly Color SUB_HEADER_COLOR = new Color(0.5f, 0.5f, 0.8f, 1f);
+        public static readonly Color MENU_PANEL_COLOR = new Color(0f, 0f, 0f, 0.8f);
+        public static readonly Color UNEARNED_COLOR = new Color(0.57f, 0.57f, 0.57f, 0.57f);
 
         // Button Colors
-        public static readonly UnityEngine.Color BUTTON_PRIMARY_NORMAL = new UnityEngine.Color(0.2f, 0.4f, 0.8f, 1f);
-        public static readonly UnityEngine.Color BUTTON_PRIMARY_HOVER = new UnityEngine.Color(0.4f, 0.6f, 1f, 1f);
-        public static readonly UnityEngine.Color BUTTON_PRIMARY_PRESSED = new UnityEngine.Color(0.1f, 0.2f, 0.6f, 1f);
-        public static readonly UnityEngine.Color BUTTON_SUCCESS_NORMAL = new UnityEngine.Color(0.2f, 0.7f, 0.3f, 1f);
-        public static readonly UnityEngine.Color BUTTON_SUCCESS_HOVER = new UnityEngine.Color(0.4f, 0.9f, 0.5f, 1f);
-        public static readonly UnityEngine.Color BUTTON_SUCCESS_PRESSED = new UnityEngine.Color(0.1f, 0.5f, 0.1f, 1f);
-        public static readonly UnityEngine.Color BUTTON_DANGER_NORMAL = new UnityEngine.Color(0.8f, 0.2f, 0.2f, 1f);
-        public static readonly UnityEngine.Color BUTTON_DANGER_HOVER = new UnityEngine.Color(1f, 0.4f, 0.4f, 1f);
-        public static readonly UnityEngine.Color BUTTON_DANGER_PRESSED = new UnityEngine.Color(0.6f, 0.1f, 0.1f, 1f);
+        public static readonly Color BUTTON_PRIMARY_NORMAL = new Color(0.2f, 0.4f, 0.8f, 1f);
+        public static readonly Color BUTTON_PRIMARY_HOVER = new Color(0.4f, 0.6f, 1f, 1f);
+        public static readonly Color BUTTON_PRIMARY_PRESSED = new Color(0.1f, 0.2f, 0.6f, 1f);
+        public static readonly Color BUTTON_SUCCESS_NORMAL = new Color(0.2f, 0.7f, 0.3f, 1f);
+        public static readonly Color BUTTON_SUCCESS_HOVER = new Color(0.4f, 0.9f, 0.5f, 1f);
+        public static readonly Color BUTTON_SUCCESS_PRESSED = new Color(0.1f, 0.5f, 0.1f, 1f);
+        public static readonly Color BUTTON_DANGER_NORMAL = new Color(0.8f, 0.2f, 0.2f, 1f);
+        public static readonly Color BUTTON_DANGER_HOVER = new Color(1f, 0.4f, 0.4f, 1f);
+        public static readonly Color BUTTON_DANGER_PRESSED = new Color(0.6f, 0.1f, 0.1f, 1f);
 
         // Dropdown Colors
-        public static readonly UnityEngine.Color DROPDOWN_NORMAL = new UnityEngine.Color(0.7f, 0.7f, 0.7f, 1f);
-        public static readonly UnityEngine.Color DROPDOWN_HOVER = new UnityEngine.Color(1f, 1f, 1f, 1f);
-        public static readonly UnityEngine.Color DROPDOWN_PRESSED = new UnityEngine.Color(0.4f, 0.4f, 0.4f, 1f);
-        public static readonly UnityEngine.Color DROPDOWN_ITEM_NORMAL = new UnityEngine.Color(0f, 0f, 0f, 1f);
-        public static readonly UnityEngine.Color DROPDOWN_ITEM_HOVER = new UnityEngine.Color(0f, 0f, 0f, 1f);
-        public static readonly UnityEngine.Color DROPDOWN_ITEM_PRESSED = new UnityEngine.Color(0f, 0f, 0f, 1f);
-        public static readonly UnityEngine.Color DROPDOWN_PANEL_BACKGROUND = new UnityEngine.Color(0.1f, 0.1f, 0.1f, 0.9f);
-        public static readonly UnityEngine.Color DROPDOWN_OPTION_BACKGROUND = new UnityEngine.Color(0.7f, 0.7f, 0.7f, 1f);
+        public static readonly Color DROPDOWN_NORMAL = new Color(0.7f, 0.7f, 0.7f, 1f);
+        public static readonly Color DROPDOWN_HOVER = new Color(1f, 1f, 1f, 1f);
+        public static readonly Color DROPDOWN_PRESSED = new Color(0.4f, 0.4f, 0.4f, 1f);
+        public static readonly Color DROPDOWN_ITEM_NORMAL = new Color(0f, 0f, 0f, 1f);
+        public static readonly Color DROPDOWN_ITEM_HOVER = new Color(0f, 0f, 0f, 1f);
+        public static readonly Color DROPDOWN_ITEM_PRESSED = new Color(0f, 0f, 0f, 1f);
+        public static readonly Color DROPDOWN_PANEL_BACKGROUND = new Color(0.1f, 0.1f, 0.1f, 0.9f);
+        public static readonly Color DROPDOWN_OPTION_BACKGROUND = new Color(0.7f, 0.7f, 0.7f, 1f);
 
         // Scrollable Area Colors
-        public static readonly UnityEngine.Color CHEAT_SCROLLABLE_BACKGROUND = new UnityEngine.Color(0.1f, 0.1f, 0.1f, 0.3f);
+        public static readonly Color CHEAT_SCROLLABLE_BACKGROUND = new Color(0.1f, 0.1f, 0.1f, 0.3f);
 
         // UI Vector2 Constants
-        public static readonly UnityEngine.Vector2 MIDDLE_ANCHOR_VECTOR = new UnityEngine.Vector2(MIDDLE_ANCHOR, MIDDLE_ANCHOR);
-        public static readonly UnityEngine.Vector2 DEFAULT_PANEL_SIZE = new UnityEngine.Vector2(MIN_PANEL_WIDTH, DEFAULT_PANEL_HEIGHT);
-        public static readonly UnityEngine.Vector2 DEFAULT_ICON_SIZE_VECTOR = new UnityEngine.Vector2(DEFAULT_ICON_SIZE, DEFAULT_ICON_SIZE);
+        public static readonly Vector2 MIDDLE_ANCHOR_VECTOR = new Vector2(MIDDLE_ANCHOR, MIDDLE_ANCHOR);
+        public static readonly Vector2 DEFAULT_PANEL_SIZE = new Vector2(MIN_PANEL_WIDTH, DEFAULT_PANEL_HEIGHT);
+        public static readonly Vector2 DEFAULT_ICON_SIZE_VECTOR = new Vector2(DEFAULT_ICON_SIZE, DEFAULT_ICON_SIZE);
 
         // Boolean/Int Defaults
         public const float DEFAULT_FLOAT_VALUE = 0f;

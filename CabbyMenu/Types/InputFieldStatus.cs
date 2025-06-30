@@ -620,7 +620,7 @@ namespace CabbyMenu.Types
 
         private IEnumerator SetCursorPositionCoroutine(int position)
         {
-            yield return new UnityEngine.WaitForEndOfFrame();
+            yield return new WaitForEndOfFrame();
             
             // Set the cursor position directly
             SetCursorPositionDirectly(position);
@@ -633,7 +633,7 @@ namespace CabbyMenu.Types
 
         private IEnumerator SyncCursorCoroutine()
         {
-            yield return new UnityEngine.WaitForEndOfFrame();
+            yield return new WaitForEndOfFrame();
             
             InputField inputField = GetInputField();
             if (inputField != null && inputField.caretPosition == 0 && !string.IsNullOrEmpty(inputField.text))
