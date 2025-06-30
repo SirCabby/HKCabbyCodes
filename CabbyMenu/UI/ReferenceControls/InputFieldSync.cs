@@ -88,7 +88,46 @@ namespace CabbyMenu.UI.ReferenceControls
         public void Submit()
         {
             string text = inputFieldStatus.GetFullText();
-            T convertedValue = (T)Convert.ChangeType(text, typeof(T));
+            
+            // If the text is empty, don't try to convert it - keep the current value
+            if (string.IsNullOrEmpty(text))
+            {
+                // Get the current value and update the display to show it
+                T currentValue = InputValue.Get();
+                string currentText = Convert.ToString(currentValue);
+                inputFieldStatus.SetFullText(currentText);
+                
+                // Reset horizontal offset and cursor position to show the beginning characters
+                if (inputFieldStatus != null)
+                {
+                    inputFieldStatus.ResetHorizontalOffset();
+                    inputFieldStatus.SetCursorPositionDirectly(0);
+                }
+                return;
+            }
+            
+            // Try to convert the text to the target type
+            T convertedValue;
+            try
+            {
+                convertedValue = (T)Convert.ChangeType(text, typeof(T));
+            }
+            catch (Exception)
+            {
+                // If conversion fails, keep the current value
+                T currentValue = InputValue.Get();
+                string currentText = Convert.ToString(currentValue);
+                inputFieldStatus.SetFullText(currentText);
+                
+                // Reset horizontal offset and cursor position to show the beginning characters
+                if (inputFieldStatus != null)
+                {
+                    inputFieldStatus.ResetHorizontalOffset();
+                    inputFieldStatus.SetCursorPositionDirectly(0);
+                }
+                return;
+            }
+            
             InputValue.Set(convertedValue);
             
             // Get the validated/capped value that was actually set
