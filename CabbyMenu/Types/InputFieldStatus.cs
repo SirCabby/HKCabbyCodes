@@ -694,7 +694,33 @@ namespace CabbyMenu.Types
         public void SetFullText(string text)
         {
             fullText = text ?? string.Empty;
+            
+            // Always update the display text to ensure Unity's InputField is synchronized
+            // This is especially important when validation/capping has occurred
             UpdateDisplayText();
+            
+            // If the field is currently selected, ensure cursor position is valid
+            if (isSelected)
+            {
+                // Ensure cursor position is within bounds of the new text
+                CursorPosition = Mathf.Clamp(CursorPosition, 0, fullText.Length);
+                
+                // Update horizontal offset to ensure cursor is visible
+                UpdateHorizontalOffsetForCursor();
+                
+                // Update Unity's InputField cursor position to match our visible cursor position
+                InputField inputField = GetInputField();
+                if (inputField != null)
+                {
+                    int visibleCursorPosition = GetVisibleCursorPosition();
+                    inputField.selectionAnchorPosition = visibleCursorPosition;
+                    inputField.selectionFocusPosition = visibleCursorPosition;
+                    inputField.caretPosition = visibleCursorPosition;
+                    
+                    // Force cursor to reset blink cycle
+                    ForceCursorBlinkReset();
+                }
+            }
         }
 
         /// <summary>

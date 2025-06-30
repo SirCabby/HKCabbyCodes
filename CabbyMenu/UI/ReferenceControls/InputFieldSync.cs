@@ -73,8 +73,7 @@ namespace CabbyMenu.UI.ReferenceControls
             if (inputFieldStatus == null || !inputFieldStatus.IsSelected)
             {
                 string fullText = Convert.ToString(InputValue.Get());
-                inputField.text = fullText;
-                // Update the full text in InputFieldStatus
+                // Update the full text in InputFieldStatus, which will handle Unity InputField synchronization
                 inputFieldStatus.SetFullText(fullText);
                 
                 // Reset horizontal offset when not selected to show the beginning of the text
@@ -91,17 +90,20 @@ namespace CabbyMenu.UI.ReferenceControls
             T convertedValue = (T)Convert.ChangeType(text, typeof(T));
             InputValue.Set(convertedValue);
             
-            // Immediately update the UI text to show the validated/capped value
-            // This ensures users see the actual value that was set, not what they typed
-            inputField.text = Convert.ToString(InputValue.Get());
+            // Get the validated/capped value that was actually set
+            T validatedValue = InputValue.Get();
+            string validatedText = Convert.ToString(validatedValue);
+            
+            // Update InputFieldStatus which will handle Unity InputField synchronization
+            inputFieldStatus.SetFullText(validatedText);
         }
 
         public void Cancel()
         {
             var value = InputValue.Get();
             string fullText = value?.ToString() ?? "0";
-            inputField.text = fullText;
-            // Restore the full text in InputFieldStatus
+            
+            // Update InputFieldStatus which will handle Unity InputField synchronization
             inputFieldStatus.SetFullText(fullText);
             // Don't call SetSelected here - the main menu handles selection state
         }
