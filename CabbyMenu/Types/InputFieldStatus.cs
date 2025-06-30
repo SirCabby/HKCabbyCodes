@@ -115,8 +115,9 @@ namespace CabbyMenu.Types
                 // Get Unity's current cursor position
                 int unityCursorPosition = inputField.caretPosition;
                 
-                // Update our logical cursor position to match
-                CursorPosition = Mathf.Clamp(unityCursorPosition, 0, inputField.text.Length);
+                // Update our logical cursor position to match, considering both text length and character limit
+                int maxPosition = Mathf.Min(inputField.text.Length, inputField.characterLimit);
+                CursorPosition = Mathf.Clamp(unityCursorPosition, 0, maxPosition);
                 
                 // Ensure Unity's cursor position is properly set
                 inputField.selectionAnchorPosition = CursorPosition;
@@ -201,7 +202,8 @@ namespace CabbyMenu.Types
             if (inputField != null)
             {
                 int newPosition = CursorPosition + offset;
-                CursorPosition = Mathf.Clamp(newPosition, 0, inputField.text.Length);
+                int maxPosition = Mathf.Min(inputField.text.Length, inputField.characterLimit);
+                CursorPosition = Mathf.Clamp(newPosition, 0, maxPosition);
                 
                 // Update Unity's InputField cursor position immediately
                 inputField.selectionAnchorPosition = CursorPosition;
@@ -222,7 +224,8 @@ namespace CabbyMenu.Types
             InputField inputField = GetInputField();
             if (inputField != null)
             {
-                CursorPosition = Mathf.Clamp(position, 0, inputField.text.Length);
+                int maxPosition = Mathf.Min(inputField.text.Length, inputField.characterLimit);
+                CursorPosition = Mathf.Clamp(position, 0, maxPosition);
                 
                 // Update Unity's InputField cursor position immediately
                 inputField.selectionAnchorPosition = CursorPosition;
@@ -277,19 +280,32 @@ namespace CabbyMenu.Types
                 
                 string text = inputField.text;
                 
+                // Ensure cursor position is within valid bounds before any operation
+                CursorPosition = Mathf.Clamp(CursorPosition, 0, text.Length);
+                
                 // If at character limit, replace the character at cursor position
                 if (text.Length >= characterLimit && CursorPosition < text.Length)
                 {
                     text = text.Substring(0, CursorPosition) + character + text.Substring(CursorPosition + 1);
+                    // Cursor position stays the same when replacing
                 }
-                // Otherwise insert at cursor position
+                // Otherwise insert at cursor position if we haven't reached the limit
                 else if (text.Length < characterLimit)
                 {
                     text = text.Substring(0, CursorPosition) + character + text.Substring(CursorPosition);
+                    CursorPosition++;
+                }
+                // If we're at the limit and cursor is at the end, don't allow insertion
+                else
+                {
+                    return;
                 }
                 
                 inputField.text = text;
-                CursorPosition++;
+                
+                // Ensure cursor position is still within bounds after text modification
+                int maxPosition = Mathf.Min(inputField.text.Length, inputField.characterLimit);
+                CursorPosition = Mathf.Clamp(CursorPosition, 0, maxPosition);
                 
                 // Update Unity's InputField cursor position immediately
                 inputField.selectionAnchorPosition = CursorPosition;
@@ -403,8 +419,9 @@ namespace CabbyMenu.Types
                 characterIndex = textGenerator.characters.Count;
             }
 
-            // Ensure the position is within bounds
-            return Mathf.Clamp(characterIndex, 0, text.Length);
+            // Ensure the position is within bounds, considering both text length and character limit
+            int maxPosition = Mathf.Min(text.Length, inputField.characterLimit);
+            return Mathf.Clamp(characterIndex, 0, maxPosition);
         }
 
         /// <summary>
@@ -416,7 +433,8 @@ namespace CabbyMenu.Types
             InputField inputField = GetInputField();
             if (inputField != null)
             {
-                CursorPosition = Mathf.Clamp(position, 0, inputField.text.Length);
+                int maxPosition = Mathf.Min(inputField.text.Length, inputField.characterLimit);
+                CursorPosition = Mathf.Clamp(position, 0, maxPosition);
                 
                 // Update Unity's InputField cursor position immediately
                 inputField.selectionAnchorPosition = CursorPosition;
