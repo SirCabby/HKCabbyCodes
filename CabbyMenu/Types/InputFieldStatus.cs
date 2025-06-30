@@ -415,11 +415,21 @@ namespace CabbyMenu.Types
             CursorPosition = Mathf.Clamp(CursorPosition, 0, fullText.Length);
             
             // If at character limit, replace the character at cursor position
-            if (fullText.Length >= characterLimit && CursorPosition < fullText.Length)
+            if (fullText.Length >= characterLimit && CursorPosition <= fullText.Length)
             {
-                fullText = fullText.Substring(0, CursorPosition) + character + fullText.Substring(CursorPosition + 1);
-                // Move cursor to the right when replacing a character
-                CursorPosition++;
+                // If cursor is at the end, replace the last character
+                if (CursorPosition == fullText.Length)
+                {
+                    fullText = fullText.Substring(0, fullText.Length - 1) + character;
+                    // Keep cursor at the end
+                }
+                else
+                {
+                    // Replace character at cursor position
+                    fullText = fullText.Substring(0, CursorPosition) + character + fullText.Substring(CursorPosition + 1);
+                    // Move cursor to the right when replacing a character
+                    CursorPosition++;
+                }
             }
             // Otherwise insert at cursor position if we haven't reached the limit
             else if (fullText.Length < characterLimit)
