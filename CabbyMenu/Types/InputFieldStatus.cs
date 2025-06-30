@@ -1,6 +1,8 @@
 using System;
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
+using CabbyMenu; // For CoroutineRunner
 
 namespace CabbyMenu.Types
 {
@@ -307,6 +309,131 @@ namespace CabbyMenu.Types
                 
                 // Force cursor to reset blink cycle
                 ForceCursorBlinkReset();
+            }
+        }
+
+        /// <summary>
+        /// Calculates the cursor position based on mouse click coordinates within the input field.
+        /// Uses Unity's TextGenerator for accurate character positioning.
+        /// </summary>
+        /// <param name="mousePosition">The mouse position in screen coordinates.</param>
+        /// <returns>The calculated cursor position.</returns>
+        public int CalculateCursorPositionFromMouse(Vector2 mousePosition)
+        {
+            InputField inputField = GetInputField();
+            if (inputField == null) return 0;
+
+            // Get the text component that displays the input field text
+            Text textComponent = inputField.textComponent;
+            if (textComponent == null) return 0;
+
+            // Convert screen position to local position in the text component
+            RectTransform textRectTransform = textComponent.GetComponent<RectTransform>();
+            if (textRectTransform == null) return 0;
+
+            Vector2 localPoint;
+            if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(textRectTransform, mousePosition, null, out localPoint))
+            {
+                return 0;
+            }
+
+            string text = inputField.text;
+            if (string.IsNullOrEmpty(text)) return 0;
+
+            // Get the text generation settings
+            TextGenerationSettings settings = textComponent.GetGenerationSettings(textComponent.rectTransform.rect.size);
+            TextGenerator textGenerator = new TextGenerator();
+            textGenerator.Populate(text, settings);
+
+            // Find the character index at the mouse position
+            int characterIndex = 0;
+            
+            for (int i = 0; i < textGenerator.characters.Count; i++)
+            {
+                UICharInfo charInfo = textGenerator.characters[i];
+                
+                // If we're past the mouse position, we've found the closest character
+                if (localPoint.x <= charInfo.cursorPos.x)
+                {
+                    characterIndex = i;
+                    break;
+                }
+                characterIndex = i + 1;
+            }
+
+            // If we clicked beyond the last character, position at the end
+            if (textGenerator.characters.Count > 0 && localPoint.x > textGenerator.characters[textGenerator.characters.Count - 1].cursorPos.x)
+            {
+                characterIndex = textGenerator.characters.Count;
+            }
+
+            // Ensure the position is within bounds
+            return Mathf.Clamp(characterIndex, 0, text.Length);
+        }
+
+        /// <summary>
+        /// Sets the cursor position directly and updates Unity's InputField.
+        /// </summary>
+        /// <param name="position">The cursor position to set.</param>
+        public void SetCursorPositionDirectly(int position)
+        {
+            InputField inputField = GetInputField();
+            if (inputField != null)
+            {
+                CursorPosition = Mathf.Clamp(position, 0, inputField.text.Length);
+                
+                // Update Unity's InputField cursor position immediately
+                inputField.selectionAnchorPosition = CursorPosition;
+                inputField.selectionFocusPosition = CursorPosition;
+                inputField.caretPosition = CursorPosition;
+                
+                // Force cursor to reset blink cycle
+                ForceCursorBlinkReset();
+            }
+        }
+
+        /// <summary>
+        /// Calculates and sets the cursor position based on mouse click coordinates.
+        /// </summary>
+        /// <param name="mousePosition">The mouse position in screen coordinates.</param>
+        public void SetCursorPositionFromMouse(Vector2 mousePosition)
+        {
+            // Store the calculated position and set it after Unity processes the click
+            int calculatedPosition = CalculateCursorPositionFromMouse(mousePosition);
+            
+            // Use coroutine to set cursor position after Unity has processed the click
+            CoroutineRunner.Instance.StartCoroutine(SetCursorPositionCoroutine(calculatedPosition));
+        }
+
+        private IEnumerator SetCursorPositionCoroutine(int position)
+        {
+            yield return new UnityEngine.WaitForEndOfFrame();
+            
+            // Set the cursor position directly
+            SetCursorPositionDirectly(position);
+        }
+
+        public void SyncCursorPositionNextFrame()
+        {
+            CoroutineRunner.Instance.StartCoroutine(SyncCursorCoroutine());
+        }
+
+        private IEnumerator SyncCursorCoroutine()
+        {
+            yield return new UnityEngine.WaitForEndOfFrame();
+            
+            InputField inputField = GetInputField();
+            if (inputField != null && inputField.caretPosition == 0 && !string.IsNullOrEmpty(inputField.text))
+            {
+                // Unity didn't set the caret position properly on first click
+                // Use mouse coordinate calculation as fallback
+                // We need to get the mouse position from the main menu
+                // For now, default to end of text
+                SetCursorPositionDirectly(inputField.text.Length);
+            }
+            else
+            {
+                SyncCursorPositionFromUnity();
             }
         }
     }

@@ -93,8 +93,6 @@ namespace CabbyMenu.UI
         /// </summary>
         private GameObject cheatContent;
 
-        private InputFieldStatus pendingCursorSync = null;
-
         /// <summary>
         /// Initializes a new instance of the CabbyMainMenu class.
         /// </summary>
@@ -181,13 +179,6 @@ namespace CabbyMenu.UI
         /// </summary>
         public void Update()
         {
-            // Robust cursor sync: if a sync is pending, do it now (after Unity processed the click)
-            if (pendingCursorSync != null)
-            {
-                pendingCursorSync.SyncCursorPositionFromUnity();
-                pendingCursorSync = null;
-            }
-
             if (gameStateProvider.ShouldShowMenu())
             {
                 if (rootGameObject == null)
@@ -222,8 +213,8 @@ namespace CabbyMenu.UI
                         lastSelected = clickedInput;
                         // Set Unity's selected GameObject for keyboard input
                         EventSystem.current?.SetSelectedGameObject(clickedInput.InputFieldGo);
-                        // Schedule cursor sync for next frame
-                        pendingCursorSync = clickedInput;
+                        // Calculate and set cursor position from mouse click
+                        clickedInput.SetCursorPositionFromMouse(mousePosition);
                     }
                     else if (clickedInput == null && lastSelected != null)
                     {
@@ -235,8 +226,8 @@ namespace CabbyMenu.UI
                     }
                     else if (clickedInput == lastSelected)
                     {
-                        // Clicked on the same input field - schedule cursor sync
-                        pendingCursorSync = clickedInput;
+                        // Clicked on the same input field - calculate and set cursor position from mouse click
+                        clickedInput.SetCursorPositionFromMouse(mousePosition);
                     }
 
                     // Update selection states
