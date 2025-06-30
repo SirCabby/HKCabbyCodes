@@ -53,7 +53,11 @@ namespace CabbyMenu.UI.ReferenceControls
             Text textComponent = textTransform.GetComponent<Text>();
             new TextMod(textComponent).SetFontStyle(FontStyle.Bold).SetFontSize(Constants.DEFAULT_FONT_SIZE).SetAlignment(TextAnchor.MiddleLeft);
             
-            inputFieldStatus = new InputFieldStatus(inputFieldGo, SetSelected, Submit, Cancel, validChars);
+            // Calculate maxVisibleCharacters based on input field width and font size
+            int maxVisibleCharacters = CalculateMaxVisibleCharacters(size.x, Constants.DEFAULT_FONT_SIZE);
+            inputFieldStatus = new InputFieldStatus(inputFieldGo, SetSelected, Submit, Cancel, validChars, maxVisibleCharacters);
+            // Initialize the full text with the current value
+            inputFieldStatus.SetFullText(Convert.ToString(InputValue.Get()));
             RegisterInputFieldSync(inputFieldStatus);
         }
 
@@ -68,13 +72,22 @@ namespace CabbyMenu.UI.ReferenceControls
             // This prevents overwriting user input while they're editing
             if (inputFieldStatus == null || !inputFieldStatus.IsSelected)
             {
-                inputField.text = Convert.ToString(InputValue.Get());
+                string fullText = Convert.ToString(InputValue.Get());
+                inputField.text = fullText;
+                // Update the full text in InputFieldStatus
+                inputFieldStatus.SetFullText(fullText);
+                
+                // Reset horizontal offset when not selected to show the beginning of the text
+                if (inputFieldStatus != null)
+                {
+                    inputFieldStatus.SetCursorPositionDirectly(0);
+                }
             }
         }
 
         public void Submit()
         {
-            string text = inputField.text;
+            string text = inputFieldStatus.GetFullText();
             T convertedValue = (T)Convert.ChangeType(text, typeof(T));
             InputValue.Set(convertedValue);
             
@@ -86,7 +99,10 @@ namespace CabbyMenu.UI.ReferenceControls
         public void Cancel()
         {
             var value = InputValue.Get();
-            inputField.text = value?.ToString() ?? "0";
+            string fullText = value?.ToString() ?? "0";
+            inputField.text = fullText;
+            // Restore the full text in InputFieldStatus
+            inputFieldStatus.SetFullText(fullText);
             // Don't call SetSelected here - the main menu handles selection state
         }
 
@@ -112,6 +128,28 @@ namespace CabbyMenu.UI.ReferenceControls
         public void Set(T value)
         {
             InputValue.Set(value);
+        }
+
+        /// <summary>
+        /// Calculates the maximum number of characters that can be displayed in the input field based on width and font size.
+        /// </summary>
+        /// <param name="width">The width of the input field in pixels.</param>
+        /// <param name="fontSize">The font size in pixels.</param>
+        /// <returns>The maximum number of characters that can be displayed.</returns>
+        private int CalculateMaxVisibleCharacters(float width, int fontSize)
+        {
+            // Estimate character width based on font size (monospace font assumption)
+            // For most fonts, character width is roughly 0.6-0.7 times the font size
+            float estimatedCharWidth = fontSize * 0.65f;
+            
+            // Account for some padding/margins (subtract about 10-20 pixels for borders/padding)
+            float usableWidth = width - 20f;
+            
+            // Calculate how many characters can fit
+            int maxChars = Mathf.FloorToInt(usableWidth / estimatedCharWidth);
+            
+            // Ensure we have at least 1 character visible
+            return Mathf.Max(1, maxChars);
         }
     }
 }

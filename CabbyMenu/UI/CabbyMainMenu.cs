@@ -230,6 +230,7 @@ namespace CabbyMenu.UI
                             EventSystem.current?.SetSelectedGameObject(clickedInput.InputFieldGo);
                             // Calculate and set cursor position from mouse click
                             clickedInput.SetCursorPositionFromMouse(mousePosition);
+                            UpdateInputFieldDisplay(clickedInput);
                         }
                     }
                     else if (clickedInput == null && lastSelected != null)
@@ -246,6 +247,7 @@ namespace CabbyMenu.UI
                         if (clickedInput.InputFieldGo != null)
                         {
                             clickedInput.SetCursorPositionFromMouse(mousePosition);
+                            UpdateInputFieldDisplay(clickedInput);
                         }
                     }
 
@@ -290,6 +292,9 @@ namespace CabbyMenu.UI
                             lastSelected.DeleteForwardCharacter();
                         }
                     }
+
+                    // Always update the display after any input handling
+                    UpdateInputFieldDisplay(lastSelected);
 
                     if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
                     {
@@ -532,6 +537,32 @@ namespace CabbyMenu.UI
                     UnityEngine.Debug.Log($"Setting {input.InputFieldGo?.name} selected={shouldBeSelected}");
                     input.SetSelected(shouldBeSelected);
                 }
+            }
+        }
+
+        /// <summary>
+        /// Updates the input field display.
+        /// </summary>
+        /// <param name="inputStatus">The input field status to update.</param>
+        private void UpdateInputFieldDisplay(InputFieldStatus inputStatus)
+        {
+            if (inputStatus?.InputFieldGo == null) return;
+
+            InputField inputField = inputStatus.InputFieldGo.GetComponent<InputField>();
+            if (inputField != null)
+            {
+                // Update the display text to show the visible portion
+                string visibleText = inputStatus.GetVisibleText();
+                if (inputField.text != visibleText)
+                {
+                    inputField.text = visibleText;
+                }
+                
+                // Update Unity's cursor position to match the visible cursor position
+                int visibleCursorPos = inputStatus.GetVisibleCursorPosition();
+                inputField.caretPosition = visibleCursorPos;
+                inputField.selectionAnchorPosition = visibleCursorPos;
+                inputField.selectionFocusPosition = visibleCursorPos;
             }
         }
     }

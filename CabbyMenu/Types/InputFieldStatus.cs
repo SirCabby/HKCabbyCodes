@@ -62,6 +62,21 @@ namespace CabbyMenu.Types
         public int CursorPosition { get; set; } = 0;
 
         /// <summary>
+        /// The horizontal offset for text scrolling when text is longer than the display area.
+        /// </summary>
+        private int horizontalOffset = 0;
+
+        /// <summary>
+        /// The maximum number of characters that can be displayed in the input field at once.
+        /// </summary>
+        private int maxVisibleCharacters;
+
+        /// <summary>
+        /// The complete text value, separate from the display text shown in Unity's InputField.
+        /// </summary>
+        private string fullText = string.Empty;
+
+        /// <summary>
         /// Initializes a new instance of the InputFieldStatus class.
         /// </summary>
         /// <param name="inputFieldGo">The GameObject containing the input field.</param>
@@ -69,13 +84,15 @@ namespace CabbyMenu.Types
         /// <param name="submit">Callback for value submission.</param>
         /// <param name="cancel">Callback for input cancellation.</param>
         /// <param name="validChars">The types of characters valid for this input field.</param>
-        public InputFieldStatus(GameObject inputFieldGo, Action<bool> onSelected, Action submit, Action cancel, KeyCodeMap.ValidChars validChars)
+        /// <param name="maxVisibleCharacters">The maximum number of characters that can be displayed in the input field at once.</param>
+        public InputFieldStatus(GameObject inputFieldGo, Action<bool> onSelected, Action submit, Action cancel, KeyCodeMap.ValidChars validChars, int maxVisibleCharacters)
         {
             InputFieldGo = inputFieldGo;
             ValidChars = validChars;
             OnSelected = onSelected;
             Submit = submit;
             Cancel = cancel;
+            this.maxVisibleCharacters = maxVisibleCharacters;
         }
 
         /// <summary>
@@ -198,14 +215,19 @@ namespace CabbyMenu.Types
         /// <param name="offset">The offset to move the cursor by (positive for right, negative for left).</param>
         public void MoveCursor(int offset)
         {
+            UnityEngine.Debug.Log($"MoveCursor: offset={offset}, currentCursor={CursorPosition}, fullText='{fullText}'");
+            int newPosition = CursorPosition + offset;
+            int maxPosition = fullText.Length;
+            CursorPosition = Mathf.Clamp(newPosition, 0, maxPosition);
+            UnityEngine.Debug.Log($"MoveCursor: newCursor={CursorPosition}");
+            
+            // Update horizontal offset to ensure cursor is visible
+            UpdateHorizontalOffsetForCursor();
+            
+            // Update Unity's InputField cursor position immediately
             InputField inputField = GetInputField();
             if (inputField != null)
             {
-                int newPosition = CursorPosition + offset;
-                int maxPosition = Mathf.Min(inputField.text.Length, inputField.characterLimit);
-                CursorPosition = Mathf.Clamp(newPosition, 0, maxPosition);
-                
-                // Update Unity's InputField cursor position immediately
                 inputField.selectionAnchorPosition = CursorPosition;
                 inputField.selectionFocusPosition = CursorPosition;
                 inputField.caretPosition = CursorPosition;
@@ -221,13 +243,16 @@ namespace CabbyMenu.Types
         /// <param name="position">The new cursor position.</param>
         public void SetCursorPosition(int position)
         {
+            int maxPosition = fullText.Length;
+            CursorPosition = Mathf.Clamp(position, 0, maxPosition);
+            
+            // Update horizontal offset to ensure cursor is visible
+            UpdateHorizontalOffsetForCursor();
+            
+            // Update Unity's InputField cursor position immediately
             InputField inputField = GetInputField();
             if (inputField != null)
             {
-                int maxPosition = Mathf.Min(inputField.text.Length, inputField.characterLimit);
-                CursorPosition = Mathf.Clamp(position, 0, maxPosition);
-                
-                // Update Unity's InputField cursor position immediately
                 inputField.selectionAnchorPosition = CursorPosition;
                 inputField.selectionFocusPosition = CursorPosition;
                 inputField.caretPosition = CursorPosition;
@@ -235,6 +260,80 @@ namespace CabbyMenu.Types
                 // Force cursor to reset blink cycle
                 ForceCursorBlinkReset();
             }
+        }
+
+        /// <summary>
+        /// Updates the horizontal offset to ensure the cursor is always visible within the display area.
+        /// </summary>
+        private void UpdateHorizontalOffsetForCursor()
+        {
+            int textLength = fullText.Length;
+
+            // If text is shorter than or equal to max visible characters, no offset needed
+            if (textLength <= maxVisibleCharacters)
+            {
+                horizontalOffset = 0;
+                return;
+            }
+
+            // Calculate the visible range
+            int visibleStart = horizontalOffset;
+            int visibleEnd = horizontalOffset + maxVisibleCharacters - 1;
+
+            // Debug logging
+            UnityEngine.Debug.Log($"UpdateHorizontalOffsetForCursor: fullText='{fullText}', length={textLength}, cursor={CursorPosition}, offset={horizontalOffset}, visible={visibleStart}-{visibleEnd}, maxVisible={maxVisibleCharacters}");
+
+            // If cursor is outside the visible range, slide the window
+            if (CursorPosition < visibleStart)
+            {
+                // Cursor is to the left of visible area, slide window left
+                horizontalOffset = CursorPosition;
+                UnityEngine.Debug.Log($"Sliding left: new offset = {horizontalOffset}");
+            }
+            else if (CursorPosition > visibleEnd)
+            {
+                // Cursor is to the right of visible area, slide window right
+                horizontalOffset = CursorPosition - maxVisibleCharacters + 1;
+                UnityEngine.Debug.Log($"Sliding right: new offset = {horizontalOffset}");
+            }
+
+            // Ensure offset doesn't go negative or beyond text length
+            horizontalOffset = Mathf.Clamp(horizontalOffset, 0, Mathf.Max(0, textLength - maxVisibleCharacters));
+            UnityEngine.Debug.Log($"Final offset after clamp: {horizontalOffset}");
+        }
+
+        /// <summary>
+        /// Gets the visible portion of the text based on the current horizontal offset.
+        /// </summary>
+        /// <returns>The visible portion of the text.</returns>
+        public string GetVisibleText()
+        {
+            int textLength = fullText.Length;
+
+            // If text is shorter than max visible characters, return the full text
+            if (textLength <= maxVisibleCharacters)
+            {
+                UnityEngine.Debug.Log($"GetVisibleText: text shorter than maxVisible, returning full text: '{fullText}'");
+                return fullText;
+            }
+
+            // Calculate the visible range
+            int visibleStart = horizontalOffset;
+            int visibleLength = Mathf.Min(maxVisibleCharacters, textLength - horizontalOffset);
+
+            // Return the visible portion of the text
+            string visibleText = fullText.Substring(visibleStart, visibleLength);
+            UnityEngine.Debug.Log($"GetVisibleText: fullText='{fullText}', offset={horizontalOffset}, visibleStart={visibleStart}, visibleLength={visibleLength}, result='{visibleText}'");
+            return visibleText;
+        }
+
+        /// <summary>
+        /// Gets the cursor position relative to the visible text.
+        /// </summary>
+        /// <returns>The cursor position relative to the visible text.</returns>
+        public int GetVisibleCursorPosition()
+        {
+            return CursorPosition - horizontalOffset;
         }
 
         /// <summary>
@@ -266,48 +365,50 @@ namespace CabbyMenu.Types
         /// <param name="characterLimit">The maximum number of characters allowed.</param>
         public void InsertCharacter(char character, int characterLimit)
         {
-            InputField inputField = GetInputField();
-            if (inputField != null)
+            // Validate decimal point for decimal input fields
+            if (character == '.' && ValidChars == KeyCodeMap.ValidChars.Decimal)
             {
-                // Validate decimal point for decimal input fields
-                if (character == '.' && ValidChars == KeyCodeMap.ValidChars.Decimal)
-                {
-                    if (!CanInsertDecimalPoint(inputField.text))
-                    {
-                        return;
-                    }
-                }
-                
-                string text = inputField.text;
-                
-                // Ensure cursor position is within valid bounds before any operation
-                CursorPosition = Mathf.Clamp(CursorPosition, 0, text.Length);
-                
-                // If at character limit, replace the character at cursor position
-                if (text.Length >= characterLimit && CursorPosition < text.Length)
-                {
-                    text = text.Substring(0, CursorPosition) + character + text.Substring(CursorPosition + 1);
-                    // Cursor position stays the same when replacing
-                }
-                // Otherwise insert at cursor position if we haven't reached the limit
-                else if (text.Length < characterLimit)
-                {
-                    text = text.Substring(0, CursorPosition) + character + text.Substring(CursorPosition);
-                    CursorPosition++;
-                }
-                // If we're at the limit and cursor is at the end, don't allow insertion
-                else
+                if (!CanInsertDecimalPoint(fullText))
                 {
                     return;
                 }
-                
-                inputField.text = text;
-                
-                // Ensure cursor position is still within bounds after text modification
-                int maxPosition = Mathf.Min(inputField.text.Length, inputField.characterLimit);
-                CursorPosition = Mathf.Clamp(CursorPosition, 0, maxPosition);
-                
-                // Update Unity's InputField cursor position immediately
+            }
+            
+            // Ensure cursor position is within valid bounds before any operation
+            CursorPosition = Mathf.Clamp(CursorPosition, 0, fullText.Length);
+            
+            // If at character limit, replace the character at cursor position
+            if (fullText.Length >= characterLimit && CursorPosition < fullText.Length)
+            {
+                fullText = fullText.Substring(0, CursorPosition) + character + fullText.Substring(CursorPosition + 1);
+                // Cursor position stays the same when replacing
+            }
+            // Otherwise insert at cursor position if we haven't reached the limit
+            else if (fullText.Length < characterLimit)
+            {
+                fullText = fullText.Substring(0, CursorPosition) + character + fullText.Substring(CursorPosition);
+                CursorPosition++;
+            }
+            // If we're at the limit and cursor is at the end, don't allow insertion
+            else
+            {
+                return;
+            }
+            
+            // Update the display text
+            UpdateDisplayText();
+            
+            // Ensure cursor position is still within bounds after text modification
+            int maxPosition = Mathf.Min(fullText.Length, characterLimit);
+            CursorPosition = Mathf.Clamp(CursorPosition, 0, maxPosition);
+            
+            // Update horizontal offset to ensure cursor is visible
+            UpdateHorizontalOffsetForCursor();
+            
+            // Update Unity's InputField cursor position immediately
+            InputField inputField = GetInputField();
+            if (inputField != null)
+            {
                 inputField.selectionAnchorPosition = CursorPosition;
                 inputField.selectionFocusPosition = CursorPosition;
                 inputField.caretPosition = CursorPosition;
@@ -322,21 +423,28 @@ namespace CabbyMenu.Types
         /// </summary>
         public void DeleteCharacter()
         {
-            InputField inputField = GetInputField();
-            if (inputField != null && CursorPosition > 0)
+            if (CursorPosition > 0)
             {
-                string text = inputField.text;
-                text = text.Substring(0, CursorPosition - 1) + text.Substring(CursorPosition);
-                inputField.text = text;
+                fullText = fullText.Substring(0, CursorPosition - 1) + fullText.Substring(CursorPosition);
                 CursorPosition--;
                 
-                // Update Unity's InputField cursor position immediately
-                inputField.selectionAnchorPosition = CursorPosition;
-                inputField.selectionFocusPosition = CursorPosition;
-                inputField.caretPosition = CursorPosition;
+                // Update the display text
+                UpdateDisplayText();
                 
-                // Force cursor to reset blink cycle
-                ForceCursorBlinkReset();
+                // Update horizontal offset to ensure cursor is visible
+                UpdateHorizontalOffsetForCursor();
+                
+                // Update Unity's InputField cursor position immediately
+                InputField inputField = GetInputField();
+                if (inputField != null)
+                {
+                    inputField.selectionAnchorPosition = CursorPosition;
+                    inputField.selectionFocusPosition = CursorPosition;
+                    inputField.caretPosition = CursorPosition;
+                    
+                    // Force cursor to reset blink cycle
+                    ForceCursorBlinkReset();
+                }
             }
         }
 
@@ -345,22 +453,27 @@ namespace CabbyMenu.Types
         /// </summary>
         public void DeleteForwardCharacter()
         {
-            InputField inputField = GetInputField();
-            if (inputField != null && CursorPosition < inputField.text.Length)
+            if (CursorPosition < fullText.Length)
             {
-                string text = inputField.text;
-                text = text.Substring(0, CursorPosition) + text.Substring(CursorPosition + 1);
-                inputField.text = text;
+                fullText = fullText.Substring(0, CursorPosition) + fullText.Substring(CursorPosition + 1);
                 
-                // Cursor position stays the same when deleting forward
+                // Update the display text
+                UpdateDisplayText();
+                
+                // Update horizontal offset to ensure cursor is visible
+                UpdateHorizontalOffsetForCursor();
                 
                 // Update Unity's InputField cursor position immediately
-                inputField.selectionAnchorPosition = CursorPosition;
-                inputField.selectionFocusPosition = CursorPosition;
-                inputField.caretPosition = CursorPosition;
-                
-                // Force cursor to reset blink cycle
-                ForceCursorBlinkReset();
+                InputField inputField = GetInputField();
+                if (inputField != null)
+                {
+                    inputField.selectionAnchorPosition = CursorPosition;
+                    inputField.selectionFocusPosition = CursorPosition;
+                    inputField.caretPosition = CursorPosition;
+                    
+                    // Force cursor to reset blink cycle
+                    ForceCursorBlinkReset();
+                }
             }
         }
 
@@ -389,7 +502,7 @@ namespace CabbyMenu.Types
                 return 0;
             }
 
-            string text = inputField.text;
+            string text = GetVisibleText();
             if (string.IsNullOrEmpty(text)) return 0;
 
             // Get the text generation settings
@@ -419,9 +532,11 @@ namespace CabbyMenu.Types
                 characterIndex = textGenerator.characters.Count;
             }
 
-            // Ensure the position is within bounds, considering both text length and character limit
-            int maxPosition = Mathf.Min(text.Length, inputField.characterLimit);
-            return Mathf.Clamp(characterIndex, 0, maxPosition);
+            // Convert the visible text position to the full text position
+            int fullTextPosition = horizontalOffset + characterIndex;
+            
+            // Ensure the position is within bounds of the full text
+            return Mathf.Clamp(fullTextPosition, 0, fullText.Length);
         }
 
         /// <summary>
@@ -430,13 +545,16 @@ namespace CabbyMenu.Types
         /// <param name="position">The cursor position to set.</param>
         public void SetCursorPositionDirectly(int position)
         {
+            int maxPosition = fullText.Length;
+            CursorPosition = Mathf.Clamp(position, 0, maxPosition);
+            
+            // Update horizontal offset to ensure cursor is visible
+            UpdateHorizontalOffsetForCursor();
+            
+            // Update Unity's InputField cursor position immediately
             InputField inputField = GetInputField();
             if (inputField != null)
             {
-                int maxPosition = Mathf.Min(inputField.text.Length, inputField.characterLimit);
-                CursorPosition = Mathf.Clamp(position, 0, maxPosition);
-                
-                // Update Unity's InputField cursor position immediately
                 inputField.selectionAnchorPosition = CursorPosition;
                 inputField.selectionFocusPosition = CursorPosition;
                 inputField.caretPosition = CursorPosition;
@@ -488,6 +606,43 @@ namespace CabbyMenu.Types
             else
             {
                 SyncCursorPositionFromUnity();
+            }
+        }
+
+        /// <summary>
+        /// Sets the complete text value and updates the display.
+        /// </summary>
+        /// <param name="text">The complete text to set.</param>
+        public void SetFullText(string text)
+        {
+            fullText = text ?? string.Empty;
+            UpdateDisplayText();
+        }
+
+        /// <summary>
+        /// Gets the complete text value.
+        /// </summary>
+        /// <returns>The complete text value.</returns>
+        public string GetFullText()
+        {
+            return fullText;
+        }
+
+        /// <summary>
+        /// Updates the display text in Unity's InputField to show the visible portion.
+        /// </summary>
+        private void UpdateDisplayText()
+        {
+            InputField inputField = GetInputField();
+            if (inputField != null)
+            {
+                string visibleText = GetVisibleText();
+                UnityEngine.Debug.Log($"UpdateDisplayText: fullText='{fullText}', visibleText='{visibleText}', currentInputFieldText='{inputField.text}'");
+                if (inputField.text != visibleText)
+                {
+                    inputField.text = visibleText;
+                    UnityEngine.Debug.Log($"Updated InputField text to: '{visibleText}'");
+                }
             }
         }
     }
