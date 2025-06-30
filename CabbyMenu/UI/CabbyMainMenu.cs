@@ -197,12 +197,25 @@ namespace CabbyMenu.UI
                     Vector2 mousePosition = Input.mousePosition;
                     InputFieldStatus clickedInput = null;
 
-                    foreach (InputFieldStatus input in registeredInputs)
+                    // Check if registeredInputs is valid
+                    if (registeredInputs != null)
                     {
-                        if (IsMouseOverInputField(input, mousePosition))
+                        foreach (InputFieldStatus input in registeredInputs)
                         {
-                            clickedInput = input;
-                            break;
+                            if (input != null && IsMouseOverInputField(input, mousePosition))
+                            {
+                                clickedInput = input;
+                                break;
+                            }
+                        }
+                    }
+
+                    // Handle dropdown deselection - close all dropdowns if clicking outside
+                    if (rootGameObject != null)
+                    {
+                        if (!CustomDropdown.IsMouseOverAnyDropdown(mousePosition))
+                        {
+                            CustomDropdown.CloseAllDropdowns();
                         }
                     }
 
@@ -212,9 +225,12 @@ namespace CabbyMenu.UI
                         lastSelected?.Submit();
                         lastSelected = clickedInput;
                         // Set Unity's selected GameObject for keyboard input
-                        EventSystem.current?.SetSelectedGameObject(clickedInput.InputFieldGo);
-                        // Calculate and set cursor position from mouse click
-                        clickedInput.SetCursorPositionFromMouse(mousePosition);
+                        if (clickedInput.InputFieldGo != null)
+                        {
+                            EventSystem.current?.SetSelectedGameObject(clickedInput.InputFieldGo);
+                            // Calculate and set cursor position from mouse click
+                            clickedInput.SetCursorPositionFromMouse(mousePosition);
+                        }
                     }
                     else if (clickedInput == null && lastSelected != null)
                     {
@@ -224,10 +240,13 @@ namespace CabbyMenu.UI
                         // Clear Unity's EventSystem selection
                         EventSystem.current?.SetSelectedGameObject(null);
                     }
-                    else if (clickedInput == lastSelected)
+                    else if (clickedInput == lastSelected && clickedInput != null)
                     {
                         // Clicked on the same input field - calculate and set cursor position from mouse click
-                        clickedInput.SetCursorPositionFromMouse(mousePosition);
+                        if (clickedInput.InputFieldGo != null)
+                        {
+                            clickedInput.SetCursorPositionFromMouse(mousePosition);
+                        }
                     }
 
                     // Update selection states
@@ -250,10 +269,13 @@ namespace CabbyMenu.UI
                     {
                         // Handle character input
                         char? keyPressed = KeyCodeMap.GetChar(lastSelected.ValidChars);
-                        if (keyPressed.HasValue)
+                        if (keyPressed.HasValue && lastSelected.InputFieldGo != null)
                         {
                             InputField inputField = lastSelected.InputFieldGo.GetComponent<InputField>();
-                            lastSelected.InsertCharacter(keyPressed.Value, inputField.characterLimit);
+                            if (inputField != null)
+                            {
+                                lastSelected.InsertCharacter(keyPressed.Value, inputField.characterLimit);
+                            }
                         }
 
                         // Handle backspace
@@ -307,6 +329,10 @@ namespace CabbyMenu.UI
                 EventSystem.current?.SetSelectedGameObject(null);
                 SetInputFieldSelection(lastSelected);
 
+                // Close and clear all open dropdowns when menu is hidden
+                CustomDropdown.CloseAllDropdowns();
+                CustomDropdown.ClearAllDropdowns();
+
                 // Reset the menu on unpausing
                 if (isMenuOpen)
                 {
@@ -340,6 +366,9 @@ namespace CabbyMenu.UI
             contentCheatPanels.Clear();
             CheatPanel.ResetPattern();
 
+            // Close all open dropdowns when changing categories
+            CustomDropdown.CloseAllDropdowns();
+
             // Build selected cheat panels
             if (categoryDropdown != null && arg0 < categoryDropdown.Options.Count)
             {
@@ -359,6 +388,9 @@ namespace CabbyMenu.UI
         private void BuildCanvas()
         {
             if (rootGameObject != null) return;
+
+            // Clear any existing dropdown tracking when rebuilding the menu
+            CustomDropdown.ClearAllDropdowns();
 
             // Ensure EventSystem exists
             if (UnityEngine.Object.FindObjectOfType<EventSystem>() == null)
@@ -487,11 +519,16 @@ namespace CabbyMenu.UI
         /// <param name="selected">The input field to select, or null to deselect all.</param>
         private void SetInputFieldSelection(InputFieldStatus selected)
         {
+            if (registeredInputs == null) return;
+            
             foreach (var input in registeredInputs)
             {
-                bool shouldBeSelected = input == selected;
-                UnityEngine.Debug.Log($"Setting {input.InputFieldGo?.name} selected={shouldBeSelected}");
-                input.SetSelected(shouldBeSelected);
+                if (input != null)
+                {
+                    bool shouldBeSelected = input == selected;
+                    UnityEngine.Debug.Log($"Setting {input.InputFieldGo?.name} selected={shouldBeSelected}");
+                    input.SetSelected(shouldBeSelected);
+                }
             }
         }
     }

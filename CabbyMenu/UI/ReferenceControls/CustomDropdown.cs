@@ -47,9 +47,128 @@ namespace CabbyMenu.UI.ReferenceControls
         public int Value => selectedIndex;
         public List<string> Options => options.ToList();
 
+        // Static tracking for all open dropdowns
+        private static readonly List<CustomDropdown> openDropdowns = new List<CustomDropdown>();
+
+        /// <summary>
+        /// Gets all currently open dropdowns.
+        /// </summary>
+        public static IReadOnlyList<CustomDropdown> OpenDropdowns => openDropdowns.AsReadOnly();
+
+        /// <summary>
+        /// Checks if the mouse position is over any dropdown component (main button, panel, or options).
+        /// </summary>
+        /// <param name="mousePosition">The mouse position in screen coordinates.</param>
+        /// <returns>True if the mouse is over any dropdown component, false otherwise.</returns>
+        public static bool IsMouseOverAnyDropdown(Vector2 mousePosition)
+        {
+            // Clean up any destroyed dropdowns first
+            CleanupDestroyedDropdowns();
+            
+            foreach (CustomDropdown dropdown in openDropdowns)
+            {
+                if (dropdown != null && dropdown.IsMouseOverDropdown(mousePosition))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Closes all open dropdowns.
+        /// </summary>
+        public static void CloseAllDropdowns()
+        {
+            // Clean up any destroyed dropdowns first
+            CleanupDestroyedDropdowns();
+            
+            // Create a copy of the list to avoid modification during iteration
+            var dropdownsToClose = openDropdowns.ToList();
+            foreach (CustomDropdown dropdown in dropdownsToClose)
+            {
+                if (dropdown != null)
+                {
+                    dropdown.HideDropdown();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Removes destroyed dropdowns from the open dropdowns list.
+        /// </summary>
+        private static void CleanupDestroyedDropdowns()
+        {
+            openDropdowns.RemoveAll(dropdown => dropdown == null);
+        }
+
+        /// <summary>
+        /// Clears all dropdowns from the tracking list. Use when completely resetting the menu.
+        /// </summary>
+        public static void ClearAllDropdowns()
+        {
+            openDropdowns.Clear();
+        }
+
+        /// <summary>
+        /// Checks if the mouse position is over this dropdown's components.
+        /// </summary>
+        /// <param name="mousePosition">The mouse position in screen coordinates.</param>
+        /// <returns>True if the mouse is over this dropdown, false otherwise.</returns>
+        public bool IsMouseOverDropdown(Vector2 mousePosition)
+        {
+            // Check main button
+            if (IsMouseOverGameObject(gameObject, mousePosition))
+            {
+                return true;
+            }
+
+            // Check dropdown panel if open
+            if (isOpen && dropdownPanel != null && IsMouseOverGameObject(dropdownPanel, mousePosition))
+            {
+                return true;
+            }
+
+            // Check option buttons if open
+            if (isOpen && optionButtons != null)
+            {
+                foreach (GameObject optionButton in optionButtons)
+                {
+                    if (optionButton != null && IsMouseOverGameObject(optionButton, mousePosition))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Helper method to check if mouse is over a specific GameObject.
+        /// </summary>
+        /// <param name="gameObject">The GameObject to check.</param>
+        /// <param name="mousePosition">The mouse position in screen coordinates.</param>
+        /// <returns>True if the mouse is over the GameObject, false otherwise.</returns>
+        private bool IsMouseOverGameObject(GameObject gameObject, Vector2 mousePosition)
+        {
+            if (gameObject == null) return false;
+
+            RectTransform rectTransform = gameObject.GetComponent<RectTransform>();
+            if (rectTransform == null) return false;
+
+            return RectTransformUtility.RectangleContainsScreenPoint(rectTransform, mousePosition);
+        }
+
         private void Awake()
         {
             InitializeBasicComponents();
+        }
+
+        private void OnDestroy()
+        {
+            // Remove from open dropdowns list when destroyed to prevent memory leaks
+            openDropdowns.Remove(this);
         }
 
         private void Start()
@@ -712,6 +831,12 @@ namespace CabbyMenu.UI.ReferenceControls
             ShowDropdownPanel();
 
             isOpen = true;
+            
+            // Add to open dropdowns list
+            if (!openDropdowns.Contains(this))
+            {
+                openDropdowns.Add(this);
+            }
         }
 
         private void HideDropdown()
@@ -723,6 +848,10 @@ namespace CabbyMenu.UI.ReferenceControls
                 UnityEngine.Debug.Log($"Dropdown panel hidden - active: {dropdownPanel.activeSelf}");
             }
             isOpen = false;
+            
+            // Remove from open dropdowns list
+            openDropdowns.Remove(this);
+            
             UnityEngine.Debug.Log($"Dropdown state - isOpen: {isOpen}");
         }
 
