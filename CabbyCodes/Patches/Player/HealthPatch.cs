@@ -23,7 +23,7 @@ namespace CabbyCodes.Patches.Player
 
         public static void AddPanel()
         {
-            InputFieldPanel<int> panel = new InputFieldPanel<int>(new HealthPatch(), KeyCodeMap.ValidChars.Numeric, CabbyMenu.Constants.DEFAULT_CHARACTER_LIMIT, CabbyMenu.Constants.DEFAULT_PANEL_WIDTH, "Max Health (5-9)");
+            InputFieldPanel<int> panel = new InputFieldPanel<int>(new HealthPatch(), KeyCodeMap.ValidChars.Numeric, CabbyMenu.Constants.DEFAULT_CHARACTER_LIMIT, "Max Health (5-9)");
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(panel);
         }
     }

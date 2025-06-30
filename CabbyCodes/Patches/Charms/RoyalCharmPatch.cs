@@ -1,7 +1,6 @@
 using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
 using System.Collections.Generic;
-using CabbyMenu;
 
 namespace CabbyCodes.Patches.Charms
 {
@@ -57,7 +56,7 @@ namespace CabbyCodes.Patches.Charms
         public static void AddPanel()
         {
             RoyalCharmPatch patch = new RoyalCharmPatch();
-            DropdownPanel dropdownPanel = new DropdownPanel(patch, 230, "40: Kingsoul / Void Heart");
+            DropdownPanel dropdownPanel = new DropdownPanel(patch, "40: Kingsoul / Void Heart");
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(dropdownPanel);
         }
     }

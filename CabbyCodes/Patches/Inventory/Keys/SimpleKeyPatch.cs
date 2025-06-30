@@ -1,6 +1,5 @@
 using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
-using System;
 
 namespace CabbyCodes.Patches.Inventory.Keys
 {
@@ -19,7 +18,7 @@ namespace CabbyCodes.Patches.Inventory.Keys
 
         public static void AddPanel()
         {
-            InputFieldPanel<int> panel = new InputFieldPanel<int>(new SimpleKeyPatch(), CabbyMenu.KeyCodeMap.ValidChars.Numeric, 1, Constants.PANEL_WIDTH_120, "Simple Keys (0-4)");
+            InputFieldPanel<int> panel = new InputFieldPanel<int>(new SimpleKeyPatch(), CabbyMenu.KeyCodeMap.ValidChars.Numeric, 1, "Simple Keys (0-4)");
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(panel);
         }
     }

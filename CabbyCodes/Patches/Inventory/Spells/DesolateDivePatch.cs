@@ -27,7 +27,7 @@ namespace CabbyCodes.Patches.Inventory.Spells
         public static void AddPanel()
         {
             DesolateDivePatch patch = new DesolateDivePatch();
-            DropdownPanel dropdownPanel = new DropdownPanel(patch, 350, "Desolate Dive / Descending Dark");
+            DropdownPanel dropdownPanel = new DropdownPanel(patch, "Desolate Dive / Descending Dark");
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(dropdownPanel);
         }
     }

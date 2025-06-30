@@ -195,18 +195,20 @@ namespace CabbyMenu.UI.ReferenceControls
         /// <returns>The maximum number of characters that can be displayed.</returns>
         private int CalculateMaxVisibleCharacters(float width, int fontSize)
         {
-            // Estimate character width based on font size (monospace font assumption)
-            // For most fonts, character width is roughly 0.6-0.7 times the font size
-            float estimatedCharWidth = fontSize * 0.65f;
-            
-            // Account for some padding/margins (subtract about 10-20 pixels for borders/padding)
-            float usableWidth = width - 20f;
-            
-            // Calculate how many characters can fit
+            float estimatedCharWidth = CalculateCursorCharacterWidth(fontSize);
+            float usableWidth = width;
             int maxChars = Mathf.FloorToInt(usableWidth / estimatedCharWidth);
-            
-            // Ensure we have at least 1 character visible
             return Mathf.Max(1, maxChars);
+        }
+
+        /// <summary>
+        /// Calculates the character width for cursor positioning calculations.
+        /// </summary>
+        /// <param name="fontSize">The font size in pixels.</param>
+        /// <returns>The estimated character width for cursor positioning.</returns>
+        private static float CalculateCursorCharacterWidth(int fontSize)
+        {
+            return fontSize * 0.65f;
         }
     }
 }

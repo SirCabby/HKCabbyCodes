@@ -1,6 +1,5 @@
 using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
-using System;
 
 namespace CabbyCodes.Patches.Inventory.Currency
 {
@@ -19,7 +18,7 @@ namespace CabbyCodes.Patches.Inventory.Currency
 
         public static void AddPanel()
         {
-            InputFieldPanel<int> panel = new InputFieldPanel<int>(new DreamEssencePatch(), CabbyMenu.KeyCodeMap.ValidChars.Numeric, 4, Constants.PANEL_WIDTH_120, "Dream Essence (0-9999)");
+            InputFieldPanel<int> panel = new InputFieldPanel<int>(new DreamEssencePatch(), CabbyMenu.KeyCodeMap.ValidChars.Numeric, 4, "Dream Essence (0-9999)");
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(panel);
         }
     }

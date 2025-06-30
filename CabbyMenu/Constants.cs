@@ -1,10 +1,12 @@
+using UnityEngine;
+
 namespace CabbyMenu
 {
     public static class Constants
     {
         // UI Constants
         public const int DEFAULT_CHARACTER_LIMIT = 1;
-        public const int DEFAULT_PANEL_WIDTH = 120;
+        public const int MIN_PANEL_WIDTH = 120;
         public const int DEFAULT_PANEL_HEIGHT = 60;
         public const double CLICK_TIMER_DELAY = 0.2;
 
@@ -107,7 +109,7 @@ namespace CabbyMenu
 
         // UI Vector2 Constants
         public static readonly UnityEngine.Vector2 MIDDLE_ANCHOR_VECTOR = new UnityEngine.Vector2(MIDDLE_ANCHOR, MIDDLE_ANCHOR);
-        public static readonly UnityEngine.Vector2 DEFAULT_PANEL_SIZE = new UnityEngine.Vector2(DEFAULT_PANEL_WIDTH, DEFAULT_PANEL_HEIGHT);
+        public static readonly UnityEngine.Vector2 DEFAULT_PANEL_SIZE = new UnityEngine.Vector2(MIN_PANEL_WIDTH, DEFAULT_PANEL_HEIGHT);
         public static readonly UnityEngine.Vector2 DEFAULT_ICON_SIZE_VECTOR = new UnityEngine.Vector2(DEFAULT_ICON_SIZE, DEFAULT_ICON_SIZE);
 
         // Boolean/Int Defaults

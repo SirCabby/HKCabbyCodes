@@ -1,6 +1,5 @@
 using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
-using System;
 using CabbyMenu;
 
 namespace CabbyCodes.Patches.Inventory.Currency
@@ -23,7 +22,7 @@ namespace CabbyCodes.Patches.Inventory.Currency
 
         public static void AddPanel()
         {
-            InputFieldPanel<int> panel = new InputFieldPanel<int>(new GeoValuePatch(), KeyCodeMap.ValidChars.Numeric, 6, Constants.PANEL_WIDTH_120, "Geo (0-999999)");
+            InputFieldPanel<int> panel = new InputFieldPanel<int>(new GeoValuePatch(), KeyCodeMap.ValidChars.Numeric, 6, "Geo (0-999999)");
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(panel);
         }
     }

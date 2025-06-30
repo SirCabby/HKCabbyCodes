@@ -1,6 +1,5 @@
 using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -38,7 +37,7 @@ namespace CabbyCodes.Patches.Hunter
 
         private static InputFieldPanel<int> BuildCheatPanel(string targetName)
         {
-            InputFieldPanel<int> panel = new InputFieldPanel<int>(new HunterPatch(targetName), CabbyMenu.KeyCodeMap.ValidChars.Numeric, 2, Constants.HUNTER_INPUT_WIDTH, targetName);
+            InputFieldPanel<int> panel = new InputFieldPanel<int>(new HunterPatch(targetName), CabbyMenu.KeyCodeMap.ValidChars.Numeric, 2, targetName);
             PanelAdder.AddToggleButton(panel, 0, new HunterKilledPatch(targetName));
 
             return panel;
@@ -57,7 +56,7 @@ namespace CabbyCodes.Patches.Hunter
                 }
 
                 CabbyCodesPlugin.cabbyMenu.UpdateCheatPanels();
-            }, "Unlock All", "Update all entries", Constants.HUNTER_UNLOCK_BUTTON_WIDTH);
+            }, "Unlock All", "Update all entries");
 
             // Lock all toggle
             PanelAdder.AddButton(buttonPanel, 1, () =>
@@ -80,7 +79,7 @@ namespace CabbyCodes.Patches.Hunter
                 }
 
                 CabbyCodesPlugin.cabbyMenu.UpdateCheatPanels();
-            }, "0", "All Entries: Set kills remaining", Constants.HUNTER_ZERO_BUTTON_WIDTH);
+            }, "0", "All Entries: Set kills remaining");
 
             // Set kills remaining 1
             PanelAdder.AddButton(setPanel, 1, () =>

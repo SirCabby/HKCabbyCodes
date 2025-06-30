@@ -5,7 +5,6 @@ using CabbyMenu;
 using HarmonyLib;
 using System.Reflection;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using System.Collections;
 using GlobalEnums;
 
@@ -123,7 +122,6 @@ namespace CabbyCodes.Patches.Settings
                 new SaveSlotReference(), 
                 KeyCodeMap.ValidChars.Numeric, 
                 CabbyMenu.Constants.DEFAULT_CHARACTER_LIMIT, 
-                CabbyMenu.Constants.DEFAULT_PANEL_WIDTH, 
                 "Save Slot (1-4)");
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(saveSlotPanel);
 

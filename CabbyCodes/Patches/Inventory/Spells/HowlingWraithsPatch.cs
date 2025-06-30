@@ -27,7 +27,7 @@ namespace CabbyCodes.Patches.Inventory.Spells
         public static void AddPanel()
         {
             HowlingWraithsPatch patch = new HowlingWraithsPatch();
-            DropdownPanel dropdownPanel = new DropdownPanel(patch, 350, "Howling Wraiths / Abyss Shriek");
+            DropdownPanel dropdownPanel = new DropdownPanel(patch, "Howling Wraiths / Abyss Shriek");
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(dropdownPanel);
         }
     }

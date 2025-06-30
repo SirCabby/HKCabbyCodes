@@ -1,6 +1,5 @@
 using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
-using System;
 
 namespace CabbyCodes.Patches.Inventory.Currency
 {
@@ -23,7 +22,7 @@ namespace CabbyCodes.Patches.Inventory.Currency
 
         public static void AddPanel()
         {
-            InputFieldPanel<int> panel = new InputFieldPanel<int>(new HallownestSealPatch(), CabbyMenu.KeyCodeMap.ValidChars.Numeric, 2, Constants.PANEL_WIDTH_120, "Hallownest Seals (0-17)");
+            InputFieldPanel<int> panel = new InputFieldPanel<int>(new HallownestSealPatch(), CabbyMenu.KeyCodeMap.ValidChars.Numeric, 2, "Hallownest Seals (0-17)");
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(panel);
         }
     }

@@ -1,6 +1,5 @@
 using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
-using System;
 
 namespace CabbyCodes.Patches.Charms
 {
@@ -19,7 +18,7 @@ namespace CabbyCodes.Patches.Charms
 
         public static void AddPanel()
         {
-            InputFieldPanel<int> panel = new InputFieldPanel<int>(new NotchPatch(), CabbyMenu.KeyCodeMap.ValidChars.Numeric, 2, Constants.PANEL_WIDTH_120, "Notches (3-11)");
+            InputFieldPanel<int> panel = new InputFieldPanel<int>(new NotchPatch(), CabbyMenu.KeyCodeMap.ValidChars.Numeric, 2, "Notches (3-11)");
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(panel);
         }
     }

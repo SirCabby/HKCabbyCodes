@@ -1,4 +1,3 @@
-using CabbyCodes.Patches.Settings;
 using CabbyMenu.UI.CheatPanels;
 
 namespace CabbyCodes.Patches.Settings

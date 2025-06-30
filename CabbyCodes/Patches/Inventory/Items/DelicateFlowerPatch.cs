@@ -50,7 +50,7 @@ namespace CabbyCodes.Patches.Inventory.Items
         public static void AddPanel()
         {
             DelicateFlowerPatch patch = new DelicateFlowerPatch();
-            DropdownPanel dropdownPanel = new DropdownPanel(patch, 350, "Delicate Flower");
+            DropdownPanel dropdownPanel = new DropdownPanel(patch, "Delicate Flower");
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(dropdownPanel);
         }
     }

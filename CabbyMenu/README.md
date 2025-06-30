@@ -78,17 +78,18 @@ CabbyMenu.UI.ReferenceControls.InputFieldSync.RegisterInputFieldSync = (inputFie
 
 ## 📖 Usage Examples
 
-### Creating a Simple Button Panel
+### Creating a Button Panel
 ```csharp
 using CabbyMenu.UI.CheatPanels;
 
 var buttonPanel = new ButtonPanel(
     action: () => Debug.Log("Button clicked!"),
     buttonText: "Click Me",
-    description: "A simple button",
-    width: CabbyMenu.Constants.DEFAULT_PANEL_WIDTH
+    description: "A simple button"
 );
 ```
+
+**Note**: Button width is automatically calculated based on the button text length to ensure all text is visible.
 
 ### Creating a Toggle Panel
 ```csharp
@@ -109,10 +110,22 @@ var inputPanel = new InputFieldPanel<int>(
     syncedReference: valueRef,
     validChars: KeyCodeMap.ValidChars.Numeric,
     characterLimit: CabbyMenu.Constants.DEFAULT_CHARACTER_LIMIT,
-    width: CabbyMenu.Constants.DEFAULT_PANEL_WIDTH,
     description: "Enter a number"
 );
 ```
+
+**Note**: Panel width is automatically calculated based on the character limit to ensure all characters can be displayed.
+
+### Creating a Dropdown Panel
+```csharp
+using CabbyMenu.SyncedReferences;
+using CabbyMenu.UI.CheatPanels;
+
+var dropdownRef = new BoxedReference<int>(0);
+var dropdownPanel = new DropdownPanel(dropdownRef, "Select an option");
+```
+
+**Note**: Dropdown width is automatically calculated based on the longest option text to ensure all options are visible.
 
 ### Using Synced References
 ```csharp
@@ -131,10 +144,18 @@ int currentHealth = healthRef.Get(); // Gets current value
 using CabbyMenu;
 
 // Use predefined UI constants for consistent sizing
-var panelWidth = Constants.DEFAULT_PANEL_WIDTH;  // 120
 var panelHeight = Constants.DEFAULT_PANEL_HEIGHT; // 60
 var charLimit = Constants.DEFAULT_CHARACTER_LIMIT; // 1
 var clickDelay = Constants.CLICK_TIMER_DELAY;     // 0.2
+
+// Calculate character width for custom calculations
+var charWidth = Constants.CalculateCharacterWidth(36); // ~16.2 pixels per character
+
+// Calculate panel width based on character limit
+var inputWidth = Constants.CalculatePanelWidth(5); // Width for 5 characters
+
+// Calculate button width based on text length
+var buttonWidth = Constants.CalculateButtonWidth("Click Me"); // Width for button text
 ```
 
 ### Using Game State Management
@@ -225,9 +246,14 @@ public static class Constants
 {
     // UI Constants
     public const int DEFAULT_CHARACTER_LIMIT = 1;
-    public const int DEFAULT_PANEL_WIDTH = 120;
+    public const int MIN_PANEL_WIDTH = 120;
     public const int DEFAULT_PANEL_HEIGHT = 60;
     public const double CLICK_TIMER_DELAY = 0.2;
+    
+    // Utility functions to calculate panel widths
+    public static float CalculateCharacterWidth(int fontSize);
+    public static int CalculatePanelWidth(int characterLimit);
+    public static int CalculateButtonWidth(string text);
 }
 ```
 

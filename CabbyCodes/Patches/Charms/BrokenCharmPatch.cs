@@ -1,5 +1,4 @@
 using CabbyMenu.SyncedReferences;
-using CabbyMenu.Types;
 using CabbyMenu.UI.CheatPanels;
 using CabbyMenu.UI.Modders;
 using System.Linq;

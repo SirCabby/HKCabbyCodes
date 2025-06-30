@@ -1,6 +1,5 @@
 using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
-using System;
 
 namespace CabbyCodes.Patches.Inventory.Upgrades
 {
@@ -19,7 +18,7 @@ namespace CabbyCodes.Patches.Inventory.Upgrades
 
         public static void AddPanel()
         {
-            InputFieldPanel<int> panel = new InputFieldPanel<int>(new MaskShardPatch(), CabbyMenu.KeyCodeMap.ValidChars.Numeric, 1, Constants.PANEL_WIDTH_120, "Mask Shards (0-4)");
+            InputFieldPanel<int> panel = new InputFieldPanel<int>(new MaskShardPatch(), CabbyMenu.KeyCodeMap.ValidChars.Numeric, 1, "Mask Shards (0-4)");
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(panel);
         }
     }

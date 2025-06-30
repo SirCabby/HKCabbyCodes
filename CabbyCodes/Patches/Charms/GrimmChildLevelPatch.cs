@@ -2,7 +2,6 @@ using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
 using CabbyMenu.UI.Modders;
 using System.Collections.Generic;
-using CabbyMenu;
 
 namespace CabbyCodes.Patches.Charms
 {
@@ -33,7 +32,7 @@ namespace CabbyCodes.Patches.Charms
         {
             int charmId = 40;
             GrimmChildLevelPatch patch = new GrimmChildLevelPatch();
-            DropdownPanel dropdownPanel = new DropdownPanel(patch, 120, "39: Grimm Child Level (1-4) or Carefree Melody");
+            DropdownPanel dropdownPanel = new DropdownPanel(patch, "39: Grimm Child Level (1-4) or Carefree Melody");
 
             (_, ImageMod spriteImageMod) = PanelAdder.AddSprite(dropdownPanel, CharmIconList.Instance.GetSprite(charmId), 1);
 

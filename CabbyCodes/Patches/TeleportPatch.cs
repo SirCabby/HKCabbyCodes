@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 using BepInEx.Configuration;
-using UnityEngine.UI;
 using System.Linq;
 using CabbyCodes.Types;
 
@@ -275,7 +274,7 @@ namespace CabbyCodes.Patches
         /// </summary>
         private static void AddPanel()
         {
-            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new DropdownPanel(new TeleportPatch(), Constants.TELEPORT_DROPDOWN_WIDTH, "Select Area to Teleport"));
+            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new DropdownPanel(new TeleportPatch(), "Select Area to Teleport"));
         }
 
         /// <summary>
@@ -292,7 +291,7 @@ namespace CabbyCodes.Patches
         /// <param name="location">The teleport location to create a panel for.</param>
         private static void AddCustomPanel(TeleportLocation location)
         {
-            ButtonPanel buttonPanel = new ButtonPanel(() => { DoTeleport(location); }, "Teleport", location.DisplayName, Constants.TELEPORT_BUTTON_WIDTH);
+            ButtonPanel buttonPanel = new ButtonPanel(() => { DoTeleport(location); }, "Teleport", location.DisplayName);
 
             GameObject destroyButton = PanelAdder.AddDestroyPanelButton(buttonPanel, buttonPanel.cheatPanel.transform.childCount, () =>
             {

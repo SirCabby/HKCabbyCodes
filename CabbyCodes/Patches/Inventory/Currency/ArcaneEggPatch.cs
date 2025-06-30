@@ -1,6 +1,5 @@
 using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
-using System;
 
 namespace CabbyCodes.Patches.Inventory.Currency
 {
@@ -23,7 +22,7 @@ namespace CabbyCodes.Patches.Inventory.Currency
 
         public static void AddPanel()
         {
-            InputFieldPanel<int> panel = new InputFieldPanel<int>(new ArcaneEggPatch(), CabbyMenu.KeyCodeMap.ValidChars.Numeric, 1, Constants.PANEL_WIDTH_120, "Arcane Eggs (0-4)");
+            InputFieldPanel<int> panel = new InputFieldPanel<int>(new ArcaneEggPatch(), CabbyMenu.KeyCodeMap.ValidChars.Numeric, 1, "Arcane Eggs (0-4)");
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(panel);
         }
     }

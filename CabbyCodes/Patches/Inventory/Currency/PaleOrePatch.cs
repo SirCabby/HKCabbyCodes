@@ -1,6 +1,5 @@
 using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
-using System;
 
 namespace CabbyCodes.Patches.Inventory.Currency
 {
@@ -19,7 +18,7 @@ namespace CabbyCodes.Patches.Inventory.Currency
 
         public static void AddPanel()
         {
-            InputFieldPanel<int> panel = new InputFieldPanel<int>(new PaleOrePatch(), CabbyMenu.KeyCodeMap.ValidChars.Numeric, 1, Constants.PANEL_WIDTH_120, "Ore (0-6)");
+            InputFieldPanel<int> panel = new InputFieldPanel<int>(new PaleOrePatch(), CabbyMenu.KeyCodeMap.ValidChars.Numeric, 1, "Ore (0-6)");
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(panel);
         }
     }
