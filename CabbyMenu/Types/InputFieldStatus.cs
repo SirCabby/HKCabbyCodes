@@ -418,7 +418,8 @@ namespace CabbyMenu.Types
             if (fullText.Length >= characterLimit && CursorPosition < fullText.Length)
             {
                 fullText = fullText.Substring(0, CursorPosition) + character + fullText.Substring(CursorPosition + 1);
-                // Cursor position stays the same when replacing
+                // Move cursor to the right when replacing a character
+                CursorPosition++;
             }
             // Otherwise insert at cursor position if we haven't reached the limit
             else if (fullText.Length < characterLimit)
