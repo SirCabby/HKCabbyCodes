@@ -270,6 +270,16 @@ namespace CabbyMenu.UI
                     {
                         lastSelected.MoveCursor(1);
                     }
+                    // Handle Home key to move cursor to beginning
+                    else if (Input.GetKeyDown(KeyCode.Home))
+                    {
+                        lastSelected.SetCursorPosition(0);
+                    }
+                    // Handle End key to move cursor to end
+                    else if (Input.GetKeyDown(KeyCode.End))
+                    {
+                        lastSelected.SetCursorPosition(lastSelected.GetFullText().Length);
+                    }
                     else
                     {
                         // Handle character input
