@@ -317,6 +317,9 @@ namespace CabbyMenu.UI
             }
             else if (rootGameObject != null && rootGoMod != null && rootGoMod.IsActive())
             {
+                // Submit any pending changes before hiding the menu
+                lastSelected?.Submit();
+                
                 rootGoMod.SetActive(false);
                 if (categoryDropdown != null)
                 {

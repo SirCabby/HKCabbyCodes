@@ -47,6 +47,11 @@ namespace CabbyMenu.Types
         private bool isSelected = false;
 
         /// <summary>
+        /// Gets whether this input field is currently selected.
+        /// </summary>
+        public bool IsSelected => isSelected;
+
+        /// <summary>
         /// The time when this input field was last selected.
         /// </summary>
         private float selectionTime = 0f;

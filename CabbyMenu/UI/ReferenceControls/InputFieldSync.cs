@@ -37,9 +37,11 @@ namespace CabbyMenu.UI.ReferenceControls
             // Ensure input field starts in deactivated state to prevent initial focus issues
             inputField.DeactivateInputField();
 
-            inputField.onEndEdit.AddListener((text) => {
-                Submit();
-            });
+            // Remove automatic onEndEdit submission to prevent conflicts with manual text manipulation
+            // The main menu will handle submission manually through InputFieldStatus.Submit
+            // inputField.onEndEdit.AddListener((text) => {
+            //     Submit();
+            // });
 
             inputField.text = Convert.ToString(InputValue.Get());
 
@@ -62,7 +64,12 @@ namespace CabbyMenu.UI.ReferenceControls
 
         public void Update()
         {
-            inputField.text = Convert.ToString(InputValue.Get());
+            // Only update the input field text if it's not currently selected
+            // This prevents overwriting user input while they're editing
+            if (inputFieldStatus == null || !inputFieldStatus.IsSelected)
+            {
+                inputField.text = Convert.ToString(InputValue.Get());
+            }
         }
 
         public void Submit()
@@ -76,7 +83,7 @@ namespace CabbyMenu.UI.ReferenceControls
         {
             var value = InputValue.Get();
             inputField.text = value?.ToString() ?? "0";
-            SetSelected(false);
+            // Don't call SetSelected here - the main menu handles selection state
         }
 
         public void SetSelected(bool isSelected)
