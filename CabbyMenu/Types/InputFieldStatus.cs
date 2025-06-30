@@ -230,6 +230,28 @@ namespace CabbyMenu.Types
         }
 
         /// <summary>
+        /// Validates if a decimal point can be inserted at the current cursor position.
+        /// </summary>
+        /// <param name="currentText">The current text in the input field.</param>
+        /// <returns>True if the decimal point can be inserted, false otherwise.</returns>
+        private bool CanInsertDecimalPoint(string currentText)
+        {
+            // Check if a decimal point already exists in the text
+            if (currentText.Contains("."))
+            {
+                return false;
+            }
+            
+            // Check if trying to insert decimal point at the beginning (which would create ".123")
+            if (CursorPosition == 0)
+            {
+                return false;
+            }
+            
+            return true;
+        }
+
+        /// <summary>
         /// Inserts a character at the current cursor position.
         /// </summary>
         /// <param name="character">The character to insert.</param>
@@ -239,6 +261,15 @@ namespace CabbyMenu.Types
             InputField inputField = GetInputField();
             if (inputField != null)
             {
+                // Validate decimal point for decimal input fields
+                if (character == '.' && ValidChars == KeyCodeMap.ValidChars.Decimal)
+                {
+                    if (!CanInsertDecimalPoint(inputField.text))
+                    {
+                        return;
+                    }
+                }
+                
                 string text = inputField.text;
                 
                 // If at character limit, replace the character at cursor position

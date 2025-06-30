@@ -26,7 +26,12 @@ namespace CabbyMenu
             /// <summary>
             /// Both alphabetic and numeric characters.
             /// </summary>
-            AlphaNumeric
+            AlphaNumeric,
+
+            /// <summary>
+            /// Numeric characters (0-9) plus decimal point.
+            /// </summary>
+            Decimal
         }
 
         /// <summary>
@@ -43,6 +48,11 @@ namespace CabbyMenu
         /// HashSet of alphabetic KeyCodes for fast lookup.
         /// </summary>
         private static readonly HashSet<KeyCode> _alphaKeys = new HashSet<KeyCode>();
+
+        /// <summary>
+        /// HashSet of decimal KeyCodes (numeric + decimal point) for fast lookup.
+        /// </summary>
+        private static readonly HashSet<KeyCode> _decimalKeys = new HashSet<KeyCode>();
 
         static KeyCodeMap()
         {
@@ -67,6 +77,10 @@ namespace CabbyMenu
             _keyCodeMap.Add(KeyCode.Alpha7, '7');
             _keyCodeMap.Add(KeyCode.Alpha8, '8');
             _keyCodeMap.Add(KeyCode.Alpha9, '9');
+
+            // Decimal point keys
+            _keyCodeMap.Add(KeyCode.Period, '.');
+            _keyCodeMap.Add(KeyCode.KeypadPeriod, '.');
 
             // Alphabetic keys
             _keyCodeMap.Add(KeyCode.A, 'A');
@@ -145,6 +159,14 @@ namespace CabbyMenu
             _alphaKeys.Add(KeyCode.X);
             _alphaKeys.Add(KeyCode.Y);
             _alphaKeys.Add(KeyCode.Z);
+
+            // Decimal KeyCodes (numeric + decimal point) - reuse existing numeric keys
+            foreach (var numericKey in _numericKeys)
+            {
+                _decimalKeys.Add(numericKey);
+            }
+            _decimalKeys.Add(KeyCode.Period);
+            _decimalKeys.Add(KeyCode.KeypadPeriod);
         }
 
         /// <summary>
@@ -162,6 +184,9 @@ namespace CabbyMenu
                     break;
                 case ValidChars.Numeric:
                     keysToCheck = _numericKeys;
+                    break;
+                case ValidChars.Decimal:
+                    keysToCheck = _decimalKeys;
                     break;
                 case ValidChars.AlphaNumeric:
                 default:
