@@ -14,9 +14,7 @@ namespace CabbyMenu.UI.ReferenceControls
         private readonly GameObject inputFieldGo;
         private readonly InputField inputField;
         private readonly ISyncedReference<T> InputValue;
-        private readonly KeyCodeMap.ValidChars validChars;
-        private readonly int characterLimit;
-        private InputFieldStatus inputFieldStatus;
+        private readonly InputFieldStatus inputFieldStatus;
 
         /// <summary>
         /// Action for registering input field sync. Can be set by the consuming project.
@@ -26,8 +24,6 @@ namespace CabbyMenu.UI.ReferenceControls
         public InputFieldSync(ISyncedReference<T> inputValue, KeyCodeMap.ValidChars validChars, Vector2 size, int characterLimit = Constants.DEFAULT_CHARACTER_LIMIT)
         {
             InputValue = inputValue;
-            this.validChars = validChars;
-            this.characterLimit = characterLimit;
 
             inputFieldGo = DefaultControls.CreateInputField(new DefaultControls.Resources());
             inputFieldGo.name = "InputFieldSync";

@@ -68,7 +68,7 @@ namespace CabbyMenu.Types
         /// <summary>
         /// The maximum number of characters that can be displayed in the input field at once.
         /// </summary>
-        private int maxVisibleCharacters;
+        private readonly int maxVisibleCharacters;
 
         /// <summary>
         /// The complete text value, separate from the display text shown in Unity's InputField.
@@ -164,14 +164,6 @@ namespace CabbyMenu.Types
                 // Get Unity's current selection positions
                 int unityAnchorPos = inputField.selectionAnchorPosition;
                 int unityFocusPos = inputField.selectionFocusPosition;
-                
-                // Convert Unity's visible positions to full text positions
-                int fullTextAnchorPos = horizontalOffset + unityAnchorPos;
-                int fullTextFocusPos = horizontalOffset + unityFocusPos;
-                
-                // Ensure positions are within bounds
-                fullTextAnchorPos = Mathf.Clamp(fullTextAnchorPos, 0, fullText.Length);
-                fullTextFocusPos = Mathf.Clamp(fullTextFocusPos, 0, fullText.Length);
                 
                 // Update Unity's selection positions to reflect the full text positions
                 inputField.selectionAnchorPosition = unityAnchorPos;
