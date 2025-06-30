@@ -93,6 +93,8 @@ namespace CabbyMenu.UI
         /// </summary>
         private GameObject cheatContent;
 
+        private InputFieldStatus pendingCursorSync = null;
+
         /// <summary>
         /// Initializes a new instance of the CabbyMainMenu class.
         /// </summary>
@@ -179,6 +181,13 @@ namespace CabbyMenu.UI
         /// </summary>
         public void Update()
         {
+            // Robust cursor sync: if a sync is pending, do it now (after Unity processed the click)
+            if (pendingCursorSync != null)
+            {
+                pendingCursorSync.SyncCursorPositionFromUnity();
+                pendingCursorSync = null;
+            }
+
             if (gameStateProvider.ShouldShowMenu())
             {
                 if (rootGameObject == null)
@@ -211,21 +220,23 @@ namespace CabbyMenu.UI
                     {
                         lastSelected?.Submit();
                         lastSelected = clickedInput;
-
                         // Set Unity's selected GameObject for keyboard input
                         EventSystem.current?.SetSelectedGameObject(clickedInput.InputFieldGo);
+                        // Schedule cursor sync for next frame
+                        pendingCursorSync = clickedInput;
                     }
                     else if (clickedInput == null && lastSelected != null)
                     {
                         // Clicked outside any input field, deselect current
                         lastSelected.Submit();
                         lastSelected = null;
-                        
                         // Clear Unity's EventSystem selection
                         EventSystem.current?.SetSelectedGameObject(null);
                     }
                     else if (clickedInput == lastSelected)
                     {
+                        // Clicked on the same input field - schedule cursor sync
+                        pendingCursorSync = clickedInput;
                     }
 
                     // Update selection states
@@ -258,6 +269,12 @@ namespace CabbyMenu.UI
                         if (Input.GetKeyDown(KeyCode.Backspace))
                         {
                             lastSelected.DeleteCharacter();
+                        }
+
+                        // Handle delete key
+                        if (Input.GetKeyDown(KeyCode.Delete))
+                        {
+                            lastSelected.DeleteForwardCharacter();
                         }
                     }
 

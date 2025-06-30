@@ -88,23 +88,36 @@ namespace CabbyMenu.Types
                 if (selected)
                 {
                     selectionTime = Time.time;
-                    // Reset cursor position to end of text when selected
-                    InputField inputField = GetInputField();
-                    if (inputField != null)
-                    {
-                        CursorPosition = inputField.text.Length;
-                        // Update Unity's InputField cursor position immediately
-                        inputField.selectionAnchorPosition = CursorPosition;
-                        inputField.selectionFocusPosition = CursorPosition;
-                        inputField.caretPosition = CursorPosition;
-                        
-                        // Force cursor to reset blink cycle
-                        ForceCursorBlinkReset();
-                    }
+                    // Sync our cursor position with Unity's InputField cursor position
+                    SyncCursorPositionFromUnity();
                 }
                 
                 // Call the OnSelected callback to update the InputFieldSync
                 OnSelected?.Invoke(selected);
+            }
+        }
+
+        /// <summary>
+        /// Synchronizes our logical cursor position with Unity's InputField cursor position.
+        /// </summary>
+        public void SyncCursorPositionFromUnity()
+        {
+            InputField inputField = GetInputField();
+            if (inputField != null)
+            {
+                // Get Unity's current cursor position
+                int unityCursorPosition = inputField.caretPosition;
+                
+                // Update our logical cursor position to match
+                CursorPosition = Mathf.Clamp(unityCursorPosition, 0, inputField.text.Length);
+                
+                // Ensure Unity's cursor position is properly set
+                inputField.selectionAnchorPosition = CursorPosition;
+                inputField.selectionFocusPosition = CursorPosition;
+                inputField.caretPosition = CursorPosition;
+                
+                // Force cursor to reset blink cycle
+                ForceCursorBlinkReset();
             }
         }
 
@@ -262,6 +275,30 @@ namespace CabbyMenu.Types
                 text = text.Substring(0, CursorPosition - 1) + text.Substring(CursorPosition);
                 inputField.text = text;
                 CursorPosition--;
+                
+                // Update Unity's InputField cursor position immediately
+                inputField.selectionAnchorPosition = CursorPosition;
+                inputField.selectionFocusPosition = CursorPosition;
+                inputField.caretPosition = CursorPosition;
+                
+                // Force cursor to reset blink cycle
+                ForceCursorBlinkReset();
+            }
+        }
+
+        /// <summary>
+        /// Deletes the character after the current cursor position (delete key).
+        /// </summary>
+        public void DeleteForwardCharacter()
+        {
+            InputField inputField = GetInputField();
+            if (inputField != null && CursorPosition < inputField.text.Length)
+            {
+                string text = inputField.text;
+                text = text.Substring(0, CursorPosition) + text.Substring(CursorPosition + 1);
+                inputField.text = text;
+                
+                // Cursor position stays the same when deleting forward
                 
                 // Update Unity's InputField cursor position immediately
                 inputField.selectionAnchorPosition = CursorPosition;

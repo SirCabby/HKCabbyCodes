@@ -84,19 +84,6 @@ namespace CabbyMenu.UI.ReferenceControls
             if (isSelected)
             {
                 inputField.ActivateInputField();
-                // Set cursor position to end of text when selected
-                if (inputFieldStatus != null)
-                {
-                    inputFieldStatus.SetCursorPosition(inputField.text.Length);
-                }
-                else
-                {
-                    // Fallback: directly set Unity's cursor position immediately
-                    int endPosition = inputField.text.Length;
-                    inputField.selectionAnchorPosition = endPosition;
-                    inputField.selectionFocusPosition = endPosition;
-                    inputField.caretPosition = endPosition;
-                }
             }
             else
                 inputField.DeactivateInputField();
