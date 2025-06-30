@@ -601,7 +601,6 @@ namespace CabbyMenu.Types
             // When clicking, only allow positioning within the currently visible text area
             // Don't trigger any sliding - that should only happen with arrow key navigation
             int visibleStart = horizontalOffset;
-            int visibleEnd = horizontalOffset + maxVisibleCharacters - 1;
             int cursorAfterVisibleEnd = horizontalOffset + maxVisibleCharacters;
             
             // Clamp to the visible range (including the position after the last visible character)
