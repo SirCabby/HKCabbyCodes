@@ -397,6 +397,48 @@ namespace CabbyMenu.Types
         }
 
         /// <summary>
+        /// Removes leading zeros from the text while preserving cursor position.
+        /// </summary>
+        private void RemoveLeadingZeros()
+        {
+            if (string.IsNullOrEmpty(fullText))
+                return;
+                
+            // Count leading zeros
+            int leadingZeros = 0;
+            for (int i = 0; i < fullText.Length; i++)
+            {
+                if (fullText[i] == '0')
+                {
+                    leadingZeros++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            
+            // If there are leading zeros and we have at least one non-zero digit, remove them
+            if (leadingZeros > 0 && leadingZeros < fullText.Length)
+            {
+                // Adjust cursor position to account for removed zeros
+                if (CursorPosition <= leadingZeros)
+                {
+                    // If cursor was within the leading zeros, move it to position 0
+                    CursorPosition = 0;
+                }
+                else
+                {
+                    // If cursor was after the leading zeros, adjust it by the number of zeros removed
+                    CursorPosition -= leadingZeros;
+                }
+                
+                // Remove the leading zeros
+                fullText = fullText.Substring(leadingZeros);
+            }
+        }
+
+        /// <summary>
         /// Inserts a character at the current cursor position.
         /// </summary>
         /// <param name="character">The character to insert.</param>
@@ -448,6 +490,12 @@ namespace CabbyMenu.Types
             else
             {
                 return;
+            }
+            
+            // Remove leading zeros for numeric input fields immediately after insertion
+            if (ValidChars == KeyCodeMap.ValidChars.Numeric)
+            {
+                RemoveLeadingZeros();
             }
             
             // Update the display text

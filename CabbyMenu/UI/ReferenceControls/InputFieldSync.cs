@@ -102,11 +102,25 @@ namespace CabbyMenu.UI.ReferenceControls
                 return;
             }
             
+            // Remove leading zeros for numeric types before conversion
+            string processedText = text;
+            if (typeof(T) == typeof(int) || typeof(T) == typeof(long) || typeof(T) == typeof(short) || 
+                typeof(T) == typeof(byte) || typeof(T) == typeof(uint) || typeof(T) == typeof(ulong) || 
+                typeof(T) == typeof(ushort) || typeof(T) == typeof(sbyte))
+            {
+                processedText = text.TrimStart('0');
+                // If all characters were zeros, keep at least one zero
+                if (string.IsNullOrEmpty(processedText))
+                {
+                    processedText = "0";
+                }
+            }
+            
             // Try to convert the text to the target type
             T convertedValue;
             try
             {
-                convertedValue = (T)Convert.ChangeType(text, typeof(T));
+                convertedValue = (T)Convert.ChangeType(processedText, typeof(T));
             }
             catch (Exception)
             {
