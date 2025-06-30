@@ -115,6 +115,11 @@ namespace CabbyMenu.Types
                     // Sync our cursor position with Unity's InputField cursor position
                     SyncCursorPositionFromUnity();
                 }
+                else
+                {
+                    // Reset horizontal offset when losing focus to show the beginning of the text
+                    ResetHorizontalOffset();
+                }
                 
                 // Call the OnSelected callback to update the InputFieldSync
                 OnSelected?.Invoke(selected);
@@ -132,14 +137,32 @@ namespace CabbyMenu.Types
                 // Get Unity's current cursor position
                 int unityCursorPosition = inputField.caretPosition;
                 
-                // Update our logical cursor position to match, considering both text length and character limit
-                int maxPosition = Mathf.Min(inputField.text.Length, inputField.characterLimit);
-                CursorPosition = Mathf.Clamp(unityCursorPosition, 0, maxPosition);
+                // If the horizontal offset is 0 (meaning we just reset it), 
+                // don't convert Unity's cursor position to full text position
+                // Instead, set the cursor to the beginning of the visible text
+                if (horizontalOffset == 0)
+                {
+                    // Set cursor to beginning of the visible text
+                    CursorPosition = 0;
+                }
+                else
+                {
+                    // Convert Unity's visible cursor position to our full text cursor position
+                    int fullTextCursorPosition = horizontalOffset + unityCursorPosition;
+                    
+                    // Update our logical cursor position to match, considering both text length and character limit
+                    int maxPosition = Mathf.Min(fullText.Length, inputField.characterLimit);
+                    CursorPosition = Mathf.Clamp(fullTextCursorPosition, 0, maxPosition);
+                }
                 
-                // Ensure Unity's cursor position is properly set
-                inputField.selectionAnchorPosition = CursorPosition;
-                inputField.selectionFocusPosition = CursorPosition;
-                inputField.caretPosition = CursorPosition;
+                // Update horizontal offset to ensure cursor is visible
+                UpdateHorizontalOffsetForCursor();
+                
+                // Update Unity's InputField cursor position to match our visible cursor position
+                int visibleCursorPosition = GetVisibleCursorPosition();
+                inputField.selectionAnchorPosition = visibleCursorPosition;
+                inputField.selectionFocusPosition = visibleCursorPosition;
+                inputField.caretPosition = visibleCursorPosition;
                 
                 // Force cursor to reset blink cycle
                 ForceCursorBlinkReset();
@@ -203,9 +226,10 @@ namespace CabbyMenu.Types
                 inputField.ForceLabelUpdate();
                 
                 // Immediately restore the cursor position
-                inputField.selectionAnchorPosition = CursorPosition;
-                inputField.selectionFocusPosition = CursorPosition;
-                inputField.caretPosition = CursorPosition;
+                int visibleCursorPosition = GetVisibleCursorPosition();
+                inputField.selectionAnchorPosition = visibleCursorPosition;
+                inputField.selectionFocusPosition = visibleCursorPosition;
+                inputField.caretPosition = visibleCursorPosition;
             }
         }
 
@@ -228,9 +252,10 @@ namespace CabbyMenu.Types
             InputField inputField = GetInputField();
             if (inputField != null)
             {
-                inputField.selectionAnchorPosition = CursorPosition;
-                inputField.selectionFocusPosition = CursorPosition;
-                inputField.caretPosition = CursorPosition;
+                int visibleCursorPosition = GetVisibleCursorPosition();
+                inputField.selectionAnchorPosition = visibleCursorPosition;
+                inputField.selectionFocusPosition = visibleCursorPosition;
+                inputField.caretPosition = visibleCursorPosition;
                 
                 // Force cursor to reset blink cycle
                 ForceCursorBlinkReset();
@@ -253,9 +278,10 @@ namespace CabbyMenu.Types
             InputField inputField = GetInputField();
             if (inputField != null)
             {
-                inputField.selectionAnchorPosition = CursorPosition;
-                inputField.selectionFocusPosition = CursorPosition;
-                inputField.caretPosition = CursorPosition;
+                int visibleCursorPosition = GetVisibleCursorPosition();
+                inputField.selectionAnchorPosition = visibleCursorPosition;
+                inputField.selectionFocusPosition = visibleCursorPosition;
+                inputField.caretPosition = visibleCursorPosition;
                 
                 // Force cursor to reset blink cycle
                 ForceCursorBlinkReset();
@@ -279,27 +305,38 @@ namespace CabbyMenu.Types
             // Calculate the visible range
             int visibleStart = horizontalOffset;
             int visibleEnd = horizontalOffset + maxVisibleCharacters - 1;
+            int cursorAfterVisibleEnd = horizontalOffset + maxVisibleCharacters; // Position after last visible character
 
             // Debug logging
-            UnityEngine.Debug.Log($"UpdateHorizontalOffsetForCursor: fullText='{fullText}', length={textLength}, cursor={CursorPosition}, offset={horizontalOffset}, visible={visibleStart}-{visibleEnd}, maxVisible={maxVisibleCharacters}");
+            UnityEngine.Debug.Log($"UpdateHorizontalOffsetForCursor: fullText='{fullText}', length={textLength}, cursor={CursorPosition}, offset={horizontalOffset}, visible={visibleStart}-{visibleEnd}, cursorAfterVisible={cursorAfterVisibleEnd}, maxVisible={maxVisibleCharacters}");
 
-            // If cursor is outside the visible range, slide the window
+            // Only slide the window if the cursor is outside the visible range AND beyond the position after the last visible character
             if (CursorPosition < visibleStart)
             {
-                // Cursor is to the left of visible area, slide window left
-                horizontalOffset = CursorPosition;
+                // Cursor is to the left of visible area, slide window left by one character
+                horizontalOffset = Mathf.Max(0, horizontalOffset - 1);
                 UnityEngine.Debug.Log($"Sliding left: new offset = {horizontalOffset}");
             }
-            else if (CursorPosition > visibleEnd)
+            else if (CursorPosition > cursorAfterVisibleEnd)
             {
-                // Cursor is to the right of visible area, slide window right
-                horizontalOffset = CursorPosition - maxVisibleCharacters + 1;
+                // Cursor is beyond the position after the last visible character, slide window right by one character
+                horizontalOffset = Mathf.Min(textLength - maxVisibleCharacters, horizontalOffset + 1);
                 UnityEngine.Debug.Log($"Sliding right: new offset = {horizontalOffset}");
             }
 
             // Ensure offset doesn't go negative or beyond text length
             horizontalOffset = Mathf.Clamp(horizontalOffset, 0, Mathf.Max(0, textLength - maxVisibleCharacters));
             UnityEngine.Debug.Log($"Final offset after clamp: {horizontalOffset}");
+        }
+
+        /// <summary>
+        /// Resets the horizontal offset to show the beginning of the text.
+        /// This is called when the input field loses focus.
+        /// </summary>
+        public void ResetHorizontalOffset()
+        {
+            horizontalOffset = 0;
+            UnityEngine.Debug.Log($"ResetHorizontalOffset: offset set to 0");
         }
 
         /// <summary>
@@ -409,9 +446,10 @@ namespace CabbyMenu.Types
             InputField inputField = GetInputField();
             if (inputField != null)
             {
-                inputField.selectionAnchorPosition = CursorPosition;
-                inputField.selectionFocusPosition = CursorPosition;
-                inputField.caretPosition = CursorPosition;
+                int visibleCursorPosition = GetVisibleCursorPosition();
+                inputField.selectionAnchorPosition = visibleCursorPosition;
+                inputField.selectionFocusPosition = visibleCursorPosition;
+                inputField.caretPosition = visibleCursorPosition;
                 
                 // Force cursor to reset blink cycle
                 ForceCursorBlinkReset();
@@ -438,9 +476,10 @@ namespace CabbyMenu.Types
                 InputField inputField = GetInputField();
                 if (inputField != null)
                 {
-                    inputField.selectionAnchorPosition = CursorPosition;
-                    inputField.selectionFocusPosition = CursorPosition;
-                    inputField.caretPosition = CursorPosition;
+                    int visibleCursorPosition = GetVisibleCursorPosition();
+                    inputField.selectionAnchorPosition = visibleCursorPosition;
+                    inputField.selectionFocusPosition = visibleCursorPosition;
+                    inputField.caretPosition = visibleCursorPosition;
                     
                     // Force cursor to reset blink cycle
                     ForceCursorBlinkReset();
@@ -467,9 +506,10 @@ namespace CabbyMenu.Types
                 InputField inputField = GetInputField();
                 if (inputField != null)
                 {
-                    inputField.selectionAnchorPosition = CursorPosition;
-                    inputField.selectionFocusPosition = CursorPosition;
-                    inputField.caretPosition = CursorPosition;
+                    int visibleCursorPosition = GetVisibleCursorPosition();
+                    inputField.selectionAnchorPosition = visibleCursorPosition;
+                    inputField.selectionFocusPosition = visibleCursorPosition;
+                    inputField.caretPosition = visibleCursorPosition;
                     
                     // Force cursor to reset blink cycle
                     ForceCursorBlinkReset();
@@ -513,30 +553,62 @@ namespace CabbyMenu.Types
             // Find the character index at the mouse position
             int characterIndex = 0;
             
-            for (int i = 0; i < textGenerator.characters.Count; i++)
+            // If we clicked to the left of the first character, position at the beginning of visible text
+            if (textGenerator.characters.Count > 0 && localPoint.x < textGenerator.characters[0].cursorPos.x)
             {
-                UICharInfo charInfo = textGenerator.characters[i];
-                
-                // If we're past the mouse position, we've found the closest character
-                if (localPoint.x <= charInfo.cursorPos.x)
-                {
-                    characterIndex = i;
-                    break;
-                }
-                characterIndex = i + 1;
+                characterIndex = 0;
+                UnityEngine.Debug.Log($"Clicked left of first character: localPoint.x={localPoint.x}, firstCharPos={textGenerator.characters[0].cursorPos.x}, setting characterIndex=0");
             }
-
-            // If we clicked beyond the last character, position at the end
-            if (textGenerator.characters.Count > 0 && localPoint.x > textGenerator.characters[textGenerator.characters.Count - 1].cursorPos.x)
+            else
             {
-                characterIndex = textGenerator.characters.Count;
+                for (int i = 0; i < textGenerator.characters.Count; i++)
+                {
+                    UICharInfo charInfo = textGenerator.characters[i];
+                    
+                    // If we're past the mouse position, we've found the closest character
+                    if (localPoint.x <= charInfo.cursorPos.x)
+                    {
+                        characterIndex = i;
+                        break;
+                    }
+                    characterIndex = i + 1;
+                }
+
+                // If we clicked beyond the last character in the visible text, position at the end of visible text
+                if (textGenerator.characters.Count > 0 && localPoint.x > textGenerator.characters[textGenerator.characters.Count - 1].cursorPos.x)
+                {
+                    characterIndex = textGenerator.characters.Count;
+                }
             }
 
             // Convert the visible text position to the full text position
             int fullTextPosition = horizontalOffset + characterIndex;
             
+            UnityEngine.Debug.Log($"CalculateCursorPositionFromMouse: horizontalOffset={horizontalOffset}, characterIndex={characterIndex}, fullTextPosition={fullTextPosition}");
+            
             // Ensure the position is within bounds of the full text
-            return Mathf.Clamp(fullTextPosition, 0, fullText.Length);
+            fullTextPosition = Mathf.Clamp(fullTextPosition, 0, fullText.Length);
+            
+            // When clicking, only allow positioning within the currently visible text area
+            // Don't trigger any sliding - that should only happen with arrow key navigation
+            int visibleStart = horizontalOffset;
+            int visibleEnd = horizontalOffset + maxVisibleCharacters - 1;
+            int cursorAfterVisibleEnd = horizontalOffset + maxVisibleCharacters;
+            
+            // Clamp to the visible range (including the position after the last visible character)
+            if (fullTextPosition < visibleStart)
+            {
+                fullTextPosition = visibleStart;
+                UnityEngine.Debug.Log($"Clamped to visible start: {fullTextPosition}");
+            }
+            else if (fullTextPosition > cursorAfterVisibleEnd)
+            {
+                fullTextPosition = Mathf.Min(cursorAfterVisibleEnd, fullText.Length);
+                UnityEngine.Debug.Log($"Clamped to cursorAfterVisibleEnd: {fullTextPosition}");
+            }
+            
+            UnityEngine.Debug.Log($"Final calculated position: {fullTextPosition}");
+            return fullTextPosition;
         }
 
         /// <summary>
@@ -548,6 +620,8 @@ namespace CabbyMenu.Types
             int maxPosition = fullText.Length;
             CursorPosition = Mathf.Clamp(position, 0, maxPosition);
             
+            UnityEngine.Debug.Log($"SetCursorPositionDirectly: requested={position}, clamped={CursorPosition}, fullText='{fullText}', horizontalOffset={horizontalOffset}");
+            
             // Update horizontal offset to ensure cursor is visible
             UpdateHorizontalOffsetForCursor();
             
@@ -555,9 +629,12 @@ namespace CabbyMenu.Types
             InputField inputField = GetInputField();
             if (inputField != null)
             {
-                inputField.selectionAnchorPosition = CursorPosition;
-                inputField.selectionFocusPosition = CursorPosition;
-                inputField.caretPosition = CursorPosition;
+                int visibleCursorPosition = GetVisibleCursorPosition();
+                UnityEngine.Debug.Log($"SetCursorPositionDirectly: fullTextCursor={CursorPosition}, visibleCursor={visibleCursorPosition}");
+                
+                inputField.selectionAnchorPosition = visibleCursorPosition;
+                inputField.selectionFocusPosition = visibleCursorPosition;
+                inputField.caretPosition = visibleCursorPosition;
                 
                 // Force cursor to reset blink cycle
                 ForceCursorBlinkReset();
