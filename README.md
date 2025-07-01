@@ -125,25 +125,63 @@ Custom teleport locations are automatically saved to the config file and will pe
 
 ### Project Structure
 
-This project uses a **multi-project solution** with two main components:
+This project uses a **multi-project solution** with three main components:
 
 - **CabbyCodes**: Main mod plugin with game patches and logic
 - **CabbyMenu**: Reusable UI library for creating mod menus
+- **AssemblyTools**: Tools for analyzing Hollow Knight assemblies and references
 
-#### Architecture
 ```
 HKCabbyCodes/
-├── CabbyCodes/          # Main mod project
-│   ├── Patches/         # Game modification patches
-│   ├── Types/           # Game-specific types
-│   └── CabbyCodesPlugin.cs  # Main plugin entry point
-├── CabbyMenu/           # UI library project
-│   ├── UI/              # UI components and controls
-│   ├── SyncedReferences/ # Data synchronization
-│   ├── Types/           # UI-specific types
-│   └── Constants.cs     # UI constants (moved from CabbyCodes)
-└── CabbyCodes.sln       # Solution file
+├── AssemblyTools/                # Tools for analyzing game assemblies
+│   ├── Inspector/                # C# and PowerShell tools for analysis
+│   └── Reference/                # Reference files (scenes, quick refs, docs)
+│
+├── CabbyCodes/                   # Main mod project
+│   ├── Patches/                  # Game modification patches, organized by category
+│   │   ├── Achievements/
+│   │   ├── Charms/
+│   │   ├── Flags/
+│   │   ├── Hunter/
+│   │   ├── Inventory/
+│   │   ├── Maps/
+│   │   ├── Player/
+│   │   ├── Settings/
+│   │   └── ... (other patch categories)
+│   ├── Types/                    # Game-specific types (e.g., Charm, TeleportLocation)
+│   ├── lib/                      # Required game DLLs (not in version control)
+│   ├── Constants.cs              # Game-specific constants
+│   ├── CabbyCodesPlugin.cs       # Main plugin entry point
+│   ├── GameStateProvider.cs      # Game state logic for menu visibility
+│   └── ... (other core files)
+│
+├── CabbyMenu/                    # UI library project
+│   ├── UI/
+│   │   ├── CheatPanels/          # Modular cheat panel components (ButtonPanel, TogglePanel, etc.)
+│   │   ├── Controls/             # UI controls (ToggleButton, InputField, Dropdown, etc.)
+│   │   ├── Factories/            # UI element factories
+│   │   ├── Modders/              # UI modder utilities
+│   │   └── Fitter.cs             # UI layout utility
+│   ├── Utilities/                # Shared utilities (ValidationUtils, KeyCodeMap, CoroutineRunner)
+│   ├── SyncedReferences/         # Data synchronization types/interfaces
+│   ├── TextProcessors/           # Input text processing utilities
+│   ├── Extensions/               # Extension methods for logging, etc.
+│   ├── Constants.cs              # UI-specific constants
+│   ├── IGameStateProvider.cs     # Interface for menu visibility logic
+│   ├── CodeState.cs              # Shared state management
+│   └── ... (other core files)
+│
+├── Makefile                      # Build and deployment scripts
+├── global.json                   # .NET SDK version specification
+├── CabbyCodes.sln                # Solution file
+└── README.md                     # Project documentation
 ```
+
+**Key changes:**
+- All utilities (e.g., `ValidationUtils`, `KeyCodeMap`) are now in `CabbyMenu/Utilities/`.
+- UI controls and panels are organized under `CabbyMenu/UI/`.
+- Patch files in `CabbyCodes/Patches/` are organized by gameplay category.
+- Assembly analysis tools and references are in `AssemblyTools/`.
 
 ### 🔧 Development Requirements
 

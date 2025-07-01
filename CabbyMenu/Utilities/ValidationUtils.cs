@@ -1,9 +1,9 @@
 using System;
 
-namespace CabbyMenu
+namespace CabbyMenu.Utilities
 {
     /// <summary>
-    /// Utility class for input validation and data verification.
+    /// Provides validation utilities for the mod.
     /// </summary>
     public static class ValidationUtils
     {

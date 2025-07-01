@@ -1,5 +1,6 @@
 using CabbyMenu.SyncedReferences;
-using CabbyMenu.UI.ReferenceControls;
+using CabbyMenu.UI.Controls.InputField;
+using CabbyMenu.Utilities;
 using UnityEngine.UI;
 using UnityEngine;
 

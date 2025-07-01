@@ -2,6 +2,7 @@ using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
 using System.Collections.Generic;
 using CabbyMenu;
+using CabbyMenu.Utilities;
 
 namespace CabbyCodes.Patches.Inventory.Upgrades
 {

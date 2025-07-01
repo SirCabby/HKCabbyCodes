@@ -1,5 +1,6 @@
 using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
+using CabbyMenu.Utilities;
 
 namespace CabbyCodes.Patches.Inventory.Upgrades
 {
@@ -12,13 +13,13 @@ namespace CabbyCodes.Patches.Inventory.Upgrades
 
         public void Set(int value)
         {
-            value = CabbyMenu.ValidationUtils.ValidateRange(value, 0, Constants.MAX_MASK_SHARDS, nameof(value));
+            value = ValidationUtils.ValidateRange(value, 0, Constants.MAX_MASK_SHARDS, nameof(value));
             PlayerData.instance.heartPieces = value;
         }
 
         public static void AddPanel()
         {
-            InputFieldPanel<int> panel = new InputFieldPanel<int>(new MaskShardPatch(), CabbyMenu.KeyCodeMap.ValidChars.Numeric, 1, "Mask Shards (0-4)");
+            InputFieldPanel<int> panel = new InputFieldPanel<int>(new MaskShardPatch(), KeyCodeMap.ValidChars.Numeric, 1, "Mask Shards (0-4)");
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(panel);
         }
     }

@@ -7,6 +7,7 @@ using System.Reflection;
 using UnityEngine;
 using System.Collections;
 using GlobalEnums;
+using CabbyMenu.Utilities;
 
 namespace CabbyCodes.Patches.Settings
 {

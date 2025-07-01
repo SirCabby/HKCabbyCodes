@@ -1,7 +1,9 @@
-using CabbyMenu.SyncedReferences;
+using System;
 using UnityEngine;
+using UnityEngine.UI;
+using CabbyMenu.SyncedReferences;
 
-namespace CabbyMenu.UI.ReferenceControls
+namespace CabbyMenu.UI.Controls.CustomDropdown
 {
     public class DropDownSync
     {

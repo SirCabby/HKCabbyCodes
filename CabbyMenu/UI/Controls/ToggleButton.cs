@@ -1,10 +1,11 @@
+using System;
 using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.Factories;
 using CabbyMenu.UI.Modders;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace CabbyMenu.UI.ReferenceControls
+namespace CabbyMenu.UI.Controls
 {
     public class ToggleButton
     {

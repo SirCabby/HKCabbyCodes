@@ -1,5 +1,6 @@
 using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
+using CabbyMenu.Utilities;
 
 namespace CabbyCodes.Patches.Inventory.Currency
 {
@@ -12,7 +13,7 @@ namespace CabbyCodes.Patches.Inventory.Currency
 
         public void Set(int value)
         {
-            value = CabbyMenu.ValidationUtils.ValidateRange(value, 0, Constants.MAX_HALLOWNEST_SEALS, nameof(value));
+            value = ValidationUtils.ValidateRange(value, 0, Constants.MAX_HALLOWNEST_SEALS, nameof(value));
             if (value > 0)
             {
                 PlayerData.instance.foundTrinket2 = true;
@@ -22,7 +23,7 @@ namespace CabbyCodes.Patches.Inventory.Currency
 
         public static void AddPanel()
         {
-            InputFieldPanel<int> panel = new InputFieldPanel<int>(new HallownestSealPatch(), CabbyMenu.KeyCodeMap.ValidChars.Numeric, 2, "Hallownest Seals (0-17)");
+            InputFieldPanel<int> panel = new InputFieldPanel<int>(new HallownestSealPatch(), KeyCodeMap.ValidChars.Numeric, 2, "Hallownest Seals (0-17)");
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(panel);
         }
     }

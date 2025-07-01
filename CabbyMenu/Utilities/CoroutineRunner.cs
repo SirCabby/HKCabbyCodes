@@ -1,7 +1,10 @@
 using UnityEngine;
 
-namespace CabbyMenu
+namespace CabbyMenu.Utilities
 {
+    /// <summary>
+    /// Provides a singleton MonoBehaviour for running coroutines from non-MonoBehaviour classes.
+    /// </summary>
     public class CoroutineRunner : MonoBehaviour
     {
         private static CoroutineRunner _instance;

@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace CabbyMenu
+namespace CabbyMenu.Utilities
 {
     /// <summary>
     /// Maps Unity KeyCode values to character representations and provides input validation.
     /// </summary>
-    public class KeyCodeMap
+    public static class KeyCodeMap
     {
         /// <summary>
         /// Defines the types of valid characters that can be input.

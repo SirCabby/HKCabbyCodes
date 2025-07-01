@@ -1,4 +1,4 @@
-namespace CabbyMenu.Types
+namespace CabbyMenu
 {
     /// <summary>
     /// Interface for providing game state information to the UI library.

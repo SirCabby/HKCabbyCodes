@@ -1,0 +1,16 @@
+"Restoring NuGet packages for solution..."
+dotnet restore CabbyCodes.sln
+  Determining projects to restore...
+  All projects are up-to-date for restore.
+"Package restore completed!"
+"Building CabbyCodes solution..."
+dotnet build CabbyCodes.sln --configuration Release --no-restore
+  CabbyMenu -> C:\Users\Joshua\workspace\GitHub\HKCabbyCodes\CabbyMenu\bin\Release\net472\CabbyMenu.dll
+  CabbyCodes -> C:\Users\Joshua\workspace\GitHub\HKCabbyCodes\CabbyCodes\bin\Release\net472\CabbyCodes.dll
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:00.71
+"Build completed successfully!"

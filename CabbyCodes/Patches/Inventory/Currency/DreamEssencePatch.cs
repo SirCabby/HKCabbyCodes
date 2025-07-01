@@ -1,5 +1,6 @@
 using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
+using CabbyMenu.Utilities;
 
 namespace CabbyCodes.Patches.Inventory.Currency
 {
@@ -12,13 +13,13 @@ namespace CabbyCodes.Patches.Inventory.Currency
 
         public void Set(int value)
         {
-            value = CabbyMenu.ValidationUtils.ValidateRange(value, Constants.MIN_DREAM_ESSENCE, Constants.MAX_DREAM_ESSENCE, nameof(value));
+            value = ValidationUtils.ValidateRange(value, Constants.MIN_DREAM_ESSENCE, Constants.MAX_DREAM_ESSENCE, nameof(value));
             PlayerData.instance.dreamOrbs = value;
         }
 
         public static void AddPanel()
         {
-            InputFieldPanel<int> panel = new InputFieldPanel<int>(new DreamEssencePatch(), CabbyMenu.KeyCodeMap.ValidChars.Numeric, 4, "Dream Essence (0-9999)");
+            InputFieldPanel<int> panel = new InputFieldPanel<int>(new DreamEssencePatch(), KeyCodeMap.ValidChars.Numeric, 4, "Dream Essence (0-9999)");
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(panel);
         }
     }

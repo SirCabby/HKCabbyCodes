@@ -5,7 +5,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using System;
 using CabbyMenu.SyncedReferences;
-using CabbyMenu.UI.ReferenceControls;
+using CabbyMenu.UI.Controls;
 
 namespace CabbyMenu.UI.CheatPanels
 {

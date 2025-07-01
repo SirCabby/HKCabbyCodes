@@ -2,13 +2,54 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using CabbyMenu.TextProcessors;
+using CabbyMenu.Utilities;
 
-namespace CabbyMenu.Types
+namespace CabbyMenu.UI.Controls.InputField
 {
+    /// <summary>
+    /// Non-generic interface for InputFieldStatus to allow type-safe handling of different generic types.
+    /// </summary>
+    public interface IInputFieldStatus
+    {
+        GameObject InputFieldGo { get; }
+        float LastUpdated { get; set; }
+        KeyCodeMap.ValidChars ValidChars { get; }
+        bool IsSelected { get; }
+        int CursorPosition { get; set; }
+        Action<bool> OnSelected { get; }
+        Action Submit { get; }
+        Action Cancel { get; }
+        
+        void SetSelected(bool selected);
+        void SyncCursorPositionFromUnity();
+        void SyncSelectionFromUnity();
+        bool WasSelected();
+        UnityEngine.UI.InputField GetInputField();
+        int GetIndex();
+        void MoveCursor(int offset);
+        void SetCursorPosition(int position);
+        void ResetHorizontalOffset();
+        string GetVisibleText();
+        int GetVisibleCursorPosition();
+        void InsertCharacter(char character, int characterLimit);
+        void DeleteCharacter();
+        void DeleteForwardCharacter();
+        int CalculateCursorPositionFromMouse(Vector2 mousePosition);
+        void SetCursorPositionDirectly(int position);
+        void SetCursorPositionFromMouse(Vector2 mousePosition);
+        void SyncCursorPositionNextFrame();
+        void SetFullText(string text);
+        string GetFullText();
+        (int start, int end)? GetTextSelection();
+        bool DeleteSelectedText();
+        bool ReplaceSelectedText(char character, int characterLimit);
+    }
+
     /// <summary>
     /// Manages the state and behavior of input fields in the mod UI.
     /// </summary>
-    public class InputFieldStatus
+    public class InputFieldStatus<T> : IInputFieldStatus
     {
         /// <summary>
         /// The GameObject containing the input field.
@@ -26,19 +67,24 @@ namespace CabbyMenu.Types
         public KeyCodeMap.ValidChars ValidChars { get; private set; }
 
         /// <summary>
+        /// The text processor for type-specific operations.
+        /// </summary>
+        private readonly ITextProcessor<T> textProcessor;
+
+        /// <summary>
         /// Callback invoked when the input field selection state changes.
         /// </summary>
-        public readonly Action<bool> OnSelected;
+        public Action<bool> OnSelected { get; }
 
         /// <summary>
         /// Callback invoked when the input field value is submitted.
         /// </summary>
-        public readonly Action Submit;
+        public Action Submit { get; }
 
         /// <summary>
         /// Callback invoked when the input field input is cancelled.
         /// </summary>
-        public readonly Action Cancel;
+        public Action Cancel { get; }
 
         /// <summary>
         /// Whether this input field is currently selected.
@@ -84,7 +130,8 @@ namespace CabbyMenu.Types
         /// <param name="cancel">Callback for input cancellation.</param>
         /// <param name="validChars">The types of characters valid for this input field.</param>
         /// <param name="maxVisibleCharacters">The maximum number of characters that can be displayed in the input field at once.</param>
-        public InputFieldStatus(GameObject inputFieldGo, Action<bool> onSelected, Action submit, Action cancel, KeyCodeMap.ValidChars validChars, int maxVisibleCharacters)
+        /// <param name="textProcessor">The text processor for type-specific operations.</param>
+        public InputFieldStatus(GameObject inputFieldGo, Action<bool> onSelected, Action submit, Action cancel, KeyCodeMap.ValidChars validChars, int maxVisibleCharacters, ITextProcessor<T> textProcessor)
         {
             InputFieldGo = inputFieldGo;
             ValidChars = validChars;
@@ -92,6 +139,7 @@ namespace CabbyMenu.Types
             Submit = submit;
             Cancel = cancel;
             this.maxVisibleCharacters = maxVisibleCharacters;
+            this.textProcessor = textProcessor;
         }
 
         /// <summary>
@@ -132,7 +180,7 @@ namespace CabbyMenu.Types
         /// </summary>
         public void SyncCursorPositionFromUnity()
         {
-            InputField inputField = GetInputField();
+            UnityEngine.UI.InputField inputField = GetInputField();
             if (inputField != null)
             {
                 // Get Unity's current cursor position
@@ -158,7 +206,7 @@ namespace CabbyMenu.Types
         /// </summary>
         public void SyncSelectionFromUnity()
         {
-            InputField inputField = GetInputField();
+            UnityEngine.UI.InputField inputField = GetInputField();
             if (inputField != null)
             {
                 // Get Unity's current selection positions
@@ -198,9 +246,9 @@ namespace CabbyMenu.Types
         /// Gets the InputField component from the GameObject.
         /// </summary>
         /// <returns>The InputField component.</returns>
-        public InputField GetInputField()
+        public UnityEngine.UI.InputField GetInputField()
         {
-            return InputFieldGo.GetComponent<InputField>();
+            return InputFieldGo.GetComponent<UnityEngine.UI.InputField>();
         }
 
         /// <summary>
@@ -217,7 +265,7 @@ namespace CabbyMenu.Types
         /// </summary>
         private void ForceCursorBlinkReset()
         {
-            InputField inputField = GetInputField();
+            UnityEngine.UI.InputField inputField = GetInputField();
             if (inputField != null)
             {
                 // Temporarily hide the cursor by setting selection to -1
@@ -238,7 +286,7 @@ namespace CabbyMenu.Types
         /// </summary>
         private void UpdateUnityCursorPosition()
         {
-            InputField inputField = GetInputField();
+            UnityEngine.UI.InputField inputField = GetInputField();
             if (inputField != null)
             {
                 int visibleCursorPosition = GetVisibleCursorPosition();
@@ -375,70 +423,6 @@ namespace CabbyMenu.Types
         }
 
         /// <summary>
-        /// Validates if a decimal point can be inserted at the current cursor position.
-        /// </summary>
-        /// <param name="currentText">The current text in the input field.</param>
-        /// <returns>True if the decimal point can be inserted, false otherwise.</returns>
-        private bool CanInsertDecimalPoint(string currentText)
-        {
-            // Check if a decimal point already exists in the text
-            if (currentText.Contains("."))
-            {
-                return false;
-            }
-            
-            // Check if trying to insert decimal point at the beginning (which would create ".123")
-            if (CursorPosition == 0)
-            {
-                return false;
-            }
-            
-            return true;
-        }
-
-        /// <summary>
-        /// Removes leading zeros from the text while preserving cursor position.
-        /// </summary>
-        private void RemoveLeadingZeros()
-        {
-            if (string.IsNullOrEmpty(fullText))
-                return;
-                
-            // Count leading zeros
-            int leadingZeros = 0;
-            for (int i = 0; i < fullText.Length; i++)
-            {
-                if (fullText[i] == '0')
-                {
-                    leadingZeros++;
-                }
-                else
-                {
-                    break;
-                }
-            }
-            
-            // If there are leading zeros and we have at least one non-zero digit, remove them
-            if (leadingZeros > 0 && leadingZeros < fullText.Length)
-            {
-                // Adjust cursor position to account for removed zeros
-                if (CursorPosition <= leadingZeros)
-                {
-                    // If cursor was within the leading zeros, move it to position 0
-                    CursorPosition = 0;
-                }
-                else
-                {
-                    // If cursor was after the leading zeros, adjust it by the number of zeros removed
-                    CursorPosition -= leadingZeros;
-                }
-                
-                // Remove the leading zeros
-                fullText = fullText.Substring(leadingZeros);
-            }
-        }
-
-        /// <summary>
         /// Inserts a character at the current cursor position.
         /// </summary>
         /// <param name="character">The character to insert.</param>
@@ -451,13 +435,10 @@ namespace CabbyMenu.Types
                 return; // Selection was replaced, we're done
             }
             
-            // Validate decimal point for decimal input fields
-            if (character == '.' && ValidChars == KeyCodeMap.ValidChars.Decimal)
+            // Use text processor to validate character insertion
+            if (!textProcessor.CanInsertCharacter(character, fullText, CursorPosition))
             {
-                if (!CanInsertDecimalPoint(fullText))
-                {
-                    return;
-                }
+                return;
             }
             
             // Ensure cursor position is within valid bounds before any operation
@@ -492,11 +473,10 @@ namespace CabbyMenu.Types
                 return;
             }
             
-            // Remove leading zeros for numeric input fields immediately after insertion
-            if (ValidChars == KeyCodeMap.ValidChars.Numeric)
-            {
-                RemoveLeadingZeros();
-            }
+            // Use text processor to process text after insertion (e.g., remove leading zeros)
+            int cursorPos = CursorPosition;
+            fullText = textProcessor.ProcessTextAfterInsertion(fullText, ref cursorPos);
+            CursorPosition = cursorPos;
             
             // Update the display text
             UpdateDisplayText();
@@ -582,7 +562,7 @@ namespace CabbyMenu.Types
         /// <returns>The calculated cursor position.</returns>
         public int CalculateCursorPositionFromMouse(Vector2 mousePosition)
         {
-            InputField inputField = GetInputField();
+            UnityEngine.UI.InputField inputField = GetInputField();
             if (inputField == null) return 0;
 
             // Get the text component that displays the input field text
@@ -718,7 +698,7 @@ namespace CabbyMenu.Types
         {
             yield return new WaitForEndOfFrame();
             
-            InputField inputField = GetInputField();
+            UnityEngine.UI.InputField inputField = GetInputField();
             if (inputField != null && inputField.caretPosition == 0 && !string.IsNullOrEmpty(inputField.text))
             {
                 // Unity didn't set the caret position properly on first click
@@ -776,7 +756,7 @@ namespace CabbyMenu.Types
         /// </summary>
         private void UpdateDisplayText()
         {
-            InputField inputField = GetInputField();
+            UnityEngine.UI.InputField inputField = GetInputField();
             if (inputField != null)
             {
                 string visibleText = GetVisibleText();
@@ -795,7 +775,7 @@ namespace CabbyMenu.Types
         /// <returns>A tuple containing (start, end) positions, or null if no selection.</returns>
         public (int start, int end)? GetTextSelection()
         {
-            InputField inputField = GetInputField();
+            UnityEngine.UI.InputField inputField = GetInputField();
             if (inputField == null) return null;
 
             int anchorPos = inputField.selectionAnchorPosition;
@@ -847,7 +827,7 @@ namespace CabbyMenu.Types
             UpdateUnityCursorPosition();
             
             // Clear the selection in Unity's InputField
-            InputField inputField = GetInputField();
+            UnityEngine.UI.InputField inputField = GetInputField();
             if (inputField != null)
             {
                 inputField.selectionAnchorPosition = inputField.caretPosition;
@@ -875,13 +855,10 @@ namespace CabbyMenu.Types
             int end = selection.Value.end;
             int selectionLength = end - start;
 
-            // Validate decimal point for decimal input fields
-            if (character == '.' && ValidChars == KeyCodeMap.ValidChars.Decimal)
+            // Use text processor to validate character insertion
+            if (!textProcessor.CanInsertCharacter(character, fullText, start))
             {
-                if (!CanInsertDecimalPoint(fullText))
-                {
-                    return false;
-                }
+                return false;
             }
 
             // Calculate the new text length after replacement
@@ -909,7 +886,7 @@ namespace CabbyMenu.Types
             UpdateUnityCursorPosition();
             
             // Clear the selection in Unity's InputField
-            InputField inputField = GetInputField();
+            UnityEngine.UI.InputField inputField = GetInputField();
             if (inputField != null)
             {
                 inputField.selectionAnchorPosition = inputField.caretPosition;

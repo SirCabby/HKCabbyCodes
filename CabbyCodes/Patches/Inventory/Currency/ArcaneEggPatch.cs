@@ -1,5 +1,6 @@
 using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
+using CabbyMenu.Utilities;
 
 namespace CabbyCodes.Patches.Inventory.Currency
 {
@@ -12,7 +13,7 @@ namespace CabbyCodes.Patches.Inventory.Currency
 
         public void Set(int value)
         {
-            value = CabbyMenu.ValidationUtils.ValidateRange(value, 0, Constants.MAX_ARCANE_EGGS, nameof(value));
+            value = ValidationUtils.ValidateRange(value, 0, Constants.MAX_ARCANE_EGGS, nameof(value));
             if (value > 0)
             {
                 PlayerData.instance.foundTrinket4 = true;
@@ -22,7 +23,7 @@ namespace CabbyCodes.Patches.Inventory.Currency
 
         public static void AddPanel()
         {
-            InputFieldPanel<int> panel = new InputFieldPanel<int>(new ArcaneEggPatch(), CabbyMenu.KeyCodeMap.ValidChars.Numeric, 1, "Arcane Eggs (0-4)");
+            InputFieldPanel<int> panel = new InputFieldPanel<int>(new ArcaneEggPatch(), KeyCodeMap.ValidChars.Numeric, 1, "Arcane Eggs (0-4)");
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(panel);
         }
     }

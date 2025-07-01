@@ -1,6 +1,6 @@
 using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.Modders;
-using CabbyMenu.UI.ReferenceControls;
+using CabbyMenu.UI.Controls;
 using UnityEngine;
 using UnityEngine.UI;
 

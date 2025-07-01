@@ -1,7 +1,8 @@
 using BepInEx.Logging;
 using System;
+using UnityEngine;
 
-namespace CabbyMenu
+namespace CabbyMenu.Extensions
 {
     /// <summary>
     /// Extension methods for structured logging with different levels.

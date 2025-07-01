@@ -2,32 +2,34 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 using CabbyMenu.SyncedReferences;
-using CabbyMenu.Types;
+using CabbyMenu.TextProcessors;
 using CabbyMenu.UI.Modders;
 
-namespace CabbyMenu.UI.ReferenceControls
+namespace CabbyMenu.UI.Controls.InputField
 {
     public class InputFieldSync<T>
     {
         private static readonly Color selectedColor = Constants.SELECTED_COLOR;
 
         private readonly GameObject inputFieldGo;
-        private readonly InputField inputField;
+        private readonly UnityEngine.UI.InputField inputField;
         private readonly ISyncedReference<T> InputValue;
-        private readonly InputFieldStatus inputFieldStatus;
+        private readonly InputFieldStatus<T> inputFieldStatus;
+        private readonly ITextProcessor<T> textProcessor;
 
         /// <summary>
         /// Action for registering input field sync. Can be set by the consuming project.
         /// </summary>
-        public static Action<InputFieldStatus> RegisterInputFieldSync { get; set; } = null;
+        public static Action<InputFieldStatus<T>> RegisterInputFieldSync { get; set; } = null;
 
-        public InputFieldSync(ISyncedReference<T> inputValue, KeyCodeMap.ValidChars validChars, Vector2 size, int characterLimit = Constants.DEFAULT_CHARACTER_LIMIT)
+        public InputFieldSync(ISyncedReference<T> inputValue, Utilities.KeyCodeMap.ValidChars validChars, Vector2 size, int characterLimit = Constants.DEFAULT_CHARACTER_LIMIT)
         {
             InputValue = inputValue;
+            textProcessor = TextProcessorFactory.Create<T>(validChars);
 
             inputFieldGo = DefaultControls.CreateInputField(new DefaultControls.Resources());
             inputFieldGo.name = "InputFieldSync";
-            inputField = inputFieldGo.GetComponent<InputField>();
+            inputField = inputFieldGo.GetComponent<UnityEngine.UI.InputField>();
             inputField.characterLimit = characterLimit;
 
             // Ensure input field starts in deactivated state to prevent initial focus issues
@@ -39,7 +41,7 @@ namespace CabbyMenu.UI.ReferenceControls
             //     Submit();
             // });
 
-            inputField.text = Convert.ToString(InputValue.Get());
+            inputField.text = textProcessor.ConvertValue(InputValue.Get());
 
             LayoutElement inputFieldPanelLayout = inputFieldGo.AddComponent<LayoutElement>();
             inputFieldPanelLayout.preferredWidth = size.x;
@@ -51,10 +53,10 @@ namespace CabbyMenu.UI.ReferenceControls
             
             // Calculate maxVisibleCharacters based on input field width and font size
             int maxVisibleCharacters = CalculateMaxVisibleCharacters(size.x, Constants.DEFAULT_FONT_SIZE);
-            inputFieldStatus = new InputFieldStatus(inputFieldGo, SetSelected, Submit, Cancel, validChars, maxVisibleCharacters);
+            inputFieldStatus = new InputFieldStatus<T>(inputFieldGo, SetSelected, Submit, Cancel, validChars, maxVisibleCharacters, textProcessor);
             // Initialize the full text with the current value
-            inputFieldStatus.SetFullText(Convert.ToString(InputValue.Get()));
-            RegisterInputFieldSync(inputFieldStatus);
+            inputFieldStatus.SetFullText(textProcessor.ConvertValue(InputValue.Get()));
+            RegisterInputFieldSync?.Invoke(inputFieldStatus);
         }
 
         public GameObject GetGameObject()
@@ -68,7 +70,7 @@ namespace CabbyMenu.UI.ReferenceControls
             // This prevents overwriting user input while they're editing
             if (inputFieldStatus == null || !inputFieldStatus.IsSelected)
             {
-                string fullText = Convert.ToString(InputValue.Get());
+                string fullText = textProcessor.ConvertValue(InputValue.Get());
                 // Update the full text in InputFieldStatus, which will handle Unity InputField synchronization
                 inputFieldStatus.SetFullText(fullText);
                 
@@ -90,7 +92,7 @@ namespace CabbyMenu.UI.ReferenceControls
             {
                 // Get the current value and update the display to show it
                 T currentValue = InputValue.Get();
-                string currentText = Convert.ToString(currentValue);
+                string currentText = textProcessor.ConvertValue(currentValue);
                 inputFieldStatus.SetFullText(currentText);
                 
                 // Reset horizontal offset and cursor position to show the beginning characters
@@ -102,31 +104,20 @@ namespace CabbyMenu.UI.ReferenceControls
                 return;
             }
             
-            // Remove leading zeros for numeric types before conversion
-            string processedText = text;
-            if (typeof(T) == typeof(int) || typeof(T) == typeof(long) || typeof(T) == typeof(short) || 
-                typeof(T) == typeof(byte) || typeof(T) == typeof(uint) || typeof(T) == typeof(ulong) || 
-                typeof(T) == typeof(ushort) || typeof(T) == typeof(sbyte))
-            {
-                processedText = text.TrimStart('0');
-                // If all characters were zeros, keep at least one zero
-                if (string.IsNullOrEmpty(processedText))
-                {
-                    processedText = "0";
-                }
-            }
+            // Use text processor to process text before conversion
+            string processedText = textProcessor.ProcessTextBeforeConversion(text);
             
             // Try to convert the text to the target type
             T convertedValue;
             try
             {
-                convertedValue = (T)Convert.ChangeType(processedText, typeof(T));
+                convertedValue = textProcessor.ConvertText(processedText);
             }
             catch (Exception)
             {
                 // If conversion fails, keep the current value
                 T currentValue = InputValue.Get();
-                string currentText = Convert.ToString(currentValue);
+                string currentText = textProcessor.ConvertValue(currentValue);
                 inputFieldStatus.SetFullText(currentText);
                 
                 // Reset horizontal offset and cursor position to show the beginning characters
@@ -142,7 +133,7 @@ namespace CabbyMenu.UI.ReferenceControls
             
             // Get the validated/capped value that was actually set
             T validatedValue = InputValue.Get();
-            string validatedText = Convert.ToString(validatedValue);
+            string validatedText = textProcessor.ConvertValue(validatedValue);
             
             // Update InputFieldStatus which will handle Unity InputField synchronization
             inputFieldStatus.SetFullText(validatedText);
@@ -158,7 +149,7 @@ namespace CabbyMenu.UI.ReferenceControls
         public void Cancel()
         {
             var value = InputValue.Get();
-            string fullText = value?.ToString() ?? "0";
+            string fullText = textProcessor.ConvertValue(value);
             
             // Update InputFieldStatus which will handle Unity InputField synchronization
             inputFieldStatus.SetFullText(fullText);

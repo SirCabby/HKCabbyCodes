@@ -6,7 +6,7 @@ using UnityEngine.Events;
 using System.Collections;
 using System.Linq;
 
-namespace CabbyMenu.UI.ReferenceControls
+namespace CabbyMenu.UI.Controls.CustomDropdown
 {
     public class CustomDropdown : MonoBehaviour, IPointerClickHandler
     {
