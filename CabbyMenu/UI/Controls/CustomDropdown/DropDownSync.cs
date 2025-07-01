@@ -1,6 +1,4 @@
-using System;
 using UnityEngine;
-using UnityEngine.UI;
 using CabbyMenu.SyncedReferences;
 
 namespace CabbyMenu.UI.Controls.CustomDropdown

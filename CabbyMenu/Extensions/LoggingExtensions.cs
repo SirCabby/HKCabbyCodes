@@ -1,6 +1,5 @@
 using BepInEx.Logging;
 using System;
-using UnityEngine;
 
 namespace CabbyMenu.Extensions
 {

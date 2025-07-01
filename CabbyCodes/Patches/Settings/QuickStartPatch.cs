@@ -1,7 +1,6 @@
 using BepInEx.Configuration;
 using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
-using CabbyMenu;
 using HarmonyLib;
 using System.Reflection;
 using UnityEngine;

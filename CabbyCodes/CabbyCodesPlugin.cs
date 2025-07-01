@@ -12,8 +12,6 @@ using CabbyCodes.Patches.Player;
 using CabbyCodes.Patches.Charms;
 using CabbyCodes.Patches.Settings;
 using CabbyMenu.UI;
-using System;
-using CabbyMenu.UI.Controls.InputField;
 
 namespace CabbyCodes
 {

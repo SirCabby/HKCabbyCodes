@@ -1,5 +1,3 @@
-using System;
-
 namespace CabbyMenu.TextProcessors
 {
     /// <summary>

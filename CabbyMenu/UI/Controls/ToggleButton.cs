@@ -1,4 +1,3 @@
-using System;
 using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.Factories;
 using CabbyMenu.UI.Modders;
