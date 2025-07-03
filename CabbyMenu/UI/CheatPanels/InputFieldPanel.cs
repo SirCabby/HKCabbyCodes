@@ -8,7 +8,7 @@ namespace CabbyMenu.UI.CheatPanels
 {
     public class InputFieldPanel<T> : CheatPanel
     {
-        private readonly InputFieldSync<T> inputFieldSync;
+        private readonly BaseInputFieldSync<T> inputFieldSync;
 
         public InputFieldPanel(ISyncedReference<T> syncedReference, KeyCodeMap.ValidChars validChars, int characterLimit, string description) : base(description)
         {
@@ -18,7 +18,7 @@ namespace CabbyMenu.UI.CheatPanels
             // Debug logging to verify width calculation
             UnityEngine.Debug.Log($"InputFieldPanel: characterLimit={characterLimit}, calculatedWidth={calculatedWidth}, description='{description}'");
             
-            inputFieldSync = new InputFieldSync<T>(syncedReference, validChars, new Vector2(calculatedWidth, Constants.DEFAULT_PANEL_HEIGHT), characterLimit);
+            inputFieldSync = InputFieldSync.Create<T>(syncedReference, validChars, new Vector2(calculatedWidth, Constants.DEFAULT_PANEL_HEIGHT), characterLimit);
             new Fitter(inputFieldSync.GetGameObject()).Attach(cheatPanel);
             inputFieldSync.GetGameObject().transform.SetAsFirstSibling();
             

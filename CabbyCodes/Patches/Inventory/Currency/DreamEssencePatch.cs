@@ -19,7 +19,7 @@ namespace CabbyCodes.Patches.Inventory.Currency
 
         public static void AddPanel()
         {
-            InputFieldPanel<int> panel = new InputFieldPanel<int>(new DreamEssencePatch(), KeyCodeMap.ValidChars.Numeric, 4, "Dream Essence (0-9999)");
+            RangeInputFieldPanel<int> panel = new RangeInputFieldPanel<int>(new DreamEssencePatch(), KeyCodeMap.ValidChars.Numeric, Constants.MIN_DREAM_ESSENCE, Constants.MAX_DREAM_ESSENCE, "Dream Essence (0-9999)");
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(panel);
         }
     }

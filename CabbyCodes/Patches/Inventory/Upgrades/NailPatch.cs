@@ -28,7 +28,7 @@ namespace CabbyCodes.Patches.Inventory.Upgrades
 
         public static void AddPanel()
         {
-            InputFieldPanel<int> panel = new InputFieldPanel<int>(new NailPatch(), KeyCodeMap.ValidChars.Numeric, 1, "Nail Upgrades (0-4)");
+            RangeInputFieldPanel<int> panel = new RangeInputFieldPanel<int>(new NailPatch(), KeyCodeMap.ValidChars.Numeric, 0, Constants.MAX_NAIL_UPGRADES, "Nail Upgrades (0-4)");
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(panel);
         }
     }

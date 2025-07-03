@@ -118,11 +118,10 @@ namespace CabbyCodes.Patches.Settings
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(quickStartToggle);
 
             // Add input field for save slot
-            InputFieldPanel<int> saveSlotPanel = new InputFieldPanel<int>(
+            RangeInputFieldPanel<int> saveSlotPanel = new RangeInputFieldPanel<int>(
                 new SaveSlotReference(), 
                 KeyCodeMap.ValidChars.Numeric, 
-                CabbyMenu.Constants.DEFAULT_CHARACTER_LIMIT, 
-                "Save Slot (1-4)");
+                1, 4, "Save Slot (1-4)");
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(saveSlotPanel);
 
             // Add toggle for skipping intro screens

@@ -19,7 +19,7 @@ namespace CabbyCodes.Patches.Charms
 
         public static void AddPanel()
         {
-            InputFieldPanel<int> panel = new InputFieldPanel<int>(new NotchPatch(), KeyCodeMap.ValidChars.Numeric, 2, "Notches (3-11)");
+            RangeInputFieldPanel<int> panel = new RangeInputFieldPanel<int>(new NotchPatch(), KeyCodeMap.ValidChars.Numeric, Constants.MIN_CHARM_NOTCHES, Constants.MAX_CHARM_NOTCHES, "Notches (3-11)");
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(panel);
         }
     }

@@ -5,32 +5,21 @@ namespace CabbyMenu.TextProcessors
     /// <summary>
     /// Text processor for numeric integer types (int, long, short, byte, etc.).
     /// </summary>
-    public class NumericTextProcessor<T> : ITextProcessor<T>
+    public class NumericTextProcessor<T> : BaseNumericProcessor<T>
     {
-        public bool CanInsertCharacter(char character, string currentText, int cursorPosition)
+        public override bool CanInsertCharacter(char character, string currentText, int cursorPosition)
         {
             // Only allow numeric characters
             return char.IsDigit(character);
         }
 
-        public string ProcessTextAfterInsertion(string text, ref int cursorPosition)
+        public override string ProcessTextAfterInsertion(string text, ref int cursorPosition)
         {
             if (string.IsNullOrEmpty(text))
                 return text;
 
             // Count leading zeros
-            int leadingZeros = 0;
-            for (int i = 0; i < text.Length; i++)
-            {
-                if (text[i] == '0')
-                {
-                    leadingZeros++;
-                }
-                else
-                {
-                    break;
-                }
-            }
+            int leadingZeros = CountLeadingZeros(text);
 
             // If there are leading zeros and we have at least one non-zero digit, remove them
             if (leadingZeros > 0 && leadingZeros < text.Length)
@@ -54,25 +43,40 @@ namespace CabbyMenu.TextProcessors
             return text;
         }
 
-        public string ProcessTextBeforeConversion(string text)
+        public override string ProcessTextBeforeConversion(string text)
         {
-            if (string.IsNullOrEmpty(text))
-                return "0";
-
-            // Remove leading zeros for numeric types before conversion
-            string processedText = text.TrimStart('0');
-            // If all characters were zeros, keep at least one zero
-            return string.IsNullOrEmpty(processedText) ? "0" : processedText;
+            return RemoveLeadingZeros(text);
         }
 
-        public T ConvertText(string text)
+        public override T ConvertText(string text)
         {
             return (T)Convert.ChangeType(text, typeof(T));
         }
 
-        public string ConvertValue(T value)
+        public override string ConvertValue(T value)
         {
             return value?.ToString() ?? "0";
+        }
+
+        public override bool HasReachedMaxCharacters(string text, int maxCharacters)
+        {
+            if (string.IsNullOrEmpty(text))
+                return false;
+
+            // Remove leading zeros for comparison
+            string cleanText = RemoveLeadingZeros(text);
+            if (string.IsNullOrEmpty(cleanText) || cleanText == "0")
+                return false;
+
+            // Compare the length of the clean text with the maximum characters allowed
+            return cleanText.Length >= maxCharacters;
+        }
+
+        public override int GetMaxCharacterLimit()
+        {
+            // For numeric types, we don't have a predefined limit
+            // This should be passed in by the caller
+            throw new InvalidOperationException("Numeric text processors require a character limit to be specified.");
         }
     }
 } 

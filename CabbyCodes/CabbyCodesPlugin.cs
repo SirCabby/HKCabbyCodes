@@ -12,6 +12,7 @@ using CabbyCodes.Patches.Player;
 using CabbyCodes.Patches.Charms;
 using CabbyCodes.Patches.Settings;
 using CabbyMenu.UI;
+using CabbyMenu.UI.Controls.InputField;
 
 namespace CabbyCodes
 {
@@ -68,13 +69,13 @@ namespace CabbyCodes
             cabbyMenu = new CabbyMainMenu(Constants.NAME, Constants.VERSION, gameStateProvider);
             
             // Set up input field registration for all used types
-            CabbyMenu.UI.Controls.InputField.InputFieldSync<int>.RegisterInputFieldSync = (inputFieldStatus) => {
+            BaseInputFieldSync<int>.RegisterInputFieldSync = (inputFieldStatus) => {
                 cabbyMenu.RegisterInputFieldSync(inputFieldStatus);
             };
-            CabbyMenu.UI.Controls.InputField.InputFieldSync<float>.RegisterInputFieldSync = (inputFieldStatus) => {
+            BaseInputFieldSync<float>.RegisterInputFieldSync = (inputFieldStatus) => {
                 cabbyMenu.RegisterInputFieldSync(inputFieldStatus);
             };
-            CabbyMenu.UI.Controls.InputField.InputFieldSync<string>.RegisterInputFieldSync = (inputFieldStatus) => {
+            BaseInputFieldSync<string>.RegisterInputFieldSync = (inputFieldStatus) => {
                 cabbyMenu.RegisterInputFieldSync(inputFieldStatus);
             };
             

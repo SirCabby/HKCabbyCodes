@@ -4,42 +4,9 @@ using CabbyMenu.Utilities;
 namespace CabbyMenu.TextProcessors
 {
     /// <summary>
-    /// Text processor for string types.
+    /// Main text processor class that provides factory methods for creating text processors.
     /// </summary>
-    public class StringTextProcessor : ITextProcessor<string>
-    {
-        public bool CanInsertCharacter(char character, string currentText, int cursorPosition)
-        {
-            // Allow any printable character
-            return !char.IsControl(character);
-        }
-
-        public string ProcessTextAfterInsertion(string text, ref int cursorPosition)
-        {
-            // No special processing for strings
-            return text;
-        }
-
-        public string ProcessTextBeforeConversion(string text)
-        {
-            return text ?? string.Empty;
-        }
-
-        public string ConvertText(string text)
-        {
-            return text ?? string.Empty;
-        }
-
-        public string ConvertValue(string value)
-        {
-            return value ?? string.Empty;
-        }
-    }
-
-    /// <summary>
-    /// Factory for creating text processors based on type and validation requirements.
-    /// </summary>
-    public static class TextProcessorFactory
+    public static class TextProcessor
     {
         /// <summary>
         /// Creates an appropriate text processor for the given type and validation requirements.

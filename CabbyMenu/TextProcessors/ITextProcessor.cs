@@ -43,5 +43,19 @@ namespace CabbyMenu.TextProcessors
         /// <param name="value">The value to convert.</param>
         /// <returns>The string representation.</returns>
         string ConvertValue(T value);
+
+        /// <summary>
+        /// Checks if the text has reached the maximum number of characters.
+        /// </summary>
+        /// <param name="text">The text to check.</param>
+        /// <param name="maxCharacters">The maximum number of characters allowed.</param>
+        /// <returns>True if the text has reached maximum characters, false otherwise.</returns>
+        bool HasReachedMaxCharacters(string text, int maxCharacters);
+
+        /// <summary>
+        /// Gets the maximum number of characters needed for this type.
+        /// </summary>
+        /// <returns>The maximum number of characters needed.</returns>
+        int GetMaxCharacterLimit();
     }
 } 

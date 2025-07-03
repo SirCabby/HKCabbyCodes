@@ -23,7 +23,7 @@ namespace CabbyCodes.Patches.Inventory.Currency
 
         public static void AddPanel()
         {
-            InputFieldPanel<int> panel = new InputFieldPanel<int>(new KingsIdolPatch(), KeyCodeMap.ValidChars.Numeric, 1, "King's Idols (0-8)");
+            RangeInputFieldPanel<int> panel = new RangeInputFieldPanel<int>(new KingsIdolPatch(), KeyCodeMap.ValidChars.Numeric, 0, Constants.MAX_KINGS_IDOLS, "King's Idols (0-8)");
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(panel);
         }
     }

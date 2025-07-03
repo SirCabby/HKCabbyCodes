@@ -36,9 +36,9 @@ namespace CabbyCodes.Patches.Hunter
             return hunterNames;
         }
 
-        private static InputFieldPanel<int> BuildCheatPanel(string targetName)
+        private static RangeInputFieldPanel<int> BuildCheatPanel(string targetName)
         {
-            InputFieldPanel<int> panel = new InputFieldPanel<int>(new HunterPatch(targetName), KeyCodeMap.ValidChars.Numeric, 2, targetName);
+            RangeInputFieldPanel<int> panel = new RangeInputFieldPanel<int>(new HunterPatch(targetName), KeyCodeMap.ValidChars.Numeric, Constants.MIN_HUNTER_KILLS, Constants.MAX_HUNTER_KILLS, targetName);
             PanelAdder.AddToggleButton(panel, 0, new HunterKilledPatch(targetName));
 
             return panel;

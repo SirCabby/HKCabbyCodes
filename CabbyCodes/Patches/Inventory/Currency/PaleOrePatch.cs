@@ -19,7 +19,7 @@ namespace CabbyCodes.Patches.Inventory.Currency
 
         public static void AddPanel()
         {
-            InputFieldPanel<int> panel = new InputFieldPanel<int>(new PaleOrePatch(), KeyCodeMap.ValidChars.Numeric, 1, "Ore (0-6)");
+            RangeInputFieldPanel<int> panel = new RangeInputFieldPanel<int>(new PaleOrePatch(), KeyCodeMap.ValidChars.Numeric, 0, Constants.MAX_PALE_ORE, "Ore (0-6)");
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(panel);
         }
     }

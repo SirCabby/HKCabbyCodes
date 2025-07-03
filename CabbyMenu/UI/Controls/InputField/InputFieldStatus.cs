@@ -4,48 +4,10 @@ using UnityEngine.UI;
 using System.Collections;
 using CabbyMenu.TextProcessors;
 using CabbyMenu.Utilities;
+using CabbyMenu.UI.Controls.InputField;
 
 namespace CabbyMenu.UI.Controls.InputField
 {
-    /// <summary>
-    /// Non-generic interface for InputFieldStatus to allow type-safe handling of different generic types.
-    /// </summary>
-    public interface IInputFieldStatus
-    {
-        GameObject InputFieldGo { get; }
-        float LastUpdated { get; set; }
-        KeyCodeMap.ValidChars ValidChars { get; }
-        bool IsSelected { get; }
-        int CursorPosition { get; set; }
-        Action<bool> OnSelected { get; }
-        Action Submit { get; }
-        Action Cancel { get; }
-        
-        void SetSelected(bool selected);
-        void SyncCursorPositionFromUnity();
-        void SyncSelectionFromUnity();
-        bool WasSelected();
-        UnityEngine.UI.InputField GetInputField();
-        int GetIndex();
-        void MoveCursor(int offset);
-        void SetCursorPosition(int position);
-        void ResetHorizontalOffset();
-        string GetVisibleText();
-        int GetVisibleCursorPosition();
-        void InsertCharacter(char character, int characterLimit);
-        void DeleteCharacter();
-        void DeleteForwardCharacter();
-        int CalculateCursorPositionFromMouse(Vector2 mousePosition);
-        void SetCursorPositionDirectly(int position);
-        void SetCursorPositionFromMouse(Vector2 mousePosition);
-        void SyncCursorPositionNextFrame();
-        void SetFullText(string text);
-        string GetFullText();
-        (int start, int end)? GetTextSelection();
-        bool DeleteSelectedText();
-        bool ReplaceSelectedText(char character, int characterLimit);
-    }
-
     /// <summary>
     /// Manages the state and behavior of input fields in the mod UI.
     /// </summary>
@@ -70,6 +32,11 @@ namespace CabbyMenu.UI.Controls.InputField
         /// The text processor for type-specific operations.
         /// </summary>
         private readonly ITextProcessor<T> textProcessor;
+
+        /// <summary>
+        /// The logical maximum value for this input field.
+        /// </summary>
+        private readonly T logicalMaxValue;
 
         /// <summary>
         /// Callback invoked when the input field selection state changes.
@@ -131,7 +98,8 @@ namespace CabbyMenu.UI.Controls.InputField
         /// <param name="validChars">The types of characters valid for this input field.</param>
         /// <param name="maxVisibleCharacters">The maximum number of characters that can be displayed in the input field at once.</param>
         /// <param name="textProcessor">The text processor for type-specific operations.</param>
-        public InputFieldStatus(GameObject inputFieldGo, Action<bool> onSelected, Action submit, Action cancel, KeyCodeMap.ValidChars validChars, int maxVisibleCharacters, ITextProcessor<T> textProcessor)
+        /// <param name="logicalMaxValue">The logical maximum value for this input field.</param>
+        public InputFieldStatus(GameObject inputFieldGo, Action<bool> onSelected, Action submit, Action cancel, KeyCodeMap.ValidChars validChars, int maxVisibleCharacters, ITextProcessor<T> textProcessor, T logicalMaxValue)
         {
             InputFieldGo = inputFieldGo;
             ValidChars = validChars;
@@ -140,6 +108,7 @@ namespace CabbyMenu.UI.Controls.InputField
             Cancel = cancel;
             this.maxVisibleCharacters = maxVisibleCharacters;
             this.textProcessor = textProcessor;
+            this.logicalMaxValue = logicalMaxValue;
         }
 
         /// <summary>
@@ -443,6 +412,30 @@ namespace CabbyMenu.UI.Controls.InputField
             
             // Ensure cursor position is within valid bounds before any operation
             CursorPosition = Mathf.Clamp(CursorPosition, 0, fullText.Length);
+            
+            // Create a temporary text to check if adding this character would reach max digits
+            string tempText = fullText.Substring(0, CursorPosition) + character + fullText.Substring(CursorPosition);
+            
+            // Check if this would reach maximum characters for the type
+            if (textProcessor.HasReachedMaxCharacters(tempText, characterLimit))
+            {
+                // Set the text to the logical maximum value
+                fullText = textProcessor.ConvertValue(logicalMaxValue);
+                CursorPosition = fullText.Length; // Set cursor to end
+                
+                // Update the display text
+                UpdateDisplayText();
+                
+                // Update horizontal offset to ensure cursor is visible
+                UpdateHorizontalOffsetForCursor();
+                
+                // Update Unity's InputField cursor position immediately
+                UpdateUnityCursorPosition();
+                
+                // Force cursor to reset blink cycle
+                ForceCursorBlinkReset();
+                return;
+            }
             
             // If at character limit, replace the character at cursor position
             if (fullText.Length >= characterLimit && CursorPosition <= fullText.Length)
@@ -827,11 +820,11 @@ namespace CabbyMenu.UI.Controls.InputField
             UpdateUnityCursorPosition();
             
             // Clear the selection in Unity's InputField
-            UnityEngine.UI.InputField inputField = GetInputField();
-            if (inputField != null)
+            UnityEngine.UI.InputField replaceInputField = GetInputField();
+            if (replaceInputField != null)
             {
-                inputField.selectionAnchorPosition = inputField.caretPosition;
-                inputField.selectionFocusPosition = inputField.caretPosition;
+                replaceInputField.selectionAnchorPosition = replaceInputField.caretPosition;
+                replaceInputField.selectionFocusPosition = replaceInputField.caretPosition;
             }
             
             // Force cursor to reset blink cycle
@@ -870,6 +863,38 @@ namespace CabbyMenu.UI.Controls.InputField
                 return false;
             }
 
+            // Create a temporary text to check if replacing would reach max characters
+            string tempText = fullText.Substring(0, start) + character + fullText.Substring(end);
+            
+            // Check if this would reach maximum characters for the type
+            if (textProcessor.HasReachedMaxCharacters(tempText, characterLimit))
+            {
+                // Set the text to the logical maximum value
+                fullText = textProcessor.ConvertValue(logicalMaxValue);
+                CursorPosition = fullText.Length; // Set cursor to end
+                
+                // Update the display text
+                UpdateDisplayText();
+                
+                // Update horizontal offset to ensure cursor is visible
+                UpdateHorizontalOffsetForCursor();
+                
+                // Update Unity's InputField cursor position immediately
+                UpdateUnityCursorPosition();
+                
+                // Clear the selection in Unity's InputField
+                UnityEngine.UI.InputField replaceInputField2 = GetInputField();
+                if (replaceInputField2 != null)
+                {
+                    replaceInputField2.selectionAnchorPosition = replaceInputField2.caretPosition;
+                    replaceInputField2.selectionFocusPosition = replaceInputField2.caretPosition;
+                }
+                
+                // Force cursor to reset blink cycle
+                ForceCursorBlinkReset();
+                return true;
+            }
+
             // Replace the selected text with the new character
             fullText = fullText.Substring(0, start) + character + fullText.Substring(end);
             
@@ -886,11 +911,11 @@ namespace CabbyMenu.UI.Controls.InputField
             UpdateUnityCursorPosition();
             
             // Clear the selection in Unity's InputField
-            UnityEngine.UI.InputField inputField = GetInputField();
-            if (inputField != null)
+            UnityEngine.UI.InputField replaceInputField3 = GetInputField();
+            if (replaceInputField3 != null)
             {
-                inputField.selectionAnchorPosition = inputField.caretPosition;
-                inputField.selectionFocusPosition = inputField.caretPosition;
+                replaceInputField3.selectionAnchorPosition = replaceInputField3.caretPosition;
+                replaceInputField3.selectionFocusPosition = replaceInputField3.caretPosition;
             }
             
             // Force cursor to reset blink cycle

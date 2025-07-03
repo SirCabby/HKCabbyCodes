@@ -18,7 +18,7 @@ namespace CabbyCodes.Patches.Player
 
         public static void AddPanel()
         {
-            InputFieldPanel<float> panel = new InputFieldPanel<float>(new PlayTimePatch(), KeyCodeMap.ValidChars.Decimal, 14, "Playtime (seconds)");
+            RangeInputFieldPanel<float> panel = new RangeInputFieldPanel<float>(new PlayTimePatch(), KeyCodeMap.ValidChars.Decimal, 0f, 999999f, "Playtime (seconds)");
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(panel);
         }
     }
