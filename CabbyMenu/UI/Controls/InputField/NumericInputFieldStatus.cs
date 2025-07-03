@@ -51,23 +51,9 @@ namespace CabbyMenu.UI.Controls.InputField
             string tempText = fullText.Substring(0, CursorPosition) + character + fullText.Substring(CursorPosition);
             if (fullText.Length >= characterLimit)
             {
-                try
-                {
-                    T tempValue = textProcessor.ConvertText(tempText);
-                    T clampedValue = textProcessor.ClampValue(tempValue, minValue, maxValue);
-                    fullText = textProcessor.ConvertValue(clampedValue);
-                    CursorPosition = fullText.Length;
-                }
-                catch
-                {
-                    fullText = textProcessor.ConvertValue(maxValue);
-                    CursorPosition = fullText.Length;
-                }
-                UpdateDisplayText();
-                UpdateHorizontalOffsetForCursor();
-                UpdateUnityCursorPosition();
-                ForceCursorBlinkReset();
-                return;
+                // When at character limit, just append the character and let the text processor handle it
+                fullText = tempText;
+                CursorPosition++;
             }
             else if (fullText.Length < characterLimit)
             {
@@ -81,17 +67,22 @@ namespace CabbyMenu.UI.Controls.InputField
             int cursorPos = CursorPosition;
             fullText = textProcessor.ProcessTextAfterInsertion(fullText, ref cursorPos);
             CursorPosition = cursorPos;
+            
+            // Apply maximum value validation immediately during typing
+            // But leave minimum value validation for submit only (to allow typing multi-digit numbers)
             try
             {
                 T value = textProcessor.ConvertText(fullText);
-                if (!textProcessor.IsValueInRange(value, minValue, maxValue))
+                if (value is IComparable<T> comparable && comparable.CompareTo(maxValue) > 0)
                 {
-                    T clampedValue = textProcessor.ClampValue(value, minValue, maxValue);
-                    fullText = textProcessor.ConvertValue(clampedValue);
+                    // Value is above maximum - clamp immediately
+                    fullText = textProcessor.ConvertValue(maxValue);
                     CursorPosition = fullText.Length;
                 }
+                // Don't validate minimum here - let users type values below minimum for multi-digit numbers
             }
             catch { }
+            
             UpdateDisplayText();
             int maxPosition = Mathf.Min(fullText.Length, characterLimit);
             CursorPosition = Mathf.Clamp(CursorPosition, 0, maxPosition);
