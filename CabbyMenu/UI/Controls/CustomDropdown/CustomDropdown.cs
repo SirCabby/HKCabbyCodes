@@ -98,10 +98,7 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
             var dropdownsToClose = openDropdowns.ToList();
             foreach (CustomDropdown dropdown in dropdownsToClose)
             {
-                if (dropdown != null)
-                {
-                    dropdown.HideDropdown();
-                }
+                dropdown?.HideDropdown();
             }
         }
 
@@ -1281,7 +1278,6 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
             // Viewport positions
             if (scrollView != null && viewport != null)
             {
-                ScrollRect scrollRectComponent = scrollView.GetComponent<ScrollRect>();
                 RectTransform viewportRect = viewport.GetComponent<RectTransform>();
                 Vector3 viewportWorldPos = viewportRect.position;
                 Vector3 viewportScreenPos = RectTransformUtility.WorldToScreenPoint(null, viewportWorldPos);
@@ -1292,7 +1288,6 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
             // Content positions
             if (scrollView != null && content != null)
             {
-                ScrollRect scrollRectComponent = scrollView.GetComponent<ScrollRect>();
                 RectTransform contentRect = content.GetComponent<RectTransform>();
                 Vector3 contentWorldPos = contentRect.position;
                 Vector3 contentScreenPos = RectTransformUtility.WorldToScreenPoint(null, contentWorldPos);

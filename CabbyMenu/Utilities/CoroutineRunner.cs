@@ -16,7 +16,7 @@ namespace CabbyMenu.Utilities
                 if (_instance == null)
                 {
                     var go = new GameObject("CoroutineRunner");
-                    Object.DontDestroyOnLoad(go);
+                    DontDestroyOnLoad(go);
                     _instance = go.AddComponent<CoroutineRunner>();
                 }
                 return _instance;

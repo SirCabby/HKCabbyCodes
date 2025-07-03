@@ -51,12 +51,12 @@ namespace CabbyMenu.UI
         /// <summary>
         /// List of registered input fields for synchronization.
         /// </summary>
-        private readonly List<IInputFieldStatus> registeredInputs = new List<IInputFieldStatus>();
+        private readonly List<InputFieldStatusBase> registeredInputs = new List<InputFieldStatusBase>();
 
         /// <summary>
         /// The last selected input field.
         /// </summary>
-        private IInputFieldStatus lastSelected;
+        private InputFieldStatusBase lastSelected;
 
         /// <summary>
         /// The root GameObject for the menu canvas.
@@ -133,7 +133,7 @@ namespace CabbyMenu.UI
         /// Registers an input field for synchronization.
         /// </summary>
         /// <param name="inputFieldStatus">The input field status to register.</param>
-        public void RegisterInputFieldSync<T>(InputFieldStatus<T> inputFieldStatus)
+        public void RegisterInputFieldSync(InputFieldStatusBase inputFieldStatus)
         {
             registeredInputs.Add(inputFieldStatus);
         }
@@ -142,7 +142,7 @@ namespace CabbyMenu.UI
         /// Gets all registered input fields.
         /// </summary>
         /// <returns>A read-only list of registered input fields.</returns>
-        public IReadOnlyList<IInputFieldStatus> GetRegisteredInputs()
+        public IReadOnlyList<InputFieldStatusBase> GetRegisteredInputs()
         {
             return registeredInputs.AsReadOnly();
         }
@@ -153,7 +153,7 @@ namespace CabbyMenu.UI
         private void ClearInputFields()
         {
             // Clear Unity's internal focus on all input fields before clearing the list
-            foreach (IInputFieldStatus input in registeredInputs)
+            foreach (InputFieldStatusBase input in registeredInputs)
             {
                 if (input?.InputFieldGo != null)
                 {
@@ -196,12 +196,12 @@ namespace CabbyMenu.UI
                 if (Input.GetMouseButtonDown(0))
                 {
                     Vector2 mousePosition = Input.mousePosition;
-                    IInputFieldStatus clickedInput = null;
+                    InputFieldStatusBase clickedInput = null;
 
                     // Check if registeredInputs is valid
                     if (registeredInputs != null)
                     {
-                        foreach (IInputFieldStatus input in registeredInputs)
+                        foreach (InputFieldStatusBase input in registeredInputs)
                         {
                             if (input != null && IsMouseOverInputField(input, mousePosition))
                             {
@@ -337,7 +337,7 @@ namespace CabbyMenu.UI
             else if (rootGameObject != null && rootGoMod != null && rootGoMod.IsActive())
             {
                 // Submit any pending changes before hiding the menu
-                if (lastSelected != null) { lastSelected.Submit(); }
+                lastSelected?.Submit();
                 
                 rootGoMod.SetActive(false);
                 if (categoryDropdown != null)
@@ -525,7 +525,7 @@ namespace CabbyMenu.UI
         /// <param name="inputStatus">The input field status to check.</param>
         /// <param name="mousePosition">The current mouse position.</param>
         /// <returns>True if the mouse is over the input field, false otherwise.</returns>
-        private bool IsMouseOverInputField(IInputFieldStatus inputStatus, Vector2 mousePosition)
+        private bool IsMouseOverInputField(InputFieldStatusBase inputStatus, Vector2 mousePosition)
         {
             if (inputStatus?.InputFieldGo == null) return false;
             RectTransform rectTransform = inputStatus.InputFieldGo.GetComponent<RectTransform>();
@@ -537,7 +537,7 @@ namespace CabbyMenu.UI
         /// Sets selection state for all input fields, ensuring only one is selected.
         /// </summary>
         /// <param name="selected">The input field to select, or null to deselect all.</param>
-        private void SetInputFieldSelection(IInputFieldStatus selected)
+        private void SetInputFieldSelection(InputFieldStatusBase selected)
         {
             if (registeredInputs == null) return;
             
@@ -556,7 +556,7 @@ namespace CabbyMenu.UI
         /// Updates the input field display.
         /// </summary>
         /// <param name="inputStatus">The input field status to update.</param>
-        private void UpdateInputFieldDisplay(IInputFieldStatus inputStatus)
+        private void UpdateInputFieldDisplay(InputFieldStatusBase inputStatus)
         {
             if (inputStatus?.InputFieldGo == null) return;
 

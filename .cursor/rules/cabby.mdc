@@ -42,11 +42,13 @@ This is a Hollow Knight mod project called "CabbyCodes" that provides various ch
 - Analyzing game assemblies for new features
 
 ## Code Style
-- Follow C# 7.3 conventions
+- Follow C# 7.3 conventions, no not use features beyond this version
 - Use meaningful names for patches and classes
 - Add comments for complex game mechanics
 - Keep patches focused and single-purpose
 - Target .NET Framework 4.7.2 compatibility
+- Never put more than one class or interface in the same file
+- Do not generate example java files
 
 ## Naming Conventions
 - **Classes**: PascalCase (e.g., `PlayerPatch`, `InventoryPatch`)
@@ -57,9 +59,7 @@ This is a Hollow Knight mod project called "CabbyCodes" that provides various ch
 - **Namespaces**: Match project structure (e.g., `CabbyCodes.Patches.Player`)
 
 ## File Organization
-- Keep patches organized by category in `CabbyCodes/Patches/`
 - UI components go in `CabbyMenu/UI/`
-- Types and interfaces in `Types/` folders
 - Use subdirectories for related functionality (e.g., `Patches/Inventory/Abilities/`)
 - Ensure non-zero and non-string constants go in Constants files.  Game specific constants go in CabbyCodes Constants and Menu specific constants go in CabbyMenu Constants
 
@@ -69,6 +69,8 @@ This is a Hollow Knight mod project called "CabbyCodes" that provides various ch
 - Don't use try-catch blocks around game API calls
 - Log both success and failure cases for troubleshooting
 - Use Makefile build target to test compiling
+- Whenever generating non-java files for debugging, such as logs or command outputs, put them in the /Output folder
+- Building should not require an output file but git and powershell commands may require it
 
 ## Performance Considerations
 - Minimize allocations in hot paths
@@ -84,7 +86,7 @@ This is a Hollow Knight mod project called "CabbyCodes" that provides various ch
 - Use `del` instead of `rm` for file deletion
 - Use `mkdir` instead of `mkdir -p` for directory creation
 - Don't use `&&` as it won't work properly
-- When querying git for information, output it to file in the /Output folder and read from file
+- When querying git for information, output it to file and read from file
 
 ## Documentation Standards
 - Add XML documentation for public methods
@@ -100,5 +102,4 @@ This is a Hollow Knight mod project called "CabbyCodes" that provides various ch
 - **Deployment**: Use the Makefile deploy target
 - **Windows-specific issues**: Consider Windows paths, registry, and Windows-specific tools
 - **.NET version issues**: Ensure compatibility with .NET Framework 4.7.2 and C# 7.3
-
 - **Performance issues**: Check for allocations, caching, and hot path optimization

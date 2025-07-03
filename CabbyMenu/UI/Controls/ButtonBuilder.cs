@@ -52,7 +52,7 @@ namespace CabbyMenu.UI.Controls
         {
             GameObject buildInstance = DefaultControls.CreateButton(new DefaultControls.Resources());
 
-            UnityEngine.UI.Button buttonComponent = buildInstance.GetComponent<UnityEngine.UI.Button>();
+            Button buttonComponent = buildInstance.GetComponent<Button>();
             Image buttonImage = buildInstance.GetComponent<Image>();
 
             // Apply rounded sprite to the button
@@ -94,7 +94,6 @@ namespace CabbyMenu.UI.Controls
 
             // Use a smaller radius percentage for better scaling across different button sizes
             float radius = size * 0.06f; // 6% of size for corner radius
-            Vector2 center = new Vector2(size / 2f, size / 2f);
 
             for (int x = 0; x < size; x++)
             {

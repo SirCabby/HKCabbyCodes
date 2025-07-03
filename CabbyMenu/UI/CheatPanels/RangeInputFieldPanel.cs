@@ -40,7 +40,7 @@ namespace CabbyMenu.UI.CheatPanels
             }
 
             // Create text processor to calculate character limit
-            var textProcessor = CabbyMenu.TextProcessors.TextProcessor.Create<T>(validChars);
+            var textProcessor = TextProcessor.Create<T>(validChars);
             
             // Since we know this is a numeric type, we can safely cast to BaseNumericProcessor
             if (textProcessor is BaseNumericProcessor<T> numericProcessor)
@@ -53,7 +53,7 @@ namespace CabbyMenu.UI.CheatPanels
                 // Debug logging to verify width calculation
                 UnityEngine.Debug.Log($"RangeInputFieldPanel: minValue={minValue}, maxValue={maxValue}, characterLimit={characterLimit}, calculatedWidth={calculatedWidth}, description='{description}'");
                 
-                inputFieldSync = InputFieldSync.Create<T>(syncedReference, validChars, new Vector2(calculatedWidth, Constants.DEFAULT_PANEL_HEIGHT), characterLimit, minValue, maxValue);
+                inputFieldSync = InputFieldSync.Create(syncedReference, validChars, new Vector2(calculatedWidth, Constants.DEFAULT_PANEL_HEIGHT), characterLimit, minValue, maxValue);
                 new Fitter(inputFieldSync.GetGameObject()).Attach(cheatPanel);
                 inputFieldSync.GetGameObject().transform.SetAsFirstSibling();
                 

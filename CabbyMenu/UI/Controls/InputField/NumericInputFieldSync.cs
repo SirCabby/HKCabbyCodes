@@ -1,8 +1,8 @@
-using System;
 using UnityEngine;
 using CabbyMenu.SyncedReferences;
 using CabbyMenu.TextProcessors;
 using CabbyMenu.Utilities;
+using System;
 
 namespace CabbyMenu.UI.Controls.InputField
 {
@@ -20,11 +20,28 @@ namespace CabbyMenu.UI.Controls.InputField
         {
             this.minValue = minValue;
             this.maxValue = maxValue;
-        }
 
-        protected override InputFieldStatus<T> CreateInputFieldStatus(KeyCodeMap.ValidChars validChars, int maxVisibleCharacters)
-        {
-            return new InputFieldStatus<T>(inputFieldGo, SetSelected, Submit, Cancel, validChars, maxVisibleCharacters, textProcessor, maxValue);
+            // Create the numeric input field status directly
+            if (textProcessor is BaseNumericProcessor<T> numericProcessor)
+            {
+                var tType = typeof(T);
+                if (tType.IsValueType && typeof(IComparable<T>).IsAssignableFrom(tType))
+                {
+                    var status = (InputFieldStatusBase)Activator.CreateInstance(
+                        typeof(NumericInputFieldStatus<>).MakeGenericType(tType),
+                        new object[] { inputFieldGo, (Action<bool>)SetSelected, (Action)Submit, (Action)Cancel, CalculateMaxVisibleCharacters(size.x, Constants.DEFAULT_FONT_SIZE), numericProcessor, minValue, maxValue });
+                    // Use the protected method from base class
+                    SetInputFieldStatus(status);
+                }
+                else
+                {
+                    throw new InvalidOperationException("NumericInputFieldSync requires a value type implementing IComparable<T>.");
+                }
+            }
+            else
+            {
+                throw new InvalidOperationException("NumericInputFieldSync requires a numeric text processor.");
+            }
         }
 
         protected override void HandleSubmit(string text)

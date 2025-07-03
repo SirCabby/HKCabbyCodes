@@ -40,8 +40,9 @@ AssemblyTools/Inspector/assembly_analysis.json
 *.swp
 *~
 
-# Input directory (temporary files, logs, git diffs)
+# temporary files, logs, git diffs
 Input/
+Output/
 
 # IDE files
 .vscode/

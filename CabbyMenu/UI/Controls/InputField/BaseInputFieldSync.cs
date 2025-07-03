@@ -19,18 +19,18 @@ namespace CabbyMenu.UI.Controls.InputField
         protected readonly GameObject inputFieldGo;
         protected readonly UnityEngine.UI.InputField inputField;
         protected readonly ISyncedReference<T> InputValue;
-        protected readonly InputFieldStatus<T> inputFieldStatus;
+        protected readonly InputFieldStatusBase inputFieldStatus;
         protected readonly ITextProcessor<T> textProcessor;
 
         /// <summary>
         /// Action for registering input field sync. Can be set by the consuming project.
         /// </summary>
-        public static Action<InputFieldStatus<T>> RegisterInputFieldSync { get; set; } = null;
+        public static Action<InputFieldStatusBase> RegisterInputFieldSync { get; set; } = null;
 
-        protected BaseInputFieldSync(ISyncedReference<T> inputValue, Utilities.KeyCodeMap.ValidChars validChars, Vector2 size, int characterLimit)
+        protected BaseInputFieldSync(ISyncedReference<T> inputValue, KeyCodeMap.ValidChars validChars, Vector2 size, int characterLimit)
         {
             InputValue = inputValue;
-            textProcessor = CabbyMenu.TextProcessors.TextProcessor.Create<T>(validChars);
+            textProcessor = TextProcessor.Create<T>(validChars);
 
             inputFieldGo = DefaultControls.CreateInputField(new DefaultControls.Resources());
             inputFieldGo.name = "InputFieldSync";
@@ -39,12 +39,6 @@ namespace CabbyMenu.UI.Controls.InputField
 
             // Ensure input field starts in deactivated state to prevent initial focus issues
             inputField.DeactivateInputField();
-
-            // Remove automatic onEndEdit submission to prevent conflicts with manual text manipulation
-            // The main menu will handle submission manually through InputFieldStatus.Submit
-            // inputField.onEndEdit.AddListener((text) => {
-            //     Submit();
-            // });
 
             inputField.text = textProcessor.ConvertValue(InputValue.Get());
 
@@ -58,11 +52,20 @@ namespace CabbyMenu.UI.Controls.InputField
             
             // Calculate maxVisibleCharacters based on input field width and font size
             int maxVisibleCharacters = CalculateMaxVisibleCharacters(size.x, Constants.DEFAULT_FONT_SIZE);
-            inputFieldStatus = CreateInputFieldStatus(validChars, maxVisibleCharacters);
-            
-            // Initialize the full text with the current value
-            inputFieldStatus.SetFullText(textProcessor.ConvertValue(InputValue.Get()));
-            RegisterInputFieldSync?.Invoke(inputFieldStatus);
+
+            // Only create status for non-numeric types; numeric types will handle it in their constructor
+            if (typeof(T) == typeof(string))
+            {
+                inputFieldStatus = CreateInputFieldStatus(validChars, maxVisibleCharacters);
+                // Initialize the full text with the current value
+                inputFieldStatus.SetFullText(textProcessor.ConvertValue(InputValue.Get()));
+                RegisterInputFieldSync?.Invoke(inputFieldStatus);
+            }
+            else
+            {
+                // For numeric types, let the subclass handle status creation
+                inputFieldStatus = null;
+            }
         }
 
         /// <summary>
@@ -71,7 +74,31 @@ namespace CabbyMenu.UI.Controls.InputField
         /// <param name="validChars">The valid character types.</param>
         /// <param name="maxVisibleCharacters">The maximum visible characters.</param>
         /// <returns>The InputFieldStatus instance.</returns>
-        protected abstract InputFieldStatus<T> CreateInputFieldStatus(KeyCodeMap.ValidChars validChars, int maxVisibleCharacters);
+        protected virtual InputFieldStatusBase CreateInputFieldStatus(KeyCodeMap.ValidChars validChars, int maxVisibleCharacters)
+        {
+            if (typeof(T) == typeof(string))
+            {
+                return new TextInputFieldStatus(inputFieldGo, SetSelected, Submit, Cancel, maxVisibleCharacters, (StringTextProcessor)textProcessor);
+            }
+            
+            // Fallback to text for any other non-numeric types
+            return new TextInputFieldStatus(inputFieldGo, SetSelected, Submit, Cancel, maxVisibleCharacters, (StringTextProcessor)textProcessor);
+        }
+
+        /// <summary>
+        /// Sets the input field status. Used by subclasses to set their status after creation.
+        /// </summary>
+        /// <param name="status">The status to set.</param>
+        protected void SetInputFieldStatus(InputFieldStatusBase status)
+        {
+            // Use reflection to set the readonly field
+            var field = typeof(BaseInputFieldSync<T>).GetField("inputFieldStatus", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            field.SetValue(this, status);
+            
+            // Initialize the full text with the current value
+            status.SetFullText(textProcessor.ConvertValue(InputValue.Get()));
+            RegisterInputFieldSync?.Invoke(status);
+        }
 
         /// <summary>
         /// Handles the submission logic specific to this input field type.
@@ -182,7 +209,7 @@ namespace CabbyMenu.UI.Controls.InputField
                 inputFieldStatus.SetCursorPositionDirectly(0);
             }
             
-            // Don't call SetSelected here - the main menu handles selection state
+            // Don't call SetSelected here
         }
 
         public void SetSelected(bool isSelected)
@@ -215,7 +242,7 @@ namespace CabbyMenu.UI.Controls.InputField
         /// <param name="width">The width of the input field in pixels.</param>
         /// <param name="fontSize">The font size in pixels.</param>
         /// <returns>The maximum number of characters that can be displayed.</returns>
-        private int CalculateMaxVisibleCharacters(float width, int fontSize)
+        protected int CalculateMaxVisibleCharacters(float width, int fontSize)
         {
             float estimatedCharWidth = CalculateCursorCharacterWidth(fontSize);
             float usableWidth = width;
@@ -228,7 +255,7 @@ namespace CabbyMenu.UI.Controls.InputField
         /// </summary>
         /// <param name="fontSize">The font size in pixels.</param>
         /// <returns>The estimated character width for cursor positioning.</returns>
-        private static float CalculateCursorCharacterWidth(int fontSize)
+        protected static float CalculateCursorCharacterWidth(int fontSize)
         {
             return fontSize * 0.65f;
         }
