@@ -2,57 +2,13 @@ using CabbyMenu.UI.Modders;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace CabbyMenu.UI.Factories
+namespace CabbyMenu.UI.Controls
 {
     /// <summary>
-    /// Factory class for creating and configuring button UI elements.
+    /// Utility class for creating and configuring button UI elements.
     /// </summary>
-    public class ButtonFactory
+    public static class ButtonBuilder
     {
-        /// <summary>
-        /// Builds a button with custom colors for different use cases.
-        /// </summary>
-        /// <param name="text">The text to display on the button.</param>
-        /// <param name="normalColor">The normal state color.</param>
-        /// <param name="highlightedColor">The hover state color.</param>
-        /// <param name="pressedColor">The pressed state color.</param>
-        /// <returns>A tuple containing the GameObject, GameObjectMod, and TextMod for the created button.</returns>
-        public static (GameObject gameObject, GameObjectMod gameObjectMod, TextMod textMod) BuildWithColors(
-            string text, Color normalColor, Color highlightedColor, Color pressedColor)
-        {
-            GameObject buildInstance = DefaultControls.CreateButton(new DefaultControls.Resources());
-
-            Button buttonComponent = buildInstance.GetComponent<Button>();
-            Image buttonImage = buildInstance.GetComponent<Image>();
-
-            // Apply rounded sprite to the button
-            buttonImage.sprite = GetRoundedSprite();
-            buttonImage.type = Image.Type.Sliced; // Use sliced type for 9-slice scaling
-
-            // Apply custom colors
-            buttonImage.color = normalColor;
-
-            ColorBlock colors = buttonComponent.colors;
-            colors.normalColor = normalColor;
-            colors.highlightedColor = highlightedColor;
-            colors.pressedColor = pressedColor;
-            colors.fadeDuration = 0.1f;
-            buttonComponent.colors = colors;
-
-            // Add outline for better visibility
-            Outline outline = buildInstance.AddComponent<Outline>();
-            outline.effectColor = new Color(0f, 0f, 0f, 0.3f);
-            outline.effectDistance = new Vector2(2f, 2f);
-
-            TextMod textMod = new TextMod(buildInstance.GetComponentInChildren<Text>());
-            textMod.SetText(text)
-                   .SetFontSize(Constants.DEFAULT_FONT_SIZE)
-                   .SetColor(Color.white);
-
-            (GameObject gameObject, GameObjectMod gameObjectMod) = GameObjectFactory.Build(buildInstance);
-            return (gameObject, gameObjectMod, textMod);
-        }
-
         /// <summary>
         /// Builds a button GameObject with the specified text and default styling.
         /// </summary>
@@ -81,6 +37,50 @@ namespace CabbyMenu.UI.Factories
         public static (GameObject gameObject, GameObjectMod gameObjectMod, TextMod textMod) BuildDanger(string text = "")
         {
             return BuildWithColors(text, Constants.BUTTON_DANGER_NORMAL, Constants.BUTTON_DANGER_HOVER, Constants.BUTTON_DANGER_PRESSED);
+        }
+
+        /// <summary>
+        /// Builds a button with custom colors for different use cases.
+        /// </summary>
+        /// <param name="text">The text to display on the button.</param>
+        /// <param name="normalColor">The normal state color.</param>
+        /// <param name="highlightedColor">The hover state color.</param>
+        /// <param name="pressedColor">The pressed state color.</param>
+        /// <returns>A tuple containing the GameObject, GameObjectMod, and TextMod for the created button.</returns>
+        public static (GameObject gameObject, GameObjectMod gameObjectMod, TextMod textMod) BuildWithColors(
+            string text, Color normalColor, Color highlightedColor, Color pressedColor)
+        {
+            GameObject buildInstance = DefaultControls.CreateButton(new DefaultControls.Resources());
+
+            UnityEngine.UI.Button buttonComponent = buildInstance.GetComponent<UnityEngine.UI.Button>();
+            Image buttonImage = buildInstance.GetComponent<Image>();
+
+            // Apply rounded sprite to the button
+            buttonImage.sprite = GetRoundedSprite();
+            buttonImage.type = Image.Type.Sliced; // Use sliced type for 9-slice scaling
+
+            // Apply custom colors
+            buttonImage.color = normalColor;
+
+            ColorBlock colors = buttonComponent.colors;
+            colors.normalColor = normalColor;
+            colors.highlightedColor = highlightedColor;
+            colors.pressedColor = pressedColor;
+            colors.fadeDuration = 0.1f;
+            buttonComponent.colors = colors;
+
+            // Add outline for better visibility
+            Outline outline = buildInstance.AddComponent<Outline>();
+            outline.effectColor = new Color(0f, 0f, 0f, 0.3f);
+            outline.effectDistance = new Vector2(2f, 2f);
+
+            TextMod textMod = new TextMod(buildInstance.GetComponentInChildren<Text>());
+            textMod.SetText(text)
+                   .SetFontSize(Constants.DEFAULT_FONT_SIZE)
+                   .SetColor(Color.white);
+
+            (GameObject gameObject, GameObjectMod gameObjectMod) = GameObjectMod.Build(buildInstance);
+            return (gameObject, gameObjectMod, textMod);
         }
 
         /// <summary>
@@ -150,4 +150,4 @@ namespace CabbyMenu.UI.Factories
             return Sprite.Create(texture, new Rect(0, 0, size, size), new Vector2(0.5f, 0.5f), 100f, 0, SpriteMeshType.FullRect, new Vector4(radius, radius, radius, radius));
         }
     }
-}
+} 

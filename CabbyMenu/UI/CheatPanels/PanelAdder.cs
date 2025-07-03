@@ -1,4 +1,3 @@
-using CabbyMenu.UI.Factories;
 using CabbyMenu.UI.Modders;
 using UnityEngine.UI;
 using UnityEngine;
@@ -41,7 +40,7 @@ namespace CabbyMenu.UI.CheatPanels
         public static GameObject AddButton(CheatPanel panel, int siblingIndex, UnityAction action, string buttonText, Vector2 size)
         {
             return CreateButtonPanel(panel, siblingIndex, "Button Panel", size,
-                (text) => ButtonFactory.BuildDefault(buttonText), action);
+                (text) => ButtonBuilder.BuildDefault(buttonText), action);
         }
 
         public static GameObject AddToggleButton(CheatPanel panel, int siblingIndex, ISyncedReference<bool> syncedReference)
@@ -85,7 +84,7 @@ namespace CabbyMenu.UI.CheatPanels
         public static GameObject AddDestroyPanelButton(CheatPanel panel, int siblingIndex, Action additionalAction, string buttonText, Vector2 size)
         {
             return CreateButtonPanel(panel, siblingIndex, "Destroy Button Panel", size,
-                (text) => ButtonFactory.BuildDanger(buttonText), delegate
+                (text) => ButtonBuilder.BuildDanger(buttonText), delegate
                 {
                     UnityEngine.Object.Destroy(panel.cheatPanel);
                     additionalAction();

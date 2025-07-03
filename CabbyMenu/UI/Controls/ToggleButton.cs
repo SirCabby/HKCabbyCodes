@@ -1,5 +1,4 @@
 using CabbyMenu.SyncedReferences;
-using CabbyMenu.UI.Factories;
 using CabbyMenu.UI.Modders;
 using UnityEngine;
 using UnityEngine.UI;
@@ -26,7 +25,7 @@ namespace CabbyMenu.UI.Controls
         {
             this.IsOn = IsOn;
 
-            (toggleButton, toggleButtonGoMod, _) = ButtonFactory.BuildDefault();
+            (toggleButton, toggleButtonGoMod, _) = ButtonBuilder.BuildDefault();
             toggleButtonGoMod.SetName("Toggle Button");
             buttonComponent = toggleButton.GetComponent<Button>();
             buttonComponent.onClick.AddListener(Toggle);

@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
-using CabbyMenu.UI.Factories;
 using CabbyMenu.UI.Modders;
 
 namespace CabbyMenu.UI.CheatPanels
@@ -82,7 +81,7 @@ namespace CabbyMenu.UI.CheatPanels
             panelContentSizeFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
 
             // Setup Text
-            var textFactoryResult = TextFactory.Build(description);
+            var textFactoryResult = TextMod.Build(description);
             cheatTextObj = textFactoryResult.Item1;
             TextMod textMod = textFactoryResult.Item3;
             textMod.SetAlignment(TextAnchor.MiddleLeft).SetFontStyle(FontStyle.Bold);

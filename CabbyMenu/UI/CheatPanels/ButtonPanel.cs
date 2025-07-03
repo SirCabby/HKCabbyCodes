@@ -1,8 +1,8 @@
 using CabbyMenu.UI.Modders;
 using UnityEngine.UI;
 using UnityEngine;
-using CabbyMenu.UI.Factories;
 using System;
+using CabbyMenu.UI.Controls;
 
 namespace CabbyMenu.UI.CheatPanels
 {
@@ -66,11 +66,11 @@ namespace CabbyMenu.UI.CheatPanels
             switch (style)
             {
                 case ButtonStyle.Danger:
-                    return ButtonFactory.BuildDanger;
+                    return ButtonBuilder.BuildDanger;
                 case ButtonStyle.Success:
-                    return ButtonFactory.BuildSuccess;
+                    return ButtonBuilder.BuildSuccess;
                 default:
-                    return ButtonFactory.BuildDefault;
+                    return ButtonBuilder.BuildDefault;
             }
         }
 

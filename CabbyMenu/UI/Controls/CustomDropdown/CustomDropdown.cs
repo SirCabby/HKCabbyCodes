@@ -18,6 +18,17 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
         private const int MAX_VISIBLE_OPTIONS = 8;
         private const float SCROLLBAR_WIDTH = 10f;
 
+        /// <summary>
+        /// Builds a custom dropdown GameObject with default styling.
+        /// </summary>
+        /// <returns>A tuple containing the GameObject and CustomDropdown for the created dropdown.</returns>
+        public static (GameObject gameObject, CustomDropdown customDropdown) Build()
+        {
+            GameObject dropdownGO = new GameObject("CustomDropdown");
+            CustomDropdown customDropdown = dropdownGO.AddComponent<CustomDropdown>();
+            return (dropdownGO, customDropdown);
+        }
+
         // Instance variables for customizable size
         private float mainButtonWidth = 200f;
         private float mainButtonHeight = 60f;

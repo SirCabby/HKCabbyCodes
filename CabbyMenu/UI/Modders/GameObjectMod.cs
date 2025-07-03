@@ -23,6 +23,16 @@ namespace CabbyMenu.UI.Modders
         }
 
         /// <summary>
+        /// Builds a GameObject with its associated GameObjectMod for easy manipulation.
+        /// </summary>
+        /// <param name="createdGameObject">The GameObject to wrap with a modifier.</param>
+        /// <returns>A tuple containing the GameObject and its GameObjectMod.</returns>
+        public static (GameObject gameObject, GameObjectMod gameObjectMod) Build(GameObject createdGameObject)
+        {
+            return (createdGameObject, new GameObjectMod(createdGameObject));
+        }
+
+        /// <summary>
         /// Gets the underlying GameObject.
         /// </summary>
         /// <returns>The GameObject being modified.</returns>
