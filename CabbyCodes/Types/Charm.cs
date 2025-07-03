@@ -27,7 +27,7 @@ namespace CabbyCodes.Types
         /// <param name="name">The display name of the charm.</param>
         public Charm(int index, string name)
         {
-            this.id = index;
+            id = index;
             this.name = name;
             defaultCost = PlayerData.instance.GetInt("charmCost_" + index);
         }

@@ -35,6 +35,10 @@ This is a Hollow Knight mod project called "CabbyCodes" that provides various ch
 - `CabbyCodes/CabbyCodes.csproj` - Main project file
 - `CabbyMenu/CabbyMenu.csproj` - UI project file
 
+## General Requirements
+- Before refactoring work, supply the concrete refactoring plan in chat and let user decide to continue
+- Always run a make build to verify changed code is still functional, and proceed with fixing errors if they show
+
 ## Common Tasks
 - Building and deploying the mod to Hollow Knight
 - Adding new patches for game mechanics
