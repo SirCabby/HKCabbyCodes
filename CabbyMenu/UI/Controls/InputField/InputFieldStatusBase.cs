@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using CabbyMenu.Utilities;
 
 namespace CabbyMenu.UI.Controls.InputField
 {
@@ -54,7 +55,24 @@ namespace CabbyMenu.UI.Controls.InputField
         public abstract void SetCursorPositionFromMouse(Vector2 mousePosition);
         public abstract void SyncCursorPositionFromUnity();
         public abstract void SyncSelectionFromUnity();
-        public abstract void SyncCursorPositionNextFrame();
         public abstract bool WasSelected();
+        
+        /// <summary>
+        /// Starts a coroutine on the input field GameObject.
+        /// </summary>
+        /// <param name="coroutine">The coroutine to start.</param>
+        public UnityEngine.Coroutine StartCoroutine(System.Collections.IEnumerator coroutine)
+        {
+            if (InputFieldGo != null)
+            {
+                var coroutineRunner = InputFieldGo.GetComponent<CoroutineRunner>();
+                if (coroutineRunner == null)
+                {
+                    coroutineRunner = InputFieldGo.AddComponent<CoroutineRunner>();
+                }
+                return coroutineRunner.StartCoroutine(coroutine);
+            }
+            return null;
+        }
     }
 } 

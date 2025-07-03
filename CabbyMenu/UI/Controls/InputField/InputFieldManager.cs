@@ -99,13 +99,12 @@ namespace CabbyMenu.UI.Controls.InputField
             {
                 lastSelected?.Submit();
                 lastSelected = clickedInput;
-                // Set Unity's selected GameObject for keyboard input
+                
                 if (clickedInput.InputFieldGo != null)
                 {
-                    EventSystem.current?.SetSelectedGameObject(clickedInput.InputFieldGo);
-                    // Calculate and set cursor position from mouse click
-                    clickedInput.SetCursorPositionFromMouse(mousePosition);
-                    UpdateInputFieldDisplay(clickedInput);
+                    // Let Unity's InputField process the click naturally to initialize its visual system
+                    // Then apply our visual override after Unity has processed the click
+                    clickedInput.StartCoroutine(ApplyVisualOverrideAfterUnityProcessing(clickedInput, mousePosition));
                 }
             }
             else if (clickedInput == null && lastSelected != null)
@@ -113,21 +112,43 @@ namespace CabbyMenu.UI.Controls.InputField
                 // Clicked outside any input field, deselect current
                 lastSelected.Submit();
                 lastSelected = null;
+                
                 // Clear Unity's EventSystem selection
-                EventSystem.current?.SetSelectedGameObject(null);
+                var eventSystem = EventSystem.current;
+                if (eventSystem != null)
+                {
+                    eventSystem.SetSelectedGameObject(null);
+                }
             }
             else if (clickedInput == lastSelected && clickedInput != null)
             {
-                // Clicked on the same input field - calculate and set cursor position from mouse click
+                // Clicked on the same input field - allow Unity's natural processing first
                 if (clickedInput.InputFieldGo != null)
                 {
-                    clickedInput.SetCursorPositionFromMouse(mousePosition);
-                    UpdateInputFieldDisplay(clickedInput);
+                    // Let Unity's InputField process the click naturally to initialize its visual system
+                    // Then apply our visual override after Unity has processed the click
+                    clickedInput.StartCoroutine(ApplyVisualOverrideAfterUnityProcessing(clickedInput, mousePosition));
                 }
             }
 
             // Update selection states
             SetInputFieldSelection(lastSelected);
+        }
+
+        /// <summary>
+        /// Applies visual override after Unity has processed the click naturally.
+        /// This ensures Unity's visual rendering system is properly initialized.
+        /// </summary>
+        /// <param name="inputStatus">The input field status to apply visual override to.</param>
+        /// <param name="mousePosition">The mouse position for cursor calculation.</param>
+        private System.Collections.IEnumerator ApplyVisualOverrideAfterUnityProcessing(InputFieldStatusBase inputStatus, Vector2 mousePosition)
+        {
+            // Wait for end of frame to ensure Unity has processed the click naturally
+            yield return new WaitForEndOfFrame();
+            
+            // Now that Unity has processed the click naturally, apply our visual override
+            inputStatus.SetCursorPositionFromMouse(mousePosition);
+            UpdateInputFieldDisplay(inputStatus);
         }
 
         /// <summary>
@@ -190,9 +211,6 @@ namespace CabbyMenu.UI.Controls.InputField
             {
                 lastSelected.Submit();
                 lastSelected = null;
-                
-                // Clear Unity's EventSystem selection
-                EventSystem.current?.SetSelectedGameObject(null);
                 SetInputFieldSelection(lastSelected);
             }
 
@@ -200,9 +218,6 @@ namespace CabbyMenu.UI.Controls.InputField
             {
                 lastSelected.Cancel();
                 lastSelected = null;
-                
-                // Clear Unity's EventSystem selection
-                EventSystem.current?.SetSelectedGameObject(null);
                 SetInputFieldSelection(lastSelected);
             }
         }
@@ -234,7 +249,6 @@ namespace CabbyMenu.UI.Controls.InputField
                 if (input != null)
                 {
                     bool shouldBeSelected = input == selected;
-                    UnityEngine.Debug.Log($"Setting {input.InputFieldGo?.name} selected={shouldBeSelected}");
                     input.SetSelected(shouldBeSelected);
                 }
             }
@@ -279,9 +293,6 @@ namespace CabbyMenu.UI.Controls.InputField
         {
             lastSelected?.Submit();
             lastSelected = null;
-            
-            // Clear Unity's EventSystem selection
-            EventSystem.current?.SetSelectedGameObject(null);
             SetInputFieldSelection(lastSelected);
         }
 

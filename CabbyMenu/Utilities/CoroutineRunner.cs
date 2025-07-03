@@ -1,4 +1,6 @@
 using UnityEngine;
+using System;
+using System.Collections;
 
 namespace CabbyMenu.Utilities
 {
@@ -21,6 +23,17 @@ namespace CabbyMenu.Utilities
                 }
                 return _instance;
             }
+        }
+
+        public static void RunNextFrame(Action action)
+        {
+            Instance.StartCoroutine(RunNextFrameCoroutine(action));
+        }
+
+        private static IEnumerator RunNextFrameCoroutine(Action action)
+        {
+            yield return null;
+            action?.Invoke();
         }
     }
 } 

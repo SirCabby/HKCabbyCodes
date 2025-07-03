@@ -214,13 +214,6 @@ namespace CabbyMenu.UI.Controls.InputField
 
         public void SetSelected(bool isSelected)
         {
-            if (isSelected)
-            {
-                inputField.ActivateInputField();
-            }
-            else
-                inputField.DeactivateInputField();
-
             // Set color after focus change
             Image imageComponent = inputFieldGo.GetComponent<Image>();
             imageComponent.color = isSelected ? selectedColor : Color.white;
