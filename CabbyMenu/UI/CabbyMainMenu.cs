@@ -88,6 +88,11 @@ namespace CabbyMenu.UI
         private GameObject cheatContent;
 
         /// <summary>
+        /// ScrollRect component for the cheat content area.
+        /// </summary>
+        private ScrollRect cheatScrollRect;
+
+        /// <summary>
         /// Initializes a new instance of the CabbyMainMenu class.
         /// </summary>
         /// <param name="name">The name of the mod.</param>
@@ -250,6 +255,12 @@ namespace CabbyMenu.UI
 
             // Clear Unity's EventSystem selection when changing categories
             EventSystem.current?.SetSelectedGameObject(null);
+
+            // Reset scroll position to top when changing categories
+            if (cheatScrollRect != null)
+            {
+                cheatScrollRect.normalizedPosition = new Vector2(0, 1);
+            }
         }
 
         /// <summary>
@@ -332,7 +343,7 @@ namespace CabbyMenu.UI
             new Fitter(cheatScrollable).Attach(menuPanel).Anchor(new Vector2(Constants.CHEAT_SCROLLABLE_MIN_X, Constants.CHEAT_SCROLLABLE_MIN_Y), new Vector2(Constants.CHEAT_SCROLLABLE_MAX_X, Constants.CHEAT_SCROLLABLE_MAX_Y)).Size(Vector2.zero);
             new ScrollBarMod(cheatScrollable.transform.Find("Scrollbar Vertical").gameObject.GetComponent<Scrollbar>()).SetDefaults();
 
-            ScrollRect cheatScrollRect = cheatScrollable.GetComponent<ScrollRect>();
+            cheatScrollRect = cheatScrollable.GetComponent<ScrollRect>();
             cheatScrollRect.movementType = ScrollRect.MovementType.Clamped;
 
             cheatContent = cheatScrollable.transform.Find("Viewport").Find("Content").gameObject;
