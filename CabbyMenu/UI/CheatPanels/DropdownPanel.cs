@@ -9,8 +9,8 @@ namespace CabbyMenu.UI.CheatPanels
 {
     public class DropdownPanel : CheatPanel
     {
-        private static readonly Vector2 middle = Constants.MIDDLE_ANCHOR_VECTOR;
-
+        private static readonly Vector2 leftMiddleMinAnchor = new Vector2(0, 0.5f); // Left-middle min anchor
+        
         private readonly DropDownSync dropdown;
 
         public DropdownPanel(ISyncedValueList syncedValueReference, string description) : base(description)
@@ -43,7 +43,7 @@ namespace CabbyMenu.UI.CheatPanels
             customDropdown.SetFontSize(Constants.DEFAULT_FONT_SIZE);
             customDropdown.SetColors(Constants.DROPDOWN_NORMAL, Constants.DROPDOWN_HOVER, Constants.DROPDOWN_PRESSED);
 
-            new Fitter(dropdownGameObject).Attach(dropdownPanel).Anchor(middle, middle);
+            new Fitter(dropdownGameObject).Attach(dropdownPanel).Anchor(leftMiddleMinAnchor, leftMiddleMinAnchor);
             dropdown.Update();
         }
     }
