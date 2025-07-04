@@ -1466,9 +1466,19 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
         }
 
         // These methods are stubs for external compatibility - implement if needed
-#pragma warning disable IDE0060 // Remove unused parameter
-        public void SetValue(int value) { /* TODO: implement if needed */ }
-#pragma warning restore IDE0060 // Remove unused parameter
+        public void SetValue(int value) 
+        { 
+            if (value >= 0 && value < options.Count)
+            {
+                selectedIndex = value;
+                UpdateMainButtonText();
+                UnityEngine.Debug.Log($"SetValue called with index {value}: '{options[value]}'");
+            }
+            else
+            {
+                UnityEngine.Debug.LogWarning($"SetValue called with invalid index {value}, options count: {options.Count}");
+            }
+        }
         public void SetSize(float width) { SetSize(width, mainButtonHeight); }
         public void SetSize(float width, float height)
         {
