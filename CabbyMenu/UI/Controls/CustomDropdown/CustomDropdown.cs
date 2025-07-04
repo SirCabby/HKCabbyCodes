@@ -447,7 +447,7 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
             Vector3 panelWorldPos = new Vector3(buttonWorldPos.x, buttonWorldPos.y - mainRect.sizeDelta.y / 2, buttonWorldPos.z);
             panelRect.position = panelWorldPos;
 
-            panelRect.pivot = new Vector2(0.5f, 1f); // Top-center pivot for proper dropdown positioning
+            panelRect.pivot = new Vector2(0f, 1f); // Top-left pivot for left-aligned dropdown positioning
 
             UnityEngine.Debug.Log($"Panel created as child of parent: {parentCanvas.name}");
             UnityEngine.Debug.Log($"Panel created with RectTransform: anchorMin={panelRect.anchorMin}, anchorMax={panelRect.anchorMax}, sizeDelta={panelRect.sizeDelta}");
@@ -534,7 +534,7 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
             viewportRect.anchorMax = new Vector2(0.97f, 1f); // Leave space for scrollbar
             viewportRect.sizeDelta = Vector2.zero; // Let anchors control sizing
             viewportRect.anchoredPosition = Vector2.zero;
-            viewportRect.pivot = new Vector2(0.5f, 1f); // Match panel's top-center pivot
+            viewportRect.pivot = new Vector2(0f, 1f); // Match panel's top-left pivot
 
             // Force layout update to ensure proper sizing
             LayoutRebuilder.ForceRebuildLayoutImmediate(viewportRect);
@@ -1029,9 +1029,18 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
             // Use the current mainButtonWidth instead of mainRect.sizeDelta.x to ensure consistency
             panelRect.sizeDelta = new Vector2(mainButtonWidth, panelHeight);
 
-            // Position the panel relative to the button's world position
-            Vector3 buttonWorldPos = mainRect.position;
-            Vector3 panelWorldPos = new Vector3(buttonWorldPos.x, buttonWorldPos.y - mainRect.sizeDelta.y / 2, buttonWorldPos.z);
+            // Get the button's actual world bounds
+            Vector3[] buttonCorners = new Vector3[4];
+            mainRect.GetWorldCorners(buttonCorners);
+            
+            // buttonCorners[0] = bottom-left, buttonCorners[1] = top-left, buttonCorners[2] = top-right, buttonCorners[3] = bottom-right
+            Vector3 buttonBottomLeft = buttonCorners[0];  // Bottom-left corner
+            Vector3 buttonTopLeft = buttonCorners[1];     // Top-left corner
+            Vector3 buttonTopRight = buttonCorners[2];    // Top-right corner
+            Vector3 buttonBottomRight = buttonCorners[3]; // Bottom-right corner
+
+            // Position panel with its left edge at the button's left edge, and its top edge at the button's bottom edge
+            Vector3 panelWorldPos = new Vector3(buttonBottomLeft.x, buttonBottomLeft.y, buttonBottomLeft.z);
             panelRect.position = panelWorldPos;
 
             // Force layout update to ensure proper positioning
@@ -1040,7 +1049,13 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
             UnityEngine.Debug.Log($"[FIXED] Panel positioning - anchorMin: {panelRect.anchorMin}, anchorMax: {panelRect.anchorMax}, pivot: {panelRect.pivot}");
             UnityEngine.Debug.Log($"[FIXED] Panel final - world position: {panelRect.position}, sizeDelta: {panelRect.sizeDelta}");
             UnityEngine.Debug.Log($"[FIXED] Panel matches main button width: {mainButtonWidth}, height for {Mathf.Min(options.Count, MAX_VISIBLE_OPTIONS)} visible options: {panelRect.sizeDelta.y}");
-            UnityEngine.Debug.Log($"[FIXED] Button world position: {buttonWorldPos}, Panel world position: {panelWorldPos}");
+            UnityEngine.Debug.Log($"[FIXED] Button world position: {mainRect.position}, Panel world position: {panelWorldPos}");
+            UnityEngine.Debug.Log($"[FIXED] Button corners - BL: {buttonBottomLeft}, TL: {buttonTopLeft}, TR: {buttonTopRight}, BR: {buttonBottomRight}");
+            UnityEngine.Debug.Log($"[FIXED] Button left edge: {buttonBottomLeft.x}, Panel left edge: {panelWorldPos.x}");
+            UnityEngine.Debug.Log($"[FIXED] Button bottom edge: {buttonBottomLeft.y}, Panel top edge: {panelWorldPos.y}");
+            UnityEngine.Debug.Log($"[FIXED] Button size: {mainRect.sizeDelta}, Panel size: {panelRect.sizeDelta}");
+            UnityEngine.Debug.Log($"[FIXED] Distance from button bottom to panel top: {buttonBottomLeft.y - panelWorldPos.y}");
+            UnityEngine.Debug.Log($"[FIXED] Expected: 0 (panel top should be at button bottom)");
         }
 
         private void ShowDropdownPanel()
@@ -1124,7 +1139,7 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
                     scrollViewRect.anchorMax = Vector2.one;  // Top-right
                     scrollViewRect.sizeDelta = Vector2.zero; // No size offset
                     scrollViewRect.anchoredPosition = Vector2.zero; // No position offset
-                    scrollViewRect.pivot = new Vector2(0.5f, 1f); // Match panel's top-center pivot
+                    scrollViewRect.pivot = new Vector2(0f, 1f); // Match panel's top-left pivot
 
                     // Force layout update to ensure proper positioning
                     LayoutRebuilder.ForceRebuildLayoutImmediate(scrollViewRect);
@@ -1150,7 +1165,7 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
                     viewportRect.anchorMax = new Vector2(0.97f, 1f); // Leave space for scrollbar
                     viewportRect.sizeDelta = Vector2.zero; // Let anchors control sizing
                     viewportRect.anchoredPosition = Vector2.zero;
-                    viewportRect.pivot = new Vector2(0.5f, 1f); // Match panel's top-center pivot
+                    viewportRect.pivot = new Vector2(0f, 1f); // Match panel's top-left pivot
 
                     // Force layout update to ensure proper sizing
                     LayoutRebuilder.ForceRebuildLayoutImmediate(viewportRect);
