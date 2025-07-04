@@ -41,7 +41,7 @@ namespace CabbyMenu
         public const float MENU_BUTTON_MAX_Y = 0.95f;
         public const float CATEGORY_TEXT_X = 0.11f;
         public const float CATEGORY_TEXT_Y = 0.74f;
-        public const float CATEGORY_DROPDOWN_X = 0.08f;
+        public const float CATEGORY_DROPDOWN_X = 0.03f;
         public const float CATEGORY_DROPDOWN_Y = 0.72f;
         public const float CHEAT_SCROLLABLE_MIN_X = 0.17f;
         public const float CHEAT_SCROLLABLE_MAX_X = 0.8f;

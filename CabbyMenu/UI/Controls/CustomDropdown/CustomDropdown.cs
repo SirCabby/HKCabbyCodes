@@ -391,9 +391,7 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
             if (mainRect != null)
             {
                 mainRect.sizeDelta = new Vector2(mainButtonWidth, mainButtonHeight);
-                mainRect.anchorMin = new Vector2(0.1f, 0.7f);
-                mainRect.anchorMax = new Vector2(0.1f, 0.7f);
-                mainRect.pivot = new Vector2(0.5f, 0.5f);
+                mainRect.pivot = new Vector2(0.0f, 0.5f); // Left-center pivot for left-aligned positioning
 
                 UnityEngine.Debug.Log($"Main button sized to: {mainRect.sizeDelta}");
             }
