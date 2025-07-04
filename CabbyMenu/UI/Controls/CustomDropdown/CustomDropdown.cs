@@ -661,20 +661,20 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
             layoutElement.preferredHeight = OPTION_HEIGHT;
             layoutElement.minHeight = OPTION_HEIGHT;
             layoutElement.flexibleWidth = 0f;
-            layoutElement.minWidth = mainButtonWidth - 15f;
-            layoutElement.preferredWidth = mainButtonWidth - 15f;
+            layoutElement.minWidth = mainButtonWidth - 21f; // Reduced by 6px (3px on each side)
+            layoutElement.preferredWidth = mainButtonWidth - 21f; // Reduced by 6px (3px on each side)
         }
 
 #pragma warning disable IDE0060 // Remove unused parameter
         private void ConfigureOptionRectTransform(RectTransform rectTransform, int index)
 #pragma warning restore IDE0060 // Remove unused parameter
         {
-            // Left-align, fixed width, vertically centered
+            // Left-align with 6px padding, fixed width, vertically centered
             rectTransform.anchorMin = new Vector2(0, 0.5f); // Left, center Y
             rectTransform.anchorMax = new Vector2(0, 0.5f); // Left, center Y
             rectTransform.pivot = new Vector2(0, 0.5f); // Left, center Y
-            rectTransform.sizeDelta = new Vector2(mainButtonWidth - 15f, OPTION_HEIGHT);
-            rectTransform.anchoredPosition = new Vector2(0, 0); // Left-aligned within parent
+            rectTransform.sizeDelta = new Vector2(mainButtonWidth - 21f, OPTION_HEIGHT); // Reduced by 6px (3px on each side)
+            rectTransform.anchoredPosition = new Vector2(6f, 0); // Left-aligned with 6px padding
         }
 
         private void CreateOptionText(GameObject parent, string text)
@@ -745,12 +745,12 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
                                 RectTransform buttonRect = buttonTransform.GetComponent<RectTransform>();
                                 if (buttonRect != null)
                                 {
-                                    // Configure button to be left-aligned within parent panel
+                                    // Configure button to be left-aligned with 6px padding within parent panel
                                     buttonRect.anchorMin = new Vector2(0, 0.5f); // Left, center Y
                                     buttonRect.anchorMax = new Vector2(0, 0.5f); // Left, center Y
                                     buttonRect.pivot = new Vector2(0, 0.5f); // Left, center Y
-                                    buttonRect.sizeDelta = new Vector2(mainButtonWidth - 15f, OPTION_HEIGHT); //full height
-                                    buttonRect.anchoredPosition = new Vector2(0, 0); // Left-aligned within parent
+                                    buttonRect.sizeDelta = new Vector2(mainButtonWidth - 21f, OPTION_HEIGHT); // Reduced by 6px (3px on each side)
+                                    buttonRect.anchoredPosition = new Vector2(6f, 0); // Left-aligned with 6px padding
 
                                     UnityEngine.Debug.Log($"Option button {i} configured - anchorMin: {buttonRect.anchorMin}, anchorMax: {buttonRect.anchorMax}, sizeDelta: {buttonRect.sizeDelta}, anchoredPosition: {buttonRect.anchoredPosition}");
                                 }
