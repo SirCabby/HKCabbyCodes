@@ -69,5 +69,42 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
         {
             return customDropdown;
         }
+
+        /// <summary>
+        /// Enables or disables dynamic sizing based on the largest dropdown item.
+        /// </summary>
+        /// <param name="enabled">True to enable dynamic sizing, false to use fixed width</param>
+        public void SetDynamicSizing(bool enabled)
+        {
+            customDropdown.SetDynamicSizing(enabled);
+        }
+
+        /// <summary>
+        /// Sets the dropdown options and triggers dynamic sizing if enabled.
+        /// </summary>
+        /// <param name="options">The list of options to display</param>
+        public void SetOptions(System.Collections.Generic.List<string> options)
+        {
+            customDropdown.SetOptions(options);
+        }
+
+        /// <summary>
+        /// Sets the size of the dropdown. If dynamic sizing is enabled, only height changes are applied.
+        /// </summary>
+        /// <param name="width">The width in pixels (ignored if dynamic sizing is enabled)</param>
+        /// <param name="height">The height in pixels</param>
+        public void SetSize(float width, float height)
+        {
+            customDropdown.SetSize(width, height);
+        }
+
+        /// <summary>
+        /// Sets the width of the dropdown. If dynamic sizing is enabled, this call is ignored.
+        /// </summary>
+        /// <param name="width">The width in pixels</param>
+        public void SetSize(float width)
+        {
+            customDropdown.SetSize(width);
+        }
     }
 }

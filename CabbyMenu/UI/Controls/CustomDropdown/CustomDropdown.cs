@@ -17,6 +17,8 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
         private const float FONT_SIZE_RATIO = 0.6f;
         private const int MAX_VISIBLE_OPTIONS = 8;
         private const float SCROLLBAR_WIDTH = 10f;
+        private const float MIN_DROPDOWN_WIDTH = 120f; // Minimum width for dropdown
+        private const float TEXT_PADDING = 20f; // Padding for text within buttons
 
         /// <summary>
         /// Builds a custom dropdown GameObject with default styling.
@@ -32,6 +34,7 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
         // Instance variables for customizable size
         private float mainButtonWidth = 200f;
         private float mainButtonHeight = 60f;
+        private bool useDynamicSizing = true; // Enable dynamic sizing by default
 
         [Header("Custom Dropdown Settings")]
         [SerializeField] private Button mainButton;
@@ -65,6 +68,139 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
         /// Gets all currently open dropdowns.
         /// </summary>
         public static IReadOnlyList<CustomDropdown> OpenDropdowns => openDropdowns.AsReadOnly();
+
+        /// <summary>
+        /// Enables or disables dynamic sizing based on the largest dropdown item.
+        /// </summary>
+        /// <param name="enabled">True to enable dynamic sizing, false to use fixed width</param>
+        public void SetDynamicSizing(bool enabled)
+        {
+            useDynamicSizing = enabled;
+            if (enabled && options.Count > 0)
+            {
+                UpdateDropdownWidth();
+            }
+        }
+
+        /// <summary>
+        /// Calculates the width needed for the largest text item in the dropdown,
+        /// using the same font, font size, and style as the main button's selected item view.
+        /// </summary>
+        /// <returns>The calculated width in pixels</returns>
+        private float CalculateRequiredWidth()
+        {
+            if (options.Count == 0) return MIN_DROPDOWN_WIDTH;
+
+            if (mainButtonText == null)
+                return MIN_DROPDOWN_WIDTH;
+
+            Font font = mainButtonText.font;
+            // Calculate the actual font size that will be used in the main button text
+            RectTransform mainRect = GetComponent<RectTransform>();
+            int fontSize = Mathf.RoundToInt(mainRect.sizeDelta.y * FONT_SIZE_RATIO);
+            FontStyle fontStyle = mainButtonText.fontStyle;
+
+            float maxWidth = MIN_DROPDOWN_WIDTH;
+            float extraPadding = TEXT_PADDING + 16f;
+
+            UnityEngine.Debug.Log($"[DynamicSizing] Measuring dropdown options (font: {font?.name}, fontSize: {fontSize}, fontStyle: {fontStyle})");
+            foreach (string option in options)
+            {
+                if (string.IsNullOrEmpty(option)) continue;
+
+                var settings = mainButtonText.GetGenerationSettings(Vector2.zero);
+                settings.fontSize = fontSize;
+                settings.fontStyle = fontStyle;
+                settings.generateOutOfBounds = true;
+                settings.scaleFactor = mainButtonText.canvas != null ? mainButtonText.canvas.scaleFactor : 1f;
+
+                TextGenerator generator = new TextGenerator();
+                float textWidth = generator.GetPreferredWidth(option, settings) / settings.scaleFactor;
+                UnityEngine.Debug.Log($"[DynamicSizing] Option: '{option}' | Measured width: {textWidth}");
+                maxWidth = Mathf.Max(maxWidth, textWidth + extraPadding);
+            }
+
+            UnityEngine.Debug.Log($"[DynamicSizing] Final calculated required width: {maxWidth}px for {options.Count} options");
+            return maxWidth;
+        }
+
+        /// <summary>
+        /// Updates the dropdown width based on the largest item if dynamic sizing is enabled.
+        /// </summary>
+        private void UpdateDropdownWidth()
+        {
+            if (!useDynamicSizing) return;
+
+            float newWidth = CalculateRequiredWidth();
+            UnityEngine.Debug.Log($"[DynamicSizing] UpdateDropdownWidth: newWidth={newWidth}, oldWidth={mainButtonWidth}");
+            if (Mathf.Abs(newWidth - mainButtonWidth) > 1f)
+            {
+                mainButtonWidth = newWidth;
+                UnityEngine.Debug.Log($"[DynamicSizing] Setting mainButtonWidth to: {mainButtonWidth}");
+
+                ConfigureMainButtonLayout();
+                UpdateOptionButtonWidths();
+                UpdateDropdownPanelWidth();
+
+                // Log actual rendered width after layout
+                RectTransform mainRect = GetComponent<RectTransform>();
+                if (mainRect != null)
+                {
+                    UnityEngine.Debug.Log($"[DynamicSizing] After layout: mainRect.sizeDelta.x = {mainRect.sizeDelta.x}");
+                }
+                if (mainButtonText != null)
+                {
+                    RectTransform textRect = mainButtonText.GetComponent<RectTransform>();
+                    UnityEngine.Debug.Log($"[DynamicSizing] mainButtonText.rect.width = {textRect.rect.width}, preferredWidth = {mainButtonText.preferredWidth}");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Updates the width of all existing option buttons.
+        /// </summary>
+        private void UpdateOptionButtonWidths()
+        {
+            foreach (GameObject optionButton in optionButtons)
+            {
+                if (optionButton != null)
+                {
+                    // Find the actual button within the parent panel
+                    Transform buttonTransform = optionButton.transform.Find($"Option_{optionButtons.IndexOf(optionButton)}");
+                    if (buttonTransform != null)
+                    {
+                        RectTransform buttonRect = buttonTransform.GetComponent<RectTransform>();
+                        LayoutElement layoutElement = buttonTransform.GetComponent<LayoutElement>();
+                        
+                        if (buttonRect != null)
+                        {
+                            buttonRect.sizeDelta = new Vector2(mainButtonWidth - 21f, OPTION_HEIGHT);
+                        }
+                        
+                        if (layoutElement != null)
+                        {
+                            layoutElement.minWidth = mainButtonWidth - 21f;
+                            layoutElement.preferredWidth = mainButtonWidth - 21f;
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Updates the dropdown panel width to match the new button width.
+        /// </summary>
+        private void UpdateDropdownPanelWidth()
+        {
+            if (dropdownPanel != null)
+            {
+                RectTransform panelRect = dropdownPanel.GetComponent<RectTransform>();
+                if (panelRect != null)
+                {
+                    panelRect.sizeDelta = new Vector2(mainButtonWidth, panelRect.sizeDelta.y);
+                }
+            }
+        }
 
         /// <summary>
         /// Checks if the mouse position is over any dropdown component (main button, panel, or options).
@@ -304,7 +440,7 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
             // Use absolute positioning (0,0) anchors so we can position relative to the button
             panelRect.anchorMin = Vector2.zero; // Bottom-left
             panelRect.anchorMax = Vector2.zero; // Bottom-left
-            panelRect.sizeDelta = new Vector2(mainRect.sizeDelta.x, 100f); // Same width as button, temporary height
+            panelRect.sizeDelta = new Vector2(mainButtonWidth, 100f); // Use current mainButtonWidth, temporary height
 
             // Position the panel relative to the button's world position
             Vector3 buttonWorldPos = mainRect.position;
@@ -520,6 +656,12 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
         {
             this.options = options.ToList();
             UnityEngine.Debug.Log($"SetOptions called with {options.Count} options");
+
+            // Update dropdown width if dynamic sizing is enabled
+            if (useDynamicSizing)
+            {
+                UpdateDropdownWidth();
+            }
 
             // Update the main button text to show the first option
             UpdateMainButtonText();
@@ -884,7 +1026,8 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
 
             // Update panel size and position - use absolute positioning
             RectTransform panelRect = dropdownPanel.GetComponent<RectTransform>();
-            panelRect.sizeDelta = new Vector2(mainRect.sizeDelta.x, panelHeight); // Same width as button, calculated height
+            // Use the current mainButtonWidth instead of mainRect.sizeDelta.x to ensure consistency
+            panelRect.sizeDelta = new Vector2(mainButtonWidth, panelHeight);
 
             // Position the panel relative to the button's world position
             Vector3 buttonWorldPos = mainRect.position;
@@ -896,7 +1039,7 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
 
             UnityEngine.Debug.Log($"[FIXED] Panel positioning - anchorMin: {panelRect.anchorMin}, anchorMax: {panelRect.anchorMax}, pivot: {panelRect.pivot}");
             UnityEngine.Debug.Log($"[FIXED] Panel final - world position: {panelRect.position}, sizeDelta: {panelRect.sizeDelta}");
-            UnityEngine.Debug.Log($"[FIXED] Panel matches main button width: {mainRect.sizeDelta.x}, height for {Mathf.Min(options.Count, MAX_VISIBLE_OPTIONS)} visible options: {panelRect.sizeDelta.y}");
+            UnityEngine.Debug.Log($"[FIXED] Panel matches main button width: {mainButtonWidth}, height for {Mathf.Min(options.Count, MAX_VISIBLE_OPTIONS)} visible options: {panelRect.sizeDelta.y}");
             UnityEngine.Debug.Log($"[FIXED] Button world position: {buttonWorldPos}, Panel world position: {panelWorldPos}");
         }
 
@@ -1482,8 +1625,17 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
         public void SetSize(float width) { SetSize(width, mainButtonHeight); }
         public void SetSize(float width, float height)
         {
-            mainButtonWidth = width;
-            mainButtonHeight = height;
+            // If dynamic sizing is enabled, only allow height changes
+            if (useDynamicSizing)
+            {
+                UnityEngine.Debug.Log($"Dynamic sizing is enabled - ignoring width parameter ({width}px), using calculated width ({mainButtonWidth}px)");
+                mainButtonHeight = height;
+            }
+            else
+            {
+                mainButtonWidth = width;
+                mainButtonHeight = height;
+            }
 
             // Update the main button layout
             ConfigureMainButtonLayout();
