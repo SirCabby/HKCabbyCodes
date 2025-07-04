@@ -342,6 +342,15 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
                 mainButtonText = CreateTextComponent("MainButtonText", transform);
             }
 
+            // Create border for the button
+            CreateButtonBorder();
+
+            // Create background image that's smaller than the border
+            CreateButtonBackground();
+
+            // Ensure proper z-order: border (back) -> background (middle) -> text (front)
+            EnsureProperButtonZOrder();
+
             // Configure main button size and positioning
             ConfigureMainButtonLayout();
         }
@@ -369,6 +378,103 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
             return textComponent;
         }
 
+        private void CreateButtonBorder()
+        {
+            // Create border GameObject as a child of the main button
+            GameObject borderObj = new GameObject("ButtonBorder");
+            borderObj.transform.SetParent(transform, false);
+
+            // Add RectTransform and Image components for the border
+            RectTransform borderRect = borderObj.AddComponent<RectTransform>();
+            Image borderImage = borderObj.AddComponent<Image>();
+
+            // Configure border rect transform to be slightly larger than the button
+            borderRect.anchorMin = Vector2.zero;
+            borderRect.anchorMax = Vector2.one;
+            borderRect.sizeDelta = new Vector2(4f, 4f); // 2px border on each side (2px * 2 = 4px total)
+            borderRect.anchoredPosition = Vector2.zero;
+
+            // Configure border image
+            borderImage.color = Color.black; // Black border
+            borderImage.sprite = CreateBorderSprite();
+
+            // Ensure border is behind the main button image
+            // Set border as first sibling so it renders behind the main button image
+            borderObj.transform.SetAsFirstSibling();
+        }
+
+        private Sprite CreateBorderSprite()
+        {
+            // Create a simple border sprite using a white square texture
+            Texture2D borderTexture = new Texture2D(4, 4, TextureFormat.RGBA32, false);
+            
+            // Fill with transparent pixels
+            Color[] pixels = new Color[16];
+            for (int i = 0; i < 16; i++)
+            {
+                pixels[i] = Color.white; // White pixels for the border
+            }
+            
+            borderTexture.SetPixels(pixels);
+            borderTexture.Apply();
+            
+            // Create sprite from texture
+            Sprite borderSprite = Sprite.Create(borderTexture, new Rect(0, 0, 4, 4), new Vector2(0.5f, 0.5f));
+            
+            return borderSprite;
+        }
+
+        private void EnsureProperButtonZOrder()
+        {
+            // Find the border GameObject
+            Transform borderTransform = transform.Find("ButtonBorder");
+            
+            // Find the background GameObject
+            Transform backgroundTransform = transform.Find("ButtonBackground");
+            
+            // Ensure proper z-order: border (back) -> background (middle) -> text (front)
+            if (borderTransform != null)
+            {
+                // Set border to be first (renders in back)
+                borderTransform.SetAsFirstSibling();
+            }
+            
+            // Set background in the middle
+            if (backgroundTransform != null)
+            {
+                backgroundTransform.SetAsLastSibling();
+            }
+            
+            // Ensure text is on top
+            if (mainButtonText != null)
+            {
+                mainButtonText.transform.SetAsLastSibling();
+            }
+        }
+
+        private void CreateButtonBackground()
+        {
+            // Create background GameObject as a child of the main button
+            GameObject backgroundObj = new GameObject("ButtonBackground");
+            backgroundObj.transform.SetParent(transform, false);
+
+            // Add RectTransform and Image components for the background
+            RectTransform backgroundRect = backgroundObj.AddComponent<RectTransform>();
+            Image backgroundImage = backgroundObj.AddComponent<Image>();
+
+            // Configure background rect transform to be slightly smaller than the button
+            backgroundRect.anchorMin = Vector2.zero;
+            backgroundRect.anchorMax = Vector2.one;
+            backgroundRect.sizeDelta = new Vector2(-4f, -4f); // 2px smaller on each side
+            backgroundRect.anchoredPosition = Vector2.zero;
+
+            // Configure background image
+            backgroundImage.color = Constants.DROPDOWN_NORMAL;
+            backgroundImage.sprite = CreateBorderSprite(); // Use same sprite as border
+        }
+
+
+
         private void ConfigureMainButtonLayout()
         {
             RectTransform mainRect = GetComponent<RectTransform>();
@@ -378,6 +484,31 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
                 mainRect.pivot = new Vector2(0.0f, 0.5f); // Left-center pivot for left-aligned positioning
 
             }
+
+            // Update border size to be larger than the button
+            Transform borderTransform = transform.Find("ButtonBorder");
+            if (borderTransform != null)
+            {
+                RectTransform borderRect = borderTransform.GetComponent<RectTransform>();
+                if (borderRect != null)
+                {
+                    borderRect.sizeDelta = new Vector2(4f, 4f); // 2px border on each side
+                }
+            }
+
+            // Update background size to be smaller than the button
+            Transform backgroundTransform = transform.Find("ButtonBackground");
+            if (backgroundTransform != null)
+            {
+                RectTransform backgroundRect = backgroundTransform.GetComponent<RectTransform>();
+                if (backgroundRect != null)
+                {
+                    backgroundRect.sizeDelta = new Vector2(-4f, -4f); // 2px smaller on each side
+                }
+            }
+
+            // Ensure proper z-order is maintained after layout changes
+            EnsureProperButtonZOrder();
         }
 
         private void EnsureDropdownPanelCreated()
@@ -1268,5 +1399,22 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
         public void SetColors(Color color) { /* TODO: implement if needed */ }
 #pragma warning disable IDE0060 // Remove unused parameter
         public void SetColors(Color normal, Color hover, Color pressed) { /* TODO: implement if needed */ }
+
+        /// <summary>
+        /// Sets the border color of the dropdown button.
+        /// </summary>
+        /// <param name="borderColor">The color for the border</param>
+        public void SetBorderColor(Color borderColor)
+        {
+            Transform borderTransform = transform.Find("ButtonBorder");
+            if (borderTransform != null)
+            {
+                Image borderImage = borderTransform.GetComponent<Image>();
+                if (borderImage != null)
+                {
+                    borderImage.color = borderColor;
+                }
+            }
+        }
     }
 }
