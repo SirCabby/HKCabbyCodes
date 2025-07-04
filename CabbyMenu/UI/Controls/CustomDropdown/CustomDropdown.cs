@@ -101,7 +101,7 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
             FontStyle fontStyle = mainButtonText.fontStyle;
 
             float maxWidth = MIN_DROPDOWN_WIDTH;
-            float extraPadding = TEXT_PADDING + 16f;
+            float extraPadding = TEXT_PADDING + 16f + 21f; // Add 21px to account for option button reduction
 
             UnityEngine.Debug.Log($"[DynamicSizing] Measuring dropdown options (font: {font?.name}, fontSize: {fontSize}, fontStyle: {fontStyle})");
             foreach (string option in options)
@@ -801,8 +801,8 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
             layoutElement.preferredHeight = OPTION_HEIGHT;
             layoutElement.minHeight = OPTION_HEIGHT;
             layoutElement.flexibleWidth = 0f;
-            layoutElement.minWidth = mainButtonWidth - 21f; // Reduced by 6px (3px on each side)
-            layoutElement.preferredWidth = mainButtonWidth - 21f; // Reduced by 6px (3px on each side)
+            layoutElement.minWidth = mainButtonWidth - 21f;
+            layoutElement.preferredWidth = mainButtonWidth - 21f;
         }
 
 #pragma warning disable IDE0060 // Remove unused parameter
@@ -813,7 +813,7 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
             rectTransform.anchorMin = new Vector2(0, 0.5f); // Left, center Y
             rectTransform.anchorMax = new Vector2(0, 0.5f); // Left, center Y
             rectTransform.pivot = new Vector2(0, 0.5f); // Left, center Y
-            rectTransform.sizeDelta = new Vector2(mainButtonWidth - 21f, OPTION_HEIGHT); // Reduced by 6px (3px on each side)
+            rectTransform.sizeDelta = new Vector2(mainButtonWidth - 21f, OPTION_HEIGHT);
             rectTransform.anchoredPosition = new Vector2(6f, 0); // Left-aligned with 6px padding
         }
 
@@ -889,7 +889,7 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
                                     buttonRect.anchorMin = new Vector2(0, 0.5f); // Left, center Y
                                     buttonRect.anchorMax = new Vector2(0, 0.5f); // Left, center Y
                                     buttonRect.pivot = new Vector2(0, 0.5f); // Left, center Y
-                                    buttonRect.sizeDelta = new Vector2(mainButtonWidth - 21f, OPTION_HEIGHT); // Reduced by 6px (3px on each side)
+                                    buttonRect.sizeDelta = new Vector2(mainButtonWidth - 21f, OPTION_HEIGHT);
                                     buttonRect.anchoredPosition = new Vector2(6f, 0); // Left-aligned with 6px padding
 
                                     UnityEngine.Debug.Log($"Option button {i} configured - anchorMin: {buttonRect.anchorMin}, anchorMax: {buttonRect.anchorMax}, sizeDelta: {buttonRect.sizeDelta}, anchoredPosition: {buttonRect.anchoredPosition}");
