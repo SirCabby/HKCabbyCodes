@@ -606,11 +606,14 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
             RectTransform parentPanelRect = parentPanel.AddComponent<RectTransform>();
             Image parentPanelImage = parentPanel.AddComponent<Image>();
 
+            // Calculate top padding to balance the OPTION_MARGIN
+            float topPadding = OPTION_MARGIN / 2f;
+
             // Configure parent panel - stretch across full width, same height as button
             parentPanelRect.anchorMin = new Vector2(0, 1);
             parentPanelRect.anchorMax = new Vector2(1, 1);
             parentPanelRect.sizeDelta = new Vector2(0, OPTION_HEIGHT); // Stretch across width, fixed height
-            parentPanelRect.anchoredPosition = new Vector2(0, -index * (OPTION_HEIGHT + OPTION_GAP));
+            parentPanelRect.anchoredPosition = new Vector2(0, -topPadding - index * (OPTION_HEIGHT + OPTION_GAP));
             parentPanelRect.pivot = new Vector2(0.5f, 1f); // Center X, Top Y
 
             // Configure parent panel image (transparent background)
@@ -700,6 +703,9 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
             {
                 UnityEngine.Debug.Log("=== ConfigureOptionButtons called ===");
 
+                // Calculate top padding to balance the OPTION_MARGIN
+                float topPadding = OPTION_MARGIN / 2f;
+
                 // Ensure all option buttons are visible and properly positioned
                 for (int i = 0; i < optionButtons.Count; i++)
                 {
@@ -718,8 +724,8 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
                                 parentPanelRect.sizeDelta = new Vector2(0, OPTION_HEIGHT); // Stretch across width, fixed height
 
                                 // Position parent panels sequentially from top to bottom with gap
-                                // Start from top (0), then position each element downward with gaps between them
-                                parentPanelRect.anchoredPosition = new Vector2(0, -i * (OPTION_HEIGHT + OPTION_GAP));
+                                // Start from top with padding, then position each element downward with gaps between them
+                                parentPanelRect.anchoredPosition = new Vector2(0, -topPadding - i * (OPTION_HEIGHT + OPTION_GAP));
 
                                 UnityEngine.Debug.Log($"Option parent panel {i} repositioned - anchorMin: {parentPanelRect.anchorMin}, anchorMax: {parentPanelRect.anchorMax}, sizeDelta: {parentPanelRect.sizeDelta}, anchoredPosition: {parentPanelRect.anchoredPosition}");
                             }
@@ -1095,7 +1101,8 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
             {
                 // Calculate content size based on ALL options, not just visible ones
                 // This ensures scrolling works when there are more options than can fit
-                float contentHeight = options.Count * OPTION_HEIGHT + (options.Count - 1) * OPTION_GAP;
+                // Include top and bottom padding (OPTION_MARGIN) to match the panel height calculation
+                float contentHeight = OPTION_MARGIN + options.Count * OPTION_HEIGHT + (options.Count - 1) * OPTION_GAP;
 
                 // Configure content to stretch across viewport width and position at top
                 contentRect.anchorMin = new Vector2(0, 1);
