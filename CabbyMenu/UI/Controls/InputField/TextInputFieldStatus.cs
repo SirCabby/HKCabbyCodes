@@ -250,168 +250,39 @@ namespace CabbyMenu.UI.Controls.InputField
             var inputField = GetInputField();
             if (inputField == null) return;
 
-
-
             if (pendingFirstClickCaret)
             {
-                // Directly manipulate Unity's internal visual components to force caret visibility
+                // For first click, let Unity handle the cursor positioning naturally
+                // Then sync from Unity's position to our reference
+                pendingFirstClickCaret = false;
                 
-                // Calculate cursor position first
-                int calculatedPosition = CalculateCursorPositionFromMouse(mousePosition);
-                
-                // Access Unity's internal caretRectTrans field via reflection
-                var type = inputField.GetType();
-                var caretRectTransField = type.GetField("caretRectTrans", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-                
-                if (caretRectTransField != null)
-                {
-                    var caretRectTrans = caretRectTransField.GetValue(inputField) as RectTransform;
-                    if (caretRectTrans != null)
-                    {
-                        // Force the caret RectTransform to be visible and positioned correctly
-                        
-                        // Ensure the caret GameObject is active
-                        caretRectTrans.gameObject.SetActive(true);
-                        
-                        // Force the caret to be visible by ensuring its CanvasRenderer is active
-                        var caretCanvasRenderer = caretRectTrans.GetComponent<CanvasRenderer>();
-                        if (caretCanvasRenderer != null)
-                        {
-                            caretCanvasRenderer.SetAlpha(1.0f); // Force full opacity
-                            caretCanvasRenderer.SetColor(Color.black); // Force black color
-                        }
-                        
-                        // Calculate the caret position based on the calculated cursor position
-                        var textComponent = inputField.textComponent;
-                        if (textComponent != null)
-                        {
-                            // Calculate the caret position in local coordinates
-                            string visibleText = inputField.text;
-                            if (calculatedPosition <= visibleText.Length)
-                            {
-                                string textBeforeCaret = visibleText.Substring(0, calculatedPosition);
-                                
-                                // Use TextGenerator to calculate the width of text before caret
-                                var textGenerator = textComponent.cachedTextGeneratorForLayout;
-                                var textSettings = textComponent.GetGenerationSettings(textComponent.rectTransform.rect.size);
-                                
-                                // Calculate the width of text before the caret position
-                                float textWidth = 0f;
-                                if (textBeforeCaret.Length > 0)
-                                {
-                                    textWidth = textGenerator.GetPreferredWidth(textBeforeCaret, textSettings);
-                                }
-                                
-                                // Set the caret RectTransform position
-                                Vector3 localPosition = caretRectTrans.localPosition;
-                                localPosition.x = textWidth;
-                                caretRectTrans.localPosition = localPosition;
-                            }
-                        }
-                        
-                        // Override Unity's internal visual rendering flags and component states
-                        
-                        // Override Unity's visual selection system immediately
-                        inputField.selectionColor = Color.clear; // Make selection transparent
-                        inputField.caretColor = Color.black; // Ensure caret is visible
-                        
-                        // Force Unity to process the visual changes immediately
-                        Canvas.ForceUpdateCanvases();
-                        
-                        // Force immediate visual update of the caret component and its CanvasRenderer
-                        
-                        // Set internal state directly
-                        inputField.caretPosition = calculatedPosition;
-                        inputField.selectionAnchorPosition = calculatedPosition;
-                        inputField.selectionFocusPosition = calculatedPosition;
-                        
-                        // Force Unity to update its visual display immediately
-                        inputField.ForceLabelUpdate();
-                        
-                        // Force the caret RectTransform to update its visual state
-                        if (caretCanvasRenderer != null)
-                        {
-                            // Force the CanvasRenderer to update by setting it dirty
-                            caretCanvasRenderer.SetAlpha(caretCanvasRenderer.GetAlpha()); // Force refresh
-                        }
-                        
-                        // Additional Unity UI refresh methods
-                        if (inputField.textComponent != null)
-                        {
-                            // Force text component to refresh
-                            inputField.textComponent.SetAllDirty();
-                            inputField.textComponent.Rebuild(UnityEngine.UI.CanvasUpdate.LatePreRender);
-                        }
-                        
-                        // Force canvas to refresh
-                        var canvas = inputField.GetComponentInParent<Canvas>();
-                        if (canvas != null)
-                        {
-                            Canvas.ForceUpdateCanvases();
-                        }
-                        
-                        // Apply multiple visual refresh methods to ensure caret visibility
-                        
-                        // Clear any visual selection by forcing a frame delay update
-                        inputField.StartCoroutine(ForceVisualUpdateCoroutine(inputField, calculatedPosition));
-                    }
-                    else
-                    {
-                        // Fall back to the previous solution if caretRectTrans is null
-                        FallbackToFocusPreservingStateReset(inputField, calculatedPosition);
-                    }
-                }
-                else
-                {
-                    // Fall back to the previous solution if we can't find the field
-                    FallbackToFocusPreservingStateReset(inputField, calculatedPosition);
-                }
+                // Start a coroutine to sync from Unity after Unity has processed the click
+                StartCoroutine(SyncFromUnityAfterClick(inputField));
             }
             else
             {
-                // Subsequent click - calculating and setting cursor position directly
-                
-                int calculatedPosition = CalculateCursorPositionFromMouse(mousePosition);
-                
-                // Override Unity's visual selection system
-                inputField.selectionColor = Color.clear; // Make selection transparent
-                inputField.caretColor = Color.black; // Ensure caret is visible
-                
-                // Set internal state directly
-                inputField.caretPosition = calculatedPosition;
-                inputField.selectionAnchorPosition = calculatedPosition;
-                inputField.selectionFocusPosition = calculatedPosition;
-                
-                // Force Unity to update its visual display
-                inputField.ForceLabelUpdate();
+                // For subsequent clicks, let Unity handle positioning and sync from it
+                StartCoroutine(SyncFromUnityAfterClick(inputField));
             }
-
-
         }
-        
 
-        
-        private System.Collections.IEnumerator ForceVisualUpdateCoroutine(UnityEngine.UI.InputField inputField, int position)
+        private System.Collections.IEnumerator SyncFromUnityAfterClick(UnityEngine.UI.InputField inputField)
         {
-            // Wait for end of frame to ensure Unity has processed all updates
-            yield return new UnityEngine.WaitForEndOfFrame();
+            // Wait for end of frame to ensure Unity has processed the click naturally
+            yield return new WaitForEndOfFrame();
             
-            // Force another visual update
-            inputField.ForceLabelUpdate();
+            // Now sync our cursor position from Unity's position
+            SyncCursorPositionFromUnity();
             
-            // Ensure caret is visible by forcing Unity's internal state
-            inputField.caretPosition = position;
-            inputField.selectionAnchorPosition = position;
-            inputField.selectionFocusPosition = position;
-            
-            // Force text component to refresh again
-            if (inputField.textComponent != null)
-            {
-                inputField.textComponent.SetAllDirty();
-            }
-            
-
+            // Update our display to match Unity's positioning
+            UpdateDisplayText();
+            UpdateHorizontalOffsetForCursor();
+            ForceCursorBlinkReset();
         }
+        
+
+        
+
         
         public override void SyncCursorPositionFromUnity()
         {
@@ -446,43 +317,6 @@ namespace CabbyMenu.UI.Controls.InputField
 
         public override Utilities.KeyCodeMap.ValidChars ValidChars => Utilities.KeyCodeMap.ValidChars.AlphaNumeric;
         
-        private void FallbackToFocusPreservingStateReset(UnityEngine.UI.InputField inputField, int calculatedPosition)
-        {
-            
-            // Override Unity's visual selection system immediately
-            inputField.selectionColor = Color.clear; // Make selection transparent
-            inputField.caretColor = Color.black; // Ensure caret is visible
-            
-            // Force Unity to process the visual changes immediately
-            Canvas.ForceUpdateCanvases();
-            
-            // Set cursor position while maintaining focus
-            inputField.caretPosition = calculatedPosition;
-            inputField.selectionAnchorPosition = calculatedPosition;
-            inputField.selectionFocusPosition = calculatedPosition;
-            
-            // Force Unity to update its visual display immediately
-            inputField.ForceLabelUpdate();
-            
-            // Additional Unity UI refresh methods
-            if (inputField.textComponent != null)
-            {
-                // Force text component to refresh
-                inputField.textComponent.SetAllDirty();
-                inputField.textComponent.Rebuild(UnityEngine.UI.CanvasUpdate.LatePreRender);
-            }
-            
-            // Force canvas to refresh
-            var canvas = inputField.GetComponentInParent<Canvas>();
-            if (canvas != null)
-            {
-                Canvas.ForceUpdateCanvases();
-            }
-            
-            // Clear any visual selection by forcing a frame delay update
-            inputField.StartCoroutine(ForceVisualUpdateCoroutine(inputField, calculatedPosition));
-        }
-
 
     }
 } 

@@ -100,11 +100,10 @@ namespace CabbyMenu.UI.Controls.InputField
                 lastSelected?.Submit();
                 lastSelected = clickedInput;
                 
+                // Let Unity handle the cursor positioning naturally
                 if (clickedInput.InputFieldGo != null)
                 {
-                    // Let Unity's InputField process the click naturally to initialize its visual system
-                    // Then apply our visual override after Unity has processed the click
-                    clickedInput.StartCoroutine(ApplyVisualOverrideAfterUnityProcessing(clickedInput, mousePosition));
+                    clickedInput.SetCursorPositionFromMouse(mousePosition);
                 }
             }
             else if (clickedInput == null && lastSelected != null)
@@ -122,12 +121,10 @@ namespace CabbyMenu.UI.Controls.InputField
             }
             else if (clickedInput == lastSelected && clickedInput != null)
             {
-                // Clicked on the same input field - allow Unity's natural processing first
+                // Clicked on the same input field - let Unity handle positioning
                 if (clickedInput.InputFieldGo != null)
                 {
-                    // Let Unity's InputField process the click naturally to initialize its visual system
-                    // Then apply our visual override after Unity has processed the click
-                    clickedInput.StartCoroutine(ApplyVisualOverrideAfterUnityProcessing(clickedInput, mousePosition));
+                    clickedInput.SetCursorPositionFromMouse(mousePosition);
                 }
             }
 
@@ -135,21 +132,7 @@ namespace CabbyMenu.UI.Controls.InputField
             SetInputFieldSelection(lastSelected);
         }
 
-        /// <summary>
-        /// Applies visual override after Unity has processed the click naturally.
-        /// This ensures Unity's visual rendering system is properly initialized.
-        /// </summary>
-        /// <param name="inputStatus">The input field status to apply visual override to.</param>
-        /// <param name="mousePosition">The mouse position for cursor calculation.</param>
-        private System.Collections.IEnumerator ApplyVisualOverrideAfterUnityProcessing(InputFieldStatusBase inputStatus, Vector2 mousePosition)
-        {
-            // Wait for end of frame to ensure Unity has processed the click naturally
-            yield return new WaitForEndOfFrame();
-            
-            // Now that Unity has processed the click naturally, apply our visual override
-            inputStatus.SetCursorPositionFromMouse(mousePosition);
-            UpdateInputFieldDisplay(inputStatus);
-        }
+
 
         /// <summary>
         /// Handles keyboard input for the selected input field.
