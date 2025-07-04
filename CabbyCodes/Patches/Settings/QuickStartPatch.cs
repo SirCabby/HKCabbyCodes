@@ -66,7 +66,6 @@ namespace CabbyCodes.Patches.Settings
         public void Set(bool value)
         {
             quickStartEnabled.Value = value;
-            CabbyCodesPlugin.BLogger.LogInfo(string.Format("Quick start enabled: {0}", value));
         }
 
         /// <summary>
@@ -86,7 +85,6 @@ namespace CabbyCodes.Patches.Settings
         {
             slot = ValidationUtils.ValidateRange(slot, 1, 4, nameof(slot));
             saveSlot.Value = slot;
-            CabbyCodesPlugin.BLogger.LogInfo(string.Format("Save slot set to: {0}", slot));
         }
 
         /// <summary>
@@ -105,7 +103,6 @@ namespace CabbyCodes.Patches.Settings
         public static void SetSkipIntroScreens(bool value)
         {
             skipIntroScreens.Value = value;
-            CabbyCodesPlugin.BLogger.LogInfo(string.Format("Skip intro screens: {0}", value));
         }
 
         /// <summary>

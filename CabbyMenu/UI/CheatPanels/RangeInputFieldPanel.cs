@@ -50,9 +50,6 @@ namespace CabbyMenu.UI.CheatPanels
                 // Calculate the width based on character limit
                 int calculatedWidth = CalculatePanelWidth(characterLimit);
                 
-                // Debug logging to verify width calculation
-                UnityEngine.Debug.Log($"RangeInputFieldPanel: minValue={minValue}, maxValue={maxValue}, characterLimit={characterLimit}, calculatedWidth={calculatedWidth}, description='{description}'");
-                
                 inputFieldSync = InputFieldSync.Create(syncedReference, validChars, new Vector2(calculatedWidth, Constants.DEFAULT_PANEL_HEIGHT), characterLimit, minValue, maxValue);
                 new Fitter(inputFieldSync.GetGameObject()).Attach(cheatPanel);
                 inputFieldSync.GetGameObject().transform.SetAsFirstSibling();

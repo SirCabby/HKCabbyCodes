@@ -8,11 +8,6 @@ namespace CabbyMenu.Utilities
     public static class ValidationUtils
     {
         /// <summary>
-        /// Action for logging warning messages. Can be set by the consuming project.
-        /// </summary>
-        public static Action<string> WarningLogger { get; set; } = Console.WriteLine;
-
-        /// <summary>
         /// Validates if a value is within the specified range.
         /// </summary>
         /// <param name="value">The value to validate.</param>
@@ -48,7 +43,6 @@ namespace CabbyMenu.Utilities
         {
             if (string.IsNullOrEmpty(value))
             {
-                WarningLogger($"{paramName} cannot be null or empty. Using empty string as fallback.");
                 return string.Empty;
             }
             return value;
@@ -64,7 +58,6 @@ namespace CabbyMenu.Utilities
         {
             if (value == null)
             {
-                WarningLogger($"{paramName} cannot be null. Using null as fallback.");
                 return null;
             }
             return value;

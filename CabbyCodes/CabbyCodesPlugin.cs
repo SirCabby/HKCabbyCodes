@@ -89,7 +89,6 @@ namespace CabbyCodes
             cabbyMenu.RegisterCategory("Flags", FlagsPatch.AddPanels);
             cabbyMenu.RegisterCategory("Achievements", AchievementPatch.AddPanels);
             cabbyMenu.RegisterCategory("Settings", SettingsPatch.AddPanels);
-            cabbyMenu.RegisterCategory("Debug", DebugPatch.AddPanels);
 
             // Apply quick start patches
             QuickStartPatch.ApplyPatches();

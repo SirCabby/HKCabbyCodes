@@ -48,9 +48,6 @@ namespace CabbyMenu.UI.CheatPanels
             layout.preferredWidth = CalculateButtonWidth(buttonText);
             layout.minWidth = CalculateButtonWidth(buttonText);
 
-            // Debug logging to verify width calculation
-            UnityEngine.Debug.Log($"ButtonPanel: buttonText='{buttonText}', calculatedWidth={layout.preferredWidth}");
-
             (GameObject button, _, _) = GetButtonFactory(style)(buttonText);
             button.GetComponent<Button>().onClick.AddListener(DoAction);
             new Fitter(button).Attach(buttonPanel).Anchor(middle, middle).Size(new Vector2(layout.preferredWidth, Constants.DEFAULT_PANEL_HEIGHT));

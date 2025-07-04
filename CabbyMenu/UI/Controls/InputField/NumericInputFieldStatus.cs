@@ -90,7 +90,10 @@ namespace CabbyMenu.UI.Controls.InputField
                 }
                 // Don't validate minimum here - let users type values below minimum for multi-digit numbers
             }
-            catch { }
+            catch (System.Exception ex)
+            {
+                UnityEngine.Debug.LogWarning($"Exception in NumericInputFieldStatus.InsertCharacter: {ex.Message}");
+            }
             
             UpdateDisplayText();
             int maxPosition = Mathf.Min(fullText.Length, characterLimit);

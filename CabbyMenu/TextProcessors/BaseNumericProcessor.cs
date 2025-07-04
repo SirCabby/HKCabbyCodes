@@ -66,8 +66,9 @@ namespace CabbyMenu.TextProcessors
                 // If IComparable comparison fails, assume it's in range
                 return true;
             }
-            catch
+            catch (System.Exception ex)
             {
+                UnityEngine.Debug.LogWarning($"Exception in BaseNumericProcessor.IsValueInRange: {ex.Message}");
                 // If comparison fails, assume it's in range
                 return true;
             }
@@ -115,8 +116,9 @@ namespace CabbyMenu.TextProcessors
                 // If IComparable comparison fails, return the original value
                 return value;
             }
-            catch
+            catch (System.Exception ex)
             {
+                UnityEngine.Debug.LogWarning($"Exception in BaseNumericProcessor.ClampValue: {ex.Message}");
                 // If comparison fails, return the original value
                 return value;
             }

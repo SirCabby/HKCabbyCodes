@@ -103,7 +103,6 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
             float maxWidth = MIN_DROPDOWN_WIDTH;
             float extraPadding = TEXT_PADDING + 16f + 21f; // Add 21px to account for option button reduction
 
-            UnityEngine.Debug.Log($"[DynamicSizing] Measuring dropdown options (font: {font?.name}, fontSize: {fontSize}, fontStyle: {fontStyle})");
             foreach (string option in options)
             {
                 if (string.IsNullOrEmpty(option)) continue;
@@ -116,11 +115,9 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
 
                 TextGenerator generator = new TextGenerator();
                 float textWidth = generator.GetPreferredWidth(option, settings) / settings.scaleFactor;
-                UnityEngine.Debug.Log($"[DynamicSizing] Option: '{option}' | Measured width: {textWidth}");
                 maxWidth = Mathf.Max(maxWidth, textWidth + extraPadding);
             }
 
-            UnityEngine.Debug.Log($"[DynamicSizing] Final calculated required width: {maxWidth}px for {options.Count} options");
             return maxWidth;
         }
 
@@ -132,11 +129,9 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
             if (!useDynamicSizing) return;
 
             float newWidth = CalculateRequiredWidth();
-            UnityEngine.Debug.Log($"[DynamicSizing] UpdateDropdownWidth: newWidth={newWidth}, oldWidth={mainButtonWidth}");
             if (Mathf.Abs(newWidth - mainButtonWidth) > 1f)
             {
                 mainButtonWidth = newWidth;
-                UnityEngine.Debug.Log($"[DynamicSizing] Setting mainButtonWidth to: {mainButtonWidth}");
 
                 ConfigureMainButtonLayout();
                 UpdateOptionButtonWidths();
@@ -146,12 +141,10 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
                 RectTransform mainRect = GetComponent<RectTransform>();
                 if (mainRect != null)
                 {
-                    UnityEngine.Debug.Log($"[DynamicSizing] After layout: mainRect.sizeDelta.x = {mainRect.sizeDelta.x}");
                 }
                 if (mainButtonText != null)
                 {
                     RectTransform textRect = mainButtonText.GetComponent<RectTransform>();
-                    UnityEngine.Debug.Log($"[DynamicSizing] mainButtonText.rect.width = {textRect.rect.width}, preferredWidth = {mainButtonText.preferredWidth}");
                 }
             }
         }
@@ -317,27 +310,20 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
 
         private void Start()
         {
-            UnityEngine.Debug.Log("CustomDropdown Start called");
-
             // Create the dropdown panel structure
             EnsureDropdownPanelCreated();
 
             // Don't set up onClick listener - we handle clicks through IPointerClickHandler
             // This prevents double-triggering of the dropdown toggle
-            UnityEngine.Debug.Log("Button click handler not set up - using IPointerClickHandler instead");
 
             // Don't create options here - wait until dropdown is opened
-            UnityEngine.Debug.Log("CustomDropdown Debug State:");
         }
 
         private void InitializeBasicComponents()
         {
-            UnityEngine.Debug.Log("InitializeBasicComponents called");
-
             // Create main button image first (this will be the target graphic)
             if (mainButtonImage == null)
             {
-                UnityEngine.Debug.Log("Creating mainButtonImage");
                 mainButtonImage = gameObject.AddComponent<Image>();
                 mainButtonImage.color = Constants.DROPDOWN_NORMAL;
             }
@@ -345,7 +331,6 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
             // Create main button if not assigned
             if (mainButton == null)
             {
-                UnityEngine.Debug.Log("Creating mainButton");
                 mainButton = gameObject.AddComponent<Button>();
                 // Set the target graphic for the button
                 mainButton.targetGraphic = mainButtonImage;
@@ -354,7 +339,6 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
             // Create main button text if not assigned
             if (mainButtonText == null)
             {
-                UnityEngine.Debug.Log("Creating mainButtonText");
                 mainButtonText = CreateTextComponent("MainButtonText", transform);
             }
 
@@ -393,7 +377,6 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
                 mainRect.sizeDelta = new Vector2(mainButtonWidth, mainButtonHeight);
                 mainRect.pivot = new Vector2(0.0f, 0.5f); // Left-center pivot for left-aligned positioning
 
-                UnityEngine.Debug.Log($"Main button sized to: {mainRect.sizeDelta}");
             }
         }
 
@@ -401,17 +384,12 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
         {
             if (dropdownPanel != null) return;
 
-            UnityEngine.Debug.Log("EnsureDropdownPanelCreated called");
-
             // Find parent canvas
             Canvas parentCanvas = GetComponentInParent<Canvas>();
             if (parentCanvas == null)
             {
-                UnityEngine.Debug.LogError("No parent canvas found for dropdown panel");
                 return;
             }
-            UnityEngine.Debug.Log($"Found parent: {parentCanvas.name}");
-
             // Create dropdown panel
             dropdownPanel = CreateDropdownPanel(parentCanvas);
 
@@ -420,16 +398,12 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
 
             // Initially hide the dropdown panel
             dropdownPanel.SetActive(false);
-            UnityEngine.Debug.Log($"Dropdown panel initially hidden - active: {dropdownPanel.activeSelf}");
-            UnityEngine.Debug.Log($"Content reference set: {content != null}, name: {content?.name}");
-            UnityEngine.Debug.Log("EnsureDropdownPanelCreated completed successfully");
         }
 
         private GameObject CreateDropdownPanel(Canvas parentCanvas)
         {
             GameObject panel = new GameObject("DropdownPanel");
             panel.transform.SetParent(parentCanvas.transform, false);
-            UnityEngine.Debug.Log($"Created dropdownPanel GameObject: {panel.name}");
 
             // Configure panel rect transform - use absolute positioning relative to button
             RectTransform panelRect = panel.AddComponent<RectTransform>();
@@ -447,16 +421,9 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
 
             panelRect.pivot = new Vector2(0f, 1f); // Top-left pivot for left-aligned dropdown positioning
 
-            UnityEngine.Debug.Log($"Panel created as child of parent: {parentCanvas.name}");
-            UnityEngine.Debug.Log($"Panel created with RectTransform: anchorMin={panelRect.anchorMin}, anchorMax={panelRect.anchorMax}, sizeDelta={panelRect.sizeDelta}");
-            UnityEngine.Debug.Log($"Panel creation complete - active: {panel.activeSelf}, parent: {panel.transform.parent?.name}");
-            UnityEngine.Debug.Log($"Button world position: {buttonWorldPos}, Panel world position: {panelWorldPos}");
-
             // Add panel image
             Image panelImage = panel.AddComponent<Image>();
             panelImage.color = Constants.DROPDOWN_PANEL_BACKGROUND;
-
-            UnityEngine.Debug.Log($"Panel RectTransform - anchorMin: {panelRect.anchorMin}, anchorMax: {panelRect.anchorMax}, sizeDelta: {panelRect.sizeDelta}, anchoredPosition: {panelRect.anchoredPosition}");
 
             return panel;
         }
@@ -464,7 +431,6 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
         private void CreateScrollViewComponents()
         {
             // Create scroll rect
-            UnityEngine.Debug.Log("Creating scroll rect");
             scrollView = CreateScrollView();
 
             // Create viewport
@@ -482,7 +448,6 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
             scrollRectComponent.content = content.GetComponent<RectTransform>();
             scrollRectComponent.verticalScrollbar = scrollbar.GetComponent<Scrollbar>();
 
-            UnityEngine.Debug.Log($"Scroll view created - viewport: {viewport.name}, content: {content.name}, scrollbar: {scrollbar.name}");
         }
 
         private GameObject CreateScrollView()
@@ -498,17 +463,6 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
             scrollRect.anchorMax = Vector2.one;  // Fill entire panel
             scrollRect.sizeDelta = Vector2.zero;
             scrollRect.anchoredPosition = Vector2.zero;
-
-            // IMMEDIATE POSITION LOGGING - Track where positioning goes wrong
-            RectTransform panelRect = dropdownPanel.GetComponent<RectTransform>();
-            UnityEngine.Debug.Log("=== IMMEDIATE SCROLLVIEW CREATION LOGGING ===");
-            UnityEngine.Debug.Log($"DropdownPanel - anchorMin: {panelRect.anchorMin}, anchorMax: {panelRect.anchorMax}, pivot: {panelRect.pivot}");
-            UnityEngine.Debug.Log($"DropdownPanel - sizeDelta: {panelRect.sizeDelta}, anchoredPosition: {panelRect.anchoredPosition}");
-            UnityEngine.Debug.Log($"DropdownPanel - world position: {panelRect.position}, local position: {panelRect.localPosition}");
-            UnityEngine.Debug.Log($"ScrollView - anchorMin: {scrollRect.anchorMin}, anchorMax: {scrollRect.anchorMax}");
-            UnityEngine.Debug.Log($"ScrollView - sizeDelta: {scrollRect.sizeDelta}, anchoredPosition: {scrollRect.anchoredPosition}");
-            UnityEngine.Debug.Log($"ScrollView - world position: {scrollRect.position}, local position: {scrollRect.localPosition}");
-            UnityEngine.Debug.Log("=== END IMMEDIATE SCROLLVIEW LOGGING ===");
 
             scrollRectComponent.horizontal = false;
             scrollRectComponent.vertical = true;
@@ -536,26 +490,6 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
 
             // Force layout update to ensure proper sizing
             LayoutRebuilder.ForceRebuildLayoutImmediate(viewportRect);
-
-            UnityEngine.Debug.Log($"Viewport configured - anchorMin: {viewportRect.anchorMin}, anchorMax: {viewportRect.anchorMax}, sizeDelta: {viewportRect.sizeDelta}, anchoredPosition: {viewportRect.anchoredPosition}");
-
-            // Additional debugging for viewport rect calculation
-            UnityEngine.Debug.Log($"Viewport rect - width: {viewportRect.rect.width}, height: {viewportRect.rect.height}");
-            UnityEngine.Debug.Log($"Viewport world bounds - min: {viewportRect.rect.min}, max: {viewportRect.rect.max}");
-
-            // Check ScrollView height
-            RectTransform scrollViewRect = scrollView.GetComponent<RectTransform>();
-            UnityEngine.Debug.Log($"ScrollView rect - width: {scrollViewRect.rect.width}, height: {scrollViewRect.rect.height}");
-            UnityEngine.Debug.Log($"ScrollView sizeDelta: {scrollViewRect.sizeDelta}");
-
-            // Configure viewport image for visible background
-            viewportImage.color = new Color(0.2f, 0.2f, 0.2f, 0.9f);
-            viewportImage.enabled = true;
-            viewportImage.raycastTarget = false;
-
-            // Configure mask
-            viewportMask.enabled = true;
-            viewportMask.showMaskGraphic = false;
 
             return viewportObj;
         }
@@ -590,8 +524,6 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
             contentFitter.enabled = false;
             contentFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
             contentFitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
-
-            UnityEngine.Debug.Log("Layout system disabled - using manual positioning");
 
             return contentObj;
         }
@@ -647,13 +579,11 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
             // Set the handle for the scrollbar
             scrollbarComponent.handleRect = handleRect;
 
-            UnityEngine.Debug.Log($"Created scrollbar handle with color: {handleImage.color}");
         }
 
         public void SetOptions(List<string> options)
         {
             this.options = options.ToList();
-            UnityEngine.Debug.Log($"SetOptions called with {options.Count} options");
 
             // Update dropdown width if dynamic sizing is enabled
             if (useDynamicSizing)
@@ -688,13 +618,9 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
                 RectTransform textRect = mainButtonText.GetComponent<RectTransform>();
                 Vector3 textWorld = textRect.position;
                 Vector3 textScreen = RectTransformUtility.WorldToScreenPoint(null, textWorld);
-                UnityEngine.Debug.Log($"MainButtonText z: {textWorld.z}, screen: {textScreen}, fontSize: {fontSize}");
-
-                UnityEngine.Debug.Log($"Updated main button text to: '{displayText}', color: {mainButtonText.color}, active: {mainButtonText.gameObject.activeSelf}");
             }
             else
             {
-                UnityEngine.Debug.Log($"Cannot update main button text - mainButtonText: {mainButtonText != null}, options count: {options.Count}");
             }
         }
 
@@ -702,15 +628,12 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
         {
             if (options == null || options.Count == 0) return;
 
-            UnityEngine.Debug.Log($"Initializing dropdown options for the first time...");
-
             // Clear existing buttons
             ClearExistingOptionButtons();
 
             // Ensure we have the content area
             if (content == null)
             {
-                UnityEngine.Debug.LogError("Content area is null - cannot create option buttons");
                 return;
             }
 
@@ -720,7 +643,6 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
                 CreateSingleOptionButton(i);
             }
 
-            UnityEngine.Debug.Log($"Created {optionButtons.Count} option buttons");
         }
 
         private void ClearExistingOptionButtons()
@@ -781,7 +703,6 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
 
             // Configure image
             optionImage.color = Constants.DROPDOWN_OPTION_BACKGROUND;
-            UnityEngine.Debug.Log($"Set option {index} button color to: {optionImage.color}");
 
             // Create text component
             CreateOptionText(optionObj, options[index]);
@@ -793,7 +714,6 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
             // Store the parent panel reference (which contains the button)
             optionButtons.Add(parentPanel);
 
-            UnityEngine.Debug.Log($"Created option button {index}: '{options[index]}' with parent panel 15px wider and left-aligned");
         }
 
         private void ConfigureOptionLayoutElement(LayoutElement layoutElement)
@@ -841,8 +761,6 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
         {
             try
             {
-                UnityEngine.Debug.Log("=== ConfigureOptionButtons called ===");
-
                 // Calculate top padding to balance the OPTION_MARGIN
                 float topPadding = OPTION_MARGIN / 2f;
 
@@ -867,15 +785,12 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
                                 // Start from top with padding, then position each element downward with gaps between them
                                 parentPanelRect.anchoredPosition = new Vector2(0, -topPadding - i * (OPTION_HEIGHT + OPTION_GAP));
 
-                                UnityEngine.Debug.Log($"Option parent panel {i} repositioned - anchorMin: {parentPanelRect.anchorMin}, anchorMax: {parentPanelRect.anchorMax}, sizeDelta: {parentPanelRect.sizeDelta}, anchoredPosition: {parentPanelRect.anchoredPosition}");
                             }
 
                             // Debug: List all children of the parent panel
-                            UnityEngine.Debug.Log($"Parent panel {i} has {optionButtons[i].transform.childCount} children:");
                             for (int j = 0; j < optionButtons[i].transform.childCount; j++)
                             {
                                 Transform child = optionButtons[i].transform.GetChild(j);
-                                UnityEngine.Debug.Log($"  Child {j}: {child.name}");
                             }
 
                             // Configure the actual button within the parent panel
@@ -892,19 +807,16 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
                                     buttonRect.sizeDelta = new Vector2(mainButtonWidth - 21f, OPTION_HEIGHT);
                                     buttonRect.anchoredPosition = new Vector2(6f, 0); // Left-aligned with 6px padding
 
-                                    UnityEngine.Debug.Log($"Option button {i} configured - anchorMin: {buttonRect.anchorMin}, anchorMax: {buttonRect.anchorMax}, sizeDelta: {buttonRect.sizeDelta}, anchoredPosition: {buttonRect.anchoredPosition}");
                                 }
                             }
                             else
                             {
-                                UnityEngine.Debug.LogError($"Button Option_{i} not found in parent panel {i}");
                             }
                         }
                     }
                     catch (System.Exception ex)
                     {
-                        UnityEngine.Debug.LogError($"Exception in ConfigureOptionButtons for button {i}: {ex.Message}");
-                        UnityEngine.Debug.LogError($"Stack trace: {ex.StackTrace}");
+                        UnityEngine.Debug.LogWarning($"Exception in ConfigureOptionButtons for button {i}: {ex.Message}");
                     }
                 }
 
@@ -916,17 +828,14 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
                         RectTransform parentPanelRect = optionButtons[i].GetComponent<RectTransform>();
                         if (parentPanelRect != null)
                         {
-                            UnityEngine.Debug.Log($"Option parent panel OptionPanel_{i} - anchorMin: {parentPanelRect.anchorMin}, anchorMax: {parentPanelRect.anchorMax}, sizeDelta: {parentPanelRect.sizeDelta}");
                         }
                     }
                 }
 
-                UnityEngine.Debug.Log("ConfigureOptionButtons completed successfully!");
             }
             catch (System.Exception ex)
             {
-                UnityEngine.Debug.LogError($"Exception in ConfigureOptionButtons: {ex.Message}");
-                UnityEngine.Debug.LogError($"Stack trace: {ex.StackTrace}");
+                UnityEngine.Debug.LogWarning($"Exception in ConfigureOptionButtons: {ex.Message}");
             }
         }
 
@@ -942,36 +851,28 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
                 // Notify listeners
                 onValueChanged?.Invoke(selectedIndex);
 
-                UnityEngine.Debug.Log($"Option selected: {options[selectedIndex]} (index: {selectedIndex})");
             }
         }
 
         public void OnPointerClick(PointerEventData eventData)
         {
-            UnityEngine.Debug.Log("IPointerClickHandler.OnPointerClick called");
-            UnityEngine.Debug.Log($"Click position: {eventData.position}, isOpen: {isOpen}");
             ToggleDropdown();
         }
 
         private void ToggleDropdown()
         {
-            UnityEngine.Debug.Log($"ToggleDropdown called, isOpen: {isOpen}, options count: {options.Count}");
             if (isOpen)
             {
-                UnityEngine.Debug.Log("Closing dropdown...");
                 HideDropdown();
             }
             else
             {
-                UnityEngine.Debug.Log("Opening dropdown...");
                 OpenDropdown();
             }
         }
 
         private void OpenDropdown()
         {
-            UnityEngine.Debug.Log($"OpenDropdown called, options count: {options.Count}");
-
             // Create option buttons if they don't exist
             if (optionButtons.Count == 0)
             {
@@ -981,7 +882,6 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
             // Position and show the dropdown panel
             PositionDropdownPanel();
 
-            UnityEngine.Debug.Log("About to call ShowDropdownPanel from OpenDropdown...");
             ShowDropdownPanel();
 
             isOpen = true;
@@ -995,18 +895,15 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
 
         private void HideDropdown()
         {
-            UnityEngine.Debug.Log("HideDropdown called");
             if (dropdownPanel != null)
             {
                 dropdownPanel.SetActive(false);
-                UnityEngine.Debug.Log($"Dropdown panel hidden - active: {dropdownPanel.activeSelf}");
             }
             isOpen = false;
             
             // Remove from open dropdowns list
             openDropdowns.Remove(this);
             
-            UnityEngine.Debug.Log($"Dropdown state - isOpen: {isOpen}");
         }
 
         private void PositionDropdownPanel()
@@ -1044,53 +941,31 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
             // Force layout update to ensure proper positioning
             LayoutRebuilder.ForceRebuildLayoutImmediate(panelRect);
 
-            UnityEngine.Debug.Log($"[FIXED] Panel positioning - anchorMin: {panelRect.anchorMin}, anchorMax: {panelRect.anchorMax}, pivot: {panelRect.pivot}");
-            UnityEngine.Debug.Log($"[FIXED] Panel final - world position: {panelRect.position}, sizeDelta: {panelRect.sizeDelta}");
-            UnityEngine.Debug.Log($"[FIXED] Panel matches main button width: {mainButtonWidth}, height for {Mathf.Min(options.Count, MAX_VISIBLE_OPTIONS)} visible options: {panelRect.sizeDelta.y}");
-            UnityEngine.Debug.Log($"[FIXED] Button world position: {mainRect.position}, Panel world position: {panelWorldPos}");
-            UnityEngine.Debug.Log($"[FIXED] Button corners - BL: {buttonBottomLeft}, TL: {buttonTopLeft}, TR: {buttonTopRight}, BR: {buttonBottomRight}");
-            UnityEngine.Debug.Log($"[FIXED] Button left edge: {buttonBottomLeft.x}, Panel left edge: {panelWorldPos.x}");
-            UnityEngine.Debug.Log($"[FIXED] Button bottom edge: {buttonBottomLeft.y}, Panel top edge: {panelWorldPos.y}");
-            UnityEngine.Debug.Log($"[FIXED] Button size: {mainRect.sizeDelta}, Panel size: {panelRect.sizeDelta}");
-            UnityEngine.Debug.Log($"[FIXED] Distance from button bottom to panel top: {buttonBottomLeft.y - panelWorldPos.y}");
-            UnityEngine.Debug.Log($"[FIXED] Expected: 0 (panel top should be at button bottom)");
         }
 
         private void ShowDropdownPanel()
         {
             if (dropdownPanel == null) return;
 
-            UnityEngine.Debug.Log("=== ShowDropdownPanel started ===");
-
             RectTransform panelRect = dropdownPanel.GetComponent<RectTransform>();
             dropdownPanel.SetActive(true);
 
-            UnityEngine.Debug.Log("About to call ConfigurePanelComponents...");
             ConfigurePanelComponents(panelRect);
 
-            UnityEngine.Debug.Log("About to call ConfigureScrollViewComponents...");
             ConfigureScrollViewComponents(panelRect);
 
-            UnityEngine.Debug.Log("About to call VerifyScrollRectConnections...");
             VerifyScrollRectConnections();
 
-            UnityEngine.Debug.Log("About to call ConfigureContentSizing...");
             ConfigureContentSizing();
 
-            UnityEngine.Debug.Log("About to call ConfigureOptionButtons...");
-            // Ensure all option buttons are visible and properly positioned
             ConfigureOptionButtons();
 
-            UnityEngine.Debug.Log("About to call ResetScrollPosition...");
             ResetScrollPosition();
 
-            UnityEngine.Debug.Log("About to call EnsureProperZOrder...");
             EnsureProperZOrder();
 
-            UnityEngine.Debug.Log("About to call LogDetailedPositions...");
             LogDetailedPositions();
 
-            UnityEngine.Debug.Log($"[FIXED] Dropdown panel activated and positioned. Panel height: {panelRect.sizeDelta.y}, AnchoredPosition: {panelRect.anchoredPosition}, SizeDelta: {panelRect.sizeDelta}");
         }
 
 #pragma warning disable IDE0060 // Remove unused parameter
@@ -1103,7 +978,6 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
             {
                 panelImage.enabled = true;
                 panelImage.color = Constants.DROPDOWN_PANEL_BACKGROUND;
-                UnityEngine.Debug.Log($"Panel image enabled with color: {panelImage.color}");
             }
         }
 
@@ -1125,7 +999,6 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
                     scrollRectComponent.scrollSensitivity = 10f;
                     scrollRectComponent.elasticity = 0f; // Prevent over-scrolling
 
-                    UnityEngine.Debug.Log($"Scroll view state - enabled: {scrollRectComponent.enabled}, viewport: {scrollRectComponent.viewport?.name}, content: {scrollRectComponent.content?.name}");
                 }
 
                 // Ensure ScrollView is properly positioned within the panel
@@ -1142,13 +1015,6 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
                     // Force layout update to ensure proper positioning
                     LayoutRebuilder.ForceRebuildLayoutImmediate(scrollViewRect);
 
-                    UnityEngine.Debug.Log($"ScrollView repositioned - anchorMin: {scrollViewRect.anchorMin}, anchorMax: {scrollViewRect.anchorMax}, sizeDelta: {scrollViewRect.sizeDelta}, anchoredPosition: {scrollViewRect.anchoredPosition}");
-                    UnityEngine.Debug.Log($"ScrollView local position after repositioning: {scrollViewRect.localPosition}");
-
-                    // Additional debug: Check if ScrollView fills the panel properly
-                    RectTransform dropdownPanelRectDebug = dropdownPanel.GetComponent<RectTransform>();
-                    UnityEngine.Debug.Log($"Panel size: {dropdownPanelRectDebug.sizeDelta}, ScrollView size: {scrollViewRect.sizeDelta}");
-                    UnityEngine.Debug.Log($"Panel pivot: {dropdownPanelRectDebug.pivot}, ScrollView pivot: {scrollViewRect.pivot}");
                 }
             }
 
@@ -1168,16 +1034,6 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
                     // Force layout update to ensure proper sizing
                     LayoutRebuilder.ForceRebuildLayoutImmediate(viewportRect);
 
-                    UnityEngine.Debug.Log($"Viewport configured - anchorMin: {viewportRect.anchorMin}, anchorMax: {viewportRect.anchorMax}, sizeDelta: {viewportRect.sizeDelta}, anchoredPosition: {viewportRect.anchoredPosition}");
-
-                    // Additional debugging for viewport rect calculation
-                    UnityEngine.Debug.Log($"Viewport rect - width: {viewportRect.rect.width}, height: {viewportRect.rect.height}");
-                    UnityEngine.Debug.Log($"Viewport world bounds - min: {viewportRect.rect.min}, max: {viewportRect.rect.max}");
-
-                    // Check ScrollView height
-                    RectTransform scrollViewRect = scrollView.GetComponent<RectTransform>();
-                    UnityEngine.Debug.Log($"ScrollView rect - width: {scrollViewRect.rect.width}, height: {scrollViewRect.rect.height}");
-                    UnityEngine.Debug.Log($"ScrollView sizeDelta: {scrollViewRect.sizeDelta}");
                 }
 
                 Image viewportImage = viewport.GetComponent<Image>();
@@ -1185,7 +1041,6 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
                 {
                     viewportImage.enabled = true;
                     viewportImage.color = new Color(0.2f, 0.2f, 0.2f, 0.9f);
-                    UnityEngine.Debug.Log($"Viewport image enabled with color: {viewportImage.color}");
                 }
 
                 Mask viewportMask = viewport.GetComponent<Mask>();
@@ -1194,11 +1049,9 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
                     viewportMask.enabled = true;
                     viewportMask.showMaskGraphic = false;
 
-                    UnityEngine.Debug.Log($"Viewport mask - enabled: {viewportMask.enabled}, showMaskGraphic: {viewportMask.showMaskGraphic}, graphic: {viewportMask.graphic?.name}");
                 }
                 else
                 {
-                    UnityEngine.Debug.LogError("Viewport mask component is null!");
                 }
 
                 // Force the viewport to update its mask
@@ -1243,7 +1096,6 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
                         }
                     }
 
-                    UnityEngine.Debug.Log($"Scrollbar configured - sizeDelta: {scrollbarRect.sizeDelta}, enabled: {scrollbarComponent.enabled}, handle: {scrollbarComponent.handleRect?.name}");
                 }
             }
         }
@@ -1275,10 +1127,6 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
                 // Force another layout update after a frame to ensure all positioning is correct
                 StartCoroutine(ForceContentLayoutUpdate(contentRect));
 
-                UnityEngine.Debug.Log($"Content sizing - sizeDelta: {contentRect.sizeDelta}, anchorMin: {contentRect.anchorMin}, anchorMax: {contentRect.anchorMax}");
-                UnityEngine.Debug.Log($"Content height for {options.Count} total options: {contentHeight}");
-                UnityEngine.Debug.Log($"Content anchoredPosition: {contentRect.anchoredPosition}");
-                UnityEngine.Debug.Log($"Content local position: {contentRect.localPosition}");
             }
         }
 
@@ -1286,7 +1134,6 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
         {
             yield return null; // Wait for next frame
             LayoutRebuilder.ForceRebuildLayoutImmediate(contentRect);
-            UnityEngine.Debug.Log($"Content layout updated after frame - local position: {contentRect.localPosition}");
         }
 
         private void EnsureProperZOrder()
@@ -1296,36 +1143,30 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
             if (parentCanvas != null)
             {
                 parentCanvas.sortingOrder = 1000;
-                UnityEngine.Debug.Log($"Brought parent canvas to front: {dropdownPanel.name}, sorting order: {parentCanvas.sortingOrder}");
             }
 
             if (scrollView != null)
             {
                 scrollView.transform.SetAsLastSibling();
-                UnityEngine.Debug.Log($"Brought scroll view to front: {scrollView.name}");
             }
 
             if (viewport != null)
             {
                 viewport.transform.SetAsLastSibling();
-                UnityEngine.Debug.Log($"Brought viewport to front: {viewport.name}");
             }
 
             if (content != null)
             {
                 content.transform.SetAsLastSibling();
-                UnityEngine.Debug.Log($"Brought content to front: {content.name}");
             }
 
             if (scrollbar != null)
             {
                 scrollbar.transform.SetAsLastSibling();
-                UnityEngine.Debug.Log($"Brought scrollbar to front: {scrollbar.name}");
             }
 
             // Ensure dropdown panel is at the front
             dropdownPanel.transform.SetAsLastSibling();
-            UnityEngine.Debug.Log($"Dropdown panel visibility ensured - active: {dropdownPanel.activeSelf}, sibling index: {dropdownPanel.transform.GetSiblingIndex()}");
         }
 
         private void ResetScrollPosition()
@@ -1337,7 +1178,6 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
                 {
                     // Reset to top position (normalizedPosition.y = 1 for top)
                     scrollRectComponent.normalizedPosition = new Vector2(0, 1);
-                    UnityEngine.Debug.Log($"Reset scroll position to top - normalizedPosition: {scrollRectComponent.normalizedPosition}");
                 }
             }
 
@@ -1348,7 +1188,6 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
                 if (scrollbarComponent != null)
                 {
                     scrollbarComponent.value = 1f; // 1 = top, 0 = bottom
-                    UnityEngine.Debug.Log($"Reset scrollbar value to top: {scrollbarComponent.value}");
                 }
             }
         }
@@ -1374,226 +1213,14 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
                     if (scrollbarComponent != null)
                     {
                         scrollRectComponent.verticalScrollbar = scrollbarComponent;
-                        UnityEngine.Debug.Log($"Connected scrollbar to ScrollRect: {scrollbar.name}");
                     }
                 }
 
-                UnityEngine.Debug.Log($"Verified scroll rect connections - viewport: {scrollRectComponent.viewport?.name}, content: {scrollRectComponent.content?.name}, scrollbar: {scrollRectComponent.verticalScrollbar?.name}");
-
-                // Force the scroll rect to update its internal state
-                scrollRectComponent.enabled = false;
-                scrollRectComponent.enabled = true;
-
-                UnityEngine.Debug.Log($"Scroll rect re-enabled - viewport: {scrollRectComponent.viewport?.name}, content: {scrollRectComponent.content?.name}");
-
-                // Check scroll rect viewport and content references
-                UnityEngine.Debug.Log($"ScrollRect viewport reference: {scrollRectComponent.viewport?.name}");
-                UnityEngine.Debug.Log($"ScrollRect content reference: {scrollRectComponent.content?.name}");
-
-                // Check scrollbar connection
-                UnityEngine.Debug.Log($"ScrollRect vertical scrollbar reference: {scrollRectComponent.verticalScrollbar?.name}");
-                if (scrollbar != null)
-                {
-                    UnityEngine.Debug.Log($"Scrollbar is connected to ScrollRect: {scrollRectComponent.verticalScrollbar == scrollbar.GetComponent<Scrollbar>()}");
-                }
             }
         }
 
         private void LogDetailedPositions()
         {
-            UnityEngine.Debug.Log("=== DETAILED POSITION ANALYSIS ===");
-
-            CheckParentCanvasConfiguration();
-
-            // Main button positions
-            RectTransform mainRect = GetComponent<RectTransform>();
-            Vector3 mainWorldPos = mainRect.position;
-            Vector3 mainScreenPos = RectTransformUtility.WorldToScreenPoint(null, mainWorldPos);
-            UnityEngine.Debug.Log($"MainButton - World: {mainWorldPos}, Screen: {mainScreenPos}, Local: {mainRect.localPosition}");
-            UnityEngine.Debug.Log($"MainButton - sizeDelta: {mainRect.sizeDelta}, anchoredPosition: {mainRect.anchoredPosition}");
-
-            // Panel positions
-            RectTransform panelRect = dropdownPanel.GetComponent<RectTransform>();
-            Vector3 panelWorldPos = panelRect.position;
-            Vector3 panelScreenPos = RectTransformUtility.WorldToScreenPoint(null, panelWorldPos);
-            UnityEngine.Debug.Log($"DropdownPanel - World: {panelWorldPos}, Screen: {panelScreenPos}, Local: {panelRect.localPosition}");
-            UnityEngine.Debug.Log($"DropdownPanel - sizeDelta: {panelRect.sizeDelta}, anchoredPosition: {panelRect.anchoredPosition}");
-
-            // Scroll view positions
-            if (scrollView != null)
-            {
-                ScrollRect scrollRectComponent = scrollView.GetComponent<ScrollRect>();
-                RectTransform scrollRectTransform = scrollView.GetComponent<RectTransform>();
-                Vector3 scrollWorldPos = scrollRectTransform.position;
-                Vector3 scrollScreenPos = RectTransformUtility.WorldToScreenPoint(null, scrollWorldPos);
-                UnityEngine.Debug.Log($"ScrollView - World: {scrollWorldPos}, Screen: {scrollScreenPos}, Local: {scrollRectTransform.localPosition}");
-                UnityEngine.Debug.Log($"ScrollView - sizeDelta: {scrollRectTransform.sizeDelta}, anchoredPosition: {scrollRectTransform.anchoredPosition}");
-
-                // Log scroll rect properties
-                if (scrollRectComponent != null)
-                {
-                    UnityEngine.Debug.Log($"ScrollRect - normalizedPosition: {scrollRectComponent.normalizedPosition}, velocity: {scrollRectComponent.velocity}");
-                    UnityEngine.Debug.Log($"ScrollRect - horizontal: {scrollRectComponent.horizontal}, vertical: {scrollRectComponent.vertical}");
-                    UnityEngine.Debug.Log($"ScrollRect - movementType: {scrollRectComponent.movementType}, elasticity: {scrollRectComponent.elasticity}");
-                }
-            }
-
-            // Viewport positions
-            if (scrollView != null && viewport != null)
-            {
-                RectTransform viewportRect = viewport.GetComponent<RectTransform>();
-                Vector3 viewportWorldPos = viewportRect.position;
-                Vector3 viewportScreenPos = RectTransformUtility.WorldToScreenPoint(null, viewportWorldPos);
-                UnityEngine.Debug.Log($"Viewport - World: {viewportWorldPos}, Screen: {viewportScreenPos}, Local: {viewportRect.localPosition}");
-                UnityEngine.Debug.Log($"Viewport - sizeDelta: {viewportRect.sizeDelta}, anchoredPosition: {viewportRect.anchoredPosition}");
-            }
-
-            // Content positions
-            if (scrollView != null && content != null)
-            {
-                RectTransform contentRect = content.GetComponent<RectTransform>();
-                Vector3 contentWorldPos = contentRect.position;
-                Vector3 contentScreenPos = RectTransformUtility.WorldToScreenPoint(null, contentWorldPos);
-                UnityEngine.Debug.Log($"Content - World: {contentWorldPos}, Screen: {contentScreenPos}, Local: {contentRect.localPosition}");
-                UnityEngine.Debug.Log($"Content - sizeDelta: {contentRect.sizeDelta}, anchoredPosition: {contentRect.anchoredPosition}");
-            }
-
-            // Scrollbar positions
-            if (scrollbar != null)
-            {
-                RectTransform scrollbarRect = scrollbar.GetComponent<RectTransform>();
-                Scrollbar scrollbarComponent = scrollbar.GetComponent<Scrollbar>();
-                Vector3 scrollbarWorldPos = scrollbarRect.position;
-                Vector3 scrollbarScreenPos = RectTransformUtility.WorldToScreenPoint(null, scrollbarWorldPos);
-                UnityEngine.Debug.Log($"Scrollbar - World: {scrollbarWorldPos}, Screen: {scrollbarScreenPos}, Local: {scrollbarRect.localPosition}");
-                UnityEngine.Debug.Log($"Scrollbar - sizeDelta: {scrollbarRect.sizeDelta}, anchoredPosition: {scrollbarRect.anchoredPosition}");
-                UnityEngine.Debug.Log($"Scrollbar - value: {scrollbarComponent.value}, enabled: {scrollbarComponent.enabled}");
-
-                // Log handle information
-                if (scrollbarComponent.handleRect != null)
-                {
-                    RectTransform handleRect = scrollbarComponent.handleRect;
-                    Image handleImage = handleRect.GetComponent<Image>();
-                    UnityEngine.Debug.Log($"Scrollbar Handle - name: {handleRect.name}, enabled: {handleImage?.enabled}, color: {handleImage?.color}");
-                    UnityEngine.Debug.Log($"Scrollbar Handle - sizeDelta: {handleRect.sizeDelta}, anchoredPosition: {handleRect.anchoredPosition}");
-                }
-                else
-                {
-                    UnityEngine.Debug.Log("Scrollbar Handle - NOT FOUND!");
-                }
-            }
-
-            // Option button positions (first few)
-            for (int i = 0; i < Mathf.Min(3, optionButtons.Count); i++)
-            {
-                if (optionButtons[i] != null)
-                {
-                    RectTransform parentPanelRect = optionButtons[i].GetComponent<RectTransform>();
-                    Vector3 parentWorldPos = parentPanelRect.position;
-                    Vector3 parentScreenPos = RectTransformUtility.WorldToScreenPoint(null, parentWorldPos);
-                    UnityEngine.Debug.Log($"OptionParentPanel_{i} - World: {parentWorldPos}, Screen: {parentScreenPos}, Local: {parentPanelRect.localPosition}");
-                    UnityEngine.Debug.Log($"OptionParentPanel_{i} - sizeDelta: {parentPanelRect.sizeDelta}, anchoredPosition: {parentPanelRect.anchoredPosition}");
-
-                    // Also log the actual button within the parent panel
-                    Transform buttonTransform = optionButtons[i].transform.Find($"Option_{i}");
-                    if (buttonTransform != null)
-                    {
-                        RectTransform buttonRect = buttonTransform.GetComponent<RectTransform>();
-                        Vector3 buttonWorldPos = buttonRect.position;
-                        Vector3 buttonScreenPos = RectTransformUtility.WorldToScreenPoint(null, buttonWorldPos);
-                        UnityEngine.Debug.Log($"OptionButton_{i} - World: {buttonWorldPos}, Screen: {buttonScreenPos}, Local: {buttonRect.localPosition}");
-                        UnityEngine.Debug.Log($"OptionButton_{i} - sizeDelta: {buttonRect.sizeDelta}, anchoredPosition: {buttonRect.anchoredPosition}");
-                    }
-                    else
-                    {
-                        UnityEngine.Debug.Log($"OptionButton_{i} - NOT FOUND within parent panel");
-                    }
-                }
-            }
-
-            // Check for overlap issues
-            UnityEngine.Debug.Log("=== OVERLAP ANALYSIS ===");
-            if (scrollView != null && viewport != null && content != null)
-            {
-                ScrollRect scrollRectComponent = scrollView.GetComponent<ScrollRect>();
-                RectTransform viewportRect = viewport.GetComponent<RectTransform>();
-                RectTransform contentRect = content.GetComponent<RectTransform>();
-
-                // Get world positions for gap analysis
-                Vector3 viewportWorldPos = viewportRect.position;
-                Vector3 contentWorldPos = contentRect.position;
-                Vector3 dropdownPanelWorldPos = dropdownPanel.GetComponent<RectTransform>().position;
-
-                // NEW: Parent-child relationship analysis
-                UnityEngine.Debug.Log("=== PARENT-CHILD RELATIONSHIP ANALYSIS ===");
-                UnityEngine.Debug.Log($"DropdownPanel parent: {dropdownPanel.transform.parent?.name}");
-                UnityEngine.Debug.Log($"ScrollView parent: {scrollView.transform.parent?.name}");
-                UnityEngine.Debug.Log($"Viewport parent: {viewport.transform.parent?.name}");
-                UnityEngine.Debug.Log($"Content parent: {content.transform.parent?.name}");
-
-                // Check local positions relative to parents
-                UnityEngine.Debug.Log($"ScrollView local position: {scrollView.transform.localPosition}");
-                UnityEngine.Debug.Log($"Viewport local position: {viewport.transform.localPosition}");
-                UnityEngine.Debug.Log($"Content local position: {content.transform.localPosition}");
-
-                // Check if ScrollView is properly positioned within panel
-                RectTransform scrollViewRect = scrollView.GetComponent<RectTransform>();
-                UnityEngine.Debug.Log($"ScrollView anchorMin: {scrollViewRect.anchorMin}, anchorMax: {scrollViewRect.anchorMax}");
-                UnityEngine.Debug.Log($"ScrollView sizeDelta: {scrollViewRect.sizeDelta}, anchoredPosition: {scrollViewRect.anchoredPosition}");
-
-                // Check if Viewport is properly positioned within ScrollView
-                UnityEngine.Debug.Log($"Viewport anchorMin: {viewportRect.anchorMin}, anchorMax: {viewportRect.anchorMax}");
-                UnityEngine.Debug.Log($"Viewport sizeDelta: {viewportRect.sizeDelta}, anchoredPosition: {viewportRect.anchoredPosition}");
-
-                // Check if Content is properly positioned within Viewport
-                UnityEngine.Debug.Log($"Content anchorMin: {contentRect.anchorMin}, anchorMax: {contentRect.anchorMax}");
-                UnityEngine.Debug.Log($"Content sizeDelta: {contentRect.sizeDelta}, anchoredPosition: {contentRect.anchoredPosition}");
-
-                // Check if viewport and content are in the same position
-                float viewportContentDistance = Vector3.Distance(viewportRect.position, contentRect.position);
-                UnityEngine.Debug.Log($"Distance between viewport and content: {viewportContentDistance}");
-
-                // Check if viewport size matches panel size
-                RectTransform dropdownPanelRect = dropdownPanel.GetComponent<RectTransform>();
-                float sizeDifference = Mathf.Abs(viewportRect.sizeDelta.x - dropdownPanelRect.sizeDelta.x);
-                UnityEngine.Debug.Log($"Viewport vs Panel width difference: {sizeDifference}");
-
-                // Check if content is properly positioned within viewport
-                Vector3 viewportCenter = viewportRect.position;
-                Vector3 contentCenter = contentRect.position;
-                UnityEngine.Debug.Log($"Viewport center: {viewportCenter}, Content center: {contentCenter}");
-
-                // NEW: Detailed gap analysis
-                UnityEngine.Debug.Log("=== GAP ANALYSIS ===");
-                UnityEngine.Debug.Log($"Panel height: {dropdownPanelRect.sizeDelta.y}");
-                UnityEngine.Debug.Log($"Content height: {contentRect.sizeDelta.y}");
-                UnityEngine.Debug.Log($"Viewport height: {viewportRect.sizeDelta.y}");
-                UnityEngine.Debug.Log($"Panel top Y: {dropdownPanelWorldPos.y + dropdownPanelRect.sizeDelta.y / 2}");
-                UnityEngine.Debug.Log($"Panel bottom Y: {dropdownPanelWorldPos.y - dropdownPanelRect.sizeDelta.y / 2}");
-                UnityEngine.Debug.Log($"Content top Y: {contentWorldPos.y + contentRect.sizeDelta.y / 2}");
-                UnityEngine.Debug.Log($"Content bottom Y: {contentWorldPos.y - contentRect.sizeDelta.y / 2}");
-                UnityEngine.Debug.Log($"Viewport top Y: {viewportWorldPos.y + viewportRect.sizeDelta.y / 2}");
-                UnityEngine.Debug.Log($"Viewport bottom Y: {viewportWorldPos.y - viewportRect.sizeDelta.y / 2}");
-
-                // Calculate the actual gap
-                float panelTop = dropdownPanelWorldPos.y + dropdownPanelRect.sizeDelta.y / 2;
-                float contentTop = contentWorldPos.y + contentRect.sizeDelta.y / 2;
-                float gapAtTop = panelTop - contentTop;
-                UnityEngine.Debug.Log($"Gap at top of panel: {gapAtTop}");
-
-                // Check scroll rect viewport and content references
-                UnityEngine.Debug.Log($"ScrollRect viewport reference: {scrollRectComponent.viewport?.name}");
-                UnityEngine.Debug.Log($"ScrollRect content reference: {scrollRectComponent.content?.name}");
-
-                // Check scrollbar connection
-                UnityEngine.Debug.Log($"ScrollRect vertical scrollbar reference: {scrollRectComponent.verticalScrollbar?.name}");
-                if (scrollbar != null)
-                {
-                    UnityEngine.Debug.Log($"Scrollbar is connected to ScrollRect: {scrollRectComponent.verticalScrollbar == scrollbar.GetComponent<Scrollbar>()}");
-                }
-            }
-
-            UnityEngine.Debug.Log("=== END POSITION ANALYSIS ===");
         }
 
         private void CheckParentCanvasConfiguration()
@@ -1601,23 +1228,6 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
             Canvas parentCanvas = dropdownPanel.GetComponentInParent<Canvas>();
             if (parentCanvas != null)
             {
-                UnityEngine.Debug.Log($"Parent Canvas - name: {parentCanvas.name}, renderMode: {parentCanvas.renderMode}");
-                UnityEngine.Debug.Log($"Parent Canvas - worldCamera: {parentCanvas.worldCamera?.name}, planeDistance: {parentCanvas.planeDistance}");
-                UnityEngine.Debug.Log($"Parent Canvas - sortingOrder: {parentCanvas.sortingOrder}, targetDisplay: {parentCanvas.targetDisplay}");
-
-                // Check if canvas is using screen space overlay or camera
-                if (parentCanvas.renderMode == RenderMode.ScreenSpaceOverlay)
-                {
-                    UnityEngine.Debug.Log("Canvas is using ScreenSpaceOverlay mode");
-                }
-                else if (parentCanvas.renderMode == RenderMode.ScreenSpaceCamera)
-                {
-                    UnityEngine.Debug.Log($"Canvas is using ScreenSpaceCamera mode with camera: {parentCanvas.worldCamera?.name}");
-                }
-                else if (parentCanvas.renderMode == RenderMode.WorldSpace)
-                {
-                    UnityEngine.Debug.Log("Canvas is using WorldSpace mode");
-                }
             }
         }
 
@@ -1628,11 +1238,9 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
             {
                 selectedIndex = value;
                 UpdateMainButtonText();
-                UnityEngine.Debug.Log($"SetValue called with index {value}: '{options[value]}'");
             }
             else
             {
-                UnityEngine.Debug.LogWarning($"SetValue called with invalid index {value}, options count: {options.Count}");
             }
         }
         public void SetSize(float width) { SetSize(width, mainButtonHeight); }
@@ -1641,8 +1249,6 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
             // If dynamic sizing is enabled, only allow height changes
             if (useDynamicSizing)
             {
-                UnityEngine.Debug.Log($"Dynamic sizing is enabled - ignoring width parameter ({width}px), using calculated width ({mainButtonWidth}px)");
-                mainButtonHeight = height;
             }
             else
             {

@@ -160,8 +160,9 @@ namespace CabbyMenu.UI.Controls.InputField
             {
                 convertedValue = textProcessor.ConvertText(processedText);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                UnityEngine.Debug.LogWarning($"Exception in BaseInputFieldSync.Submit text conversion: {ex.Message}");
                 // If conversion fails, keep the current value
                 T currentValue = InputValue.Get();
                 string currentText = textProcessor.ConvertValue(currentValue);
