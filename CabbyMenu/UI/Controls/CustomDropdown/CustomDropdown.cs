@@ -370,14 +370,14 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
             RectTransform textRect = textObj.AddComponent<RectTransform>();
             textRect.anchorMin = Vector2.zero;
             textRect.anchorMax = Vector2.one;
-            textRect.offsetMin = Vector2.zero;
-            textRect.offsetMax = Vector2.zero;
+            textRect.offsetMin = new Vector2(TEXT_PADDING, 0); // Add left padding to position text after dropdown arrow
+            textRect.offsetMax = new Vector2(-TEXT_PADDING, 0); // Add right padding for balance
 
             Text textComponent = textObj.AddComponent<Text>();
             textComponent.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
             textComponent.fontSize = (int)DEFAULT_FONT_SIZE;
             textComponent.color = Color.black;
-            textComponent.alignment = TextAnchor.MiddleCenter;
+            textComponent.alignment = TextAnchor.MiddleLeft; // Left-align the text
 
             // Ensure text is on top of the button image
             textObj.transform.SetAsLastSibling();

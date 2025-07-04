@@ -76,6 +76,7 @@ namespace CabbyMenu.UI.CheatPanels
             cheatLayoutGroup.childForceExpandWidth = false;
             cheatLayoutGroup.childControlHeight = true;
             cheatLayoutGroup.childControlWidth = true;
+            cheatLayoutGroup.childAlignment = TextAnchor.UpperLeft; // Ensure left alignment
 
             ContentSizeFitter panelContentSizeFitter = cheatPanel.AddComponent<ContentSizeFitter>();
             panelContentSizeFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
@@ -88,7 +89,7 @@ namespace CabbyMenu.UI.CheatPanels
             new Fitter(cheatTextObj).Attach(cheatPanel);
 
             LayoutElement textLayout = cheatTextObj.AddComponent<LayoutElement>();
-            textLayout.flexibleWidth = Constants.FLEXIBLE_LAYOUT_VALUE;
+            textLayout.flexibleWidth = 0f; // Don't expand to fill available space
             textLayout.flexibleHeight = Constants.FLEXIBLE_LAYOUT_VALUE;
 
             ContentSizeFitter textContentSizeFitter = cheatTextObj.AddComponent<ContentSizeFitter>();

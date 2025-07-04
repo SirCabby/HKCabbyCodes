@@ -12,10 +12,11 @@ namespace CabbyMenu.UI.CheatPanels
         private static readonly Vector2 leftMiddleMinAnchor = new Vector2(0, 0.5f); // Left-middle min anchor
         
         private readonly DropDownSync dropdown;
+        private readonly GameObject dropdownPanel;
 
         public DropdownPanel(ISyncedValueList syncedValueReference, string description) : base(description)
         {
-            GameObject dropdownPanel = DefaultControls.CreatePanel(new DefaultControls.Resources());
+            dropdownPanel = DefaultControls.CreatePanel(new DefaultControls.Resources());
             dropdownPanel.name = "Dropdown Panel";
             var image = dropdownPanel.GetComponent<Image>();
             if (image != null) image.color = Color.clear;
@@ -24,8 +25,8 @@ namespace CabbyMenu.UI.CheatPanels
 
             LayoutElement dropdownPanelLayout = dropdownPanel.AddComponent<LayoutElement>();
             dropdownPanelLayout.flexibleHeight = Constants.FLEXIBLE_LAYOUT_VALUE;
-            // Use flexible width to allow dynamic sizing
-            dropdownPanelLayout.flexibleWidth = Constants.FLEXIBLE_LAYOUT_VALUE;
+            // Let the dropdown determine its own width dynamically
+            dropdownPanelLayout.flexibleWidth = 0f;
             dropdownPanelLayout.minWidth = Constants.MIN_PANEL_WIDTH;
 
             // Create dropdown using the new API
@@ -45,6 +46,36 @@ namespace CabbyMenu.UI.CheatPanels
 
             new Fitter(dropdownGameObject).Attach(dropdownPanel).Anchor(leftMiddleMinAnchor, leftMiddleMinAnchor);
             dropdown.Update();
+            
+            // Update the dropdown panel width to match the dynamically calculated dropdown width
+            UpdateDropdownPanelWidth();
+        }
+        
+        /// <summary>
+        /// Updates the dropdown panel width to match the dynamically calculated dropdown width.
+        /// </summary>
+        private void UpdateDropdownPanelWidth()
+        {
+            var customDropdown = dropdown.GetCustomDropdown();
+            if (customDropdown != null)
+            {
+                // Get the actual width of the dropdown button
+                RectTransform dropdownRect = customDropdown.GetComponent<RectTransform>();
+                if (dropdownRect != null)
+                {
+                    float dropdownWidth = dropdownRect.sizeDelta.x;
+                    
+                    // Update the dropdown panel's preferred width to match the actual dropdown width
+                    LayoutElement dropdownPanelLayout = dropdownPanel.GetComponent<LayoutElement>();
+                    if (dropdownPanelLayout != null)
+                    {
+                        dropdownPanelLayout.preferredWidth = dropdownWidth;
+                    }
+                    
+                    // Force layout rebuild to apply the new width
+                    LayoutRebuilder.ForceRebuildLayoutImmediate(cheatPanel.GetComponent<RectTransform>());
+                }
+            }
         }
     }
 }
