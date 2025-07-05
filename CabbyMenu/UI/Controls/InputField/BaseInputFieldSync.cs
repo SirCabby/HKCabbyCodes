@@ -170,7 +170,7 @@ namespace CabbyMenu.UI.Controls.InputField
             }
             catch (Exception ex)
             {
-                UnityEngine.Debug.LogWarning($"Exception in BaseInputFieldSync.Submit text conversion: {ex.Message}");
+                Debug.LogWarning($"Exception in BaseInputFieldSync.Submit text conversion: {ex.Message}");
                 // If conversion fails, keep the current value
                 T currentValue = InputValue.Get();
                 string currentText = textProcessor.ConvertValue(currentValue);
@@ -343,25 +343,19 @@ namespace CabbyMenu.UI.Controls.InputField
             
             // Find the background GameObject
             Transform backgroundTransform = inputFieldGo.transform.Find("InputFieldBackground");
-            
+
             // Ensure proper z-order: border (back) -> background (middle) -> input field content (front)
-            if (borderTransform != null)
-            {
-                // Set border to be first (renders in back)
-                borderTransform.SetAsFirstSibling();
-            }
-            
+            // Set border to be first (renders in back)
+            borderTransform?.SetAsFirstSibling();
+
             // Set background in the middle (after border but before content)
-            if (backgroundTransform != null)
-            {
-                // Move background to be after border but before all other content
-                backgroundTransform.SetSiblingIndex(1);
-            }
+            // Move background to be after border but before all other content
+            backgroundTransform?.SetSiblingIndex(1);
 
             // Preserve the original Unity InputField child order
             // Unity InputField has specific child elements that need to maintain their relative order
             // The cursor is managed internally by Unity and needs to be on top
-            
+
             // Move all Unity-created children to the top while preserving their relative order
             List<Transform> unityChildren = new List<Transform>();
             

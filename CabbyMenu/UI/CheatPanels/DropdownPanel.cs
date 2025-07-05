@@ -1,7 +1,5 @@
 using UnityEngine.UI;
 using UnityEngine;
-using System.Linq;
-using System.Collections.Generic;
 using CabbyMenu.UI.Controls.CustomDropdown;
 using CabbyMenu.SyncedReferences;
 

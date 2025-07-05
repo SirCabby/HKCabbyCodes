@@ -114,10 +114,7 @@ namespace CabbyMenu.UI.Controls.InputField
                 
                 // Clear Unity's EventSystem selection
                 var eventSystem = EventSystem.current;
-                if (eventSystem != null)
-                {
-                    eventSystem.SetSelectedGameObject(null);
-                }
+                eventSystem?.SetSelectedGameObject(null);
             }
             else if (clickedInput == lastSelected && clickedInput != null)
             {

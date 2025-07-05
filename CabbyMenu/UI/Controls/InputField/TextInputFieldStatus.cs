@@ -39,10 +39,7 @@ namespace CabbyMenu.UI.Controls.InputField
                 {
                     // Deactivate when deselected
                     var inputField = GetInputField();
-                    if (inputField != null)
-                    {
-                        inputField.DeactivateInputField();
-                    }
+                    inputField?.DeactivateInputField();
                     ResetHorizontalOffset();
                     UpdateDisplayText();
                 }
@@ -323,7 +320,7 @@ namespace CabbyMenu.UI.Controls.InputField
             return fontSize * 0.65f;
         }
 
-        public override Utilities.KeyCodeMap.ValidChars ValidChars => Utilities.KeyCodeMap.ValidChars.AlphaNumeric;
+        public override Utilities.KeyCodeMap.ValidChars ValidChars => KeyCodeMap.ValidChars.AlphaNumeric;
 
     }
 } 

@@ -1,6 +1,5 @@
 using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
-using HarmonyLib;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
@@ -8,6 +7,7 @@ using UnityEngine;
 using BepInEx.Configuration;
 using System.Linq;
 using CabbyCodes.Types;
+using GlobalEnums;
 
 namespace CabbyCodes.Patches
 {
@@ -27,31 +27,6 @@ namespace CabbyCodes.Patches
         public static readonly List<TeleportLocation> savedTeleports = InitTeleportLocations();
 
         /// <summary>
-        /// Harmony instance for patching game methods.
-        /// </summary>
-        private static readonly Harmony harmony = new Harmony(key);
-
-        /// <summary>
-        /// Method info for the original EnterHero method.
-        /// </summary>
-        private static readonly MethodInfo mOriginal = typeof(GameManager).GetMethod("EnterHero", BindingFlags.NonPublic | BindingFlags.Instance);
-
-        /// <summary>
-        /// Method info for the post-teleport method.
-        /// </summary>
-        private static readonly MethodInfo postMethod = typeof(TeleportPatch).GetMethod(nameof(PostTeleport), BindingFlags.NonPublic | BindingFlags.Static);
-
-        /// <summary>
-        /// Field info for accessing the target scene field.
-        /// </summary>
-        private static readonly FieldInfo targetSceneFieldInfo = typeof(GameManager).GetField("targetScene", BindingFlags.NonPublic | BindingFlags.Instance);
-
-        /// <summary>
-        /// Field info for accessing the entry delay field.
-        /// </summary>
-        private static readonly FieldInfo entryDelayFieldInfo = typeof(GameManager).GetField("entryDelay", BindingFlags.NonPublic | BindingFlags.Instance);
-
-        /// <summary>
         /// Field info for accessing the hero field in GameMap.
         /// </summary>
         private static readonly FieldInfo heroFieldInfo = typeof(GameMap).GetField("hero", BindingFlags.NonPublic | BindingFlags.Instance);
@@ -65,10 +40,7 @@ namespace CabbyCodes.Patches
             new TeleportLocation("Town", "Starting Town", new Vector2(Constants.TOWN_X_POSITION, Constants.TOWN_Y_POSITION)),
         };
 
-        /// <summary>
-        /// Original dream gate location for restoration after teleport.
-        /// </summary>
-        private static Vector2 originalDreamGateLoc;
+
 
         /// <summary>
         /// Gets the current teleport selection index.
@@ -156,45 +128,59 @@ namespace CabbyCodes.Patches
         {
             CabbyCodesPlugin.BLogger.LogInfo(string.Format("Teleporting to [{0}] ({1}, {2})", teleportLocation.SceneName, teleportLocation.Location.x, teleportLocation.Location.y));
 
-            MethodInfo runPrefix = typeof(CabbyMenu.CommonPatches).GetMethod(nameof(CabbyMenu.CommonPatches.Prefix_RunOriginal));
-            harmony.Patch(mOriginal, prefix: new HarmonyMethod(runPrefix), postfix: new HarmonyMethod(postMethod));
-
             GameManager gm = GameManager._instance;
-            originalDreamGateLoc = new Vector2(gm.playerData.dreamGateX, gm.playerData.dreamGateY);
-            gm.playerData.dreamGateX = teleportLocation.Location.x;
-            gm.playerData.dreamGateY = teleportLocation.Location.y;
 
-            gm.entryGateName = "dreamGate";
-            targetSceneFieldInfo.SetValue(gm, teleportLocation.SceneName);
-            entryDelayFieldInfo.SetValue(gm, 0);
-            gm.cameraCtrl.FreezeInPlace(false);
+            // Store the target location for use after the scene loads
+            _pendingTeleportLocation = teleportLocation;
+
+            // Subscribe to the event that fires after the hero is spawned in the new scene
+            gm.OnFinishedEnteringScene += OnFinishedEnteringSceneTeleport;
+
+            // Start the scene transition
             gm.BeginSceneTransition(new GameManager.SceneLoadInfo
             {
                 AlwaysUnloadUnusedAssets = true,
-                EntryGateName = "dreamGate",
+                EntryGateName = "dreamGate", // Use a valid entry gate or empty if not needed
                 PreventCameraFadeOut = true,
                 SceneName = teleportLocation.SceneName,
                 Visualization = GameManager.SceneLoadVisualizations.Dream
             });
         }
 
-        /// <summary>
-        /// Post-teleport method that restores the original dream gate location.
-        /// </summary>
-        /// <param name="additiveGateSearch">Unused parameter required for reflection lookup.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Remove unused parameter", Justification = "Required for reflection lookup")]
-        private static void PostTeleport(bool additiveGateSearch)
+        // Store the pending teleport location
+        private static TeleportLocation _pendingTeleportLocation;
+
+        // Event handler to set the hero's position after entering the scene
+        private static void OnFinishedEnteringSceneTeleport()
         {
-            GameManager gm = GameManager._instance;
-            gm.playerData.dreamGateX = originalDreamGateLoc.x;
-            gm.playerData.dreamGateY = originalDreamGateLoc.y;
-
-            //ObjectPrint.DisplayObjectInfo(gm);
-
-            // Didn't work history
-            //UIManager.instance.SetState(UIState.PLAYING);
-
-            harmony.UnpatchSelf();
+            var gm = GameManager._instance;
+            var hero = gm.hero_ctrl;
+            
+            if (_pendingTeleportLocation != null && hero != null)
+            {
+                Vector3 newPos = new Vector3(_pendingTeleportLocation.Location.x, _pendingTeleportLocation.Location.y, hero.transform.position.z);
+                hero.transform.position = newPos;
+                gm.cameraCtrl.SnapTo(newPos.x, newPos.y);
+                
+                // Restore the game state to fully playable
+                gm.SetState(GameState.PLAYING);
+                gm.inputHandler.StartAcceptingInput();
+                gm.inputHandler.AllowPause();
+                
+                // Actually unpause the game
+                gm.isPaused = false;
+                Time.timeScale = 1f;
+                TimeController.GenericTimeScale = 1f;
+                
+                // Transition audio snapshot
+                gm.actorSnapshotUnpaused?.TransitionTo(0f);
+                
+                // Update UI state to match game state
+                gm.ui?.SetState(UIState.PLAYING);
+            }
+            // Unsubscribe to avoid memory leaks
+            gm.OnFinishedEnteringScene -= OnFinishedEnteringSceneTeleport;
+            _pendingTeleportLocation = null;
         }
 
         /// <summary>
@@ -325,7 +311,6 @@ namespace CabbyCodes.Patches
         public static void AddPanels()
         {
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Teleportation: Select common point of interest to travel to").SetColor(CheatPanel.headerColor));
-            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Warning: Teleporting requires a pause / unpause to complete").SetColor(CheatPanel.warningColor));
             AddPanel();
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Lloyd's Beacon: Save and recall custom teleportation locations").SetColor(CheatPanel.headerColor));
             AddSavePanel();

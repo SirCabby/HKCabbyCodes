@@ -579,25 +579,16 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
             
             // Find the background GameObject
             Transform backgroundTransform = transform.Find("ButtonBackground");
-            
+
             // Ensure proper z-order: border (back) -> background (middle) -> text (front)
-            if (borderTransform != null)
-            {
-                // Set border to be first (renders in back)
-                borderTransform.SetAsFirstSibling();
-            }
-            
+            // Set border to be first (renders in back)
+            borderTransform?.SetAsFirstSibling();
+
             // Set background in the middle
-            if (backgroundTransform != null)
-            {
-                backgroundTransform.SetAsLastSibling();
-            }
+            backgroundTransform?.SetAsLastSibling();
             
             // Ensure text is on top
-            if (mainButtonText != null)
-            {
-                mainButtonText.transform.SetAsLastSibling();
-            }
+            mainButtonText?.transform.SetAsLastSibling();
         }
 
         private void CreateButtonBackground()
@@ -1095,7 +1086,7 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
                     }
                     catch (System.Exception ex)
                     {
-                        UnityEngine.Debug.LogWarning($"Exception in ConfigureOptionButtons for button {i}: {ex.Message}");
+                        Debug.LogWarning($"Exception in ConfigureOptionButtons for button {i}: {ex.Message}");
                     }
                 }
 
@@ -1114,7 +1105,7 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
             }
             catch (System.Exception ex)
             {
-                UnityEngine.Debug.LogWarning($"Exception in ConfigureOptionButtons: {ex.Message}");
+                Debug.LogWarning($"Exception in ConfigureOptionButtons: {ex.Message}");
             }
         }
 
@@ -1174,10 +1165,7 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
 
         private void HideDropdown()
         {
-            if (dropdownPanel != null)
-            {
-                dropdownPanel.SetActive(false);
-            }
+            dropdownPanel?.SetActive(false);
             isOpen = false;
             
             // Remove from open dropdowns list
@@ -1430,25 +1418,13 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
                 parentCanvas.sortingOrder = 1000;
             }
 
-            if (scrollView != null)
-            {
-                scrollView.transform.SetAsLastSibling();
-            }
+            scrollView?.transform.SetAsLastSibling();
 
-            if (viewport != null)
-            {
-                viewport.transform.SetAsLastSibling();
-            }
+            viewport?.transform.SetAsLastSibling();
 
-            if (content != null)
-            {
-                content.transform.SetAsLastSibling();
-            }
+            content?.transform.SetAsLastSibling();
 
-            if (scrollbar != null)
-            {
-                scrollbar.transform.SetAsLastSibling();
-            }
+            scrollbar?.transform.SetAsLastSibling();
 
             // Ensure dropdown panel is at the front
             dropdownPanel.transform.SetAsLastSibling();

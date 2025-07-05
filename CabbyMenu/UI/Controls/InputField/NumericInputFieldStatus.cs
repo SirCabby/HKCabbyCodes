@@ -43,10 +43,7 @@ namespace CabbyMenu.UI.Controls.InputField
                 {
                     // Deactivate when deselected
                     var inputField = GetInputField();
-                    if (inputField != null)
-                    {
-                        inputField.DeactivateInputField();
-                    }
+                    inputField?.DeactivateInputField();
                     ResetHorizontalOffset();
                     UpdateDisplayText();
                 }
@@ -94,7 +91,7 @@ namespace CabbyMenu.UI.Controls.InputField
             }
             catch (System.Exception ex)
             {
-                UnityEngine.Debug.LogWarning($"Exception in NumericInputFieldStatus.InsertCharacter: {ex.Message}");
+                Debug.LogWarning($"Exception in NumericInputFieldStatus.InsertCharacter: {ex.Message}");
             }
             
             UpdateDisplayText();
@@ -367,8 +364,8 @@ namespace CabbyMenu.UI.Controls.InputField
             get
             {
                 if (textProcessor.GetType().Name.Contains("Decimal"))
-                    return Utilities.KeyCodeMap.ValidChars.Decimal;
-                return Utilities.KeyCodeMap.ValidChars.Numeric;
+                    return KeyCodeMap.ValidChars.Decimal;
+                return KeyCodeMap.ValidChars.Numeric;
             }
         }
 
