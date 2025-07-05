@@ -133,42 +133,23 @@ namespace CabbyCodes.Patches.Settings
         {
             if (patchesApplied) 
             {
-                CabbyCodesPlugin.BLogger.LogInfo("QuickStart patches already applied, skipping...");
                 return;
             }
 
             InitializeConfig();
 
-            CabbyCodesPlugin.BLogger.LogInfo("=== Applying QuickStart Patches ===");
-            CabbyCodesPlugin.BLogger.LogInfo(string.Format("Skip intro screens setting: {0}", skipIntroScreens.Value));
-            CabbyCodesPlugin.BLogger.LogInfo(string.Format("Quick start enabled setting: {0}", quickStartEnabled.Value));
-            CabbyCodesPlugin.BLogger.LogInfo(string.Format("Save slot setting: {0}", saveSlot.Value));
-
             // Apply patches based on settings
             if (skipIntroScreens.Value)
             {
-                CabbyCodesPlugin.BLogger.LogInfo("Applying intro skip patches...");
                 ApplyIntroSkipPatches();
-            }
-            else
-            {
-                CabbyCodesPlugin.BLogger.LogInfo("Intro skip patches not applied (setting disabled)");
             }
 
             if (quickStartEnabled.Value)
             {
-                CabbyCodesPlugin.BLogger.LogInfo("Applying quick load patches...");
                 ApplyQuickLoadPatches();
-            }
-            else
-            {
-                CabbyCodesPlugin.BLogger.LogInfo("Quick load patches not applied (setting disabled)");
             }
 
             patchesApplied = true;
-            CabbyCodesPlugin.BLogger.LogInfo("=== QuickStart Patches Applied ===");
-            CabbyCodesPlugin.BLogger.LogInfo(string.Format("Quick start enabled: {0}", quickStartEnabled.Value));
-            CabbyCodesPlugin.BLogger.LogInfo(string.Format("Save slot: {0}", saveSlot.Value));
         }
 
         /// <summary>
@@ -197,11 +178,6 @@ namespace CabbyCodes.Patches.Settings
             {
                 harmony.Patch(startManagerStartMethod, 
                     prefix: new HarmonyMethod(typeof(QuickStartPatch).GetMethod(nameof(StartManagerStartPrefix), BindingFlags.NonPublic | BindingFlags.Static)));
-                CabbyCodesPlugin.BLogger.LogInfo("StartManager.Start patch applied successfully");
-            }
-            else
-            {
-                CabbyCodesPlugin.BLogger.LogWarning("StartManager.Start method not found");
             }
         }
 
@@ -216,47 +192,7 @@ namespace CabbyCodes.Patches.Settings
             {
                 harmony.Patch(gameManagerUpdateMethod, 
                     postfix: new HarmonyMethod(typeof(QuickStartPatch).GetMethod(nameof(GameManagerUpdatePostfix), BindingFlags.NonPublic | BindingFlags.Static)));
-                CabbyCodesPlugin.BLogger.LogInfo("GameManager.Update patch applied successfully");
             }
-            else
-            {
-                CabbyCodesPlugin.BLogger.LogWarning("GameManager.Update method not found");
-            }
-        }
-
-        /// <summary>
-        /// Prefix method for StartManager.Start to skip intro screens.
-        /// </summary>
-        private static bool StartManagerStartPrefix(StartManager __instance)
-        {
-            if (!skipIntroScreens.Value) return true; // Continue with original method
-
-            CabbyCodesPlugin.BLogger.LogInfo("StartManagerStartPrefix called - skipping intro screens");
-            
-            // Start the coroutine that skips intro and goes directly to main menu
-            __instance.StartCoroutine(SkipIntroAndGoToMainMenu(__instance));
-            
-            return false; // Skip the original method
-        }
-
-        /// <summary>
-        /// Coroutine to skip intro and go directly to main menu.
-        /// </summary>
-        private static IEnumerator SkipIntroAndGoToMainMenu(StartManager startManager)
-        {
-            CabbyCodesPlugin.BLogger.LogInfo("SkipIntroAndGoToMainMenu coroutine started");
-            
-            // Wait a short moment for any initialization
-            yield return new WaitForSeconds(0.1f);
-            
-            CabbyCodesPlugin.BLogger.LogInfo("Loading main menu directly");
-            
-            // Load the main menu scene directly
-            AsyncOperation loadOperation = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync("Menu_Title");
-            loadOperation.allowSceneActivation = true;
-            yield return loadOperation;
-            
-            CabbyCodesPlugin.BLogger.LogInfo("Main menu loaded successfully");
         }
 
         /// <summary>
@@ -268,40 +204,95 @@ namespace CabbyCodes.Patches.Settings
 
             // Check if we're in the main menu state and ready for quick load
             if (__instance.gameState == GameState.MAIN_MENU && 
-                __instance.ui != null)
+                __instance.ui != null &&
+                __instance.ui.menuState == MainMenuState.MAIN_MENU)
             {
-                CabbyCodesPlugin.BLogger.LogInfo("GameManagerUpdatePostfix - Main menu ready, attempting quick load");
-                
-                // Perform quick load
-                PerformQuickLoad(__instance);
+                // Wait a short moment for the menu to be fully ready
+                if (!__instance.ui.IsAnimatingMenus && !__instance.ui.IsFadingMenu)
+                {
+                    // Set the flag immediately to prevent multiple calls
+                    quickStartPerformed = true;
+                    
+                    // Perform quick load using the normal game flow
+                    PerformQuickLoad(__instance);
+                }
             }
         }
 
         /// <summary>
-        /// Performs the quick load operation.
+        /// Performs the quick load operation using the normal game flow.
         /// </summary>
         private static void PerformQuickLoad(GameManager gameManager)
         {
-            if (quickStartPerformed) return;
-            
-            quickStartPerformed = true;
             int slotNumber = saveSlot.Value;
-            
-            CabbyCodesPlugin.BLogger.LogInfo(string.Format("Performing quick load for save slot {0}", slotNumber));
             
             // Check if save file exists
             gameManager.HasSaveFile(slotNumber, (hasSave) =>
             {
                 if (hasSave)
                 {
-                    CabbyCodesPlugin.BLogger.LogInfo(string.Format("Save slot {0} exists, loading game", slotNumber));
-                    gameManager.LoadGameFromUI(slotNumber);
+                    // Start a coroutine to ensure main menu initialization is complete and then load game
+                    gameManager.StartCoroutine(WaitForMainMenuInitializationAndLoadGame(gameManager, slotNumber));
                 }
                 else
                 {
-                    CabbyCodesPlugin.BLogger.LogWarning(string.Format("Save slot {0} does not exist, quick load failed", slotNumber));
+                    // Reset the flag if save doesn't exist
+                    quickStartPerformed = false;
                 }
             });
+        }
+
+        /// <summary>
+        /// Coroutine to wait for main menu initialization to complete, then load the game.
+        /// </summary>
+        private static IEnumerator WaitForMainMenuInitializationAndLoadGame(GameManager gameManager, int slotNumber)
+        {
+            // Wait for main menu to be fully initialized
+            // This ensures all the normal main menu initialization steps have completed
+            for (int attempt = 0; attempt < 30; attempt++) // Wait up to 30 frames
+            {
+                yield return null;
+                
+                // Check if main menu is fully ready
+                if (gameManager.ui != null && 
+                    gameManager.ui.menuState == MainMenuState.MAIN_MENU &&
+                    !gameManager.ui.IsAnimatingMenus && 
+                    !gameManager.ui.IsFadingMenu &&
+                    gameManager.playerData != null)
+                {
+                    break;
+                }
+            }
+            
+            // Now that main menu is initialized, load the game directly
+            gameManager.LoadGameFromUI(slotNumber);
+        }
+
+        /// <summary>
+        /// Prefix method for StartManager.Start to skip intro screens.
+        /// </summary>
+        private static bool StartManagerStartPrefix(StartManager __instance)
+        {
+            if (!skipIntroScreens.Value) return true; // Continue with original method
+
+            // Start the coroutine that skips intro and goes directly to main menu
+            __instance.StartCoroutine(SkipIntroAndGoToMainMenu(__instance));
+            
+            return false; // Skip the original method
+        }
+
+        /// <summary>
+        /// Coroutine to skip intro and go directly to main menu.
+        /// </summary>
+        private static IEnumerator SkipIntroAndGoToMainMenu(StartManager startManager)
+        {
+            // Wait a short moment for any initialization
+            yield return new WaitForSeconds(0.1f);
+            
+            // Load the main menu scene directly
+            AsyncOperation loadOperation = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync("Menu_Title");
+            loadOperation.allowSceneActivation = true;
+            yield return loadOperation;
         }
 
         /// <summary>
