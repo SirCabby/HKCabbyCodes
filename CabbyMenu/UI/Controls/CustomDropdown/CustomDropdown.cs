@@ -12,7 +12,7 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
     {
         private const float OPTION_HEIGHT = 40f;
         private const float OPTION_MARGIN = 10f;
-        private const float OPTION_GAP = 3f;
+        private const float OPTION_GAP = 5f;
         private const float DEFAULT_FONT_SIZE = 18f; // Increased from 14f
         private const float FONT_SIZE_RATIO = 0.7f; // Increased from 0.6f for better proportion
         private const int MAX_VISIBLE_OPTIONS = 8;
