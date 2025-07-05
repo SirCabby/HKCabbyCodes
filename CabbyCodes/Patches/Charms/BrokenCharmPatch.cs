@@ -2,7 +2,7 @@ using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
 using CabbyMenu.UI.Modders;
 using System.Linq;
-using CabbyCodes.Types;
+using CabbyCodes.Patches.Charms;
 
 namespace CabbyCodes.Patches.Charms
 {

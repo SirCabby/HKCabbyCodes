@@ -1,7 +1,7 @@
 using BepInEx.Configuration;
 using UnityEngine;
 
-namespace CabbyCodes.Types
+namespace CabbyCodes.Patches.Teleport
 {
     /// <summary>
     /// Represents a custom teleport location that is stored in the configuration system.
@@ -55,4 +55,4 @@ namespace CabbyCodes.Types
             configEntry = entry;
         }
     }
-}
+} 

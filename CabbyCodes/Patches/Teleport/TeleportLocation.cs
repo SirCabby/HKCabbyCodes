@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace CabbyCodes.Types
+namespace CabbyCodes.Patches.Teleport
 {
     /// <summary>
     /// Represents a teleport location in the game with scene and position information.
@@ -40,4 +40,4 @@ namespace CabbyCodes.Types
             Location = location;
         }
     }
-}
+} 

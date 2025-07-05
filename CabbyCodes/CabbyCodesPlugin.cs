@@ -11,6 +11,7 @@ using CabbyCodes.Patches.Maps;
 using CabbyCodes.Patches.Player;
 using CabbyCodes.Patches.Charms;
 using CabbyCodes.Patches.Settings;
+using CabbyCodes.Patches.Teleport;
 using CabbyMenu.UI;
 using CabbyMenu.UI.Controls.InputField;
 

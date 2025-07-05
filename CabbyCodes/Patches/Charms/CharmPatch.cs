@@ -3,7 +3,7 @@ using CabbyMenu.UI.CheatPanels;
 using CabbyMenu.UI.Modders;
 using System.Collections.Generic;
 using UnityEngine;
-using CabbyCodes.Types;
+using CabbyCodes.Patches.Charms;
 
 namespace CabbyCodes.Patches.Charms
 {

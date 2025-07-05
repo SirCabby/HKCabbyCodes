@@ -1,4 +1,4 @@
-namespace CabbyCodes.Types
+namespace CabbyCodes.Patches.Charms
 {
     /// <summary>
     /// Represents a charm in the game with its properties and cost information.
@@ -32,4 +32,4 @@ namespace CabbyCodes.Types
             defaultCost = PlayerData.instance.GetInt("charmCost_" + index);
         }
     }
-}
+} 
