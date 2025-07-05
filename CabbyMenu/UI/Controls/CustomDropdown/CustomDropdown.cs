@@ -13,8 +13,8 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
         private const float OPTION_HEIGHT = 40f;
         private const float OPTION_MARGIN = 10f;
         private const float OPTION_GAP = 3f;
-        private const float DEFAULT_FONT_SIZE = 14f;
-        private const float FONT_SIZE_RATIO = 0.6f;
+        private const float DEFAULT_FONT_SIZE = 18f; // Increased from 14f
+        private const float FONT_SIZE_RATIO = 0.7f; // Increased from 0.6f for better proportion
         private const int MAX_VISIBLE_OPTIONS = 8;
         private const float SCROLLBAR_WIDTH = 10f;
         private const float MIN_DROPDOWN_WIDTH = 120f; // Minimum width for dropdown
@@ -35,6 +35,7 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
         private float mainButtonWidth = 200f;
         private float mainButtonHeight = 60f;
         private bool useDynamicSizing = true; // Enable dynamic sizing by default
+        private float dynamicOptionHeight = OPTION_HEIGHT; // Dynamic option height based on panel
 
         [Header("Custom Dropdown Settings")]
         [SerializeField] private Button mainButton;
@@ -79,6 +80,80 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
             if (enabled && options.Count > 0)
             {
                 UpdateDropdownWidth();
+            }
+        }
+
+        /// <summary>
+        /// Calculates the dynamic option height and font size based on the dropdown panel height.
+        /// </summary>
+        private void CalculateDynamicSizing()
+        {
+            if (dropdownPanel == null) return;
+
+            RectTransform panelRect = dropdownPanel.GetComponent<RectTransform>();
+            if (panelRect == null) return;
+
+            // Calculate available height for options (panel height minus margins)
+            float availableHeight = panelRect.sizeDelta.y - OPTION_MARGIN;
+            
+            // Calculate how many options can fit in the visible area
+            int visibleOptions = Mathf.Min(options.Count, MAX_VISIBLE_OPTIONS);
+            
+            if (visibleOptions > 0)
+            {
+                // Calculate dynamic option height based on available space
+                // Account for gaps between options
+                float totalGaps = (visibleOptions - 1) * OPTION_GAP;
+                float heightForOptions = availableHeight - totalGaps;
+                dynamicOptionHeight = heightForOptions / visibleOptions;
+                
+                // Ensure minimum height
+                dynamicOptionHeight = Mathf.Max(dynamicOptionHeight, 30f);
+            }
+            else
+            {
+                dynamicOptionHeight = OPTION_HEIGHT;
+            }
+        }
+
+        /// <summary>
+        /// Calculates the font size for option text based on the dynamic option height.
+        /// </summary>
+        /// <returns>The calculated font size</returns>
+        private int CalculateOptionFontSize()
+        {
+            // Use a ratio of the dynamic option height for font size
+            // Leave some padding for text margins
+            float fontHeightRatio = 0.6f; // Font height as ratio of option height
+            int fontSize = Mathf.RoundToInt(dynamicOptionHeight * fontHeightRatio);
+            
+            // Ensure reasonable bounds
+            fontSize = Mathf.Max(fontSize, 12);
+            fontSize = Mathf.Min(fontSize, 24);
+            
+            return fontSize;
+        }
+
+        /// <summary>
+        /// Updates the font size of all existing option text components.
+        /// </summary>
+        private void UpdateOptionTextFontSizes()
+        {
+            foreach (GameObject optionButton in optionButtons)
+            {
+                if (optionButton != null)
+                {
+                    // Find the text component within the option button
+                    Transform buttonTransform = optionButton.transform.Find($"Option_{optionButtons.IndexOf(optionButton)}");
+                    if (buttonTransform != null)
+                    {
+                        Text textComponent = buttonTransform.GetComponentInChildren<Text>();
+                        if (textComponent != null)
+                        {
+                            textComponent.fontSize = CalculateOptionFontSize();
+                        }
+                    }
+                }
             }
         }
 
@@ -167,7 +242,7 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
                         
                         if (buttonRect != null)
                         {
-                            buttonRect.sizeDelta = new Vector2(mainButtonWidth - 21f, OPTION_HEIGHT);
+                            buttonRect.sizeDelta = new Vector2(mainButtonWidth - 21f, dynamicOptionHeight);
                         }
                         
                         if (layoutElement != null)
@@ -805,8 +880,8 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
             // Configure parent panel - stretch across full width, same height as button
             parentPanelRect.anchorMin = new Vector2(0, 1);
             parentPanelRect.anchorMax = new Vector2(1, 1);
-            parentPanelRect.sizeDelta = new Vector2(0, OPTION_HEIGHT); // Stretch across width, fixed height
-            parentPanelRect.anchoredPosition = new Vector2(0, -topPadding - index * (OPTION_HEIGHT + OPTION_GAP));
+            parentPanelRect.sizeDelta = new Vector2(0, dynamicOptionHeight); // Use dynamic height
+            parentPanelRect.anchoredPosition = new Vector2(0, -topPadding - index * (dynamicOptionHeight + OPTION_GAP));
             parentPanelRect.pivot = new Vector2(0.5f, 1f); // Center X, Top Y
 
             // Configure parent panel image (transparent background)
@@ -849,8 +924,8 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
 
         private void ConfigureOptionLayoutElement(LayoutElement layoutElement)
         {
-            layoutElement.preferredHeight = OPTION_HEIGHT;
-            layoutElement.minHeight = OPTION_HEIGHT;
+            layoutElement.preferredHeight = dynamicOptionHeight;
+            layoutElement.minHeight = dynamicOptionHeight;
             layoutElement.flexibleWidth = 0f;
             layoutElement.minWidth = mainButtonWidth - 21f;
             layoutElement.preferredWidth = mainButtonWidth - 21f;
@@ -864,7 +939,7 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
             rectTransform.anchorMin = new Vector2(0, 0.5f); // Left, center Y
             rectTransform.anchorMax = new Vector2(0, 0.5f); // Left, center Y
             rectTransform.pivot = new Vector2(0, 0.5f); // Left, center Y
-            rectTransform.sizeDelta = new Vector2(mainButtonWidth - 21f, OPTION_HEIGHT);
+            rectTransform.sizeDelta = new Vector2(mainButtonWidth - 21f, dynamicOptionHeight);
             rectTransform.anchoredPosition = new Vector2(6f, 0); // Left-aligned with 6px padding
         }
 
@@ -883,7 +958,7 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
 
             optionText.text = text;
             optionText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-            optionText.fontSize = (int)DEFAULT_FONT_SIZE;
+            optionText.fontSize = CalculateOptionFontSize();
             optionText.color = Color.black;
             optionText.alignment = TextAnchor.MiddleCenter;
         }
@@ -910,11 +985,11 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
                                 // Configure parent panel to stretch across content width
                                 parentPanelRect.anchorMin = new Vector2(0, 1);
                                 parentPanelRect.anchorMax = new Vector2(1, 1);
-                                parentPanelRect.sizeDelta = new Vector2(0, OPTION_HEIGHT); // Stretch across width, fixed height
+                                parentPanelRect.sizeDelta = new Vector2(0, dynamicOptionHeight); // Use dynamic height
 
                                 // Position parent panels sequentially from top to bottom with gap
                                 // Start from top with padding, then position each element downward with gaps between them
-                                parentPanelRect.anchoredPosition = new Vector2(0, -topPadding - i * (OPTION_HEIGHT + OPTION_GAP));
+                                parentPanelRect.anchoredPosition = new Vector2(0, -topPadding - i * (dynamicOptionHeight + OPTION_GAP));
 
                             }
 
@@ -935,7 +1010,7 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
                                     buttonRect.anchorMin = new Vector2(0, 0.5f); // Left, center Y
                                     buttonRect.anchorMax = new Vector2(0, 0.5f); // Left, center Y
                                     buttonRect.pivot = new Vector2(0, 0.5f); // Left, center Y
-                                    buttonRect.sizeDelta = new Vector2(mainButtonWidth - 21f, OPTION_HEIGHT);
+                                    buttonRect.sizeDelta = new Vector2(mainButtonWidth - 21f, dynamicOptionHeight);
                                     buttonRect.anchoredPosition = new Vector2(6f, 0); // Left-aligned with 6px padding
 
                                 }
@@ -1046,7 +1121,7 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
 
             // Calculate panel height to match visible content height
             // Use MAX_VISIBLE_OPTIONS to limit panel height, but content will be sized for all options
-            float panelHeight = Mathf.Min(options.Count, MAX_VISIBLE_OPTIONS) * OPTION_HEIGHT +
+            float panelHeight = Mathf.Min(options.Count, MAX_VISIBLE_OPTIONS) * dynamicOptionHeight +
                                Mathf.Min(options.Count - 1, MAX_VISIBLE_OPTIONS - 1) * OPTION_GAP +
                                OPTION_MARGIN;
 
@@ -1087,9 +1162,15 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
 
             VerifyScrollRectConnections();
 
+            // Calculate dynamic sizing before configuring content and options
+            CalculateDynamicSizing();
+
             ConfigureContentSizing();
 
             ConfigureOptionButtons();
+
+            // Update font sizes for existing option text components
+            UpdateOptionTextFontSizes();
 
             ResetScrollPosition();
 
@@ -1241,7 +1322,7 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
                 // Calculate content size based on ALL options, not just visible ones
                 // This ensures scrolling works when there are more options than can fit
                 // Include top and bottom padding (OPTION_MARGIN) to match the panel height calculation
-                float contentHeight = OPTION_MARGIN + options.Count * OPTION_HEIGHT + (options.Count - 1) * OPTION_GAP;
+                float contentHeight = OPTION_MARGIN + options.Count * dynamicOptionHeight + (options.Count - 1) * OPTION_GAP;
 
                 // Configure content to stretch across viewport width and position at top
                 contentRect.anchorMin = new Vector2(0, 1);
