@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using CabbyMenu.SyncedReferences;
@@ -50,6 +51,13 @@ namespace CabbyMenu.UI.Controls.InputField
             Text textComponent = textTransform.GetComponent<Text>();
             new TextMod(textComponent).SetFontStyle(FontStyle.Bold).SetFontSize(Constants.DEFAULT_FONT_SIZE).SetAlignment(TextAnchor.MiddleLeft);
             
+            // Add border to the input field
+            CreateInputFieldBorder();
+            CreateInputFieldBackground();
+
+            // Ensure proper z-order: border (back) -> background (middle) -> input field content (front)
+            EnsureProperInputFieldZOrder();
+
             // Calculate maxVisibleCharacters based on input field width and font size
             int maxVisibleCharacters = CalculateMaxVisibleCharacters(size.x, Constants.DEFAULT_FONT_SIZE);
 
@@ -218,6 +226,23 @@ namespace CabbyMenu.UI.Controls.InputField
             // Set color after focus change
             Image imageComponent = inputFieldGo.GetComponent<Image>();
             imageComponent.color = isSelected ? selectedColor : Color.white;
+
+            // Update background color to match
+            Transform backgroundTransform = inputFieldGo.transform.Find("InputFieldBackground");
+            if (backgroundTransform != null)
+            {
+                Image backgroundImage = backgroundTransform.GetComponent<Image>();
+                if (backgroundImage != null)
+                {
+                    backgroundImage.color = isSelected ? selectedColor : Color.white;
+                }
+            }
+
+            // Ensure cursor is brought to front when selected
+            if (isSelected && inputFieldStatus != null)
+            {
+                inputFieldStatus.EnsureCursorIsOnTop();
+            }
         }
 
         public T Get()
@@ -252,6 +277,136 @@ namespace CabbyMenu.UI.Controls.InputField
         protected static float CalculateCursorCharacterWidth(int fontSize)
         {
             return fontSize * 0.65f;
+        }
+
+        /// <summary>
+        /// Creates a border around the input field.
+        /// </summary>
+        private void CreateInputFieldBorder()
+        {
+            // Create border GameObject as a child of the input field
+            GameObject borderObj = new GameObject("InputFieldBorder");
+            borderObj.transform.SetParent(inputFieldGo.transform, false);
+
+            // Add RectTransform and Image components for the border
+            RectTransform borderRect = borderObj.AddComponent<RectTransform>();
+            Image borderImage = borderObj.AddComponent<Image>();
+
+            // Configure border rect transform to be slightly larger than the input field
+            borderRect.anchorMin = Vector2.zero;
+            borderRect.anchorMax = Vector2.one;
+            borderRect.sizeDelta = new Vector2(4f, 4f); // 2px border on each side (2px * 2 = 4px total)
+            borderRect.anchoredPosition = Vector2.zero;
+
+            // Configure border image
+            borderImage.color = Color.black; // Black border
+            borderImage.sprite = CreateBorderSprite();
+
+            // Ensure border is behind the input field image
+            // Set border as first sibling so it renders behind the input field image
+            borderObj.transform.SetAsFirstSibling();
+        }
+
+
+
+        /// <summary>
+        /// Creates a background for the input field that's smaller than the border.
+        /// </summary>
+        private void CreateInputFieldBackground()
+        {
+            // Create background GameObject as a child of the input field
+            GameObject backgroundObj = new GameObject("InputFieldBackground");
+            backgroundObj.transform.SetParent(inputFieldGo.transform, false);
+
+            // Add RectTransform and Image components for the background
+            RectTransform backgroundRect = backgroundObj.AddComponent<RectTransform>();
+            Image backgroundImage = backgroundObj.AddComponent<Image>();
+
+            // Configure background rect transform to be slightly smaller than the input field
+            backgroundRect.anchorMin = Vector2.zero;
+            backgroundRect.anchorMax = Vector2.one;
+            backgroundRect.sizeDelta = new Vector2(-4f, -4f); // 2px smaller on each side
+            backgroundRect.anchoredPosition = Vector2.zero;
+
+            // Configure background image
+            backgroundImage.color = Color.white; // White background (default input field color)
+            backgroundImage.sprite = CreateBorderSprite(); // Use same sprite as border
+        }
+
+        /// <summary>
+        /// Ensures proper z-order for input field components.
+        /// </summary>
+        private void EnsureProperInputFieldZOrder()
+        {
+            // Find the border GameObject
+            Transform borderTransform = inputFieldGo.transform.Find("InputFieldBorder");
+            
+            // Find the background GameObject
+            Transform backgroundTransform = inputFieldGo.transform.Find("InputFieldBackground");
+            
+            // Ensure proper z-order: border (back) -> background (middle) -> input field content (front)
+            if (borderTransform != null)
+            {
+                // Set border to be first (renders in back)
+                borderTransform.SetAsFirstSibling();
+            }
+            
+            // Set background in the middle (after border but before content)
+            if (backgroundTransform != null)
+            {
+                // Move background to be after border but before all other content
+                backgroundTransform.SetSiblingIndex(1);
+            }
+
+            // Preserve the original Unity InputField child order
+            // Unity InputField has specific child elements that need to maintain their relative order
+            // The cursor is managed internally by Unity and needs to be on top
+            
+            // Move all Unity-created children to the top while preserving their relative order
+            List<Transform> unityChildren = new List<Transform>();
+            
+            // Collect all Unity-created children (excluding our border and background)
+            for (int i = 0; i < inputFieldGo.transform.childCount; i++)
+            {
+                Transform child = inputFieldGo.transform.GetChild(i);
+                if (child.name != "InputFieldBorder" && child.name != "InputFieldBackground")
+                {
+                    unityChildren.Add(child);
+                }
+            }
+            
+            // Move all Unity children to the top in their original order
+            foreach (Transform child in unityChildren)
+            {
+                child.SetAsLastSibling();
+            }
+        }
+
+
+
+        /// <summary>
+        /// Creates a simple border sprite using a white square texture.
+        /// </summary>
+        /// <returns>The created border sprite.</returns>
+        private Sprite CreateBorderSprite()
+        {
+            // Create a simple border sprite using a white square texture
+            Texture2D borderTexture = new Texture2D(4, 4, TextureFormat.RGBA32, false);
+            
+            // Fill with white pixels
+            Color[] pixels = new Color[16];
+            for (int i = 0; i < 16; i++)
+            {
+                pixels[i] = Color.white; // White pixels for the border
+            }
+            
+            borderTexture.SetPixels(pixels);
+            borderTexture.Apply();
+            
+            // Create sprite from texture
+            Sprite borderSprite = Sprite.Create(borderTexture, new Rect(0, 0, 4, 4), new Vector2(0.5f, 0.5f));
+            
+            return borderSprite;
         }
     }
 } 

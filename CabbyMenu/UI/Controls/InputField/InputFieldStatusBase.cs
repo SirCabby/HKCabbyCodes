@@ -74,5 +74,55 @@ namespace CabbyMenu.UI.Controls.InputField
             }
             return null;
         }
+        
+        /// <summary>
+        /// Ensures the cursor is brought to the front when the input field is selected.
+        /// </summary>
+        public void EnsureCursorIsOnTop()
+        {
+            if (InputFieldGo == null) return;
+            
+            // Unity's InputField cursor is typically a child GameObject that gets created when the input field is activated
+            // We need to find it and ensure it's rendered on top of other UI elements
+            
+            // Look for Unity's cursor GameObject - it's typically named "Caret" or similar
+            Transform caretTransform = InputFieldGo.transform.Find("Caret");
+            if (caretTransform != null)
+            {
+                // Move the caret to the very front
+                caretTransform.SetAsLastSibling();
+                
+                // Also ensure the caret's Canvas component has the highest sorting order if it exists
+                Canvas caretCanvas = caretTransform.GetComponent<Canvas>();
+                if (caretCanvas != null)
+                {
+                    caretCanvas.sortingOrder = 32767; // Maximum sorting order
+                }
+            }
+            
+            // Also check for any child with "caret" in the name (case insensitive)
+            for (int i = 0; i < InputFieldGo.transform.childCount; i++)
+            {
+                Transform child = InputFieldGo.transform.GetChild(i);
+                if (child.name.ToLowerInvariant().Contains("caret"))
+                {
+                    child.SetAsLastSibling();
+                    
+                    // Ensure the caret's Canvas component has the highest sorting order if it exists
+                    Canvas childCanvas = child.GetComponent<Canvas>();
+                    if (childCanvas != null)
+                    {
+                        childCanvas.sortingOrder = 32767; // Maximum sorting order
+                    }
+                }
+            }
+            
+            // Force the input field to update its rendering order
+            Canvas inputFieldCanvas = InputFieldGo.GetComponent<Canvas>();
+            if (inputFieldCanvas != null)
+            {
+                inputFieldCanvas.sortingOrder = 32766; // High sorting order, just below caret
+            }
+        }
     }
 } 

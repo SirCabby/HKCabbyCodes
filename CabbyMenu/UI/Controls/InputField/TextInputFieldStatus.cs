@@ -32,6 +32,8 @@ namespace CabbyMenu.UI.Controls.InputField
                 if (selected)
                 {
                     pendingFirstClickCaret = true;
+                    // Ensure cursor is on top when selected
+                    EnsureCursorIsOnTop();
                 }
                 else
                 {
@@ -205,6 +207,9 @@ namespace CabbyMenu.UI.Controls.InputField
                 inputField.selectionFocusPosition = -1;
                 inputField.ForceLabelUpdate();
                 UpdateUnityCursorPosition();
+                
+                // Ensure cursor is on top after forcing update
+                EnsureCursorIsOnTop();
             }
         }
 
@@ -278,6 +283,9 @@ namespace CabbyMenu.UI.Controls.InputField
             UpdateDisplayText();
             UpdateHorizontalOffsetForCursor();
             ForceCursorBlinkReset();
+            
+            // Ensure cursor is on top after syncing from Unity
+            EnsureCursorIsOnTop();
         }
         
 
@@ -316,7 +324,6 @@ namespace CabbyMenu.UI.Controls.InputField
         }
 
         public override Utilities.KeyCodeMap.ValidChars ValidChars => Utilities.KeyCodeMap.ValidChars.AlphaNumeric;
-        
 
     }
 } 
