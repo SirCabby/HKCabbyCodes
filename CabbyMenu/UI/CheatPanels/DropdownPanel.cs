@@ -14,7 +14,7 @@ namespace CabbyMenu.UI.CheatPanels
         private readonly DropDownSync dropdown;
         private readonly GameObject dropdownPanel;
 
-        public DropdownPanel(ISyncedValueList syncedValueReference, string description) : base(description)
+        public DropdownPanel(ISyncedValueList syncedValueReference, string description, float height) : base(description)
         {
             dropdownPanel = DefaultControls.CreatePanel(new DefaultControls.Resources());
             dropdownPanel.name = "Dropdown Panel";
@@ -27,6 +27,7 @@ namespace CabbyMenu.UI.CheatPanels
             dropdownPanelLayout.flexibleHeight = Constants.FLEXIBLE_LAYOUT_VALUE;
             // Let the dropdown determine its own width dynamically
             dropdownPanelLayout.flexibleWidth = 0f;
+            dropdownPanelLayout.preferredHeight = height;
             dropdownPanelLayout.minWidth = Constants.MIN_PANEL_WIDTH;
 
             // Create dropdown using the new API
@@ -38,7 +39,7 @@ namespace CabbyMenu.UI.CheatPanels
             dropdown.SetOptions(syncedValueReference.GetValueList());
             
             // Set height only (width will be calculated dynamically)
-            dropdown.SetSize(Constants.MIN_PANEL_WIDTH, Constants.DEFAULT_PANEL_HEIGHT);
+            dropdown.SetSize(0f, height);
             
             var customDropdown = dropdown.GetCustomDropdown();
             customDropdown.SetFontSize(Constants.DEFAULT_FONT_SIZE);
@@ -46,6 +47,9 @@ namespace CabbyMenu.UI.CheatPanels
 
             new Fitter(dropdownGameObject).Attach(dropdownPanel).Anchor(leftMiddleMinAnchor, leftMiddleMinAnchor);
             dropdown.Update();
+            
+            // Force width recalculation to ensure dynamic sizing is applied
+            customDropdown.ForceWidthRecalculation();
             
             // Update the dropdown panel width to match the dynamically calculated dropdown width
             UpdateDropdownPanelWidth();
@@ -65,11 +69,18 @@ namespace CabbyMenu.UI.CheatPanels
                 {
                     float dropdownWidth = dropdownRect.sizeDelta.x;
                     
+                    // Ensure we have a reasonable width (at least the minimum)
+                    if (dropdownWidth < Constants.MIN_PANEL_WIDTH)
+                    {
+                        dropdownWidth = Constants.MIN_PANEL_WIDTH;
+                    }
+                    
                     // Update the dropdown panel's preferred width to match the actual dropdown width
                     LayoutElement dropdownPanelLayout = dropdownPanel.GetComponent<LayoutElement>();
                     if (dropdownPanelLayout != null)
                     {
                         dropdownPanelLayout.preferredWidth = dropdownWidth;
+                        dropdownPanelLayout.minWidth = dropdownWidth;
                     }
                     
                     // Force layout rebuild to apply the new width

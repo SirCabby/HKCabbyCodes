@@ -50,7 +50,7 @@ namespace CabbyCodes.Patches.Inventory.Abilities
         public static void AddPanel()
         {
             MothwingCloakPatch patch = new MothwingCloakPatch();
-            DropdownPanel dropdownPanel = new DropdownPanel(patch, "Mothwing Cloak / Shade Cloak");
+            DropdownPanel dropdownPanel = new DropdownPanel(patch, "Mothwing Cloak / Shade Cloak", Constants.DEFAULT_PANEL_HEIGHT);
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(dropdownPanel);
         }
     }

@@ -274,7 +274,7 @@ namespace CabbyCodes.Patches
         /// </summary>
         private static void AddPanel()
         {
-            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new DropdownPanel(new TeleportPatch(), "Select Area to Teleport"));
+                            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new DropdownPanel(new TeleportPatch(), "Select Area to Teleport", Constants.DEFAULT_PANEL_HEIGHT));
         }
 
         /// <summary>

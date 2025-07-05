@@ -27,7 +27,7 @@ namespace CabbyCodes.Patches.Inventory.Spells
         public static void AddPanel()
         {
             VengefulSpiritPatch patch = new VengefulSpiritPatch();
-            DropdownPanel dropdownPanel = new DropdownPanel(patch, "Vengeful Spirit / Shade Soul");
+            DropdownPanel dropdownPanel = new DropdownPanel(patch, "Vengeful Spirit / Shade Soul", Constants.DEFAULT_PANEL_HEIGHT);
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(dropdownPanel);
         }
     }

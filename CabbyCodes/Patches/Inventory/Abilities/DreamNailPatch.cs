@@ -50,7 +50,7 @@ namespace CabbyCodes.Patches.Inventory.Abilities
         public static void AddPanel()
         {
             DreamNailPatch patch = new DreamNailPatch();
-            DropdownPanel dropdownPanel = new DropdownPanel(patch, "Dream Nail / Awoken Dream Nail");
+            DropdownPanel dropdownPanel = new DropdownPanel(patch, "Dream Nail / Awoken Dream Nail", Constants.DEFAULT_PANEL_HEIGHT);
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(dropdownPanel);
         }
     }

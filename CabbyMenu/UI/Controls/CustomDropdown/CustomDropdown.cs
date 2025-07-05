@@ -32,8 +32,8 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
         }
 
         // Instance variables for customizable size
-        private float mainButtonWidth = 200f;
-        private float mainButtonHeight = 60f;
+        private float mainButtonWidth = MIN_DROPDOWN_WIDTH; // Start with minimum width, will be calculated dynamically
+        private float mainButtonHeight = 0f; // Set by SetSize method
         private bool useDynamicSizing = true; // Enable dynamic sizing by default
         private float dynamicOptionHeight = OPTION_HEIGHT; // Dynamic option height based on panel
 
@@ -84,7 +84,32 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
         }
 
         /// <summary>
+        /// Sets the option height based on the main button height and recalculates dynamic sizing.
+        /// </summary>
+        /// <param name="buttonHeight">The height of the main button</param>
+        public void SetOptionHeightFromButtonHeight(float buttonHeight)
+        {
+            mainButtonHeight = buttonHeight;
+            
+            // Calculate option height based on button height
+            // Use a ratio of the button height for option height
+            float optionHeightRatio = 0.8f; // Option height as ratio of button height
+            dynamicOptionHeight = buttonHeight * optionHeightRatio;
+            
+            // Ensure minimum height
+            dynamicOptionHeight = Mathf.Max(dynamicOptionHeight, 30f);
+            
+            // Update existing option buttons if they exist
+            if (optionButtons.Count > 0)
+            {
+                UpdateOptionButtonHeights();
+                UpdateOptionTextFontSizes();
+            }
+        }
+
+        /// <summary>
         /// Calculates the dynamic option height and font size based on the dropdown panel height.
+        /// Only used when option height hasn't been explicitly set via SetOptionHeightFromButtonHeight.
         /// </summary>
         private void CalculateDynamicSizing()
         {
@@ -93,26 +118,30 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
             RectTransform panelRect = dropdownPanel.GetComponent<RectTransform>();
             if (panelRect == null) return;
 
-            // Calculate available height for options (panel height minus margins)
-            float availableHeight = panelRect.sizeDelta.y - OPTION_MARGIN;
-            
-            // Calculate how many options can fit in the visible area
-            int visibleOptions = Mathf.Min(options.Count, MAX_VISIBLE_OPTIONS);
-            
-            if (visibleOptions > 0)
+            // Only calculate dynamic sizing if mainButtonHeight hasn't been set yet
+            if (mainButtonHeight <= 0f)
             {
-                // Calculate dynamic option height based on available space
-                // Account for gaps between options
-                float totalGaps = (visibleOptions - 1) * OPTION_GAP;
-                float heightForOptions = availableHeight - totalGaps;
-                dynamicOptionHeight = heightForOptions / visibleOptions;
+                // Calculate available height for options (panel height minus margins)
+                float availableHeight = panelRect.sizeDelta.y - OPTION_MARGIN;
                 
-                // Ensure minimum height
-                dynamicOptionHeight = Mathf.Max(dynamicOptionHeight, 30f);
-            }
-            else
-            {
-                dynamicOptionHeight = OPTION_HEIGHT;
+                // Calculate how many options can fit in the visible area
+                int visibleOptions = Mathf.Min(options.Count, MAX_VISIBLE_OPTIONS);
+                
+                if (visibleOptions > 0)
+                {
+                    // Calculate dynamic option height based on available space
+                    // Account for gaps between options
+                    float totalGaps = (visibleOptions - 1) * OPTION_GAP;
+                    float heightForOptions = availableHeight - totalGaps;
+                    dynamicOptionHeight = heightForOptions / visibleOptions;
+                    
+                    // Ensure minimum height
+                    dynamicOptionHeight = Mathf.Max(dynamicOptionHeight, 30f);
+                }
+                else
+                {
+                    dynamicOptionHeight = OPTION_HEIGHT;
+                }
             }
         }
 
@@ -132,6 +161,37 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
             fontSize = Mathf.Min(fontSize, 24);
             
             return fontSize;
+        }
+
+        /// <summary>
+        /// Updates the height of all existing option buttons.
+        /// </summary>
+        private void UpdateOptionButtonHeights()
+        {
+            foreach (GameObject optionButton in optionButtons)
+            {
+                if (optionButton != null)
+                {
+                    // Find the actual button within the parent panel
+                    Transform buttonTransform = optionButton.transform.Find($"Option_{optionButtons.IndexOf(optionButton)}");
+                    if (buttonTransform != null)
+                    {
+                        RectTransform buttonRect = buttonTransform.GetComponent<RectTransform>();
+                        LayoutElement layoutElement = buttonTransform.GetComponent<LayoutElement>();
+                        
+                        if (buttonRect != null)
+                        {
+                            buttonRect.sizeDelta = new Vector2(buttonRect.sizeDelta.x, dynamicOptionHeight);
+                        }
+                        
+                        if (layoutElement != null)
+                        {
+                            layoutElement.minHeight = dynamicOptionHeight;
+                            layoutElement.preferredHeight = dynamicOptionHeight;
+                        }
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -221,6 +281,19 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
                 {
                     RectTransform textRect = mainButtonText.GetComponent<RectTransform>();
                 }
+            }
+        }
+
+        /// <summary>
+        /// Forces a recalculation of the dropdown width based on current options.
+        /// </summary>
+        public void ForceWidthRecalculation()
+        {
+            if (useDynamicSizing && options.Count > 0)
+            {
+                UpdateDropdownWidth();
+                // Force layout update to ensure changes are applied
+                LayoutRebuilder.ForceRebuildLayoutImmediate(GetComponent<RectTransform>());
             }
         }
 
@@ -1458,14 +1531,18 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
         public void SetSize(float width) { SetSize(width, mainButtonHeight); }
         public void SetSize(float width, float height)
         {
-            // If dynamic sizing is enabled, only allow height changes
+            // If dynamic sizing is enabled, only allow height changes and preserve calculated width
             if (useDynamicSizing)
             {
+                // Only set height when dynamic sizing is enabled
+                // Don't override the dynamically calculated width
+                SetOptionHeightFromButtonHeight(height);
             }
             else
             {
                 mainButtonWidth = width;
                 mainButtonHeight = height;
+                SetOptionHeightFromButtonHeight(height);
             }
 
             // Update the main button layout
