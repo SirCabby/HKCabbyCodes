@@ -10,6 +10,8 @@ using CabbyMenu.Utilities;
 
 namespace CabbyCodes.Patches.Settings
 {
+
+
     /// <summary>
     /// Handles quick start settings including intro skip and automatic save loading.
     /// </summary>
@@ -110,20 +112,13 @@ namespace CabbyCodes.Patches.Settings
         /// </summary>
         public static void AddPanel()
         {
-            // Add toggle for quick start
-            TogglePanel quickStartToggle = new TogglePanel(new QuickStartPatch(), "Enable Quick Start");
-            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(quickStartToggle);
-
-            // Add input field for save slot
-            RangeInputFieldPanel<int> saveSlotPanel = new RangeInputFieldPanel<int>(
-                new SaveSlotReference(), 
-                KeyCodeMap.ValidChars.Numeric, 
-                1, 4, "Save Slot (1-4)");
-            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(saveSlotPanel);
-
             // Add toggle for skipping intro screens
             TogglePanel skipIntroToggle = new TogglePanel(new SkipIntroReference(), "Skip Intro Screens");
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(skipIntroToggle);
+
+            // Add combined quick load panel with toggle and save slot input
+            QuickLoadPanel quickLoadPanel = new QuickLoadPanel(new QuickStartPatch(), new SaveSlotReference(), "Enable Quick Load");
+            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(quickLoadPanel);
         }
 
         /// <summary>
