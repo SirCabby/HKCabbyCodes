@@ -1262,6 +1262,8 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
 
             EnsureProperZOrder();
 
+            // Log dropdown position and bounds after everything is configured
+            LogDropdownPositionAndBounds();
         }
 
         private void ConfigurePanelComponents()
@@ -1273,6 +1275,199 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
                 panelImage.enabled = true;
                 panelImage.color = Constants.DROPDOWN_PANEL_BACKGROUND;
             }
+        }
+
+        /// <summary>
+        /// Logs the absolute screen position and bounds of the dropdown listview.
+        /// This method provides detailed information about the dropdown's position within the game screen.
+        /// </summary>
+        private void LogDropdownPositionAndBounds()
+        {
+            if (dropdownPanel == null)
+            {
+                Debug.LogWarning("Dropdown panel is null, cannot log position and bounds");
+                return;
+            }
+
+            // Log screen dimensions
+            Vector2 screenSize = new Vector2(Screen.width, Screen.height);
+            Debug.Log($"[Dropdown Position Log] Screen dimensions: {screenSize.x} x {screenSize.y} pixels");
+
+            // Get dropdown panel RectTransform
+            RectTransform panelRect = dropdownPanel.GetComponent<RectTransform>();
+            if (panelRect == null)
+            {
+                Debug.LogWarning("Dropdown panel RectTransform is null");
+                return;
+            }
+
+            // Get the Canvas that contains this dropdown
+            Canvas parentCanvas = dropdownPanel.GetComponentInParent<Canvas>();
+            if (parentCanvas == null)
+            {
+                Debug.LogWarning("No parent Canvas found for dropdown panel");
+                return;
+            }
+
+            // Log Canvas information
+            Debug.Log($"[Dropdown Position Log] Canvas render mode: {parentCanvas.renderMode}");
+            Debug.Log($"[Dropdown Position Log] Canvas scale factor: {parentCanvas.scaleFactor}");
+            Debug.Log($"[Dropdown Position Log] Canvas reference pixels per unit: {parentCanvas.referencePixelsPerUnit}");
+
+            // Get the dropdown panel's world position
+            Vector3 panelWorldPosition = panelRect.position;
+            Debug.Log($"[Dropdown Position Log] Panel world position: {panelWorldPosition}");
+
+            // Try multiple coordinate conversion methods
+            Vector3 panelScreenPosition1 = Vector3.zero;
+            Vector3 panelScreenPosition2 = Vector3.zero;
+            Vector3 panelScreenPosition3 = Vector3.zero;
+
+            // Method 1: Using Camera.main.WorldToScreenPoint
+            Camera mainCamera = Camera.main;
+            if (mainCamera != null)
+            {
+                panelScreenPosition1 = mainCamera.WorldToScreenPoint(panelWorldPosition);
+                Debug.Log($"[Dropdown Position Log] Panel screen position (Camera.main): {panelScreenPosition1}");
+            }
+
+            // Method 2: Using RectTransformUtility.WorldToScreenPoint with null camera (for UI)
+            panelScreenPosition2 = RectTransformUtility.WorldToScreenPoint(null, panelWorldPosition);
+            Debug.Log($"[Dropdown Position Log] Panel screen position (RectTransformUtility): {panelScreenPosition2}");
+
+            // Method 3: Using Canvas camera if available
+            if (parentCanvas.worldCamera != null)
+            {
+                panelScreenPosition3 = parentCanvas.worldCamera.WorldToScreenPoint(panelWorldPosition);
+                Debug.Log($"[Dropdown Position Log] Panel screen position (Canvas camera): {panelScreenPosition3}");
+            }
+
+            // Get accurate screen bounds using RectTransformUtility
+            Rect panelScreenRect = GetAccurateScreenRect(panelRect, parentCanvas);
+            Debug.Log($"[Dropdown Position Log] ===== PANEL (Background Container) =====");
+            Debug.Log($"[Dropdown Position Log] Panel screen bounds: X={panelScreenRect.x}, Y={panelScreenRect.y}, Width={panelScreenRect.width}, Height={panelScreenRect.height}");
+            Debug.Log($"[Dropdown Position Log] Panel bounds - Top: {panelScreenRect.y + panelScreenRect.height}, Bottom: {panelScreenRect.y}");
+            Debug.Log($"[Dropdown Position Log] Panel role: Main background container with color, holds entire dropdown");
+
+            // Also log the viewport bounds if available
+            if (viewport != null)
+            {
+                RectTransform viewportRect = viewport.GetComponent<RectTransform>();
+                if (viewportRect != null)
+                {
+                    Rect viewportScreenRect = GetAccurateScreenRect(viewportRect, parentCanvas);
+                    Debug.Log($"[Dropdown Position Log] ===== VIEWPORT (Visible Area Clipper) =====");
+                    Debug.Log($"[Dropdown Position Log] Viewport screen bounds: X={viewportScreenRect.x}, Y={viewportScreenRect.y}, Width={viewportScreenRect.width}, Height={viewportScreenRect.height}");
+                    Debug.Log($"[Dropdown Position Log] Viewport bounds - Top: {viewportScreenRect.y + viewportScreenRect.height}, Bottom: {viewportScreenRect.y}");
+                    Debug.Log($"[Dropdown Position Log] Viewport role: 'Window' that shows only visible portion of content");
+                }
+            }
+
+            // Log content bounds if available
+            if (content != null)
+            {
+                RectTransform contentRect = content.GetComponent<RectTransform>();
+                if (contentRect != null)
+                {
+                    Rect contentScreenRect = GetAccurateScreenRect(contentRect, parentCanvas);
+                    Debug.Log($"[Dropdown Position Log] ===== CONTENT (Scrollable Area) =====");
+                    Debug.Log($"[Dropdown Position Log] Content screen bounds: X={contentScreenRect.x}, Y={contentScreenRect.y}, Width={contentScreenRect.width}, Height={contentScreenRect.height}");
+                    Debug.Log($"[Dropdown Position Log] Content bounds - Top: {contentScreenRect.y + contentScreenRect.height}, Bottom: {contentScreenRect.y}");
+                    Debug.Log($"[Dropdown Position Log] Content role: Contains all option buttons, extends beyond viewport if many options");
+                    
+                    // Log content vs viewport size comparison
+                    if (viewport != null)
+                    {
+                        RectTransform viewportRect = viewport.GetComponent<RectTransform>();
+                        if (viewportRect != null)
+                        {
+                            Rect viewportScreenRect = GetAccurateScreenRect(viewportRect, parentCanvas);
+                            float contentHeight = contentScreenRect.height;
+                            float viewportHeight = viewportScreenRect.height;
+                            Debug.Log($"[Dropdown Position Log] Content height: {contentHeight}, Viewport height: {viewportHeight}");
+                            if (contentHeight > viewportHeight)
+                            {
+                                Debug.Log($"[Dropdown Position Log] Content is scrollable (content height > viewport height)");
+                            }
+                            else
+                            {
+                                Debug.Log($"[Dropdown Position Log] Content fits within viewport (no scrolling needed)");
+                            }
+                        }
+                    }
+                }
+            }
+
+            // Log component hierarchy summary
+            Debug.Log($"[Dropdown Position Log] ===== COMPONENT HIERARCHY =====");
+            Debug.Log($"[Dropdown Position Log] Panel (Background) -> ScrollView -> Viewport (Clipper) -> Content (Scrollable)");
+            Debug.Log($"[Dropdown Position Log] Panel: Background container with color");
+            Debug.Log($"[Dropdown Position Log] Viewport: Masks/clips content to show only visible portion");
+            Debug.Log($"[Dropdown Position Log] Content: Contains all options, can be larger than viewport");
+        }
+
+        /// <summary>
+        /// Gets the screen rect for a RectTransform, converting from world space to screen space.
+        /// </summary>
+        /// <param name="rectTransform">The RectTransform to get bounds for</param>
+        /// <param name="camera">The camera to use for conversion (can be null)</param>
+        /// <returns>The screen rect in pixels</returns>
+        private Rect GetScreenRect(RectTransform rectTransform, Camera camera)
+        {
+            if (rectTransform == null) return new Rect();
+
+            // Get the four corners of the RectTransform in world space
+            Vector3[] corners = new Vector3[4];
+            rectTransform.GetWorldCorners(corners);
+
+            // Convert corners to screen space
+            Vector3[] screenCorners = new Vector3[4];
+            for (int i = 0; i < 4; i++)
+            {
+                screenCorners[i] = camera != null ? 
+                    camera.WorldToScreenPoint(corners[i]) : 
+                    corners[i];
+            }
+
+            // Calculate the bounding rect
+            float minX = Mathf.Min(screenCorners[0].x, screenCorners[1].x, screenCorners[2].x, screenCorners[3].x);
+            float maxX = Mathf.Max(screenCorners[0].x, screenCorners[1].x, screenCorners[2].x, screenCorners[3].x);
+            float minY = Mathf.Min(screenCorners[0].y, screenCorners[1].y, screenCorners[2].y, screenCorners[3].y);
+            float maxY = Mathf.Max(screenCorners[0].y, screenCorners[1].y, screenCorners[2].y, screenCorners[3].y);
+
+            return new Rect(minX, minY, maxX - minX, maxY - minY);
+        }
+
+        /// <summary>
+        /// Gets accurate screen rect for UI elements using RectTransformUtility.
+        /// This method properly handles Canvas scaling and different render modes.
+        /// </summary>
+        /// <param name="rectTransform">The RectTransform to get bounds for</param>
+        /// <param name="canvas">The Canvas that contains the RectTransform</param>
+        /// <returns>The screen rect in pixels</returns>
+        private Rect GetAccurateScreenRect(RectTransform rectTransform, Canvas canvas)
+        {
+            if (rectTransform == null || canvas == null) return new Rect();
+
+            // Get the four corners of the RectTransform in world space
+            Vector3[] corners = new Vector3[4];
+            rectTransform.GetWorldCorners(corners);
+
+            // Convert corners to screen space using RectTransformUtility (proper for UI)
+            Vector3[] screenCorners = new Vector3[4];
+            for (int i = 0; i < 4; i++)
+            {
+                // Use RectTransformUtility.WorldToScreenPoint with null camera for UI elements
+                screenCorners[i] = RectTransformUtility.WorldToScreenPoint(null, corners[i]);
+            }
+
+            // Calculate the bounding rect
+            float minX = Mathf.Min(screenCorners[0].x, screenCorners[1].x, screenCorners[2].x, screenCorners[3].x);
+            float maxX = Mathf.Max(screenCorners[0].x, screenCorners[1].x, screenCorners[2].x, screenCorners[3].x);
+            float minY = Mathf.Min(screenCorners[0].y, screenCorners[1].y, screenCorners[2].y, screenCorners[3].y);
+            float maxY = Mathf.Max(screenCorners[0].y, screenCorners[1].y, screenCorners[2].y, screenCorners[3].y);
+
+            return new Rect(minX, minY, maxX - minX, maxY - minY);
         }
 
         private void ConfigureScrollViewComponents()
