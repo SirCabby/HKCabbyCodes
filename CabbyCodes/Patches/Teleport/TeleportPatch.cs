@@ -32,6 +32,16 @@ namespace CabbyCodes.Patches.Teleport
         private static readonly FieldInfo heroFieldInfo = typeof(GameMap).GetField("hero", BindingFlags.NonPublic | BindingFlags.Instance);
 
         /// <summary>
+        /// Synced reference for the custom teleport name input field.
+        /// </summary>
+        private static readonly CustomTeleportNameReference customTeleportNameRef = new CustomTeleportNameReference();
+
+        /// <summary>
+        /// Reference to the custom name input field panel for forcing updates.
+        /// </summary>
+        private static CabbyMenu.UI.CheatPanels.InputFieldPanel<string> customNameInputPanel;
+
+        /// <summary>
         /// List of predefined teleport locations.
         /// </summary>
         private static readonly List<TeleportLocation> teleportLocations = new List<TeleportLocation>
@@ -89,26 +99,36 @@ namespace CabbyCodes.Patches.Teleport
 
             try
             {
-                // Try to get a list of saved teleport location names from a special config entry
+                // Try to get a list of saved teleport location keys from a special config entry
                 var savedLocationsEntry = CabbyCodesPlugin.configFile.Bind(key, "SavedLocations", "",
-                    new ConfigDescription("List of saved teleport location names"));
+                    new ConfigDescription("List of saved teleport location keys"));
 
                 if (!string.IsNullOrEmpty(savedLocationsEntry.Value))
                 {
-                    string[] locationNames = savedLocationsEntry.Value.Split(',');
+                    string[] locationKeys = savedLocationsEntry.Value.Split(',');
 
-                    foreach (string locationName in locationNames)
+                    foreach (string locationKey in locationKeys)
                     {
-                        if (!string.IsNullOrEmpty(locationName))
+                        if (!string.IsNullOrEmpty(locationKey))
                         {
-                            // Try to get the location data for this name
-                            var locationEntry = CabbyCodesPlugin.configFile.Bind(key, locationName, "",
-                                new ConfigDescription($"Teleport location data for {locationName}"));
+                            // Try to get the location data for this key
+                            var locationEntry = CabbyCodesPlugin.configFile.Bind(key, locationKey, "",
+                                new ConfigDescription($"Teleport location data for {locationKey}"));
 
                             if (!string.IsNullOrEmpty(locationEntry.Value))
                             {
-                                ConfigDefinition configDef = new ConfigDefinition(key, locationName);
-                                result.Add(new CustomTeleportLocation(configDef, locationEntry));
+                                // Validate the format before creating the teleport location
+                                var parts = locationEntry.Value.Split('|');
+                                if (parts.Length == 3)
+                                {
+                                    ConfigDefinition configDef = new ConfigDefinition(key, locationKey);
+                                    result.Add(new CustomTeleportLocation(configDef, locationEntry));
+                                }
+                                else
+                                {
+                                    // Log error and skip this teleport
+                                    CabbyCodesPlugin.BLogger.LogWarning(string.Format("Invalid teleport location format for '{0}'. Expected 'sceneName|x|y', got '{1}'. Skipping this teleport.", locationKey, locationEntry.Value));
+                                }
                             }
                         }
                     }
@@ -307,28 +327,39 @@ namespace CabbyCodes.Patches.Teleport
             string sceneName = GameManager.GetBaseSceneName(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
             Vector2 teleportLocation = new Vector2((int)Math.Round(heroPos.x), (int)Math.Ceiling(heroPos.y));
 
+            // Get the custom name if provided, otherwise use the scene name
+            string customName = customTeleportNameRef.Get().Trim();
+            string displayName = !string.IsNullOrEmpty(customName) ? customName : sceneName;
+
             List<TeleportLocation> teleportLocations = savedTeleports;
             bool locationFound = false;
             for (int i = 0; i < teleportLocations.Count; i++)
             {
-                if (teleportLocations[i].SceneName == sceneName)
+                if (teleportLocations[i] is CustomTeleportLocation ctl)
                 {
-                    teleportLocations[i].Location = teleportLocation;
-                    locationFound = true;
-                    break;
+                    // Match on display name
+                    if (ctl.DisplayName == displayName)
+                    {
+                        ctl.Location = teleportLocation;
+                        locationFound = true;
+                        break;
+                    }
                 }
             }
 
             if (!locationFound)
             {
-                // Create the config entry directly using BepInEx
-                string locationValue = teleportLocation.x + "," + teleportLocation.y;
-                ConfigEntry<string> configEntry = CabbyCodesPlugin.configFile.Bind(key, sceneName, locationValue,
-                    new ConfigDescription($"Custom teleport location for {sceneName}"));
+                // Store as sceneName|x|y
+                string locationValue = $"{sceneName}|{teleportLocation.x}|{teleportLocation.y}";
+                ConfigEntry<string> configEntry = CabbyCodesPlugin.configFile.Bind(key, displayName, "",
+                    new ConfigDescription($"Custom teleport location for {displayName}"));
 
                 if (configEntry != null)
                 {
-                    ConfigDefinition configDef = new ConfigDefinition(key, sceneName);
+                    // Set the value before creating the CustomTeleportLocation
+                    configEntry.Value = locationValue;
+                    
+                    ConfigDefinition configDef = new ConfigDefinition(key, displayName);
                     CustomTeleportLocation loc = new CustomTeleportLocation(configDef, configEntry);
                     teleportLocations.Add(loc);
                     AddCustomPanel(loc);
@@ -336,31 +367,37 @@ namespace CabbyCodes.Patches.Teleport
                     // Update the list of saved locations
                     UpdateSavedLocationsList();
 
-                    CabbyCodesPlugin.BLogger.LogDebug(string.Format("Saved new teleport location: {0} at ({1}, {2})", sceneName, teleportLocation.x, teleportLocation.y));
+                    // Clear the custom name input field after saving
+                    customTeleportNameRef.Set("");
+                    
+                    // Force an update to ensure the UI reflects the cleared value
+                    customNameInputPanel?.ForceUpdate();
+
+                    CabbyCodesPlugin.BLogger.LogDebug(string.Format("Saved new teleport location: {0} ({1}) at ({2}, {3})", displayName, sceneName, teleportLocation.x, teleportLocation.y));
                 }
                 else
                 {
-                    CabbyCodesPlugin.BLogger.LogWarning(string.Format("Failed to create config entry for teleport location: {0}", sceneName));
+                    CabbyCodesPlugin.BLogger.LogWarning(string.Format("Failed to create config entry for teleport location: {0} ({1})", displayName, sceneName));
                 }
             }
         }
 
         /// <summary>
-        /// Updates the list of saved teleport location names in the config file.
+        /// Updates the list of saved teleport location keys in the config file.
         /// </summary>
         private static void UpdateSavedLocationsList()
         {
             try
             {
                 var savedLocationsEntry = CabbyCodesPlugin.configFile.Bind(key, "SavedLocations", "",
-                    new ConfigDescription("List of saved teleport location names"));
+                    new ConfigDescription("List of saved teleport location keys"));
 
-                var locationNames = savedTeleports
-                    .Where(loc => loc is CustomTeleportLocation)
-                    .Select(loc => loc.SceneName)
+                var locationKeys = savedTeleports
+                    .Where(loc => loc is CustomTeleportLocation ctl)
+                    .Select(loc => ((CustomTeleportLocation)loc).configDef.Key)
                     .ToArray();
 
-                savedLocationsEntry.Value = string.Join(",", locationNames);
+                savedLocationsEntry.Value = string.Join(",", locationKeys);
                 CabbyCodesPlugin.configFile.Save();
             }
             catch (Exception ex)
@@ -383,6 +420,15 @@ namespace CabbyCodes.Patches.Teleport
         private static void AddSavePanel()
         {
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new ButtonPanel(SaveTeleportLocation, "Save", "Save a custom teleport at current position"));
+        }
+
+        /// <summary>
+        /// Adds the custom teleport name input field panel to the menu.
+        /// </summary>
+        private static void AddCustomNamePanel()
+        {
+            customNameInputPanel = new CabbyMenu.UI.CheatPanels.InputFieldPanel<string>(customTeleportNameRef, CabbyMenu.Utilities.KeyCodeMap.ValidChars.AlphaNumeric, 20, "(Optional) Custom teleport name");
+            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(customNameInputPanel);
         }
 
         /// <summary>
@@ -428,10 +474,30 @@ namespace CabbyCodes.Patches.Teleport
             AddPanel();
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Lloyd's Beacon: Save and recall custom teleportation locations").SetColor(CheatPanel.headerColor));
             AddSavePanel();
+            AddCustomNamePanel(); // Add the new panel here
+            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Custom Teleport Locations").SetColor(CheatPanel.subHeaderColor));
             foreach (TeleportLocation location in savedTeleports)
             {
                 AddCustomPanel(location);
             }
+        }
+    }
+
+    /// <summary>
+    /// Simple string reference for custom teleport names.
+    /// </summary>
+    public class CustomTeleportNameReference : ISyncedReference<string>
+    {
+        private string value = "";
+
+        public string Get()
+        {
+            return value;
+        }
+
+        public void Set(string value)
+        {
+            this.value = value ?? "";
         }
     }
 } 

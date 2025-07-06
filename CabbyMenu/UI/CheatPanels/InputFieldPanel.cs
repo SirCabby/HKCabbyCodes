@@ -33,6 +33,14 @@ namespace CabbyMenu.UI.CheatPanels
         }
 
         /// <summary>
+        /// Forces an update of the input field UI regardless of selection state.
+        /// </summary>
+        public void ForceUpdate()
+        {
+            inputFieldSync.ForceUpdate();
+        }
+
+        /// <summary>
         /// Calculates the panel width based on character limit, ensuring it's never less than the minimum width.
         /// </summary>
         /// <param name="characterLimit">The maximum number of characters allowed.</param>

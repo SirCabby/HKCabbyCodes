@@ -138,6 +138,21 @@ namespace CabbyMenu.UI.Controls.InputField
             }
         }
 
+        /// <summary>
+        /// Forces an update of the input field UI regardless of selection state.
+        /// Use this when you need to ensure the UI reflects the current value.
+        /// </summary>
+        public void ForceUpdate()
+        {
+            if (inputFieldStatus != null)
+            {
+                string fullText = textProcessor.ConvertValue(InputValue.Get());
+                inputFieldStatus.SetFullText(fullText);
+                inputFieldStatus.ResetHorizontalOffset();
+                inputFieldStatus.SetCursorPositionDirectly(0);
+            }
+        }
+
         public void Submit()
         {
             string text = inputFieldStatus.GetFullText();

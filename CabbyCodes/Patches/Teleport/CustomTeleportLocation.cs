@@ -18,29 +18,30 @@ namespace CabbyCodes.Patches.Teleport
         /// </summary>
         private readonly ConfigEntry<string> configEntry;
 
-        /// <summary>
-        /// Gets the scene name from the configuration key.
-        /// </summary>
-        public override string SceneName { get => configDef.Key; }
+        private string displayName;
+        private string sceneName;
+        private Vector2 location;
 
         /// <summary>
-        /// Gets the display name from the configuration key.
+        /// Gets the scene name for teleporting.
         /// </summary>
-        public override string DisplayName { get => configDef.Key; }
+        public override string SceneName { get => sceneName; }
 
         /// <summary>
-        /// Gets or sets the location coordinates by parsing the configuration value.
+        /// Gets the display name for the UI.
+        /// </summary>
+        public override string DisplayName { get => displayName; }
+
+        /// <summary>
+        /// Gets or sets the location coordinates.
         /// </summary>
         public override Vector2 Location
         {
-            get
-            {
-                string[] locSplit = configEntry.Value.Split(',');
-                return new Vector2(int.Parse(locSplit[0]), int.Parse(locSplit[1]));
-            }
+            get => location;
             set
             {
-                configEntry.Value = value.x.ToString() + "," + value.y.ToString();
+                location = value;
+                SaveToConfig();
             }
         }
 
@@ -53,6 +54,23 @@ namespace CabbyCodes.Patches.Teleport
         {
             this.configDef = configDef;
             configEntry = entry;
+            displayName = configDef.Key; // Display name is the config key
+            ParseConfigValue(entry.Value);
+        }
+
+        private void ParseConfigValue(string value)
+        {
+            // Format: sceneName|x|y (validated before creation)
+            var parts = value.Split('|');
+            sceneName = parts[0];
+            float.TryParse(parts[1], out float x);
+            float.TryParse(parts[2], out float y);
+            location = new Vector2(x, y);
+        }
+
+        private void SaveToConfig()
+        {
+            configEntry.Value = $"{sceneName}|{location.x}|{location.y}";
         }
     }
 } 
