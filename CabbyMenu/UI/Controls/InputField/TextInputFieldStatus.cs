@@ -220,11 +220,10 @@ namespace CabbyMenu.UI.Controls.InputField
             // Convert mouse position to local position within the input field
             RectTransform rectTransform = InputFieldGo.GetComponent<RectTransform>();
             if (rectTransform == null) return 0;
-            
-            Vector2 localPoint;
-            if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, mousePosition, null, out localPoint))
+
+            if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, mousePosition, null, out Vector2 localPoint))
                 return 0;
-            
+
             // Find the text component to get font information
             Transform textTransform = InputFieldGo.transform.Find("Text");
             if (textTransform == null) return 0;
@@ -284,11 +283,7 @@ namespace CabbyMenu.UI.Controls.InputField
             // Ensure cursor is on top after syncing from Unity
             EnsureCursorIsOnTop();
         }
-        
 
-        
-
-        
         public override void SyncCursorPositionFromUnity()
         {
             var inputField = GetInputField();
@@ -320,7 +315,6 @@ namespace CabbyMenu.UI.Controls.InputField
             return fontSize * 0.65f;
         }
 
-        public override Utilities.KeyCodeMap.ValidChars ValidChars => KeyCodeMap.ValidChars.AlphaNumeric;
-
+        public override KeyCodeMap.ValidChars ValidChars => KeyCodeMap.ValidChars.AlphaNumeric;
     }
 } 

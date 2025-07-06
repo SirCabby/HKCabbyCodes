@@ -247,7 +247,6 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
             if (mainButtonText == null)
                 return MIN_DROPDOWN_WIDTH;
 
-            Font font = mainButtonText.font;
             // Calculate the actual font size that will be used in the main button text
             RectTransform mainRect = GetComponent<RectTransform>();
             int fontSize = Mathf.RoundToInt(mainRect.sizeDelta.y * FONT_SIZE_RATIO);
@@ -289,16 +288,6 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
                 ConfigureMainButtonLayout();
                 UpdateOptionButtonWidths();
                 UpdateDropdownPanelWidth();
-
-                // Log actual rendered width after layout
-                RectTransform mainRect = GetComponent<RectTransform>();
-                if (mainRect != null)
-                {
-                }
-                if (mainButtonText != null)
-                {
-                    RectTransform textRect = mainButtonText.GetComponent<RectTransform>();
-                }
             }
         }
 
@@ -645,8 +634,6 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
             backgroundImage.sprite = CreateBorderSprite(); // Use same sprite as border
         }
 
-
-
         private void ConfigureMainButtonLayout()
         {
             RectTransform mainRect = GetComponent<RectTransform>();
@@ -791,8 +778,8 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
             viewportObj.transform.SetParent(scrollView.transform, false);
 
             RectTransform viewportRect = viewportObj.AddComponent<RectTransform>();
-            Image viewportImage = viewportObj.AddComponent<Image>();
-            Mask viewportMask = viewportObj.AddComponent<Mask>();
+            viewportObj.AddComponent<Image>();
+            viewportObj.AddComponent<Mask>();
 
             viewportRect.anchorMin = Vector2.zero;
             viewportRect.anchorMax = new Vector2(0.97f, 1f); // Leave space for scrollbar
@@ -929,10 +916,7 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
                 // Log z and screen position and font size
                 RectTransform textRect = mainButtonText.GetComponent<RectTransform>();
                 Vector3 textWorld = textRect.position;
-                Vector3 textScreen = RectTransformUtility.WorldToScreenPoint(null, textWorld);
-            }
-            else
-            {
+                RectTransformUtility.WorldToScreenPoint(null, textWorld);
             }
         }
 
@@ -1011,7 +995,7 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
             ConfigureOptionLayoutElement(optionLayout);
 
             // Configure rect transform - left-align within parent panel
-            ConfigureOptionRectTransform(optionRect, index);
+            ConfigureOptionRectTransform(optionRect);
 
             // Configure image
             optionImage.color = Constants.DROPDOWN_OPTION_BACKGROUND;
@@ -1044,9 +1028,7 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
             layoutElement.preferredWidth = mainButtonWidth - 21f;
         }
 
-#pragma warning disable IDE0060 // Remove unused parameter
-        private void ConfigureOptionRectTransform(RectTransform rectTransform, int index)
-#pragma warning restore IDE0060 // Remove unused parameter
+        private void ConfigureOptionRectTransform(RectTransform rectTransform)
         {
             // Left-align with 6px padding, fixed width, vertically centered
             rectTransform.anchorMin = new Vector2(0, 0.5f); // Left, center Y
@@ -1103,7 +1085,6 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
                                 // Position parent panels sequentially from top to bottom with gap
                                 // Start from top with padding, then position each element downward with gaps between them
                                 parentPanelRect.anchoredPosition = new Vector2(0, -topPadding - i * (dynamicOptionHeight + OPTION_GAP));
-
                             }
 
                             // Debug: List all children of the parent panel
@@ -1128,9 +1109,6 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
 
                                 }
                             }
-                            else
-                            {
-                            }
                         }
                     }
                     catch (System.Exception ex)
@@ -1138,19 +1116,6 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
                         Debug.LogWarning($"Exception in ConfigureOptionButtons for button {i}: {ex.Message}");
                     }
                 }
-
-                // Log option button configurations
-                for (int i = 0; i < Mathf.Min(optionButtons.Count, 3); i++) // Log first 3 buttons
-                {
-                    if (optionButtons[i] != null)
-                    {
-                        RectTransform parentPanelRect = optionButtons[i].GetComponent<RectTransform>();
-                        if (parentPanelRect != null)
-                        {
-                        }
-                    }
-                }
-
             }
             catch (System.Exception ex)
             {
@@ -1169,7 +1134,6 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
 
                 // Notify listeners
                 onValueChanged?.Invoke(selectedIndex);
-
             }
         }
 
@@ -1230,7 +1194,6 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
             
             // Remove from open dropdowns list
             openDropdowns.Remove(this);
-            
         }
 
         private void PositionDropdownPanel()
@@ -1259,23 +1222,19 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
 
             // Force layout update to ensure proper positioning
             LayoutRebuilder.ForceRebuildLayoutImmediate(panelRect);
-
         }
 
         private void ShowDropdownPanel()
         {
             if (dropdownPanel == null) return;
 
-            RectTransform panelRect = dropdownPanel.GetComponent<RectTransform>();
             dropdownPanel.SetActive(true);
 
             // Ensure dropdown panel is drawn on top in hierarchy
             dropdownPanel.transform.SetAsLastSibling();
 
             // Ensure dropdown panel is rendered above all other UI by using a Canvas with high sorting order
-            Canvas dropdownCanvas = dropdownPanel.GetComponent<Canvas>();
-            if (dropdownCanvas == null)
-                dropdownCanvas = dropdownPanel.AddComponent<Canvas>();
+            Canvas dropdownCanvas = dropdownPanel.GetComponent<Canvas>() ?? dropdownPanel.AddComponent<Canvas>();
             dropdownCanvas.overrideSorting = true;
             dropdownCanvas.sortingOrder = 10000;
 
@@ -1283,9 +1242,9 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
             if (dropdownPanel.GetComponent<GraphicRaycaster>() == null)
                 dropdownPanel.AddComponent<GraphicRaycaster>();
 
-            ConfigurePanelComponents(panelRect);
+            ConfigurePanelComponents();
 
-            ConfigureScrollViewComponents(panelRect);
+            ConfigureScrollViewComponents();
 
             VerifyScrollRectConnections();
 
@@ -1303,13 +1262,9 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
 
             EnsureProperZOrder();
 
-            LogDetailedPositions();
-
         }
 
-#pragma warning disable IDE0060 // Remove unused parameter
-        private void ConfigurePanelComponents(RectTransform panelRect)
-#pragma warning restore IDE0060 // Remove unused parameter
+        private void ConfigurePanelComponents()
         {
             // Ensure panel image is visible
             Image panelImage = dropdownPanel.GetComponent<Image>();
@@ -1320,9 +1275,7 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
             }
         }
 
-#pragma warning disable IDE0060 // Remove unused parameter
-        private void ConfigureScrollViewComponents(RectTransform panelRect)
-#pragma warning restore IDE0060 // Remove unused parameter
+        private void ConfigureScrollViewComponents()
         {
             // Ensure scroll view is properly configured
             if (scrollView != null)
@@ -1353,7 +1306,6 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
 
                     // Force layout update to ensure proper positioning
                     LayoutRebuilder.ForceRebuildLayoutImmediate(scrollViewRect);
-
                 }
             }
 
@@ -1372,7 +1324,6 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
 
                     // Force layout update to ensure proper sizing
                     LayoutRebuilder.ForceRebuildLayoutImmediate(viewportRect);
-
                 }
 
                 Image viewportImage = viewport.GetComponent<Image>();
@@ -1388,9 +1339,6 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
                     viewportMask.enabled = true;
                     viewportMask.showMaskGraphic = false;
 
-                }
-                else
-                {
                 }
 
                 // Force the viewport to update its mask
@@ -1434,7 +1382,6 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
                             handleImage.color = new Color(0.6f, 0.6f, 0.6f, 1f);
                         }
                     }
-
                 }
             }
         }
@@ -1465,7 +1412,6 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
 
                 // Force another layout update after a frame to ensure all positioning is correct
                 StartCoroutine(ForceContentLayoutUpdate(contentRect));
-
             }
         }
 
@@ -1542,12 +1488,7 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
                         scrollRectComponent.verticalScrollbar = scrollbarComponent;
                     }
                 }
-
             }
-        }
-
-        private void LogDetailedPositions()
-        {
         }
 
         private void CheckParentCanvasConfiguration()
@@ -1566,10 +1507,8 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
                 selectedIndex = value;
                 UpdateMainButtonText();
             }
-            else
-            {
-            }
         }
+        
         public void SetSize(float width) { SetSize(width, mainButtonHeight); }
         public void SetSize(float width, float height)
         {
@@ -1593,6 +1532,7 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
             // Update the main button text if it exists
             UpdateMainButtonText();
         }
+
 #pragma warning disable IDE0060 // Remove unused parameter
         public void SetFontSize(int size) { /* TODO: implement if needed */ }
         

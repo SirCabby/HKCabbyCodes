@@ -12,7 +12,6 @@ namespace CabbyMenu.UI.Controls.InputField
     public class NumericInputFieldStatus<T> : InputFieldStatusBase where T : struct, IComparable<T>
     {
         private readonly BaseNumericProcessor<T> textProcessor;
-        private readonly T minValue;
         private readonly T maxValue;
         private bool isSelected = false;
         private bool pendingFirstClickCaret = false;
@@ -23,7 +22,6 @@ namespace CabbyMenu.UI.Controls.InputField
             : base(inputFieldGo, onSelected, submit, cancel, maxVisibleCharacters)
         {
             this.textProcessor = textProcessor;
-            this.minValue = minValue;
             this.maxValue = maxValue;
         }
 
@@ -72,6 +70,7 @@ namespace CabbyMenu.UI.Controls.InputField
             {
                 return;
             }
+
             int cursorPos = CursorPosition;
             fullText = textProcessor.ProcessTextAfterInsertion(fullText, ref cursorPos);
             CursorPosition = cursorPos;
@@ -89,7 +88,7 @@ namespace CabbyMenu.UI.Controls.InputField
                 }
                 // Don't validate minimum here - let users type values below minimum for multi-digit numbers
             }
-            catch (System.Exception ex)
+            catch (Exception ex)
             {
                 Debug.LogWarning($"Exception in NumericInputFieldStatus.InsertCharacter: {ex.Message}");
             }
@@ -253,8 +252,7 @@ namespace CabbyMenu.UI.Controls.InputField
             if (InputFieldGo == null) return 0;
             RectTransform rectTransform = InputFieldGo.GetComponent<RectTransform>();
             if (rectTransform == null) return 0;
-            Vector2 localPoint;
-            if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, mousePosition, null, out localPoint))
+            if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, mousePosition, null, out Vector2 localPoint))
                 return 0;
             Transform textTransform = InputFieldGo.transform.Find("Text");
             if (textTransform == null) return 0;
@@ -323,11 +321,7 @@ namespace CabbyMenu.UI.Controls.InputField
             // Ensure cursor is on top after syncing from Unity
             EnsureCursorIsOnTop();
         }
-        
 
-        
-
-        
         public override void SyncCursorPositionFromUnity()
         {
             var inputField = GetInputField();
@@ -348,18 +342,8 @@ namespace CabbyMenu.UI.Controls.InputField
         {
             return isSelected;
         }
-        
-        /// <summary>
-        /// Calculates the estimated width of a single character based on font size.
-        /// </summary>
-        /// <param name="fontSize">The font size in pixels.</param>
-        /// <returns>The estimated character width in pixels.</returns>
-        private static float CalculateCharacterWidth(int fontSize)
-        {
-            return fontSize * 0.65f;
-        }
 
-        public override Utilities.KeyCodeMap.ValidChars ValidChars
+        public override KeyCodeMap.ValidChars ValidChars
         {
             get
             {
@@ -368,6 +352,5 @@ namespace CabbyMenu.UI.Controls.InputField
                 return KeyCodeMap.ValidChars.Numeric;
             }
         }
-
     }
 } 

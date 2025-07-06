@@ -39,7 +39,7 @@ namespace CabbyCodes.Patches.Teleport
         /// <summary>
         /// Reference to the custom name input field panel for forcing updates.
         /// </summary>
-        private static CabbyMenu.UI.CheatPanels.InputFieldPanel<string> customNameInputPanel;
+        private static InputFieldPanel<string> customNameInputPanel;
 
         /// <summary>
         /// List of predefined teleport locations.
@@ -411,7 +411,7 @@ namespace CabbyCodes.Patches.Teleport
         /// </summary>
         private static void AddPanel()
         {
-                            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new DropdownPanel(new TeleportPatch(), "Select Area to Teleport", Constants.DEFAULT_PANEL_HEIGHT));
+            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new DropdownPanel(new TeleportPatch(), "Select Area to Teleport", Constants.DEFAULT_PANEL_HEIGHT));
         }
 
         /// <summary>
@@ -427,8 +427,34 @@ namespace CabbyCodes.Patches.Teleport
         /// </summary>
         private static void AddCustomNamePanel()
         {
-            customNameInputPanel = new CabbyMenu.UI.CheatPanels.InputFieldPanel<string>(customTeleportNameRef, CabbyMenu.Utilities.KeyCodeMap.ValidChars.AlphaNumeric, 20, "(Optional) Custom teleport name");
+            // Calculate width for 35 characters but allow 50 characters
+            int widthFor35Chars = CalculatePanelWidth(35);
+            customNameInputPanel = new InputFieldPanel<string>(customTeleportNameRef, CabbyMenu.Utilities.KeyCodeMap.ValidChars.AlphaNumeric, 60, widthFor35Chars, "(Optional) Custom teleport name");
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(customNameInputPanel);
+        }
+
+        /// <summary>
+        /// Calculates the panel width based on character limit, matching the logic from InputFieldPanel.
+        /// </summary>
+        /// <param name="characterLimit">The maximum number of characters allowed.</param>
+        /// <returns>The calculated width in pixels.</returns>
+        private static int CalculatePanelWidth(int characterLimit)
+        {
+            // Use the cursor character width for panel sizing to match visible character logic
+            float estimatedCharWidth = CalculateCursorCharacterWidth(CabbyMenu.Constants.DEFAULT_FONT_SIZE);
+            float uiBuffer = 10f;
+            float calculatedWidth = (characterLimit * estimatedCharWidth) + uiBuffer;
+            return Mathf.Max(CabbyMenu.Constants.MIN_PANEL_WIDTH, Mathf.RoundToInt(calculatedWidth));
+        }
+
+        /// <summary>
+        /// Calculates the character width for cursor positioning calculations.
+        /// </summary>
+        /// <param name="fontSize">The font size in pixels.</param>
+        /// <returns>The estimated character width for cursor positioning.</returns>
+        private static float CalculateCursorCharacterWidth(int fontSize)
+        {
+            return fontSize * 0.65f;
         }
 
         /// <summary>
@@ -474,7 +500,7 @@ namespace CabbyCodes.Patches.Teleport
             AddPanel();
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Lloyd's Beacon: Save and recall custom teleportation locations").SetColor(CheatPanel.headerColor));
             AddSavePanel();
-            AddCustomNamePanel(); // Add the new panel here
+            AddCustomNamePanel();
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Custom Teleport Locations").SetColor(CheatPanel.subHeaderColor));
             foreach (TeleportLocation location in savedTeleports)
             {

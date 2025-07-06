@@ -19,7 +19,7 @@ namespace CabbyMenu.UI.Controls.InputField
         public Action<bool> OnSelected { get; protected set; }
         public Action Submit { get; protected set; }
         public Action Cancel { get; protected set; }
-        public abstract Utilities.KeyCodeMap.ValidChars ValidChars { get; }
+        public abstract KeyCodeMap.ValidChars ValidChars { get; }
 
         protected InputFieldStatusBase(GameObject inputFieldGo, Action<bool> onSelected, Action submit, Action cancel, int maxVisibleCharacters)
         {
@@ -61,15 +61,11 @@ namespace CabbyMenu.UI.Controls.InputField
         /// Starts a coroutine on the input field GameObject.
         /// </summary>
         /// <param name="coroutine">The coroutine to start.</param>
-        public UnityEngine.Coroutine StartCoroutine(System.Collections.IEnumerator coroutine)
+        public Coroutine StartCoroutine(System.Collections.IEnumerator coroutine)
         {
             if (InputFieldGo != null)
             {
-                var coroutineRunner = InputFieldGo.GetComponent<CoroutineRunner>();
-                if (coroutineRunner == null)
-                {
-                    coroutineRunner = InputFieldGo.AddComponent<CoroutineRunner>();
-                }
+                var coroutineRunner = InputFieldGo.GetComponent<CoroutineRunner>() ?? InputFieldGo.AddComponent<CoroutineRunner>();
                 return coroutineRunner.StartCoroutine(coroutine);
             }
             return null;

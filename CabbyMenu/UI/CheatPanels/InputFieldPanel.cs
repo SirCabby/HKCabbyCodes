@@ -27,6 +27,31 @@ namespace CabbyMenu.UI.CheatPanels
             updateActions.Add(inputFieldSync.Update);
         }
 
+        /// <summary>
+        /// Creates an input field panel with a custom width instead of calculating it from character limit.
+        /// </summary>
+        /// <param name="syncedReference">The synced reference for the value.</param>
+        /// <param name="validChars">The valid character types.</param>
+        /// <param name="characterLimit">The maximum number of characters allowed.</param>
+        /// <param name="customWidth">The custom width in pixels for the input field.</param>
+        /// <param name="description">The description text for the panel.</param>
+        public InputFieldPanel(ISyncedReference<T> syncedReference, KeyCodeMap.ValidChars validChars, int characterLimit, int customWidth, string description) : base(description)
+        {
+            // Use the custom width instead of calculating it
+            int width = Mathf.Max(Constants.MIN_PANEL_WIDTH, customWidth);
+            
+            inputFieldSync = InputFieldSync.Create(syncedReference, validChars, new Vector2(width, Constants.DEFAULT_PANEL_HEIGHT), characterLimit);
+            new Fitter(inputFieldSync.GetGameObject()).Attach(cheatPanel);
+            inputFieldSync.GetGameObject().transform.SetAsFirstSibling();
+            
+            // Add LayoutElement to set the custom width as preferred width (not flexible)
+            LayoutElement inputFieldLayout = inputFieldSync.GetGameObject().AddComponent<LayoutElement>();
+            inputFieldLayout.preferredWidth = width;
+            inputFieldLayout.minWidth = width;
+            
+            updateActions.Add(inputFieldSync.Update);
+        }
+
         public InputField GetInputField()
         {
             return inputFieldSync.GetGameObject().GetComponent<InputField>();

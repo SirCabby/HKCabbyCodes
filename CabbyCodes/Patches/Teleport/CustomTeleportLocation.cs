@@ -18,7 +18,7 @@ namespace CabbyCodes.Patches.Teleport
         /// </summary>
         private readonly ConfigEntry<string> configEntry;
 
-        private string displayName;
+        private readonly string displayName;
         private string sceneName;
         private Vector2 location;
 

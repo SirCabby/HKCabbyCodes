@@ -322,8 +322,6 @@ namespace CabbyMenu.UI.Controls.InputField
             borderObj.transform.SetAsFirstSibling();
         }
 
-
-
         /// <summary>
         /// Creates a background for the input field that's smaller than the border.
         /// </summary>
@@ -390,8 +388,6 @@ namespace CabbyMenu.UI.Controls.InputField
                 child.SetAsLastSibling();
             }
         }
-
-
 
         /// <summary>
         /// Creates a simple border sprite using a white square texture.
