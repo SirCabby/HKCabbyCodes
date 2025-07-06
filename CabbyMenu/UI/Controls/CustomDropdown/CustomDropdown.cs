@@ -15,7 +15,8 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
         private const float OPTION_GAP = 5f;
         private const float DEFAULT_FONT_SIZE = 18f; // Increased from 14f
         private const float FONT_SIZE_RATIO = 0.7f; // Increased from 0.6f for better proportion
-        private const int MAX_VISIBLE_OPTIONS = 8;
+        private const int MAX_VISIBLE_OPTIONS = 8; // Fallback default
+        private int dynamicMaxVisibleOptions = 8; // Will be calculated based on screen space
         private const float SCROLLBAR_WIDTH = 10f;
         private const float MIN_DROPDOWN_WIDTH = 120f; // Minimum width for dropdown
         private const float TEXT_PADDING = 20f; // Padding for text within buttons
@@ -126,6 +127,52 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
         }
 
         /// <summary>
+        /// Calculates the maximum number of visible options based on available screen space below the dropdown.
+        /// </summary>
+        /// <returns>The maximum number of options that can be displayed</returns>
+        private int CalculateMaxVisibleOptions()
+        {
+            // Get the dropdown's screen position
+            RectTransform mainRect = GetComponent<RectTransform>();
+            if (mainRect == null) return MAX_VISIBLE_OPTIONS;
+
+            // Get the Canvas that contains this dropdown
+            Canvas parentCanvas = GetComponentInParent<Canvas>();
+            if (parentCanvas == null) return MAX_VISIBLE_OPTIONS;
+
+            // Get the dropdown's screen bounds
+            Rect dropdownScreenRect = GetAccurateScreenRect(mainRect, parentCanvas);
+            
+            // Calculate available space below the dropdown
+            float dropdownBottom = dropdownScreenRect.y; // Y is the bottom in screen coordinates
+            float screenHeight = Screen.height;
+            float availableSpaceBelow = dropdownBottom; // Space from bottom of dropdown to bottom of screen
+            
+            // Add some safety margin (20 pixels) to prevent dropdown from touching screen edge
+            float usableSpace = availableSpaceBelow - 20f;
+            
+            // Calculate how many options can fit in the available space
+            // Each option needs: option height + gap (except for the last option)
+            float optionHeightWithGap = dynamicOptionHeight + OPTION_GAP;
+            float totalMargins = OPTION_MARGIN; // Top and bottom margins
+            
+            // Calculate max options: (usable space - margins) / (option height + gap)
+            int maxOptions = Mathf.FloorToInt((usableSpace - totalMargins) / optionHeightWithGap);
+            
+            // Ensure reasonable bounds
+            maxOptions = Mathf.Max(maxOptions, 1); // At least 1 option
+            maxOptions = Mathf.Min(maxOptions, options.Count); // Don't exceed total options
+            maxOptions = Mathf.Min(maxOptions, 20); // Cap at 20 for performance
+            
+            Debug.Log($"[Dropdown Space Calculation] Dropdown bottom: {dropdownBottom}, Screen height: {screenHeight}");
+            Debug.Log($"[Dropdown Space Calculation] Available space below: {availableSpaceBelow}, Usable space: {usableSpace}");
+            Debug.Log($"[Dropdown Space Calculation] Option height: {dynamicOptionHeight}, Gap: {OPTION_GAP}");
+            Debug.Log($"[Dropdown Space Calculation] Calculated max options: {maxOptions}");
+            
+            return maxOptions;
+        }
+
+        /// <summary>
         /// Calculates the dynamic option height and font size based on the dropdown panel height.
         /// Only used when option height hasn't been explicitly set via SetOptionHeightFromButtonHeight.
         /// </summary>
@@ -136,14 +183,17 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
             RectTransform panelRect = dropdownPanel.GetComponent<RectTransform>();
             if (panelRect == null) return;
 
+            // Calculate the maximum visible options based on screen space
+            dynamicMaxVisibleOptions = CalculateMaxVisibleOptions();
+
             // Only calculate dynamic sizing if mainButtonHeight hasn't been set yet
             if (mainButtonHeight <= 0f)
             {
                 // Calculate available height for options (panel height minus margins)
                 float availableHeight = panelRect.sizeDelta.y - OPTION_MARGIN;
                 
-                // Calculate how many options can fit in the visible area
-                int visibleOptions = Mathf.Min(options.Count, MAX_VISIBLE_OPTIONS);
+                // Calculate how many options can fit in the visible area using dynamic max
+                int visibleOptions = Mathf.Min(options.Count, dynamicMaxVisibleOptions);
                 
                 if (visibleOptions > 0)
                 {
@@ -1203,11 +1253,17 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
             // Get the main button's position and size
             RectTransform mainRect = GetComponent<RectTransform>();
 
+            // Calculate the maximum visible options based on screen space
+            dynamicMaxVisibleOptions = CalculateMaxVisibleOptions();
+
             // Calculate panel height to match visible content height
-            // Use MAX_VISIBLE_OPTIONS to limit panel height, but content will be sized for all options
-            float panelHeight = Mathf.Min(options.Count, MAX_VISIBLE_OPTIONS) * dynamicOptionHeight +
-                               Mathf.Min(options.Count - 1, MAX_VISIBLE_OPTIONS - 1) * OPTION_GAP +
+            // Use dynamicMaxVisibleOptions to limit panel height, but content will be sized for all options
+            float panelHeight = Mathf.Min(options.Count, dynamicMaxVisibleOptions) * dynamicOptionHeight +
+                               Mathf.Min(options.Count - 1, dynamicMaxVisibleOptions - 1) * OPTION_GAP +
                                OPTION_MARGIN;
+
+            Debug.Log($"[Dropdown Panel Sizing] Total options: {options.Count}, Max visible: {dynamicMaxVisibleOptions}");
+            Debug.Log($"[Dropdown Panel Sizing] Panel height: {panelHeight}, Option height: {dynamicOptionHeight}");
 
             // Update panel size and position - use relative positioning within the same parent
             RectTransform panelRect = dropdownPanel.GetComponent<RectTransform>();
@@ -1592,6 +1648,8 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
                 // This ensures scrolling works when there are more options than can fit
                 // Include top and bottom padding (OPTION_MARGIN) to match the panel height calculation
                 float contentHeight = OPTION_MARGIN + options.Count * dynamicOptionHeight + (options.Count - 1) * OPTION_GAP;
+
+                Debug.Log($"[Dropdown Content Sizing] Content height: {contentHeight}, Total options: {options.Count}");
 
                 // Configure content to stretch across viewport width and position at top
                 contentRect.anchorMin = new Vector2(0, 1);
