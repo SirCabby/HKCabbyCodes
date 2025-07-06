@@ -1196,6 +1196,13 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
             ShowDropdownPanel();
 
             isOpen = true;
+
+            // Store the button's world position for scroll detection
+            RectTransform mainRect = GetComponent<RectTransform>();
+            if (mainRect != null)
+            {
+                lastButtonPosition = mainRect.position;
+            }
             
             // Add to open dropdowns list
             if (!openDropdowns.Contains(this))
@@ -1680,6 +1687,24 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
             if (isOpen && dropdownPanel != null)
             {
                 PositionDropdownPanel();
+            }
+        }
+
+        private Vector3 lastButtonPosition;
+
+        private void Update()
+        {
+            if (isOpen)
+            {
+                RectTransform mainRect = GetComponent<RectTransform>();
+                if (mainRect != null)
+                {
+                    Vector3 currentPosition = mainRect.position;
+                    if (currentPosition != lastButtonPosition)
+                    {
+                        HideDropdown();
+                    }
+                }
             }
         }
     }
