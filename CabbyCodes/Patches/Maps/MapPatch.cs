@@ -38,10 +38,11 @@ namespace CabbyCodes.Patches.Maps
         public static void AddPanels()
         {
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Maps: Enable to have map for area").SetColor(CheatPanel.headerColor));
-            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Warning: Still requires Quill item to fill maps out").SetColor(CheatPanel.warningColor));
+            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Warning: Still requires Inventory Map and Quill items to view / fill maps out").SetColor(CheatPanel.warningColor));
             AddMapPanels();
             
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Rooms: Enable to have room mapped out").SetColor(CheatPanel.headerColor));
+            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Warning: Turning rooms OFF requires a save and reload").SetColor(CheatPanel.warningColor));
             
             // Add area selector dropdown
             MapAreaSelector areaSelector = new MapAreaSelector();
