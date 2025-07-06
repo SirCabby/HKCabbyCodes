@@ -240,6 +240,9 @@ namespace CabbyMenu.UI
                 UnityEngine.Object.Destroy(child.gameObject);
             }
 
+            // Force layout rebuild after clearing content
+            LayoutRebuilder.ForceRebuildLayoutImmediate(cheatContent.GetComponent<RectTransform>());
+
             ClearInputFields();
             contentCheatPanels.Clear();
             CheatPanel.ResetPattern();
@@ -252,6 +255,9 @@ namespace CabbyMenu.UI
             {
                 registeredCategories[categoryDropdown.Options[arg0]]();
             }
+
+            // Force layout rebuild after adding new panels
+            LayoutRebuilder.ForceRebuildLayoutImmediate(cheatContent.GetComponent<RectTransform>());
 
             // Clear Unity's EventSystem selection when changing categories
             EventSystem.current?.SetSelectedGameObject(null);
