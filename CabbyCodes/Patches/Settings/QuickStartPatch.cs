@@ -30,7 +30,7 @@ namespace CabbyCodes.Patches.Settings
         /// <summary>
         /// Configuration entry for enabling quick start.
         /// </summary>
-        private static ConfigEntry<bool> quickStartEnabled;
+        private static ConfigEntry<bool> quickLoadEnabled;
 
         /// <summary>
         /// Configuration entry for the save slot to load.
@@ -58,7 +58,7 @@ namespace CabbyCodes.Patches.Settings
         /// <returns>True if quick start is enabled, false otherwise.</returns>
         public bool Get()
         {
-            return quickStartEnabled.Value;
+            return quickLoadEnabled.Value;
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace CabbyCodes.Patches.Settings
         /// <param name="value">The new enabled state.</param>
         public void Set(bool value)
         {
-            quickStartEnabled.Value = value;
+            quickLoadEnabled.Value = value;
         }
 
         /// <summary>
@@ -139,7 +139,7 @@ namespace CabbyCodes.Patches.Settings
                 ApplyIntroSkipPatches();
             }
 
-            if (quickStartEnabled.Value)
+            if (quickLoadEnabled.Value)
             {
                 ApplyQuickLoadPatches();
             }
@@ -152,14 +152,14 @@ namespace CabbyCodes.Patches.Settings
         /// </summary>
         private static void InitializeConfig()
         {
-            quickStartEnabled = CabbyCodesPlugin.configFile.Bind(CONFIG_KEY, "EnableQuickStart", false, 
+            skipIntroScreens = CabbyCodesPlugin.configFile.Bind(CONFIG_KEY, "SkipIntroScreens", false, 
+                "Skip the intro splash screens and go directly to main menu");
+
+            quickLoadEnabled = CabbyCodesPlugin.configFile.Bind(CONFIG_KEY, "EnableQuickLoad", false, 
                 "Enable automatic loading of a save slot when reaching the main menu");
             
             saveSlot = CabbyCodesPlugin.configFile.Bind(CONFIG_KEY, "SaveSlot", 1, 
-                "The save slot to load when quick start is enabled (1-4)");
-            
-            skipIntroScreens = CabbyCodesPlugin.configFile.Bind(CONFIG_KEY, "SkipIntroScreens", false, 
-                "Skip the intro splash screens and go directly to main menu");
+                "The save slot to load when quick load is enabled (1-4)");
         }
 
         /// <summary>
@@ -195,7 +195,7 @@ namespace CabbyCodes.Patches.Settings
         /// </summary>
         private static void GameManagerUpdatePostfix(GameManager __instance)
         {
-            if (!quickStartEnabled.Value || quickStartPerformed) return;
+            if (!quickLoadEnabled.Value || quickStartPerformed) return;
 
             // Check if we're in the main menu state and ready for quick load
             if (__instance.gameState == GameState.MAIN_MENU && 
