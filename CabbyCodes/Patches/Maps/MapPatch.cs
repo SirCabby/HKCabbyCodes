@@ -40,8 +40,22 @@ namespace CabbyCodes.Patches.Maps
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Maps: Enable to have map for area").SetColor(CheatPanel.headerColor));
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Warning: Still requires Quill item to fill maps out").SetColor(CheatPanel.warningColor));
             AddMapPanels();
+            
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Rooms: Enable to have room mapped out").SetColor(CheatPanel.headerColor));
-            MapRoomPatch.AddPanels();
+            
+            // Add area selector dropdown
+            MapAreaSelector areaSelector = new MapAreaSelector();
+            DropdownPanel areaDropdownPanel = new DropdownPanel(areaSelector, "Select Area", Constants.DEFAULT_PANEL_HEIGHT);
+            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(areaDropdownPanel);
+            
+            // Add dynamic room manager
+            DynamicMapRoomManager roomManager = new DynamicMapRoomManager(areaSelector);
+            roomManager.AddAllPanelsToMenu();
+            
+            // Add update action to handle area changes (for menu update loop)
+            areaDropdownPanel.updateActions.Add(roomManager.UpdateVisibleArea);
+            // Hook dropdown value change event for immediate update
+            areaDropdownPanel.GetDropDownSync().GetCustomDropdown().onValueChanged.AddListener(_ => roomManager.UpdateVisibleArea());
         }
     }
 }

@@ -86,5 +86,10 @@ namespace CabbyMenu.UI.CheatPanels
                 }
             }
         }
+
+        public DropDownSync GetDropDownSync()
+        {
+            return dropdown;
+        }
     }
 }

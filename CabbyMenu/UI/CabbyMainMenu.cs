@@ -113,6 +113,13 @@ namespace CabbyMenu.UI
         /// <returns>The added cheat panel.</returns>
         public CheatPanel AddCheatPanel(CheatPanel cheatPanel)
         {
+            if (cheatContent == null)
+            {
+                // If cheatContent is null, the menu might be rebuilding or in an invalid state
+                // Return the panel without adding it to prevent errors
+                return cheatPanel;
+            }
+            
             new Fitter(cheatPanel.GetGameObject()).Attach(cheatContent).Size(cheatPanelSize);
             contentCheatPanels.Add(cheatPanel);
             return cheatPanel;
@@ -162,6 +169,28 @@ namespace CabbyMenu.UI
             foreach (CheatPanel panel in contentCheatPanels)
             {
                 panel.Update();
+            }
+        }
+
+        /// <summary>
+        /// Removes a cheat panel from the menu content area.
+        /// </summary>
+        /// <param name="cheatPanel">The cheat panel to remove.</param>
+        public void RemoveCheatPanel(CheatPanel cheatPanel)
+        {
+            if (contentCheatPanels.Contains(cheatPanel))
+            {
+                contentCheatPanels.Remove(cheatPanel);
+            }
+            GameObject panelGo = cheatPanel.GetGameObject();
+            if (panelGo != null)
+            {
+                UnityEngine.Object.Destroy(panelGo);
+            }
+            // Force layout rebuild after removing
+            if (cheatContent != null)
+            {
+                LayoutRebuilder.ForceRebuildLayoutImmediate(cheatContent.GetComponent<RectTransform>());
             }
         }
 
