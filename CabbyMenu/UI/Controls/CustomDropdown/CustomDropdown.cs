@@ -60,6 +60,14 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
         private Color hoverColor = Constants.DROPDOWN_HOVER;
         private Color pressedColor = Constants.DROPDOWN_PRESSED;
         
+        // Store original colors for restoration when re-enabled
+        private Color originalNormalColor = Constants.DROPDOWN_NORMAL;
+        private Color originalHoverColor = Constants.DROPDOWN_HOVER;
+        private Color originalPressedColor = Constants.DROPDOWN_PRESSED;
+        
+        // Track interactable state
+        private bool isInteractable = true;
+        
         // Custom colors for option button states
         private Color optionNormalColor = Constants.DROPDOWN_OPTION_BACKGROUND;
         private Color optionHoverColor = Constants.DROPDOWN_OPTION_HOVER;
@@ -1167,6 +1175,10 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
 
         public void OnPointerClick(PointerEventData eventData)
         {
+            // Don't respond to clicks if not interactable
+            if (!isInteractable)
+                return;
+                
             ToggleDropdown();
         }
 
@@ -1607,6 +1619,12 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
             normalColor = normal;
             hoverColor = hover;
             pressedColor = pressed;
+            
+            // Store original colors for restoration when re-enabled
+            originalNormalColor = normal;
+            originalHoverColor = hover;
+            originalPressedColor = pressed;
+            
             ApplyCustomColors();
         }
 
@@ -1636,7 +1654,28 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
                 colorBlock.normalColor = normalColor;
                 colorBlock.highlightedColor = hoverColor;
                 colorBlock.pressedColor = pressedColor;
+                colorBlock.disabledColor = normalColor; // Set disabled color to match normal color
                 mainButton.colors = colorBlock;
+                
+                // Also update the main button image directly
+                if (mainButtonImage != null)
+                {
+                    mainButtonImage.color = normalColor;
+                }
+                
+                // Update the ButtonBackground image (the actual visual background)
+                Transform backgroundTransform = transform.Find("ButtonBackground");
+                if (backgroundTransform != null)
+                {
+                    Image backgroundImage = backgroundTransform.GetComponent<Image>();
+                    if (backgroundImage != null)
+                    {
+                        backgroundImage.color = normalColor;
+                    }
+                }
+                
+                // Force the button to update its visual state
+                mainButton.targetGraphic?.SetAllDirty();
             }
 
             // Apply to all option buttons
@@ -1654,6 +1693,7 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
                             colorBlock.normalColor = optionNormalColor;
                             colorBlock.highlightedColor = optionHoverColor;
                             colorBlock.pressedColor = optionPressedColor;
+                            colorBlock.disabledColor = optionNormalColor; // Set disabled color to match normal color
                             button.colors = colorBlock;
                         }
                     }
@@ -1676,6 +1716,42 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
                     borderImage.color = borderColor;
                 }
             }
+        }
+
+        /// <summary>
+        /// Sets the interactable state of the dropdown button.
+        /// </summary>
+        /// <param name="interactable">True to enable interaction, false to disable</param>
+        public void SetInteractable(bool interactable)
+        {
+            isInteractable = interactable;
+            
+            if (mainButton != null)
+            {
+                mainButton.interactable = interactable;
+            }
+            
+            // Also disable/enable the CustomDropdown component itself to prevent OnPointerClick
+            enabled = interactable;
+            
+            // Update colors to show disabled state
+            if (interactable)
+            {
+                // Restore original colors when enabled
+                normalColor = originalNormalColor;
+                hoverColor = originalHoverColor;
+                pressedColor = originalPressedColor;
+            }
+            else
+            {
+                // Use disabled colors when disabled
+                normalColor = Constants.OFF_COLOR;
+                hoverColor = Constants.OFF_COLOR;
+                pressedColor = Constants.OFF_COLOR;
+            }
+            
+            // Apply the color changes
+            ApplyCustomColors();
         }
 
         /// <summary>

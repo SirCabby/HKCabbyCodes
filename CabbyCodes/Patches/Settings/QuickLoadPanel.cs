@@ -22,9 +22,12 @@ namespace CabbyCodes.Patches.Settings
         private readonly ToggleButton toggleButton;
         private readonly DropDownSync dropdownSync;
         private readonly GameObject dropdownPanel;
+        private readonly ISyncedReference<bool> toggleReference;
 
         public QuickLoadPanel(ISyncedReference<bool> toggleReference, ISyncedReference<int> inputReference, string description) : base(description)
         {
+            this.toggleReference = toggleReference;
+
             // Create toggle button panel
             GameObject togglePanel = DefaultControls.CreatePanel(new DefaultControls.Resources());
             togglePanel.name = "Toggle Button Panel";
@@ -39,6 +42,13 @@ namespace CabbyCodes.Patches.Settings
             toggleButton = new ToggleButton(toggleReference);
             new Fitter(toggleButton.GetGameObject()).Attach(togglePanel).Anchor(middle, middle).Size(defaultSize);
             updateActions.Add(toggleButton.Update);
+
+            // Subscribe to toggle value change to update dropdown interactable state immediately
+            var unityButton = toggleButton.GetGameObject().GetComponent<Button>();
+            unityButton?.onClick.AddListener(() => {
+                    bool newValue = toggleReference.Get();
+                    UpdateDropdownInteractable(newValue);
+                });
 
             // Create dropdown panel
             dropdownPanel = DefaultControls.CreatePanel(new DefaultControls.Resources());
@@ -81,7 +91,10 @@ namespace CabbyCodes.Patches.Settings
             UpdateDropdownPanelWidth();
             
             updateActions.Add(dropdownSync.Update);
+            updateActions.Add(() => UpdateDropdownInteractable());
 
+            // Initialize the dropdown's interactable state
+            UpdateDropdownInteractable();
 
         }
 
@@ -98,6 +111,16 @@ namespace CabbyCodes.Patches.Settings
         public DropDownSync GetDropdown()
         {
             return dropdownSync;
+        }
+
+        /// <summary>
+        /// Updates the dropdown's interactable state based on the toggle state.
+        /// </summary>
+        private void UpdateDropdownInteractable(bool? overrideValue = null)
+        {
+            bool isEnabled = overrideValue ?? toggleReference.Get();
+            var customDropdown = dropdownSync.GetCustomDropdown();
+            customDropdown?.SetInteractable(isEnabled);
         }
 
         /// <summary>
