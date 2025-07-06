@@ -5,6 +5,30 @@ alwaysApply: true
 ---
 # Cursor Rules for CabbyCodes - Hollow Knight Mod
 
+## CRITICAL ENFORCEMENT RULES - NEVER BYPASS
+These rules are ABSOLUTE and must be followed in ALL cases without exception:
+
+### File Organization - ABSOLUTE REQUIREMENT
+- **NEVER put more than one class or interface in the same file**
+- **ALWAYS create separate .cs files for each class/interface**
+- **ALWAYS use descriptive filenames that exactly match the class name**
+- **NEVER combine multiple classes in a single file, even for "related" functionality**
+- **NEVER create utility classes or helper classes in the same file as main classes**
+
+### Build Verification - ABSOLUTE REQUIREMENT  
+- **ALWAYS run `make build` after ANY code changes, regardless of perceived complexity**
+- **NEVER assume any change is too small to test**
+- **ALWAYS include build verification in every response that involves code changes**
+- **ALWAYS report build results and fix any errors immediately**
+- **NEVER skip build testing for "minor" changes, comments, or documentation**
+
+### Output File Management - ABSOLUTE REQUIREMENT
+- **ALWAYS put ALL generated non-java files in the `/Output` folder**
+- **NEVER create files in the root directory or other project folders**
+- **ALWAYS use `/Output/` prefix for any generated files**
+- **ALWAYS apply this to ALL file generation, not just debugging outputs**
+- **NEVER create temporary files, logs, or command outputs outside `/Output`**
+
 ## Project Context
 This is a Hollow Knight mod project called "CabbyCodes" that provides various cheats and modifications to the game. The project consists of:
 
@@ -88,23 +112,4 @@ This is a Hollow Knight mod project called "CabbyCodes" that provides various ch
 - Only use PowerShell when specific PowerShell features are required
 - Use `dir` instead of `ls` for directory listing
 - Use `copy` instead of `cp` for file copying
-- Use `del` instead of `rm` for file deletion
-- Use `mkdir` instead of `mkdir -p` for directory creation
-- Don't use `&&` as it won't work properly
-- When querying git for information, output it to file and read from file
-
-## Documentation Standards
-- Add XML documentation for public methods
-- Include usage examples in comments
-- Document any game-specific knowledge or workarounds
-- Keep README.md updated with new features
-
-## When Asked About:
-- **Build issues**: Check Makefile, global.json, and project files
-- **Game mechanics**: Look at existing patches in CabbyCodes/Patches/
-- **UI changes**: Check CabbyMenu/UI/ directory
-- **Building**: Use the Makefile build target
-- **Deployment**: Use the Makefile deploy target
-- **Windows-specific issues**: Consider Windows paths, registry, and Windows-specific tools
-- **.NET version issues**: Ensure compatibility with .NET Framework 4.7.2 and C# 7.3
-- **Performance issues**: Check for allocations, caching, and hot path optimization
+- Use `del`
