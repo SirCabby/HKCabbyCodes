@@ -95,14 +95,13 @@ namespace CabbyMenu
         public static readonly Color BUTTON_DANGER_PRESSED = new Color(0.6f, 0.1f, 0.1f, 1f);
 
         // Dropdown Colors
-        public static readonly Color DROPDOWN_NORMAL = new Color(0.7f, 0.7f, 0.7f, 1f);
+        public static readonly Color DROPDOWN_NORMAL = new Color(0.9f, 0.9f, 0.9f, 1f);
         public static readonly Color DROPDOWN_HOVER = new Color(1f, 1f, 1f, 1f);
         public static readonly Color DROPDOWN_PRESSED = new Color(0.4f, 0.4f, 0.4f, 1f);
-        public static readonly Color DROPDOWN_ITEM_NORMAL = new Color(0f, 0f, 0f, 1f);
-        public static readonly Color DROPDOWN_ITEM_HOVER = new Color(0f, 0f, 0f, 1f);
-        public static readonly Color DROPDOWN_ITEM_PRESSED = new Color(0f, 0f, 0f, 1f);
         public static readonly Color DROPDOWN_PANEL_BACKGROUND = new Color(0.1f, 0.1f, 0.1f, 0.9f);
         public static readonly Color DROPDOWN_OPTION_BACKGROUND = new Color(0.7f, 0.7f, 0.7f, 1f);
+        public static readonly Color DROPDOWN_OPTION_HOVER = new Color(0.7f, 0.8f, 1f, 1f);
+        public static readonly Color DROPDOWN_OPTION_PRESSED = new Color(0.4f, 0.6f, 1f, 1f);
 
         // Scrollable Area Colors
         public static readonly Color CHEAT_SCROLLABLE_BACKGROUND = new Color(0.1f, 0.1f, 0.1f, 0.3f);

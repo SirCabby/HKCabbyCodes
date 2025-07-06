@@ -55,6 +55,16 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
         private bool isOpen;
         private int selectedIndex;
 
+        // Custom colors for button states
+        private Color normalColor = Constants.DROPDOWN_NORMAL;
+        private Color hoverColor = Constants.DROPDOWN_HOVER;
+        private Color pressedColor = Constants.DROPDOWN_PRESSED;
+        
+        // Custom colors for option button states
+        private Color optionNormalColor = Constants.DROPDOWN_OPTION_BACKGROUND;
+        private Color optionHoverColor = Constants.DROPDOWN_OPTION_HOVER;
+        private Color optionPressedColor = Constants.DROPDOWN_OPTION_PRESSED;
+
         // Events - Using UnityEvent for consistency
         public UnityEvent<int> onValueChanged = new UnityEvent<int>();
 
@@ -981,6 +991,13 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
             int capturedIndex = index; // Capture the index for the lambda
             optionButton.onClick.AddListener(() => OnOptionSelected(capturedIndex));
 
+            // Apply custom colors to the option button
+            ColorBlock colorBlock = optionButton.colors;
+            colorBlock.normalColor = optionNormalColor;
+            colorBlock.highlightedColor = optionHoverColor;
+            colorBlock.pressedColor = optionPressedColor;
+            optionButton.colors = colorBlock;
+
             // Store the parent panel reference (which contains the button)
             optionButtons.Add(parentPanel);
 
@@ -1529,10 +1546,83 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
         }
 #pragma warning disable IDE0060 // Remove unused parameter
         public void SetFontSize(int size) { /* TODO: implement if needed */ }
-#pragma warning disable IDE0060 // Remove unused parameter
-        public void SetColors(Color color) { /* TODO: implement if needed */ }
-#pragma warning disable IDE0060 // Remove unused parameter
-        public void SetColors(Color normal, Color hover, Color pressed) { /* TODO: implement if needed */ }
+        
+        /// <summary>
+        /// Sets all button colors to the same color.
+        /// </summary>
+        /// <param name="color">The color to use for all states</param>
+        public void SetColors(Color color)
+        {
+            normalColor = color;
+            hoverColor = color;
+            pressedColor = color;
+            ApplyCustomColors();
+        }
+
+        /// <summary>
+        /// Sets custom colors for normal, hover, and pressed states.
+        /// </summary>
+        /// <param name="normal">Normal state color</param>
+        /// <param name="hover">Hover state color</param>
+        /// <param name="pressed">Pressed state color</param>
+        public void SetColors(Color normal, Color hover, Color pressed)
+        {
+            normalColor = normal;
+            hoverColor = hover;
+            pressedColor = pressed;
+            ApplyCustomColors();
+        }
+
+        /// <summary>
+        /// Sets custom colors for option button states.
+        /// </summary>
+        /// <param name="normal">Normal state color</param>
+        /// <param name="hover">Hover state color</param>
+        /// <param name="pressed">Pressed state color</param>
+        public void SetOptionColors(Color normal, Color hover, Color pressed)
+        {
+            optionNormalColor = normal;
+            optionHoverColor = hover;
+            optionPressedColor = pressed;
+            ApplyCustomColors();
+        }
+
+        /// <summary>
+        /// Applies the custom colors to the main button and all option buttons.
+        /// </summary>
+        private void ApplyCustomColors()
+        {
+            // Apply to main button
+            if (mainButton != null)
+            {
+                ColorBlock colorBlock = mainButton.colors;
+                colorBlock.normalColor = normalColor;
+                colorBlock.highlightedColor = hoverColor;
+                colorBlock.pressedColor = pressedColor;
+                mainButton.colors = colorBlock;
+            }
+
+            // Apply to all option buttons
+            foreach (GameObject optionButton in optionButtons)
+            {
+                if (optionButton != null)
+                {
+                    Transform buttonTransform = optionButton.transform.Find($"Option_{optionButtons.IndexOf(optionButton)}");
+                    if (buttonTransform != null)
+                    {
+                        Button button = buttonTransform.GetComponent<Button>();
+                        if (button != null)
+                        {
+                            ColorBlock colorBlock = button.colors;
+                            colorBlock.normalColor = optionNormalColor;
+                            colorBlock.highlightedColor = optionHoverColor;
+                            colorBlock.pressedColor = optionPressedColor;
+                            button.colors = colorBlock;
+                        }
+                    }
+                }
+            }
+        }
 
         /// <summary>
         /// Sets the border color of the dropdown button.
