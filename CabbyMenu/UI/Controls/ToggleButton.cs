@@ -33,14 +33,6 @@ namespace CabbyMenu.UI.Controls
             textMod = new TextMod(toggleButton.GetComponentInChildren<Text>());
             imageMod = new ImageMod(toggleButton.GetComponent<Image>());
 
-            // Increase border width and make it full opacity
-            Outline outline = toggleButton.GetComponent<Outline>();
-            if (outline != null)
-            {
-                outline.effectDistance = new Vector2(4f, 4f); // Increased from 2f, 2f to 4f, 4f
-                outline.effectColor = new Color(0f, 0f, 0f, 1f); // Full opacity black border
-            }
-
             Update();
         }
 

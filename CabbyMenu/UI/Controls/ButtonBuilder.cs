@@ -71,8 +71,8 @@ namespace CabbyMenu.UI.Controls
 
             // Add outline for better visibility
             Outline outline = buildInstance.AddComponent<Outline>();
-            outline.effectColor = new Color(0f, 0f, 0f, 0.3f);
-            outline.effectDistance = new Vector2(2f, 2f);
+            outline.effectColor = new Color(0f, 0f, 0f, 1f); // Full opacity black border
+            outline.effectDistance = new Vector2(4f, 4f); // Increased border width to match toggle buttons
 
             TextMod textMod = new TextMod(buildInstance.GetComponentInChildren<Text>());
             textMod.SetText(text)
