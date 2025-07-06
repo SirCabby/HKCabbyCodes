@@ -81,14 +81,53 @@ namespace CabbyMenu.UI.CheatPanels
             return (imagePanel, spriteImageMod);
         }
 
-        public static GameObject AddDestroyPanelButton(CheatPanel panel, int siblingIndex, Action additionalAction, string buttonText, Vector2 size)
+        /// <summary>
+        /// Adds a destroy button directly to an existing panel (like ButtonPanel) positioned at the right edge.
+        /// </summary>
+        /// <param name="targetPanel">The panel to add the destroy button to.</param>
+        /// <param name="additionalAction">Additional action to perform when the button is clicked.</param>
+        /// <param name="buttonText">Text to display on the button (default: "X").</param>
+        /// <param name="buttonSize">Size of the button (default: 60x60).</param>
+        /// <returns>The created destroy button GameObject.</returns>
+        public static GameObject AddDestroyButtonToPanel(CheatPanel targetPanel, Action additionalAction, string buttonText = "X", float buttonSize = 60f)
         {
-            return CreateButtonPanel(panel, siblingIndex, "Destroy Button Panel", size,
-                (text) => ButtonBuilder.BuildDanger(buttonText), delegate
-                {
-                    UnityEngine.Object.Destroy(panel.cheatPanel);
-                    additionalAction();
-                });
+            // Create the destroy button using the same factory as other buttons
+            (GameObject button, _, _) = ButtonBuilder.BuildDanger(buttonText);
+            
+            button.GetComponent<Button>().onClick.AddListener(delegate
+            {
+                UnityEngine.Object.Destroy(targetPanel.cheatPanel);
+                additionalAction();
+            });
+
+            // Check if the target panel exists
+            if (targetPanel.cheatPanel == null)
+            {
+                return button;
+            }
+            
+            // Attach the button to the target panel
+            button.transform.SetParent(targetPanel.cheatPanel.transform, false);
+            
+            // Configure the RectTransform for positioning
+            RectTransform buttonRect = button.GetComponent<RectTransform>();
+            
+            // Set the size
+            buttonRect.sizeDelta = new Vector2(buttonSize, buttonSize);
+            
+            // Add LayoutElement to prevent the HorizontalLayoutGroup from controlling this button
+            LayoutElement buttonLayout = button.AddComponent<LayoutElement>();
+            buttonLayout.ignoreLayout = true;
+            
+            // Use right-center anchors to position the button at the right edge of the panel
+            buttonRect.anchorMin = new Vector2(0.99f, 0.5f);
+            buttonRect.anchorMax = new Vector2(0.99f, 0.5f);
+            
+            // Position the button at the right edge with a small offset to center it
+            float buttonOffset = buttonSize / 2f;
+            buttonRect.anchoredPosition = new Vector2(-buttonOffset, 0f);
+
+            return button;
         }
     }
 }

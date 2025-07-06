@@ -4,7 +4,6 @@ using CabbyMenu.UI.Controls;
 using CabbyMenu.UI.Controls.CustomDropdown;
 using CabbyMenu.UI.Modders;
 using CabbyMenu.UI;
-using CabbyMenu.Utilities;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;

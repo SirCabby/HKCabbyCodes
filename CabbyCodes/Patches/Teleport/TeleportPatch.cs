@@ -1,9 +1,11 @@
 using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
+using CabbyMenu.UI.Controls;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
+using UnityEngine.UI;
 using BepInEx.Configuration;
 using System.Linq;
 using GlobalEnums;
@@ -139,7 +141,6 @@ namespace CabbyCodes.Patches.Teleport
                 CabbyCodesPlugin.BLogger.LogWarning(string.Format("Failed to load teleport locations from config: {0}", ex.Message));
             }
 
-            CabbyCodesPlugin.BLogger.LogDebug(string.Format("Loaded {0} custom teleport locations", result.Count));
             return result;
         }
 
@@ -226,7 +227,6 @@ namespace CabbyCodes.Patches.Teleport
                 bool heroReady = IsHeroReadyForTeleport(hero, gm);
                 if (heroReady)
                 {
-                    CabbyCodesPlugin.BLogger.LogInfo("Hero is ready for teleportation, proceeding");
                     break;
                 }
                 yield return null;
@@ -256,7 +256,6 @@ namespace CabbyCodes.Patches.Teleport
         {
             if (hero == null || gm == null)
             {
-                CabbyCodesPlugin.BLogger.LogDebug("[Teleport] Not ready: hero or gm is null");
                 return false;
             }
 
@@ -269,7 +268,6 @@ namespace CabbyCodes.Patches.Teleport
             // Check if the hero is on the ground (if available)
             bool onGround = false;
             try { onGround = hero.cState.onGround; } catch { }
-            CabbyCodesPlugin.BLogger.LogDebug(string.Format("[Teleport] Checking readiness: isGamePlaying={0}, acceptingInput={1}, heroState={2}, onGround={3}", isGamePlaying, acceptingInput, heroState, onGround));
 
             if (!isGamePlaying) return false;
             if (!acceptingInput) return false;
@@ -465,7 +463,11 @@ namespace CabbyCodes.Patches.Teleport
         {
             ButtonPanel buttonPanel = new ButtonPanel(() => { DoTeleport(location); }, "Teleport", location.DisplayName);
 
-            GameObject destroyButton = PanelAdder.AddDestroyPanelButton(buttonPanel, buttonPanel.cheatPanel.transform.childCount, () =>
+            // Add the panel to the menu first so it has a parent
+            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(buttonPanel);
+
+            // Create the X button after the panel has been added to the menu
+            GameObject destroyButton = PanelAdder.AddDestroyButtonToPanel(buttonPanel, () =>
             {
                 savedTeleports.Remove(location);
                 if (location is CustomTeleportLocation customLocation)
@@ -486,9 +488,7 @@ namespace CabbyCodes.Patches.Teleport
                         CabbyCodesPlugin.BLogger.LogWarning(string.Format("Failed to remove teleport location from config: {0} - {1}", customLocation.SceneName, ex.Message));
                     }
                 }
-            }, "X", new Vector2(Constants.TELEPORT_DESTROY_BUTTON_SIZE, Constants.TELEPORT_DESTROY_BUTTON_SIZE));
-
-            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(buttonPanel);
+            });
         }
 
         /// <summary>
@@ -502,6 +502,7 @@ namespace CabbyCodes.Patches.Teleport
             AddSavePanel();
             AddCustomNamePanel();
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Custom Teleport Locations").SetColor(CheatPanel.subHeaderColor));
+            
             foreach (TeleportLocation location in savedTeleports)
             {
                 AddCustomPanel(location);

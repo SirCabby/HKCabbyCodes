@@ -1,6 +1,5 @@
 using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
-using CabbyCodes.Patches.Charms;
 using CabbyMenu;
 
 namespace CabbyCodes.Patches.Charms
