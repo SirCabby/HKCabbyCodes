@@ -15,8 +15,7 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
         private const float OPTION_GAP = 5f;
         private const float DEFAULT_FONT_SIZE = 18f; // Increased from 14f
         private const float FONT_SIZE_RATIO = 0.7f; // Increased from 0.6f for better proportion
-        private const int MAX_VISIBLE_OPTIONS = 8; // Fallback default
-        private int dynamicMaxVisibleOptions = 8; // Will be calculated based on screen space
+        private int dynamicMaxVisibleOptions = 1; // Will be calculated based on screen space
         private const float SCROLLBAR_WIDTH = 10f;
         private const float MIN_DROPDOWN_WIDTH = 120f; // Minimum width for dropdown
         private const float TEXT_PADDING = 20f; // Padding for text within buttons
@@ -134,11 +133,11 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
         {
             // Get the dropdown's screen position
             RectTransform mainRect = GetComponent<RectTransform>();
-            if (mainRect == null) return MAX_VISIBLE_OPTIONS;
+            if (mainRect == null) return 1; // Fallback to 1 if no rect transform
 
             // Get the Canvas that contains this dropdown
             Canvas parentCanvas = GetComponentInParent<Canvas>();
-            if (parentCanvas == null) return MAX_VISIBLE_OPTIONS;
+            if (parentCanvas == null) return 1; // Fallback to 1 if no canvas
 
             // Get the dropdown's screen bounds
             Rect dropdownScreenRect = GetAccurateScreenRect(mainRect, parentCanvas);
@@ -163,11 +162,6 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
             maxOptions = Mathf.Max(maxOptions, 1); // At least 1 option
             maxOptions = Mathf.Min(maxOptions, options.Count); // Don't exceed total options
             maxOptions = Mathf.Min(maxOptions, 20); // Cap at 20 for performance
-            
-            Debug.Log($"[Dropdown Space Calculation] Dropdown bottom: {dropdownBottom}, Screen height: {screenHeight}");
-            Debug.Log($"[Dropdown Space Calculation] Available space below: {availableSpaceBelow}, Usable space: {usableSpace}");
-            Debug.Log($"[Dropdown Space Calculation] Option height: {dynamicOptionHeight}, Gap: {OPTION_GAP}");
-            Debug.Log($"[Dropdown Space Calculation] Calculated max options: {maxOptions}");
             
             return maxOptions;
         }
@@ -1262,9 +1256,6 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
                                Mathf.Min(options.Count - 1, dynamicMaxVisibleOptions - 1) * OPTION_GAP +
                                OPTION_MARGIN;
 
-            Debug.Log($"[Dropdown Panel Sizing] Total options: {options.Count}, Max visible: {dynamicMaxVisibleOptions}");
-            Debug.Log($"[Dropdown Panel Sizing] Panel height: {panelHeight}, Option height: {dynamicOptionHeight}");
-
             // Update panel size and position - use relative positioning within the same parent
             RectTransform panelRect = dropdownPanel.GetComponent<RectTransform>();
             // Use the current mainButtonWidth instead of mainRect.sizeDelta.x to ensure consistency
@@ -1318,8 +1309,7 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
 
             EnsureProperZOrder();
 
-            // Log dropdown position and bounds after everything is configured
-            LogDropdownPositionAndBounds();
+
         }
 
         private void ConfigurePanelComponents()
@@ -1333,134 +1323,7 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
             }
         }
 
-        /// <summary>
-        /// Logs the absolute screen position and bounds of the dropdown listview.
-        /// This method provides detailed information about the dropdown's position within the game screen.
-        /// </summary>
-        private void LogDropdownPositionAndBounds()
-        {
-            if (dropdownPanel == null)
-            {
-                Debug.LogWarning("Dropdown panel is null, cannot log position and bounds");
-                return;
-            }
 
-            // Log screen dimensions
-            Vector2 screenSize = new Vector2(Screen.width, Screen.height);
-            Debug.Log($"[Dropdown Position Log] Screen dimensions: {screenSize.x} x {screenSize.y} pixels");
-
-            // Get dropdown panel RectTransform
-            RectTransform panelRect = dropdownPanel.GetComponent<RectTransform>();
-            if (panelRect == null)
-            {
-                Debug.LogWarning("Dropdown panel RectTransform is null");
-                return;
-            }
-
-            // Get the Canvas that contains this dropdown
-            Canvas parentCanvas = dropdownPanel.GetComponentInParent<Canvas>();
-            if (parentCanvas == null)
-            {
-                Debug.LogWarning("No parent Canvas found for dropdown panel");
-                return;
-            }
-
-            // Log Canvas information
-            Debug.Log($"[Dropdown Position Log] Canvas render mode: {parentCanvas.renderMode}");
-            Debug.Log($"[Dropdown Position Log] Canvas scale factor: {parentCanvas.scaleFactor}");
-            Debug.Log($"[Dropdown Position Log] Canvas reference pixels per unit: {parentCanvas.referencePixelsPerUnit}");
-
-            // Get the dropdown panel's world position
-            Vector3 panelWorldPosition = panelRect.position;
-            Debug.Log($"[Dropdown Position Log] Panel world position: {panelWorldPosition}");
-
-            // Try multiple coordinate conversion methods
-            Vector3 panelScreenPosition1 = Vector3.zero;
-            Vector3 panelScreenPosition2 = Vector3.zero;
-            Vector3 panelScreenPosition3 = Vector3.zero;
-
-            // Method 1: Using Camera.main.WorldToScreenPoint
-            Camera mainCamera = Camera.main;
-            if (mainCamera != null)
-            {
-                panelScreenPosition1 = mainCamera.WorldToScreenPoint(panelWorldPosition);
-                Debug.Log($"[Dropdown Position Log] Panel screen position (Camera.main): {panelScreenPosition1}");
-            }
-
-            // Method 2: Using RectTransformUtility.WorldToScreenPoint with null camera (for UI)
-            panelScreenPosition2 = RectTransformUtility.WorldToScreenPoint(null, panelWorldPosition);
-            Debug.Log($"[Dropdown Position Log] Panel screen position (RectTransformUtility): {panelScreenPosition2}");
-
-            // Method 3: Using Canvas camera if available
-            if (parentCanvas.worldCamera != null)
-            {
-                panelScreenPosition3 = parentCanvas.worldCamera.WorldToScreenPoint(panelWorldPosition);
-                Debug.Log($"[Dropdown Position Log] Panel screen position (Canvas camera): {panelScreenPosition3}");
-            }
-
-            // Get accurate screen bounds using RectTransformUtility
-            Rect panelScreenRect = GetAccurateScreenRect(panelRect, parentCanvas);
-            Debug.Log($"[Dropdown Position Log] ===== PANEL (Background Container) =====");
-            Debug.Log($"[Dropdown Position Log] Panel screen bounds: X={panelScreenRect.x}, Y={panelScreenRect.y}, Width={panelScreenRect.width}, Height={panelScreenRect.height}");
-            Debug.Log($"[Dropdown Position Log] Panel bounds - Top: {panelScreenRect.y + panelScreenRect.height}, Bottom: {panelScreenRect.y}");
-            Debug.Log($"[Dropdown Position Log] Panel role: Main background container with color, holds entire dropdown");
-
-            // Also log the viewport bounds if available
-            if (viewport != null)
-            {
-                RectTransform viewportRect = viewport.GetComponent<RectTransform>();
-                if (viewportRect != null)
-                {
-                    Rect viewportScreenRect = GetAccurateScreenRect(viewportRect, parentCanvas);
-                    Debug.Log($"[Dropdown Position Log] ===== VIEWPORT (Visible Area Clipper) =====");
-                    Debug.Log($"[Dropdown Position Log] Viewport screen bounds: X={viewportScreenRect.x}, Y={viewportScreenRect.y}, Width={viewportScreenRect.width}, Height={viewportScreenRect.height}");
-                    Debug.Log($"[Dropdown Position Log] Viewport bounds - Top: {viewportScreenRect.y + viewportScreenRect.height}, Bottom: {viewportScreenRect.y}");
-                    Debug.Log($"[Dropdown Position Log] Viewport role: 'Window' that shows only visible portion of content");
-                }
-            }
-
-            // Log content bounds if available
-            if (content != null)
-            {
-                RectTransform contentRect = content.GetComponent<RectTransform>();
-                if (contentRect != null)
-                {
-                    Rect contentScreenRect = GetAccurateScreenRect(contentRect, parentCanvas);
-                    Debug.Log($"[Dropdown Position Log] ===== CONTENT (Scrollable Area) =====");
-                    Debug.Log($"[Dropdown Position Log] Content screen bounds: X={contentScreenRect.x}, Y={contentScreenRect.y}, Width={contentScreenRect.width}, Height={contentScreenRect.height}");
-                    Debug.Log($"[Dropdown Position Log] Content bounds - Top: {contentScreenRect.y + contentScreenRect.height}, Bottom: {contentScreenRect.y}");
-                    Debug.Log($"[Dropdown Position Log] Content role: Contains all option buttons, extends beyond viewport if many options");
-                    
-                    // Log content vs viewport size comparison
-                    if (viewport != null)
-                    {
-                        RectTransform viewportRect = viewport.GetComponent<RectTransform>();
-                        if (viewportRect != null)
-                        {
-                            Rect viewportScreenRect = GetAccurateScreenRect(viewportRect, parentCanvas);
-                            float contentHeight = contentScreenRect.height;
-                            float viewportHeight = viewportScreenRect.height;
-                            Debug.Log($"[Dropdown Position Log] Content height: {contentHeight}, Viewport height: {viewportHeight}");
-                            if (contentHeight > viewportHeight)
-                            {
-                                Debug.Log($"[Dropdown Position Log] Content is scrollable (content height > viewport height)");
-                            }
-                            else
-                            {
-                                Debug.Log($"[Dropdown Position Log] Content fits within viewport (no scrolling needed)");
-                            }
-                        }
-                    }
-                }
-            }
-
-            // Log component hierarchy summary
-            Debug.Log($"[Dropdown Position Log] ===== COMPONENT HIERARCHY =====");
-            Debug.Log($"[Dropdown Position Log] Panel (Background) -> ScrollView -> Viewport (Clipper) -> Content (Scrollable)");
-            Debug.Log($"[Dropdown Position Log] Panel: Background container with color");
-            Debug.Log($"[Dropdown Position Log] Viewport: Masks/clips content to show only visible portion");
-            Debug.Log($"[Dropdown Position Log] Content: Contains all options, can be larger than viewport");
-        }
 
         /// <summary>
         /// Gets the screen rect for a RectTransform, converting from world space to screen space.
@@ -1644,14 +1507,12 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
             RectTransform contentRect = content.GetComponent<RectTransform>();
             if (contentRect != null)
             {
-                // Calculate content size based on ALL options, not just visible ones
-                // This ensures scrolling works when there are more options than can fit
-                // Include top and bottom padding (OPTION_MARGIN) to match the panel height calculation
-                float contentHeight = OPTION_MARGIN + options.Count * dynamicOptionHeight + (options.Count - 1) * OPTION_GAP;
+                            // Calculate content size based on ALL options, not just visible ones
+            // This ensures scrolling works when there are more options than can fit
+            // Include top and bottom padding (OPTION_MARGIN) to match the panel height calculation
+            float contentHeight = OPTION_MARGIN + options.Count * dynamicOptionHeight + (options.Count - 1) * OPTION_GAP;
 
-                Debug.Log($"[Dropdown Content Sizing] Content height: {contentHeight}, Total options: {options.Count}");
-
-                // Configure content to stretch across viewport width and position at top
+            // Configure content to stretch across viewport width and position at top
                 contentRect.anchorMin = new Vector2(0, 1);
                 contentRect.anchorMax = new Vector2(1, 1);
                 contentRect.pivot = new Vector2(0.5f, 1f);
