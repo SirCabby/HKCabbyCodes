@@ -14,6 +14,7 @@ namespace CabbyCodes.Patches.Settings
         {
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Settings").SetColor(CheatPanel.headerColor));
             QuickStartPatch.AddPanel();
+            CustomSaveLoadPatch.AddPanels();
         }
     }
 } 
