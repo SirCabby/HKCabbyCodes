@@ -7,6 +7,7 @@ using UnityEngine;
 using BepInEx.Configuration;
 using System.Linq;
 using GlobalEnums;
+using System.Collections;
 
 namespace CabbyCodes.Patches.Teleport
 {
@@ -39,7 +40,10 @@ namespace CabbyCodes.Patches.Teleport
             new TeleportLocation("Town", "Starting Town", new Vector2(Constants.TOWN_X_POSITION, Constants.TOWN_Y_POSITION)),
         };
 
-
+        /// <summary>
+        /// Flag to prevent multiple teleport attempts while one is in progress.
+        /// </summary>
+        private static bool teleportInProgress = false;
 
         /// <summary>
         /// Gets the current teleport selection index.
@@ -125,12 +129,88 @@ namespace CabbyCodes.Patches.Teleport
         /// <param name="teleportLocation">The location to teleport to.</param>
         public static void DoTeleport(TeleportLocation teleportLocation)
         {
+            if (teleportInProgress)
+            {
+                CabbyCodesPlugin.BLogger.LogWarning("Teleport already in progress, ignoring request");
+                return;
+            }
+
             CabbyCodesPlugin.BLogger.LogInfo(string.Format("Teleporting to [{0}] ({1}, {2})", teleportLocation.SceneName, teleportLocation.Location.x, teleportLocation.Location.y));
 
             GameManager gm = GameManager._instance;
+            if (gm == null)
+            {
+                CabbyCodesPlugin.BLogger.LogError("GameManager is null, cannot teleport");
+                return;
+            }
+
+            // Unpause the game by setting all pause state fields before unpausing the hero
+            var hero = gm.hero_ctrl;
+            if (hero != null)
+            {
+                // Set all pause state fields to unpaused state
+                gm.isPaused = false;
+                Time.timeScale = 1f;
+                TimeController.GenericTimeScale = 1f;
+                
+                // Restore input handling
+                gm.inputHandler.StartAcceptingInput();
+                gm.inputHandler.AllowPause();
+                
+                // Set game state to playing
+                gm.SetState(GameState.PLAYING);
+                
+                // Update UI state to match game state
+                gm.ui?.SetState(UIState.PLAYING);
+                
+                // Now unpause the hero
+                hero.UnPause();
+            }
 
             // Store the target location for use after the scene loads
             _pendingTeleportLocation = teleportLocation;
+            teleportInProgress = true;
+
+            // Start the coroutine that waits for the hero to be ready before teleporting
+            gm.StartCoroutine(WaitForHeroReadyAndTeleport(teleportLocation));
+        }
+
+        /// <summary>
+        /// Coroutine that waits for the hero to be fully initialized before starting the teleport.
+        /// </summary>
+        /// <param name="teleportLocation">The location to teleport to.</param>
+        private static IEnumerator WaitForHeroReadyAndTeleport(TeleportLocation teleportLocation)
+        {
+            GameManager gm = GameManager._instance;
+            if (gm == null)
+            {
+                teleportInProgress = false;
+                yield break;
+            }
+
+            // Wait for the hero to be available
+            HeroController hero = null;
+            while (hero == null)
+            {
+                hero = gm.hero_ctrl;
+                if (hero == null)
+                {
+                    yield return null;
+                }
+            }
+
+            // Wait for the hero to be fully initialized and ready
+            while (true)
+            {
+                // Check if the hero is ready for teleportation
+                bool heroReady = IsHeroReadyForTeleport(hero, gm);
+                if (heroReady)
+                {
+                    CabbyCodesPlugin.BLogger.LogInfo("Hero is ready for teleportation, proceeding");
+                    break;
+                }
+                yield return null;
+            }
 
             // Subscribe to the event that fires after the hero is spawned in the new scene
             gm.OnFinishedEnteringScene += OnFinishedEnteringSceneTeleport;
@@ -144,6 +224,40 @@ namespace CabbyCodes.Patches.Teleport
                 SceneName = teleportLocation.SceneName,
                 Visualization = GameManager.SceneLoadVisualizations.Dream
             });
+        }
+
+        /// <summary>
+        /// Checks if the hero is ready for teleportation by examining various state conditions.
+        /// </summary>
+        /// <param name="hero">The hero controller to check.</param>
+        /// <param name="gm">The game manager instance.</param>
+        /// <returns>True if the hero is ready for teleportation, false otherwise.</returns>
+        private static bool IsHeroReadyForTeleport(HeroController hero, GameManager gm)
+        {
+            if (hero == null || gm == null)
+            {
+                CabbyCodesPlugin.BLogger.LogDebug("[Teleport] Not ready: hero or gm is null");
+                return false;
+            }
+
+            // Check if the game is in a playable state
+            bool isGamePlaying = gm.gameState == GameState.PLAYING;
+            // Check if the hero is accepting input (indicates it's fully initialized)
+            bool acceptingInput = gm.inputHandler.acceptingInput;
+            // Check if the hero is in a valid state
+            var heroState = hero.hero_state;
+            // Check if the hero is on the ground (if available)
+            bool onGround = false;
+            try { onGround = hero.cState.onGround; } catch { }
+            CabbyCodesPlugin.BLogger.LogDebug(string.Format("[Teleport] Checking readiness: isGamePlaying={0}, acceptingInput={1}, heroState={2}, onGround={3}", isGamePlaying, acceptingInput, heroState, onGround));
+
+            if (!isGamePlaying) return false;
+            if (!acceptingInput) return false;
+            if (heroState == ActorStates.no_input || heroState == ActorStates.airborne) return false;
+            if (!onGround) return false;
+            if (hero.transform == null) return false;
+
+            return true;
         }
 
         // Store the pending teleport location
@@ -180,6 +294,7 @@ namespace CabbyCodes.Patches.Teleport
             // Unsubscribe to avoid memory leaks
             gm.OnFinishedEnteringScene -= OnFinishedEnteringSceneTeleport;
             _pendingTeleportLocation = null;
+            teleportInProgress = false;
         }
 
         /// <summary>
