@@ -406,6 +406,21 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
         }
 
         /// <summary>
+        /// Repositions all currently open dropdowns to stay aligned with their buttons.
+        /// Call this when a parent container scrolls or moves.
+        /// </summary>
+        public static void RepositionAllDropdowns()
+        {
+            // Clean up any destroyed dropdowns first
+            CleanupDestroyedDropdowns();
+            
+            foreach (CustomDropdown dropdown in openDropdowns)
+            {
+                dropdown?.RepositionDropdownPanel();
+            }
+        }
+
+        /// <summary>
         /// Checks if the mouse position is over this dropdown's components.
         /// </summary>
         /// <param name="mousePosition">The mouse position in screen coordinates.</param>
@@ -664,14 +679,22 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
         {
             if (dropdownPanel != null) return;
 
-            // Find parent canvas
-            Canvas parentCanvas = GetComponentInParent<Canvas>();
-            if (parentCanvas == null)
+            // Find the appropriate parent - use the same parent that contains this dropdown button
+            // This ensures the dropdown panel moves with the parent when it scrolls
+            Transform parentTransform = transform.parent;
+            if (parentTransform == null)
             {
-                return;
+                // Fallback to canvas if no parent found
+                Canvas parentCanvas = GetComponentInParent<Canvas>();
+                if (parentCanvas == null)
+                {
+                    return;
+                }
+                parentTransform = parentCanvas.transform;
             }
+            
             // Create dropdown panel
-            dropdownPanel = CreateDropdownPanel(parentCanvas);
+            dropdownPanel = CreateDropdownPanel(parentTransform);
 
             // Create scroll view components
             CreateScrollViewComponents();
@@ -680,12 +703,12 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
             dropdownPanel.SetActive(false);
         }
 
-        private GameObject CreateDropdownPanel(Canvas parentCanvas)
+        private GameObject CreateDropdownPanel(Transform parentTransform)
         {
             GameObject panel = new GameObject("DropdownPanel");
-            panel.transform.SetParent(parentCanvas.transform, false);
+            panel.transform.SetParent(parentTransform, false);
 
-            // Configure panel rect transform - use absolute positioning relative to button
+            // Configure panel rect transform - use relative positioning to the button
             RectTransform panelRect = panel.AddComponent<RectTransform>();
             RectTransform mainRect = GetComponent<RectTransform>();
 
@@ -694,10 +717,11 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
             panelRect.anchorMax = Vector2.zero; // Bottom-left
             panelRect.sizeDelta = new Vector2(mainButtonWidth, 100f); // Use current mainButtonWidth, temporary height
 
-            // Position the panel relative to the button's world position
-            Vector3 buttonWorldPos = mainRect.position;
-            Vector3 panelWorldPos = new Vector3(buttonWorldPos.x, buttonWorldPos.y - mainRect.sizeDelta.y / 2, buttonWorldPos.z);
-            panelRect.position = panelWorldPos;
+            // Position the panel relative to the button's local position within the same parent
+            // This ensures the panel moves with the parent when it scrolls
+            Vector3 buttonLocalPos = mainRect.localPosition;
+            Vector3 panelLocalPos = new Vector3(buttonLocalPos.x, buttonLocalPos.y - mainRect.sizeDelta.y / 2, buttonLocalPos.z);
+            panelRect.localPosition = panelLocalPos;
 
             panelRect.pivot = new Vector2(0f, 1f); // Top-left pivot for left-aligned dropdown positioning
 
@@ -1203,24 +1227,16 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
                                Mathf.Min(options.Count - 1, MAX_VISIBLE_OPTIONS - 1) * OPTION_GAP +
                                OPTION_MARGIN;
 
-            // Update panel size and position - use absolute positioning
+            // Update panel size and position - use relative positioning within the same parent
             RectTransform panelRect = dropdownPanel.GetComponent<RectTransform>();
             // Use the current mainButtonWidth instead of mainRect.sizeDelta.x to ensure consistency
             panelRect.sizeDelta = new Vector2(mainButtonWidth, panelHeight);
 
-            // Get the button's actual world bounds
-            Vector3[] buttonCorners = new Vector3[4];
-            mainRect.GetWorldCorners(buttonCorners);
-            
-            // buttonCorners[0] = bottom-left, buttonCorners[1] = top-left, buttonCorners[2] = top-right, buttonCorners[3] = bottom-right
-            Vector3 buttonBottomLeft = buttonCorners[0];  // Bottom-left corner
-            Vector3 buttonTopLeft = buttonCorners[1];     // Top-left corner
-            Vector3 buttonTopRight = buttonCorners[2];    // Top-right corner
-            Vector3 buttonBottomRight = buttonCorners[3]; // Bottom-right corner
-
-            // Position panel with its left edge at the button's left edge, and its top edge at the button's bottom edge
-            Vector3 panelWorldPos = new Vector3(buttonBottomLeft.x, buttonBottomLeft.y, buttonBottomLeft.z);
-            panelRect.position = panelWorldPos;
+            // Position panel relative to the button's local position within the same parent
+            // This ensures the panel moves with the parent when it scrolls
+            Vector3 buttonLocalPos = mainRect.localPosition;
+            Vector3 panelLocalPos = new Vector3(buttonLocalPos.x, buttonLocalPos.y - mainRect.sizeDelta.y / 2, buttonLocalPos.z);
+            panelRect.localPosition = panelLocalPos;
 
             // Force layout update to ensure proper positioning
             LayoutRebuilder.ForceRebuildLayoutImmediate(panelRect);
@@ -1233,6 +1249,20 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
 
             RectTransform panelRect = dropdownPanel.GetComponent<RectTransform>();
             dropdownPanel.SetActive(true);
+
+            // Ensure dropdown panel is drawn on top in hierarchy
+            dropdownPanel.transform.SetAsLastSibling();
+
+            // Ensure dropdown panel is rendered above all other UI by using a Canvas with high sorting order
+            Canvas dropdownCanvas = dropdownPanel.GetComponent<Canvas>();
+            if (dropdownCanvas == null)
+                dropdownCanvas = dropdownPanel.AddComponent<Canvas>();
+            dropdownCanvas.overrideSorting = true;
+            dropdownCanvas.sortingOrder = 10000;
+
+            // Ensure dropdown panel receives UI events
+            if (dropdownPanel.GetComponent<GraphicRaycaster>() == null)
+                dropdownPanel.AddComponent<GraphicRaycaster>();
 
             ConfigurePanelComponents(panelRect);
 
@@ -1638,6 +1668,18 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
                 {
                     borderImage.color = borderColor;
                 }
+            }
+        }
+
+        /// <summary>
+        /// Repositions the dropdown panel to stay aligned with the button.
+        /// Call this when the parent container scrolls or moves.
+        /// </summary>
+        public void RepositionDropdownPanel()
+        {
+            if (isOpen && dropdownPanel != null)
+            {
+                PositionDropdownPanel();
             }
         }
     }
