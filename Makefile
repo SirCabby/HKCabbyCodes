@@ -118,6 +118,8 @@ publish: build
 # Deploy to Hollow Knight (copy DLL to BepInEx plugins folder)
 .PHONY: deploy
 deploy: build
+	@echo Closing any existing Hollow Knight processes...
+	@taskkill /f /im "hollow_knight.exe" >nul 2>&1 || exit /b 0
 	@echo Deploying $(PROJECT_NAME) to Hollow Knight...
 	@if not exist "$(BUILD_DIR)" echo Error: Output directory "$(BUILD_DIR)" does not exist. && exit /b 1
 	@if not exist "$(CABBYMENU_BUILD_DIR)" echo Error: CabbyMenu output directory "$(CABBYMENU_BUILD_DIR)" does not exist. && exit /b 1
