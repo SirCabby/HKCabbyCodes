@@ -19,14 +19,9 @@ namespace CabbyCodes.Patches.Settings
     public class CustomSaveLoadPatch
     {
         /// <summary>
-        /// Configuration key for custom save/load settings.
+        /// File extension for custom save files.
         /// </summary>
-        private const string CONFIG_KEY = "CustomSaveLoad";
-
-        /// <summary>
-        /// Configuration entry for the last used save name.
-        /// </summary>
-        private static ConfigEntry<string> lastSaveName;
+        private const string SAVE_FILE_EXTENSION = ".dat";
 
         /// <summary>
         /// Flag to track if patches have been applied.
@@ -50,24 +45,6 @@ namespace CabbyCodes.Patches.Settings
             }
             
             return cabbySavesDir;
-        }
-
-        /// <summary>
-        /// Gets the last used save name.
-        /// </summary>
-        /// <returns>The last used save name.</returns>
-        public static string GetLastSaveName()
-        {
-            return lastSaveName.Value;
-        }
-
-        /// <summary>
-        /// Sets the last used save name.
-        /// </summary>
-        /// <param name="value">The new save name.</param>
-        public static void SetLastSaveName(string value)
-        {
-            lastSaveName.Value = value;
         }
 
         /// <summary>
@@ -129,7 +106,7 @@ namespace CabbyCodes.Patches.Settings
                 return new List<string>();
             }
 
-            return Directory.GetFiles(cabbySavesDir, "*.save")
+            return Directory.GetFiles(cabbySavesDir, "*" + SAVE_FILE_EXTENSION)
                            .Select(Path.GetFileName)
                            .Where(name => !string.IsNullOrEmpty(name))
                            .ToList();
@@ -294,12 +271,6 @@ namespace CabbyCodes.Patches.Settings
             // Get the custom name if provided
             string customName = ((customSaveNameRef?.Get()) ?? "").Trim();
             
-            // Store the save name for convenience
-            if (!string.IsNullOrEmpty(customName))
-            {
-                SetLastSaveName(customName);
-            }
-
             SaveCustomGame(customName, (success) =>
             {
                 if (success)
@@ -416,27 +387,26 @@ namespace CabbyCodes.Patches.Settings
         /// </summary>
         private static void InitializeConfig()
         {
-            lastSaveName = CabbyCodesPlugin.configFile.Bind(CONFIG_KEY, "LastSaveName", "",
-                "The last used save name for convenience");
+            // No configuration entries needed for custom save/load
         }
 
         /// <summary>
         /// Generates a save file name from the provided name or timestamp.
         /// </summary>
         /// <param name="saveName">The user-provided save name (can be null/empty).</param>
-        /// <returns>The generated filename with .save extension.</returns>
+        /// <returns>The generated filename with SAVE_FILE_EXTENSION extension.</returns>
         private static string GenerateSaveFileName(string saveName)
         {
             if (string.IsNullOrWhiteSpace(saveName))
             {
                 // Use timestamp format: YYYY-MM-DD_HH-MM-SS
-                return DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + ".save";
+                return DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + SAVE_FILE_EXTENSION;
             }
             else
             {
                 // Sanitize the filename to remove invalid characters
                 string sanitizedName = string.Join("_", saveName.Split(Path.GetInvalidFileNameChars()));
-                return sanitizedName + ".save";
+                return sanitizedName + SAVE_FILE_EXTENSION;
             }
         }
 
@@ -586,5 +556,4 @@ namespace CabbyCodes.Patches.Settings
             }
         }
     }
-
 } 
