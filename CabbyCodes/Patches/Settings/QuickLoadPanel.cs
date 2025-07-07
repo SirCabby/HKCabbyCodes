@@ -61,11 +61,25 @@ namespace CabbyCodes.Patches.Settings
             dropdownPanelLayout.flexibleWidth = 0f;
             dropdownPanelLayout.minWidth = CabbyMenu.Constants.MIN_PANEL_WIDTH;
 
-            // Create wrapper to convert between dropdown index and slot number
-            var slotWrapper = new SaveSlotDropdownWrapper(inputReference);
-
+            // Create a simple reference that converts between dropdown index (0-3) and slot value (1-4)
+            var slotReference = new BoxedReference<int>(inputReference.Get() - 1);
+            
             // Create dropdown for save slot selection
-            var (dropDownSync, dropdownGameObject) = DropDownSync.Create(slotWrapper);
+            var (dropDownSync, dropdownGameObject) = DropDownSync.Create(slotReference);
+            
+            // Subscribe to dropdown changes to update the original reference
+            var dropdownComponent = dropDownSync.GetCustomDropdown();
+            dropdownComponent.onValueChanged.AddListener((index) => {
+                inputReference.Set(index + 1); // Convert index (0-3) to slot (1-4)
+            });
+            
+            // Subscribe to input reference changes to update the dropdown
+            // This ensures the dropdown stays in sync when the value changes externally
+            var originalUpdateAction = updateActions.Count > 0 ? updateActions[updateActions.Count - 1] : null;
+            updateActions.Add(() => {
+                slotReference.Set(inputReference.Get() - 1); // Convert slot (1-4) to index (0-3)
+                dropdownSync.Update();
+            });
             dropdownSync = dropDownSync;
             
             // Enable dynamic sizing and set options
