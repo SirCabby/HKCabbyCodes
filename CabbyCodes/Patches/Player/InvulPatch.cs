@@ -9,7 +9,7 @@ namespace CabbyCodes.Patches.Player
     public class InvulPatch : ISyncedReference<bool>
     {
         public const string key = "Invul_Patch";
-        private static readonly BoxedReference value = CodeState.Get(key, false);
+        private static readonly BoxedReference<bool> value = CodeState.Get(key, false);
         private static readonly Harmony harmony = new Harmony(key);
         private static readonly MethodInfo mOriginal = AccessTools.Method(typeof(PlayerData), nameof(PlayerData.TakeHealth));
         private static readonly MethodInfo mOriginal2 = AccessTools.Method(typeof(PlayerData), nameof(PlayerData.WouldDie));
@@ -17,7 +17,7 @@ namespace CabbyCodes.Patches.Player
 
         public bool Get()
         {
-            return (bool)value.Get();
+            return value.Get();
         }
 
         public void Set(bool value)
@@ -63,7 +63,7 @@ namespace CabbyCodes.Patches.Player
         private static void OnFinishedEnteringSceneInvul()
         {
             // Reapply invulnerability state if it's currently enabled
-            if ((bool)value.Get())
+            if (value.Get())
             {
                 PlayerData.instance.isInvincible = true;
                 PlayerData.instance.MaxHealth();

@@ -9,7 +9,7 @@ namespace CabbyCodes.Patches.Player
     public class SoulPatch : ISyncedReference<bool>
     {
         public const string key = "Soul_Patch";
-        private static readonly BoxedReference value = CodeState.Get(key, false);
+        private static readonly BoxedReference<bool> value = CodeState.Get(key, false);
         private static readonly Harmony harmony = new Harmony(key);
         private static readonly MethodInfo mOriginal = AccessTools.Method(typeof(PlayerData), nameof(PlayerData.TakeMP));
         private static readonly MethodInfo mOriginal2 = AccessTools.Method(typeof(PlayerData), nameof(PlayerData.TakeReserveMP));
@@ -17,7 +17,7 @@ namespace CabbyCodes.Patches.Player
 
         public bool Get()
         {
-            return (bool)value.Get();
+            return value.Get();
         }
 
         public void Set(bool value)

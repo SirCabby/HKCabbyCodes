@@ -49,9 +49,6 @@ namespace CabbyCodes
         [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "Unity lifecycle method called by Unity engine")]
         private void Awake()
         {
-            // Setup custom save/load delegates before anything else
-            CabbyCodes.Patches.Settings.CustomSaveLoadPatch.SetupDelegates();
-
             BLogger = Logger;
             BLogger.LogInfo("Plugin cabby.cabbycodes is loaded!");
             BLogger.LogInfo(string.Format("Config location: {0}", Config.ConfigFilePath));

@@ -1,11 +1,9 @@
 using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
-using CabbyMenu.UI.Controls;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
-using UnityEngine.UI;
 using BepInEx.Configuration;
 using System.Linq;
 using GlobalEnums;
@@ -36,7 +34,7 @@ namespace CabbyCodes.Patches.Teleport
         /// <summary>
         /// Synced reference for the custom teleport name input field.
         /// </summary>
-        private static readonly CustomTeleportNameReference customTeleportNameRef = new CustomTeleportNameReference();
+        private static readonly BoxedReference<string> customTeleportNameRef = new BoxedReference<string>("");
 
         /// <summary>
         /// Reference to the custom name input field panel for forcing updates.
@@ -326,7 +324,7 @@ namespace CabbyCodes.Patches.Teleport
             Vector2 teleportLocation = new Vector2((int)Math.Round(heroPos.x), (int)Math.Ceiling(heroPos.y));
 
             // Get the custom name if provided, otherwise use the scene name
-            string customName = customTeleportNameRef.Get().Trim();
+            string customName = (customTeleportNameRef.Get() ?? "").Trim();
             string displayName = !string.IsNullOrEmpty(customName) ? customName : sceneName;
 
             List<TeleportLocation> teleportLocations = savedTeleports;
@@ -507,24 +505,6 @@ namespace CabbyCodes.Patches.Teleport
             {
                 AddCustomPanel(location);
             }
-        }
-    }
-
-    /// <summary>
-    /// Simple string reference for custom teleport names.
-    /// </summary>
-    public class CustomTeleportNameReference : ISyncedReference<string>
-    {
-        private string value = "";
-
-        public string Get()
-        {
-            return value;
-        }
-
-        public void Set(string value)
-        {
-            this.value = value ?? "";
         }
     }
 } 

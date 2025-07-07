@@ -8,11 +8,11 @@ namespace CabbyCodes.Patches.Charms
     {
         public const string key = "CharmCost_Patch";
         private static readonly string charmCostName = "charmCost_";
-        private static readonly BoxedReference value = CodeState.Get(key, false);
+        private static readonly BoxedReference<bool> value = CodeState.Get(key, false);
 
         public bool Get()
         {
-            return (bool)value.Get();
+            return value.Get();
         }
 
         public void Set(bool value)

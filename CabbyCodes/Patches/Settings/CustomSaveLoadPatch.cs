@@ -1,7 +1,6 @@
 using BepInEx.Configuration;
 using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
-using HarmonyLib;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -23,11 +22,6 @@ namespace CabbyCodes.Patches.Settings
         /// Configuration key for custom save/load settings.
         /// </summary>
         private const string CONFIG_KEY = "CustomSaveLoad";
-
-        /// <summary>
-        /// Harmony instance for patching game methods.
-        /// </summary>
-        private static readonly Harmony harmony = new Harmony("cabby.customsaveload");
 
         /// <summary>
         /// Configuration entry for the last used save name.
@@ -57,8 +51,6 @@ namespace CabbyCodes.Patches.Settings
             
             return cabbySavesDir;
         }
-
-
 
         /// <summary>
         /// Gets the last used save name.
@@ -169,22 +161,10 @@ namespace CabbyCodes.Patches.Settings
         }
 
         /// <summary>
-        /// Sets up the delegates for the UI panel. This must be called before creating any UI panels.
-        /// </summary>
-        public static void SetupDelegates()
-        {
-            // No longer needed since we're not using delegates
-            // All functionality is now handled directly in this class
-        }
-
-        /// <summary>
         /// Adds all custom save/load panels to the mod menu.
         /// </summary>
         public static void AddPanels()
         {
-            // Ensure delegates are set up before creating panels
-            SetupDelegates();
-            
             // Header panel
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Save / Load").SetColor(CheatPanel.headerColor));
             
@@ -216,7 +196,7 @@ namespace CabbyCodes.Patches.Settings
         {
             // Calculate width for 35 characters but allow 50 characters
             int widthFor35Chars = CalculatePanelWidth(35);
-            customSaveNameInputPanel = new InputFieldPanel<string>(customSaveNameRef, CabbyMenu.Utilities.KeyCodeMap.ValidChars.AlphaNumeric, 60, widthFor35Chars, "(Optional) Save game name");
+            customSaveNameInputPanel = new InputFieldPanel<string>(customSaveNameRef, KeyCodeMap.ValidChars.AlphaNumeric, 60, widthFor35Chars, "(Optional) Save game name");
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(customSaveNameInputPanel);
         }
 
@@ -312,7 +292,7 @@ namespace CabbyCodes.Patches.Settings
         private static void SaveCustomGame()
         {
             // Get the custom name if provided
-            string customName = customSaveNameRef?.Get().Trim() ?? "";
+            string customName = ((customSaveNameRef?.Get()) ?? "").Trim();
             
             // Store the save name for convenience
             if (!string.IsNullOrEmpty(customName))
@@ -327,10 +307,7 @@ namespace CabbyCodes.Patches.Settings
                     CabbyCodesPlugin.BLogger.LogDebug(string.Format("Game saved successfully: {0}", customName));
                     
                     // Clear the custom name input field after saving
-                    if (customSaveNameRef != null)
-                    {
-                        customSaveNameRef.Set("");
-                    }
+                    customSaveNameRef.Set("");
                     
                     // Force an update to ensure the UI reflects the cleared value
                     customSaveNameInputPanel?.ForceUpdate();
@@ -358,10 +335,7 @@ namespace CabbyCodes.Patches.Settings
                     CabbyCodesPlugin.BLogger.LogDebug(string.Format("Loaded save file successfully: {0}", saveFileName));
                     
                     // After loading, trigger the continue game function
-                    if (GameManager.instance != null)
-                    {
-                        GameManager.instance.ContinueGame();
-                    }
+                    GameManager.instance?.ContinueGame();
                 }
                 else
                 {
@@ -414,9 +388,9 @@ namespace CabbyCodes.Patches.Settings
         private static InputFieldPanel<string> customSaveNameInputPanel;
 
         /// <summary>
-        /// Reference to the custom save name for accessing the input field value.
+        /// Synced reference for the custom save name input field.
         /// </summary>
-        private static readonly CustomSaveNameReference customSaveNameRef = new CustomSaveNameReference();
+        private static readonly BoxedReference<string> customSaveNameRef = new BoxedReference<string>("");
 
         /// <summary>
         /// List of save file panels that need to be refreshed.
@@ -529,10 +503,6 @@ namespace CabbyCodes.Patches.Settings
                 // Write to our custom file
                 File.WriteAllBytes(filePath, fileData);
                 
-                // Reset game timer like vanilla does
-                // Note: These fields are private, so we'll use the public PlayTime property instead
-                // The game will handle session timing internally
-
                 callback?.Invoke(true);
             }
             catch (Exception ex)
@@ -584,9 +554,6 @@ namespace CabbyCodes.Patches.Settings
                 // Update input handler
                 gameManager.inputHandler.RefreshPlayerData();
                 
-                // Reset session timer
-                // Note: These fields are private, so we'll let the game handle session timing
-
                 // If we have scene and position data, restore them
                 if (!string.IsNullOrEmpty(saveGameData.sceneName))
                 {
@@ -618,34 +585,6 @@ namespace CabbyCodes.Patches.Settings
                 callback?.Invoke(false);
             }
         }
-
-
     }
 
-    /// <summary>
-    /// Save game data structure (extends vanilla game structure with custom scene/position data).
-    /// </summary>
-    [Serializable]
-    public class SaveGameData
-    {
-        public PlayerData playerData;
-        public SceneData sceneData;
-        public string sceneName;
-        public float playerX;
-        public float playerY;
-
-        public SaveGameData(PlayerData playerData, SceneData sceneData, string sceneName, Vector2 playerPosition)
-        {
-            this.playerData = playerData;
-            this.sceneData = sceneData;
-            this.sceneName = sceneName;
-            this.playerX = playerPosition.x;
-            this.playerY = playerPosition.y;
-        }
-
-        public Vector2 GetPlayerPosition()
-        {
-            return new Vector2(playerX, playerY);
-        }
-    }
 } 
