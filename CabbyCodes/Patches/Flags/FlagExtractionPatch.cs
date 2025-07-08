@@ -59,7 +59,6 @@ namespace CabbyCodes.Patches.Flags
                 allFlags.Add(new FlagData(
                     pbd.id,
                     pbd.sceneName,
-                    pbd.activated.ToString(),
                     pbd.semiPersistent,
                     "PersistentBoolData"
                 ));
@@ -75,7 +74,6 @@ namespace CabbyCodes.Patches.Flags
                 allFlags.Add(new FlagData(
                     pid.id,
                     pid.sceneName,
-                    pid.value.ToString(),
                     pid.semiPersistent,
                     "PersistentIntData"
                 ));
@@ -91,7 +89,6 @@ namespace CabbyCodes.Patches.Flags
                 allFlags.Add(new FlagData(
                     grd.id,
                     grd.sceneName,
-                    "N/A",
                     false,
                     "GeoRockData"
                 ));
@@ -112,7 +109,6 @@ namespace CabbyCodes.Patches.Flags
                     allFlags.Add(new FlagData(
                         field.Name,
                         "Global",
-                        field.GetValue(PlayerData.instance).ToString(),
                         false,
                         "PlayerData_Bool"
                     ));
@@ -122,7 +118,6 @@ namespace CabbyCodes.Patches.Flags
                     allFlags.Add(new FlagData(
                         field.Name,
                         "Global",
-                        field.GetValue(PlayerData.instance).ToString(),
                         false,
                         "PlayerData_Int"
                     ));
@@ -155,7 +150,6 @@ namespace CabbyCodes.Patches.Flags
                     {
                         writer.WriteLine($"ID: {flag.Id}");
                         writer.WriteLine($"Scene: {flag.SceneName}");
-                        writer.WriteLine($"Value: {flag.Value}");
                         writer.WriteLine($"SemiPersistent: {flag.SemiPersistent}");
                         writer.WriteLine();
                     }
