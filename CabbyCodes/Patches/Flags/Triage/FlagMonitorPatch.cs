@@ -1,11 +1,10 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
-using System.Reflection;
 using HarmonyLib;
 using CabbyMenu.UI.CheatPanels;
 
-namespace CabbyCodes.Patches.Flags
+namespace CabbyCodes.Patches.Flags.Triage
 {
     public class FlagMonitorPatch
     {
@@ -76,8 +75,6 @@ namespace CabbyCodes.Patches.Flags
                 AddNotification(notification);
             }
         }
-
-
 
         private static void AddNotification(string message)
         {

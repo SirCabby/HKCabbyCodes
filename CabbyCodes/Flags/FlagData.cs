@@ -1,4 +1,4 @@
-namespace CabbyCodes.Patches.Flags
+namespace CabbyCodes.Flags
 {
     public class FlagData
     {

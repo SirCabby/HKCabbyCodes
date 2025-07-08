@@ -1,5 +1,6 @@
 using CabbyCodes.Patches.Flags.General;
 using CabbyCodes.Patches.Flags.NPC_Status;
+using CabbyCodes.Patches.Flags.Triage;
 using CabbyMenu.UI.CheatPanels;
 
 namespace CabbyCodes.Patches.Flags

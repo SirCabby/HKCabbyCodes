@@ -5,8 +5,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using CabbyCodes.Flags;
 
-namespace CabbyCodes.Patches.Flags
+namespace CabbyCodes.Patches.Flags.Triage
 {
     public class FlagExtractionPatch
     {
@@ -21,7 +22,7 @@ namespace CabbyCodes.Patches.Flags
                     ExtractAllFlags();
                     Debug.Log("Flag extraction completed! Check CabbySaves folder for all_flags_report.txt");
                 }
-                catch (System.Exception ex)
+                catch (Exception ex)
                 {
                     Debug.LogError($"Flag extraction failed: {ex.Message}");
                 }
