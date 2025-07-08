@@ -17,6 +17,9 @@ namespace CabbyCodes.Patches.Flags
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Must be outside of npc room when updating").SetColor(CheatPanel.warningColor));
             MylaWaifuPatch.AddPanel();
 
+            FlagExtractionPatch.AddPanel();
+            FlagMonitorPatch.AddPanel();
+
             //CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Boss Defeated").SetColor(CheatPanel.subHeaderColor));
             //CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Stag Stations").SetColor(CheatPanel.subHeaderColor));
         }
