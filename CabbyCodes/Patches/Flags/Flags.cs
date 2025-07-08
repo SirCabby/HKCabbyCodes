@@ -1750,7 +1750,7 @@ namespace CabbyCodes.Patches.Flags
 
         public static class Type
         {
-            public static class Georockdata
+            public static class GeoRocks
             {
                 public static FlagData Crossroads01GeoRock2 => FlagInstances.Crossroads_01__Geo_Rock_2;
                 public static FlagData Crossroads05GeoRock1 => FlagInstances.Crossroads_05__Geo_Rock_1;
@@ -1779,18 +1779,63 @@ namespace CabbyCodes.Patches.Flags
                 public static FlagData Tutorial01GeoRock5 => FlagInstances.Tutorial_01__Geo_Rock_5;
             }
 
-            public static class Persistentbooldata
+            public static class GrubBottles
             {
                 public static FlagData Abyss17GrubBottle => FlagInstances.Abyss_17__Grub_Bottle;
                 public static FlagData Abyss19GrubBottle => FlagInstances.Abyss_19__Grub_Bottle;
+                public static FlagData Crossroads03GrubBottle => FlagInstances.Crossroads_03__Grub_Bottle;
+                public static FlagData Crossroads05GrubBottle => FlagInstances.Crossroads_05__Grub_Bottle;
+                public static FlagData Crossroads31GrubBottle => FlagInstances.Crossroads_31__Grub_Bottle;
+                public static FlagData Crossroads35GrubBottle => FlagInstances.Crossroads_35__Grub_Bottle;
+                public static FlagData Crossroads48GrubBottle => FlagInstances.Crossroads_48__Grub_Bottle;
+                public static FlagData Deepnest03GrubBottle => FlagInstances.Deepnest_03__Grub_Bottle;
+                public static FlagData Deepnest31GrubBottle => FlagInstances.Deepnest_31__Grub_Bottle;
+                public static FlagData Deepnest36GrubBottle => FlagInstances.Deepnest_36__Grub_Bottle;
+                public static FlagData Deepnest39GrubBottle => FlagInstances.Deepnest_39__Grub_Bottle;
+                public static FlagData DeepnestEast11GrubBottle => FlagInstances.Deepnest_East_11__Grub_Bottle;
+                public static FlagData DeepnestEast14GrubBottle => FlagInstances.Deepnest_East_14__Grub_Bottle;
+                public static FlagData DeepnestSpiderTownGrubBottle => FlagInstances.Deepnest_Spider_Town__Grub_Bottle;
+                public static FlagData Fungus106GrubBottle => FlagInstances.Fungus1_06__Grub_Bottle;
+                public static FlagData Fungus107GrubBottle => FlagInstances.Fungus1_07__Grub_Bottle;
+                public static FlagData Fungus113GrubBottle => FlagInstances.Fungus1_13__Grub_Bottle;
+                public static FlagData Fungus121GrubBottle => FlagInstances.Fungus1_21__Grub_Bottle;
+                public static FlagData Fungus128GrubBottle => FlagInstances.Fungus1_28__Grub_Bottle;
+                public static FlagData Fungus218GrubBottle => FlagInstances.Fungus2_18__Grub_Bottle;
+                public static FlagData Fungus220GrubBottle => FlagInstances.Fungus2_20__Grub_Bottle;
+                public static FlagData Fungus310GrubBottle => FlagInstances.Fungus3_10__Grub_Bottle;
+                public static FlagData Fungus322GrubBottle => FlagInstances.Fungus3_22__Grub_Bottle;
+                public static FlagData Fungus347GrubBottle => FlagInstances.Fungus3_47__Grub_Bottle;
+                public static FlagData Fungus348GrubBottle => FlagInstances.Fungus3_48__Grub_Bottle;
+                public static FlagData Hive03GrubBottle => FlagInstances.Hive_03__Grub_Bottle;
+                public static FlagData Hive04GrubBottle => FlagInstances.Hive_04__Grub_Bottle;
+                public static FlagData Mines03GrubBottle => FlagInstances.Mines_03__Grub_Bottle;
+                public static FlagData Mines04GrubBottle => FlagInstances.Mines_04__Grub_Bottle;
+                public static FlagData Mines16GrubBottle => FlagInstances.Mines_16__Grub_Bottle;
+                public static FlagData Mines19GrubBottle => FlagInstances.Mines_19__Grub_Bottle;
+                public static FlagData Mines24GrubBottle => FlagInstances.Mines_24__Grub_Bottle;
+                public static FlagData Mines31GrubBottle => FlagInstances.Mines_31__Grub_Bottle;
+                public static FlagData Mines35GrubBottle => FlagInstances.Mines_35__Grub_Bottle;
+                public static FlagData Restinggrounds10GrubBottle => FlagInstances.RestingGrounds_10__Grub_Bottle;
+                public static FlagData Ruins105GrubBottle => FlagInstances.Ruins1_05__Grub_Bottle;
+                public static FlagData Ruins132GrubBottle => FlagInstances.Ruins1_32__Grub_Bottle;
+                public static FlagData Ruins203GrubBottle => FlagInstances.Ruins2_03__Grub_Bottle;
+                public static FlagData Ruins207GrubBottle => FlagInstances.Ruins2_07__Grub_Bottle;
+                public static FlagData Ruins211GrubBottle => FlagInstances.Ruins2_11__Grub_Bottle;
+                public static FlagData RuinsHouse01GrubBottle => FlagInstances.Ruins_House_01__Grub_Bottle;
+                public static FlagData Waterways04GrubBottle => FlagInstances.Waterways_04__Grub_Bottle;
+                public static FlagData Waterways13GrubBottle => FlagInstances.Waterways_13__Grub_Bottle;
+                public static FlagData Waterways14GrubBottle => FlagInstances.Waterways_14__Grub_Bottle;
+            }
+
+            // UNCATEGORIZED
+            public static class Uncategorized_Persistentbooldata
+            {
                 public static FlagData Crossroads01SecretMask => FlagInstances.Crossroads_01__Secret_Mask;
                 public static FlagData Crossroads01ShinyItem => FlagInstances.Crossroads_01__Shiny_Item;
                 public static FlagData Crossroads01ZombieRunner => FlagInstances.Crossroads_01__Zombie_Runner;
                 public static FlagData Crossroads01ZombieRunner1 => FlagInstances.Crossroads_01__Zombie_Runner_1;
                 public static FlagData Crossroads03BreakWall2 => FlagInstances.Crossroads_03__Break_Wall_2;
-                public static FlagData Crossroads03GrubBottle => FlagInstances.Crossroads_03__Grub_Bottle;
                 public static FlagData Crossroads03TollGateSwitch => FlagInstances.Crossroads_03__Toll_Gate_Switch;
-                public static FlagData Crossroads05GrubBottle => FlagInstances.Crossroads_05__Grub_Bottle;
                 public static FlagData Crossroads05ZombieRunner => FlagInstances.Crossroads_05__Zombie_Runner;
                 public static FlagData Crossroads07BreakableWallSilhouette => FlagInstances.Crossroads_07__Breakable_Wall_Silhouette;
                 public static FlagData Crossroads07DreamPlant => FlagInstances.Crossroads_07__Dream_Plant;
@@ -1841,8 +1886,6 @@ namespace CabbyCodes.Patches.Flags
                 public static FlagData Crossroads18InverseRemasker => FlagInstances.Crossroads_18__Inverse_Remasker;
                 public static FlagData Crossroads19Hatcher => FlagInstances.Crossroads_19__Hatcher;
                 public static FlagData Crossroads19ZombieLeaper => FlagInstances.Crossroads_19__Zombie_Leaper;
-                public static FlagData Crossroads31GrubBottle => FlagInstances.Crossroads_31__Grub_Bottle;
-                public static FlagData Crossroads35GrubBottle => FlagInstances.Crossroads_35__Grub_Bottle;
                 public static FlagData Crossroads35Hatcher => FlagInstances.Crossroads_35__Hatcher;
                 public static FlagData Crossroads35Remasker => FlagInstances.Crossroads_35__Remasker;
                 public static FlagData Crossroads36CollapserSmall => FlagInstances.Crossroads_36__Collapser_Small;
@@ -1866,44 +1909,9 @@ namespace CabbyCodes.Patches.Flags
                 public static FlagData Crossroads40ZombieLeaper1 => FlagInstances.Crossroads_40__Zombie_Leaper_1;
                 public static FlagData Crossroads40ZombieRunner2 => FlagInstances.Crossroads_40__Zombie_Runner_2;
                 public static FlagData Crossroads45ZombieMyla => FlagInstances.Crossroads_45__Zombie_Myla;
-                public static FlagData Crossroads48GrubBottle => FlagInstances.Crossroads_48__Grub_Bottle;
                 public static FlagData Crossroads48ZombieGuard => FlagInstances.Crossroads_48__Zombie_Guard;
-                public static FlagData Deepnest03GrubBottle => FlagInstances.Deepnest_03__Grub_Bottle;
-                public static FlagData Deepnest31GrubBottle => FlagInstances.Deepnest_31__Grub_Bottle;
-                public static FlagData Deepnest36GrubBottle => FlagInstances.Deepnest_36__Grub_Bottle;
-                public static FlagData Deepnest39GrubBottle => FlagInstances.Deepnest_39__Grub_Bottle;
-                public static FlagData DeepnestEast11GrubBottle => FlagInstances.Deepnest_East_11__Grub_Bottle;
-                public static FlagData DeepnestEast14GrubBottle => FlagInstances.Deepnest_East_14__Grub_Bottle;
-                public static FlagData DeepnestSpiderTownGrubBottle => FlagInstances.Deepnest_Spider_Town__Grub_Bottle;
-                public static FlagData Fungus106GrubBottle => FlagInstances.Fungus1_06__Grub_Bottle;
-                public static FlagData Fungus107GrubBottle => FlagInstances.Fungus1_07__Grub_Bottle;
-                public static FlagData Fungus113GrubBottle => FlagInstances.Fungus1_13__Grub_Bottle;
-                public static FlagData Fungus121GrubBottle => FlagInstances.Fungus1_21__Grub_Bottle;
-                public static FlagData Fungus128GrubBottle => FlagInstances.Fungus1_28__Grub_Bottle;
-                public static FlagData Fungus218GrubBottle => FlagInstances.Fungus2_18__Grub_Bottle;
-                public static FlagData Fungus220GrubBottle => FlagInstances.Fungus2_20__Grub_Bottle;
-                public static FlagData Fungus310GrubBottle => FlagInstances.Fungus3_10__Grub_Bottle;
-                public static FlagData Fungus322GrubBottle => FlagInstances.Fungus3_22__Grub_Bottle;
-                public static FlagData Fungus347GrubBottle => FlagInstances.Fungus3_47__Grub_Bottle;
-                public static FlagData Fungus348GrubBottle => FlagInstances.Fungus3_48__Grub_Bottle;
-                public static FlagData Hive03GrubBottle => FlagInstances.Hive_03__Grub_Bottle;
-                public static FlagData Hive04GrubBottle => FlagInstances.Hive_04__Grub_Bottle;
                 public static FlagData Mines01EggSac => FlagInstances.Mines_01__Egg_Sac;
                 public static FlagData Mines01Mine1QuakeFloor => FlagInstances.Mines_01__mine_1_quake_floor;
-                public static FlagData Mines03GrubBottle => FlagInstances.Mines_03__Grub_Bottle;
-                public static FlagData Mines04GrubBottle => FlagInstances.Mines_04__Grub_Bottle;
-                public static FlagData Mines16GrubBottle => FlagInstances.Mines_16__Grub_Bottle;
-                public static FlagData Mines19GrubBottle => FlagInstances.Mines_19__Grub_Bottle;
-                public static FlagData Mines24GrubBottle => FlagInstances.Mines_24__Grub_Bottle;
-                public static FlagData Mines31GrubBottle => FlagInstances.Mines_31__Grub_Bottle;
-                public static FlagData Mines35GrubBottle => FlagInstances.Mines_35__Grub_Bottle;
-                public static FlagData Restinggrounds10GrubBottle => FlagInstances.RestingGrounds_10__Grub_Bottle;
-                public static FlagData Ruins105GrubBottle => FlagInstances.Ruins1_05__Grub_Bottle;
-                public static FlagData Ruins132GrubBottle => FlagInstances.Ruins1_32__Grub_Bottle;
-                public static FlagData Ruins203GrubBottle => FlagInstances.Ruins2_03__Grub_Bottle;
-                public static FlagData Ruins207GrubBottle => FlagInstances.Ruins2_07__Grub_Bottle;
-                public static FlagData Ruins211GrubBottle => FlagInstances.Ruins2_11__Grub_Bottle;
-                public static FlagData RuinsHouse01GrubBottle => FlagInstances.Ruins_House_01__Grub_Bottle;
                 public static FlagData TownDeathRespawnTrigger => FlagInstances.Town__Death_Respawn_Trigger;
                 public static FlagData TownDeathRespawnTrigger1 => FlagInstances.Town__Death_Respawn_Trigger_1;
                 public static FlagData TownDoorDestroyer => FlagInstances.Town__Door_Destroyer;
@@ -1931,12 +1939,9 @@ namespace CabbyCodes.Patches.Flags
                 public static FlagData Tutorial01TuteDoor7 => FlagInstances.Tutorial_01__Tute_Door_7;
                 public static FlagData Tutorial01FuryCharmRemask => FlagInstances.Tutorial_01__fury_charm_remask;
                 public static FlagData Tutorial01InverseRemaskRight => FlagInstances.Tutorial_01__inverse_remask_right;
-                public static FlagData Waterways04GrubBottle => FlagInstances.Waterways_04__Grub_Bottle;
-                public static FlagData Waterways13GrubBottle => FlagInstances.Waterways_13__Grub_Bottle;
-                public static FlagData Waterways14GrubBottle => FlagInstances.Waterways_14__Grub_Bottle;
             }
 
-            public static class Persistentintdata
+            public static class Uncategorized_Persistentintdata
             {
                 public static FlagData Crossroads18SoulTotemMiniHorned => FlagInstances.Crossroads_18__Soul_Totem_mini_horned;
                 public static FlagData Crossroads19SoulTotemMiniTwoHorned => FlagInstances.Crossroads_19__Soul_Totem_mini_two_horned;
@@ -1946,7 +1951,7 @@ namespace CabbyCodes.Patches.Flags
                 public static FlagData Crossroads45SoulTotem5 => FlagInstances.Crossroads_45__Soul_Totem_5;
             }
 
-            public static class PlayerdataBool
+            public static class Uncategorized_PlayerdataBool
             {
                 public static FlagData AladarEncountered => FlagInstances.ALADAR_encountered;
                 public static FlagData GalienEncountered => FlagInstances.GALIEN_encountered;
@@ -3050,7 +3055,7 @@ namespace CabbyCodes.Patches.Flags
                 public static FlagData Zotetrappeddeepnest => FlagInstances.zoteTrappedDeepnest;
             }
 
-            public static class PlayerdataInt
+            public static class Uncategorized_PlayerdataInt
             {
                 public static FlagData Mpcharge => FlagInstances.MPCharge;
                 public static FlagData Mpreserve => FlagInstances.MPReserve;
