@@ -6,7 +6,7 @@ namespace CabbyCodes.Scenes
     /// <summary>
     /// Maps Hollow Knight scene names to readable display names and areas.
     /// </summary>
-    public static class Scenes
+    public static class SceneManagement
     {
         /// <summary>
         /// Collection of all scene mapping data from the static SceneInstances class.

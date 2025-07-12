@@ -1,13 +1,15 @@
+using CabbyCodes.Flags.FlagInfo;
+
 namespace CabbyCodes.Flags.SceneFlags
 {
-    public class Crossroads38 : FlagGroupBase
+    public class Crossroads38
     {
-        public static FlagData Reward10 => FlagInstances.Crossroads_38__Reward_10;
-        public static FlagData Reward16 => FlagInstances.Crossroads_38__Reward_16;
-        public static FlagData Reward23 => FlagInstances.Crossroads_38__Reward_23;
-        public static FlagData Reward31 => FlagInstances.Crossroads_38__Reward_31;
-        public static FlagData Reward38 => FlagInstances.Crossroads_38__Reward_38;
-        public static FlagData Reward46 => FlagInstances.Crossroads_38__Reward_46;
-        public static FlagData Reward5 => FlagInstances.Crossroads_38__Reward_5;
+        public static FlagDef Reward10 => FlagInstances.Crossroads_38__Reward_10;
+        public static FlagDef Reward16 => FlagInstances.Crossroads_38__Reward_16;
+        public static FlagDef Reward23 => FlagInstances.Crossroads_38__Reward_23;
+        public static FlagDef Reward31 => FlagInstances.Crossroads_38__Reward_31;
+        public static FlagDef Reward38 => FlagInstances.Crossroads_38__Reward_38;
+        public static FlagDef Reward46 => FlagInstances.Crossroads_38__Reward_46;
+        public static FlagDef Reward5 => FlagInstances.Crossroads_38__Reward_5;
     }
 } 

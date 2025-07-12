@@ -3,7 +3,8 @@ using CabbyMenu.UI.CheatPanels;
 using CabbyMenu.UI.Modders;
 using System.Collections.Generic;
 using UnityEngine;
-using CabbyCodes.Flags;
+using CabbyCodes.Flags.FlagInfo;
+using CabbyCodes.Flags.FlagData;
 
 namespace CabbyCodes.Patches.Charms
 {

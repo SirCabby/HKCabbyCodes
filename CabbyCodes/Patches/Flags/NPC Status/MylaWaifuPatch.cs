@@ -1,6 +1,7 @@
 using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
 using CabbyCodes.Scenes;
+using CabbyCodes.Flags;
 
 namespace CabbyCodes.Patches.Flags.NPC_Status
 {
@@ -12,7 +13,7 @@ namespace CabbyCodes.Patches.Flags.NPC_Status
         public bool Get()
         {
             // true = alive
-            return !PbdMaker.GetPbd(id, sceneName).activated;
+            return !FlagManager.GetBoolFlag(id, sceneName);
         }
 
         public void Set(bool value)
@@ -21,15 +22,13 @@ namespace CabbyCodes.Patches.Flags.NPC_Status
 
             if (value && !wasAlive)
             {
-                PersistentBoolData pbd = PbdMaker.GetPbd(id, sceneName);
-                pbd.activated = false;
-                SceneData.instance.SaveMyState(pbd);
+                // Set to false (alive) when we want Myla to be alive
+                FlagManager.SetBoolFlag(id, sceneName, false);
             }
             else if (!value && wasAlive)
             {
-                PersistentBoolData pbd = PbdMaker.GetPbd(id, sceneName);
-                pbd.activated = true;
-                SceneData.instance.SaveMyState(pbd);
+                // Set to true (zombie) when we want Myla to be dead
+                FlagManager.SetBoolFlag(id, sceneName, true);
             }
         }
 

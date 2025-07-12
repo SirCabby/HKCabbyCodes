@@ -1,6 +1,6 @@
-﻿namespace CabbyCodes.Flags.SceneFlags
+namespace CabbyCodes.Flags.SceneFlags
 {
-    public static class SceneFlags
+    public static class SceneFlagRegistry
     {
         public static readonly Abyss17 Abyss17 = new Abyss17();
         public static readonly Abyss19 Abyss19 = new Abyss19();
@@ -44,7 +44,7 @@
         public static readonly Fungus322 Fungus322 = new Fungus322();
         public static readonly Fungus347 Fungus347 = new Fungus347();
         public static readonly Fungus348 Fungus348 = new Fungus348();
-        public static readonly Global Global = new Global();
+        public static readonly GlobalFlags Global = new GlobalFlags();
         public static readonly Hive03 Hive03 = new Hive03();
         public static readonly Hive04 Hive04 = new Hive04();
         public static readonly Mines01 Mines01 = new Mines01();

@@ -1,4 +1,4 @@
-namespace CabbyCodes.Flags
+namespace CabbyCodes.Flags.FlagInfo
 {
     /// <summary>
     /// Represents hunter target information with killed and kills flags.
@@ -9,10 +9,10 @@ namespace CabbyCodes.Flags
 
         public string EnemyName { get; }
         public string ReadableName => string.IsNullOrEmpty(_readableName) ? EnemyName : _readableName;
-        public FlagData KilledFlag { get; }
-        public FlagData KillsFlag { get; }
+        public FlagDef KilledFlag { get; }
+        public FlagDef KillsFlag { get; }
 
-        public HunterInfo(string enemyName, FlagData killedFlag, FlagData killsFlag, string readableName = "")
+        public HunterInfo(string enemyName, FlagDef killedFlag, FlagDef killsFlag, string readableName = "")
         {
             EnemyName = enemyName;
             _readableName = readableName;

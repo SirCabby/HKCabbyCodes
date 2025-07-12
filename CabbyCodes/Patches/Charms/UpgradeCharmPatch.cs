@@ -1,27 +1,18 @@
-using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
 using CabbyMenu.UI.Modders;
-using CabbyCodes.Flags;
+using CabbyCodes.Flags.FlagData;
 
 namespace CabbyCodes.Patches.Charms
 {
-    public class UpgradeCharmPatch : ISyncedReference<bool>
+    public class UpgradeCharmPatch : PlayerDataSyncedBool
     {
-        private readonly string boolName;
-
-        public UpgradeCharmPatch(string boolName)
+        public UpgradeCharmPatch(string boolName) : base(boolName)
         {
-            this.boolName = boolName;
         }
 
-        public bool Get()
+        public override void Set(bool value)
         {
-            return PlayerData.instance.GetBool(boolName);
-        }
-
-        public void Set(bool value)
-        {
-            PlayerData.instance.SetBool(boolName, value);
+            base.Set(value);
             CabbyCodesPlugin.cabbyMenu.UpdateCheatPanels();
         }
 

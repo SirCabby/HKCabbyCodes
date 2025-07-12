@@ -1,7 +1,9 @@
+using CabbyCodes.Flags.FlagInfo;
+
 namespace CabbyCodes.Flags.SceneFlags
 {
-    public class Waterways04 : FlagGroupBase
+    public class Waterways04
     {
-        public static FlagData GrubBottle => FlagInstances.Waterways_04__Grub_Bottle;
+        public static FlagDef GrubBottle => FlagInstances.Waterways_04__Grub_Bottle;
     }
 } 

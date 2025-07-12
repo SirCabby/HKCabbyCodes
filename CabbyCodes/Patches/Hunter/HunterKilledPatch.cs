@@ -1,24 +1,9 @@
-using CabbyMenu.SyncedReferences;
-
 namespace CabbyCodes.Patches.Hunter
 {
-    public class HunterKilledPatch : ISyncedReference<bool>
+    public class HunterKilledPatch : PlayerDataSyncedBool
     {
-        private readonly string targetName;
-
-        public HunterKilledPatch(string targetName)
+        public HunterKilledPatch(string targetName) : base("killed" + targetName)
         {
-            this.targetName = targetName;
-        }
-
-        public bool Get()
-        {
-            return PlayerData.instance.GetBool("killed" + targetName);
-        }
-
-        public void Set(bool value)
-        {
-            PlayerData.instance.SetBool("killed" + targetName, value);
         }
     }
 }

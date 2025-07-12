@@ -1,23 +1,21 @@
-using CabbyCodes.Flags.FlagTypes;
-
-namespace CabbyCodes.Flags
+namespace CabbyCodes.Flags.FlagInfo
 {
     /// <summary>
     /// Represents a charm with all its properties.
     /// </summary>
-    public struct CharmInfo
+    public readonly struct CharmInfo
     {
         public int Id { get; }
         public string Name { get; }
-        public FlagData GotFlag { get; }
-        public FlagData CostFlag { get; }
-        public FlagData BrokenFlag { get; }
-        public FlagData UpgradeFlag { get; }
+        public FlagDef GotFlag { get; }
+        public FlagDef CostFlag { get; }
+        public FlagDef BrokenFlag { get; }
+        public FlagDef UpgradeFlag { get; }
         public bool CanBeBroken { get; }
         public bool CanBeUpgraded { get; }
 
-        public CharmInfo(int id, string name, FlagData gotFlag, FlagData costFlag, 
-                       FlagData brokenFlag = null, FlagData upgradeFlag = null)
+        public CharmInfo(int id, string name, FlagDef gotFlag, FlagDef costFlag, 
+                       FlagDef brokenFlag = null, FlagDef upgradeFlag = null)
         {
             Id = id;
             Name = name;

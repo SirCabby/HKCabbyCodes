@@ -1,7 +1,9 @@
+using CabbyCodes.Flags.FlagInfo;
+
 namespace CabbyCodes.Flags.SceneFlags
 {
-    public class Fungus347 : FlagGroupBase
+    public class Fungus347
     {
-        public static FlagData GrubBottle => FlagInstances.Fungus3_47__Grub_Bottle;
+        public static FlagDef GrubBottle => FlagInstances.Fungus3_47__Grub_Bottle;
     }
 } 

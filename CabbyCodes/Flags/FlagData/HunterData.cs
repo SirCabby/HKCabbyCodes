@@ -1,33 +1,34 @@
 using System.Collections.Generic;
 using System.Linq;
+using CabbyCodes.Flags.FlagInfo;
 
-namespace CabbyCodes.Flags.FlagTypes
+namespace CabbyCodes.Flags.FlagData
 {
     /// <summary>
     /// Centralized hunter data structure providing access to all hunter target properties.
     /// </summary>
-    public class HunterData : FlagGroupBase
+    public class HunterData
     {
         /// <summary>
         /// All hunter targets in the game with their properties.
         /// </summary>
         public static readonly Dictionary<string, HunterInfo> AllHunterTargets = new Dictionary<string, HunterInfo>
         {
-            { "AbyssCrawler", new HunterInfo("AbyssCrawler", FlagInstances.killedAbyssCrawler, FlagInstances.killsAbyssCrawler, "Abyss Crawler") },
-            { "AbyssTendril", new HunterInfo("AbyssTendril", FlagInstances.killedAbyssTendril, FlagInstances.killsAbyssTendril, "Abyss Tendril") },
-            { "AcidFlyer", new HunterInfo("AcidFlyer", FlagInstances.killedAcidFlyer, FlagInstances.killsAcidFlyer, "Acid Flyer") },
-            { "AcidWalker", new HunterInfo("AcidWalker", FlagInstances.killedAcidWalker, FlagInstances.killsAcidWalker, "Acid Walker") },
-            { "AngryBuzzer", new HunterInfo("AngryBuzzer", FlagInstances.killedAngryBuzzer, FlagInstances.killsAngryBuzzer, "Angry Buzzer") },
-            { "BabyCentipede", new HunterInfo("BabyCentipede", FlagInstances.killedBabyCentipede, FlagInstances.killsBabyCentipede, "Baby Centipede") },
-            { "BeamMiner", new HunterInfo("BeamMiner", FlagInstances.killedBeamMiner, FlagInstances.killsBeamMiner, "Beam Miner") },
-            { "BeeHatchling", new HunterInfo("BeeHatchling", FlagInstances.killedBeeHatchling, FlagInstances.killsBeeHatchling, "Bee Hatchling") },
-            { "BeeStinger", new HunterInfo("BeeStinger", FlagInstances.killedBeeStinger, FlagInstances.killsBeeStinger, "Bee Stinger") },
-            { "BigBee", new HunterInfo("BigBee", FlagInstances.killedBigBee, FlagInstances.killsBigBee, "Big Bee") },
-            { "BigBuzzer", new HunterInfo("BigBuzzer", FlagInstances.killedBigBuzzer, FlagInstances.killsBigBuzzer, "Big Buzzer") },
-            { "BigCentipede", new HunterInfo("BigCentipede", FlagInstances.killedBigCentipede, FlagInstances.killsBigCentipede, "Big Centipede") },
-            { "BigFly", new HunterInfo("BigFly", FlagInstances.killedBigFly, FlagInstances.killsBigFly, "Big Fly") },
-            { "BindingSeal", new HunterInfo("BindingSeal", FlagInstances.killedBindingSeal, FlagInstances.killsBindingSeal, "Binding Seal") },
-            { "BlackKnight", new HunterInfo("BlackKnight", FlagInstances.killedBlackKnight, FlagInstances.killsBlackKnight, "Black Knight") },
+            { "AbyssCrawler", new HunterInfo("AbyssCrawler", FlagInstances.killedAbyssCrawler, FlagInstances.killsAbyssCrawler) },
+            { "AbyssTendril", new HunterInfo("AbyssTendril", FlagInstances.killedAbyssTendril, FlagInstances.killsAbyssTendril) },
+            { "AcidFlyer", new HunterInfo("AcidFlyer", FlagInstances.killedAcidFlyer, FlagInstances.killsAcidFlyer) },
+            { "AcidWalker", new HunterInfo("AcidWalker", FlagInstances.killedAcidWalker, FlagInstances.killsAcidWalker) },
+            { "AngryBuzzer", new HunterInfo("AngryBuzzer", FlagInstances.killedAngryBuzzer, FlagInstances.killsAngryBuzzer) },
+            { "BabyCentipede", new HunterInfo("BabyCentipede", FlagInstances.killedBabyCentipede, FlagInstances.killsBabyCentipede) },
+            { "BeamMiner", new HunterInfo("BeamMiner", FlagInstances.killedBeamMiner, FlagInstances.killsBeamMiner) },
+            { "BeeHatchling", new HunterInfo("BeeHatchling", FlagInstances.killedBeeHatchling, FlagInstances.killsBeeHatchling) },
+            { "BeeStinger", new HunterInfo("BeeStinger", FlagInstances.killedBeeStinger, FlagInstances.killsBeeStinger) },
+            { "BigBee", new HunterInfo("BigBee", FlagInstances.killedBigBee, FlagInstances.killsBigBee) },
+            { "BigBuzzer", new HunterInfo("BigBuzzer", FlagInstances.killedBigBuzzer, FlagInstances.killsBigBuzzer) },
+            { "BigCentipede", new HunterInfo("BigCentipede", FlagInstances.killedBigCentipede, FlagInstances.killsBigCentipede) },
+            { "BigFly", new HunterInfo("BigFly", FlagInstances.killedBigFly, FlagInstances.killsBigFly) },
+            { "BindingSeal", new HunterInfo("BindingSeal", FlagInstances.killedBindingSeal, FlagInstances.killsBindingSeal) },
+            { "BlackKnight", new HunterInfo("BlackKnight", FlagInstances.killedBlackKnight, FlagInstances.killsBlackKnight) },
             { "BlobFlyer", new HunterInfo("BlobFlyer", FlagInstances.killedBlobFlyer, FlagInstances.killsBlobFlyer) },
             { "Blobble", new HunterInfo("Blobble", FlagInstances.killedBlobble, FlagInstances.killsBlobble) },
             { "Blocker", new HunterInfo("Blocker", FlagInstances.killedBlocker, FlagInstances.killsBlocker) },

@@ -1,7 +1,9 @@
+using CabbyCodes.Flags.FlagInfo;
+
 namespace CabbyCodes.Flags.SceneFlags
 {
-    public class DeepnestSpiderTown : FlagGroupBase
+    public class DeepnestSpiderTown
     {
-        public static FlagData GrubBottle => FlagInstances.Deepnest_Spider_Town__Grub_Bottle;
+        public static FlagDef GrubBottle => FlagInstances.Deepnest_Spider_Town__Grub_Bottle;
     }
 } 

@@ -1,11 +1,10 @@
 using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
 using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 using CabbyMenu.Utilities;
-using CabbyCodes.Flags;
-using CabbyCodes.Flags.FlagTypes;
+using CabbyCodes.Flags.FlagInfo;
+using CabbyCodes.Flags.FlagData;
 
 namespace CabbyCodes.Patches.Hunter
 {
@@ -17,7 +16,7 @@ namespace CabbyCodes.Patches.Hunter
 
         public HunterPatch(string targetName)
         {
-            this.hunterInfo = HunterData.GetHunterTarget(targetName);
+            hunterInfo = HunterData.GetHunterTarget(targetName);
         }
 
         public int Get()

@@ -1,11 +1,13 @@
+using CabbyCodes.Flags.FlagInfo;
+
 namespace CabbyCodes.Flags.SceneFlags
 {
-    public class Crossroads01 : FlagGroupBase
+    public class Crossroads01
     {
-        public static FlagData GeoRock2 => FlagInstances.Crossroads_01__Geo_Rock_2;
-        public static FlagData SecretMask => FlagInstances.Crossroads_01__Secret_Mask;
-        public static FlagData ShinyItem => FlagInstances.Crossroads_01__Shiny_Item;
-        public static FlagData ZombieRunner => FlagInstances.Crossroads_01__Zombie_Runner;
-        public static FlagData ZombieRunner1 => FlagInstances.Crossroads_01__Zombie_Runner_1;
+        public static FlagDef GeoRock2 => FlagInstances.Crossroads_01__Geo_Rock_2;
+        public static FlagDef SecretMask => FlagInstances.Crossroads_01__Secret_Mask;
+        public static FlagDef ShinyItem => FlagInstances.Crossroads_01__Shiny_Item;
+        public static FlagDef ZombieRunner => FlagInstances.Crossroads_01__Zombie_Runner;
+        public static FlagDef ZombieRunner1 => FlagInstances.Crossroads_01__Zombie_Runner_1;
     }
 } 

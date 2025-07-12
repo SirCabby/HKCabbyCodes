@@ -1,7 +1,9 @@
+using CabbyCodes.Flags.FlagInfo;
+
 namespace CabbyCodes.Flags.SceneFlags
 {
-    public class Deepnest31 : FlagGroupBase
+    public class Deepnest31
     {
-        public static FlagData GrubBottle => FlagInstances.Deepnest_31__Grub_Bottle;
+        public static FlagDef GrubBottle => FlagInstances.Deepnest_31__Grub_Bottle;
     }
 } 

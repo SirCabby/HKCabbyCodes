@@ -1,7 +1,9 @@
+using CabbyCodes.Flags.FlagInfo;
+
 namespace CabbyCodes.Flags.SceneFlags
 {
-    public class Hive04 : FlagGroupBase
+    public class Hive04
     {
-        public static FlagData GrubBottle => FlagInstances.Hive_04__Grub_Bottle;
+        public static FlagDef GrubBottle => FlagInstances.Hive_04__Grub_Bottle;
     }
 } 

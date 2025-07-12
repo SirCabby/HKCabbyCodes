@@ -1,8 +1,10 @@
+using CabbyCodes.Flags.FlagInfo;
+
 namespace CabbyCodes.Flags.SceneFlags
 {
-    public class Mines01 : FlagGroupBase
+    public class Mines01
     {
-        public static FlagData EggSac => FlagInstances.Mines_01__Egg_Sac;
-        public static FlagData Mine1QuakeFloor => FlagInstances.Mines_01__mine_1_quake_floor;
+        public static FlagDef EggSac => FlagInstances.Mines_01__Egg_Sac;
+        public static FlagDef Mine1QuakeFloor => FlagInstances.Mines_01__mine_1_quake_floor;
     }
 } 

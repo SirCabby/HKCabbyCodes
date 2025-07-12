@@ -2,7 +2,7 @@ using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
 using System.Collections.Generic;
 using UnityEngine;
-using static CabbyCodes.Scenes.Scenes;
+using static CabbyCodes.Scenes.SceneManagement;
 using static CabbyCodes.Scenes.Areas;
 
 namespace CabbyCodes.Patches.Maps

@@ -1,7 +1,7 @@
 using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
 using CabbyMenu.UI.Modders;
-using CabbyCodes.Flags;
+using CabbyCodes.Flags.FlagData;
 
 namespace CabbyCodes.Patches.Charms
 {

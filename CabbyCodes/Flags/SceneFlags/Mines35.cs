@@ -1,7 +1,9 @@
+using CabbyCodes.Flags.FlagInfo;
+
 namespace CabbyCodes.Flags.SceneFlags
 {
-    public class Mines35 : FlagGroupBase
+    public class Mines35
     {
-        public static FlagData GrubBottle => FlagInstances.Mines_35__Grub_Bottle;
+        public static FlagDef GrubBottle => FlagInstances.Mines_35__Grub_Bottle;
     }
 } 

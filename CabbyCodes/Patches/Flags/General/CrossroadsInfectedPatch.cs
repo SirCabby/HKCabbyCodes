@@ -1,5 +1,6 @@
 using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
+using CabbyCodes.Flags;
 
 namespace CabbyCodes.Patches.Flags.General
 {
@@ -7,12 +8,12 @@ namespace CabbyCodes.Patches.Flags.General
     {
         public bool Get()
         {
-            return PlayerData.instance.crossroadsInfected;
+            return FlagManager.GetBoolFlag(FlagInstances.crossroadsInfected);
         }
 
         public void Set(bool value)
         {
-            PlayerData.instance.crossroadsInfected = value;
+            FlagManager.SetBoolFlag(FlagInstances.crossroadsInfected, value);
         }
 
         public static void AddPanel()

@@ -3,8 +3,9 @@ using CabbyMenu.UI.CheatPanels;
 using System.Collections.Generic;
 using System.Linq;
 using CabbyCodes.Scenes;
-using static CabbyCodes.Scenes.Scenes;
+using static CabbyCodes.Scenes.SceneManagement;
 using static CabbyCodes.Scenes.Areas;
+using CabbyCodes.Flags;
 
 namespace CabbyCodes.Patches
 {
@@ -90,7 +91,7 @@ namespace CabbyCodes.Patches
         public bool Get()
         {
             // true = got it
-            return PbdMaker.GetPbd(grubId, sceneName).activated;
+            return FlagManager.GetBoolFlag(grubId, sceneName);
         }
 
         /// <summary>
@@ -103,26 +104,22 @@ namespace CabbyCodes.Patches
 
             if (value && !hasGrub)
             {
-                PersistentBoolData pbd = PbdMaker.GetPbd(grubId, sceneName);
-                pbd.activated = true;
-                SceneData.instance.SaveMyState(pbd);
+                FlagManager.SetBoolFlag(grubId, sceneName, true);
 
-                if (!PlayerData.instance.scenesGrubRescued.Contains(sceneName))
+                if (!FlagManager.ListFlagContains(FlagInstances.scenesGrubRescued, sceneName))
                 {
-                    PlayerData.instance.scenesGrubRescued.Add(sceneName);
-                    PlayerData.instance.grubsCollected++;
+                    FlagManager.AddToListFlag(FlagInstances.scenesGrubRescued, sceneName);
+                    FlagManager.SetIntFlag(FlagInstances.grubsCollected, PlayerData.instance.grubsCollected + 1);
                 }
             }
             else if (!value && hasGrub)
             {
-                PersistentBoolData pbd = PbdMaker.GetPbd(grubId, sceneName);
-                pbd.activated = false;
-                SceneData.instance.SaveMyState(pbd);
+                FlagManager.SetBoolFlag(grubId, sceneName, false);
 
-                if (PlayerData.instance.scenesGrubRescued.Contains(sceneName))
+                if (FlagManager.ListFlagContains(FlagInstances.scenesGrubRescued, sceneName))
                 {
-                    PlayerData.instance.scenesGrubRescued.Remove(sceneName);
-                    PlayerData.instance.grubsCollected--;
+                    FlagManager.RemoveFromListFlag(FlagInstances.scenesGrubRescued, sceneName);
+                    FlagManager.SetIntFlag(FlagInstances.grubsCollected, PlayerData.instance.grubsCollected - 1);
                 }
             }
         }

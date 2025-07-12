@@ -1,7 +1,9 @@
+using CabbyCodes.Flags.FlagInfo;
+
 namespace CabbyCodes.Flags.SceneFlags
 {
-    public class Ruins105 : FlagGroupBase
+    public class Ruins105
     {
-        public static FlagData GrubBottle => FlagInstances.Ruins1_05__Grub_Bottle;
+        public static FlagDef GrubBottle => FlagInstances.Ruins1_05__Grub_Bottle;
     }
 } 

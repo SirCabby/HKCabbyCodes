@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using CabbyCodes.Flags;
+using CabbyCodes.Flags.FlagInfo;
 
 namespace CabbyCodes.Patches.Flags.Triage
 {
@@ -33,7 +33,7 @@ namespace CabbyCodes.Patches.Flags.Triage
 
         public static void ExtractAllFlags()
         {
-            var allFlags = new List<FlagData>();
+            var allFlags = new List<FlagDef>();
             
             // Extract PersistentBoolData flags
             ExtractPersistentBoolFlags(allFlags);
@@ -51,13 +51,13 @@ namespace CabbyCodes.Patches.Flags.Triage
             WriteFlagReport(allFlags);
         }
         
-        private static void ExtractPersistentBoolFlags(List<FlagData> allFlags)
+        private static void ExtractPersistentBoolFlags(List<FlagDef> allFlags)
         {
             if (SceneData.instance?.persistentBoolItems == null) return;
             
             foreach (var pbd in SceneData.instance.persistentBoolItems)
             {
-                allFlags.Add(new FlagData(
+                allFlags.Add(new FlagDef(
                     pbd.id,
                     pbd.sceneName,
                     pbd.semiPersistent,
@@ -66,13 +66,13 @@ namespace CabbyCodes.Patches.Flags.Triage
             }
         }
         
-        private static void ExtractPersistentIntFlags(List<FlagData> allFlags)
+        private static void ExtractPersistentIntFlags(List<FlagDef> allFlags)
         {
             if (SceneData.instance?.persistentIntItems == null) return;
             
             foreach (var pid in SceneData.instance.persistentIntItems)
             {
-                allFlags.Add(new FlagData(
+                allFlags.Add(new FlagDef(
                     pid.id,
                     pid.sceneName,
                     pid.semiPersistent,
@@ -81,13 +81,13 @@ namespace CabbyCodes.Patches.Flags.Triage
             }
         }
         
-        private static void ExtractGeoRockFlags(List<FlagData> allFlags)
+        private static void ExtractGeoRockFlags(List<FlagDef> allFlags)
         {
             if (SceneData.instance?.geoRocks == null) return;
             
             foreach (var grd in SceneData.instance.geoRocks)
             {
-                allFlags.Add(new FlagData(
+                allFlags.Add(new FlagDef(
                     grd.id,
                     grd.sceneName,
                     false,
@@ -96,7 +96,7 @@ namespace CabbyCodes.Patches.Flags.Triage
             }
         }
         
-        private static void ExtractPlayerDataFlags(List<FlagData> allFlags)
+        private static void ExtractPlayerDataFlags(List<FlagDef> allFlags)
         {
             if (PlayerData.instance == null) return;
             
@@ -107,7 +107,7 @@ namespace CabbyCodes.Patches.Flags.Triage
             {
                 if (field.FieldType == typeof(bool))
                 {
-                    allFlags.Add(new FlagData(
+                    allFlags.Add(new FlagDef(
                         field.Name,
                         "Global",
                         false,
@@ -116,7 +116,7 @@ namespace CabbyCodes.Patches.Flags.Triage
                 }
                 else if (field.FieldType == typeof(int))
                 {
-                    allFlags.Add(new FlagData(
+                    allFlags.Add(new FlagDef(
                         field.Name,
                         "Global",
                         false,
@@ -126,7 +126,7 @@ namespace CabbyCodes.Patches.Flags.Triage
             }
         }
         
-        private static void WriteFlagReport(List<FlagData> allFlags)
+        private static void WriteFlagReport(List<FlagDef> allFlags)
         {
             string outputPath = Path.Combine(Application.persistentDataPath, "CabbySaves", "all_flags_report.txt");
             Directory.CreateDirectory(Path.GetDirectoryName(outputPath));

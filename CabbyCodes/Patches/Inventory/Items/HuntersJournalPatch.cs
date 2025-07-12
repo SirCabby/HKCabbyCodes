@@ -1,18 +1,11 @@
-using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
 
 namespace CabbyCodes.Patches.Inventory.Items
 {
-    public class HuntersJournalPatch : ISyncedReference<bool>
+    public class HuntersJournalPatch : PlayerDataSyncedBool
     {
-        public bool Get()
+        public HuntersJournalPatch() : base("hasJournal")
         {
-            return PlayerData.instance.hasJournal;
-        }
-
-        public void Set(bool value)
-        {
-            PlayerData.instance.hasJournal = value;
         }
 
         public static void AddPanel()
