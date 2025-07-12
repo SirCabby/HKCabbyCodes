@@ -2,13 +2,12 @@ using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
 using CabbyMenu.UI.Modders;
 using System.Linq;
+using CabbyCodes.Flags;
 
 namespace CabbyCodes.Patches.Charms
 {
     public class BrokenCharmPatch : ISyncedReference<bool>
     {
-        public static readonly string brokenCharmName = "brokenCharm_";
-
         private readonly int charmIndex;
 
         public BrokenCharmPatch(int charmIndex)
@@ -18,29 +17,32 @@ namespace CabbyCodes.Patches.Charms
 
         public bool Get()
         {
-            return PlayerData.instance.GetBool(brokenCharmName + charmIndex);
+            var charm = CharmData.GetCharm(charmIndex);
+            return PlayerData.instance.GetBool(charm.BrokenFlag.Id);
         }
 
         public void Set(bool value)
         {
-            PlayerData.instance.SetBool(brokenCharmName + charmIndex, value);
+            var charm = CharmData.GetCharm(charmIndex);
+            PlayerData.instance.SetBool(charm.BrokenFlag.Id, value);
             CabbyCodesPlugin.cabbyMenu.UpdateCheatPanels();
         }
 
         public static void AddPanels()
         {
-            for (int i = 23; i < 26; i++)
+            var breakableCharms = CharmData.GetBreakableCharms();
+            
+            foreach (var charm in breakableCharms)
             {
-                Charm charm = CharmPatch.charms.Single(x => x.id == i);
-                BrokenCharmPatch patch = new BrokenCharmPatch(charm.id);
+                BrokenCharmPatch patch = new BrokenCharmPatch(charm.Id);
 
                 int index = CharmPatch.charms.IndexOf(charm) + 1;
-                TogglePanel togglePanel = new TogglePanel(patch, index + ": " + charm.name + " is Broken");
-                (_, ImageMod spriteImageMod) = PanelAdder.AddSprite(togglePanel, CharmIconList.Instance.GetSprite(charm.id), 1);
+                TogglePanel togglePanel = new TogglePanel(patch, index + ": " + charm.Name + " is Broken");
+                (_, ImageMod spriteImageMod) = PanelAdder.AddSprite(togglePanel, CharmIconList.Instance.GetSprite(charm.Id), 1);
 
                 togglePanel.updateActions.Add(() =>
                 {
-                    spriteImageMod.SetSprite(CharmPatch.GetCharmIcon(charm.id));
+                    spriteImageMod.SetSprite(CharmPatch.GetCharmIcon(charm.Id));
                 });
                 togglePanel.Update();
 

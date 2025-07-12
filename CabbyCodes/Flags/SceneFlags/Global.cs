@@ -2,8 +2,6 @@
 {
     public class Global : FlagGroupBase
     {
-
-
         public static FlagData AladarEncountered => FlagInstances.ALADAR_encountered;
         public static FlagData GalienEncountered => FlagInstances.GALIEN_encountered;
         public static FlagData HuEncountered => FlagInstances.HU_encountered;
@@ -1433,6 +1431,5 @@
         public static FlagData Zotestatuewallbroken => FlagInstances.zoteStatueWallBroken;
         public static FlagData Zotetownconvo => FlagInstances.zoteTownConvo;
         public static FlagData Zotetrappeddeepnest => FlagInstances.zoteTrappedDeepnest;
-    
     }
 }

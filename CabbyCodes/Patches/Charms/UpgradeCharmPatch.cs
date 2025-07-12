@@ -2,6 +2,7 @@ using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
 using CabbyMenu.UI.Modders;
 using System.Linq;
+using CabbyCodes.Flags;
 
 namespace CabbyCodes.Patches.Charms
 {
@@ -27,32 +28,19 @@ namespace CabbyCodes.Patches.Charms
 
         public static void AddPanels()
         {
-            for (int i = 23; i < 26; i++)
+            var upgradeableCharms = CharmData.GetUpgradeableCharms();
+            
+            foreach (var charm in upgradeableCharms)
             {
-                string charmBool = "";
-                switch (i)
-                {
-                    case 23:
-                        charmBool = "fragileHealth_unbreakable";
-                        break;
-                    case 24:
-                        charmBool = "fragileGreed_unbreakable";
-                        break;
-                    case 25:
-                        charmBool = "fragileStrength_unbreakable";
-                        break;
-                }
-
-                Charm charm = CharmPatch.charms.Single(x => x.id == i);
-                UpgradeCharmPatch patch = new UpgradeCharmPatch(charmBool);
+                UpgradeCharmPatch patch = new UpgradeCharmPatch(charm.UpgradeFlag.Id);
 
                 int index = CharmPatch.charms.IndexOf(charm) + 1;
-                TogglePanel togglePanel = new TogglePanel(patch, index + ": " + charm.name + " is Unbreakable");
-                (_, ImageMod spriteImageMod) = PanelAdder.AddSprite(togglePanel, CharmIconList.Instance.GetSprite(charm.id), 1);
+                TogglePanel togglePanel = new TogglePanel(patch, index + ": " + charm.Name + " is Unbreakable");
+                (_, ImageMod spriteImageMod) = PanelAdder.AddSprite(togglePanel, CharmIconList.Instance.GetSprite(charm.Id), 1);
 
                 togglePanel.updateActions.Add(() =>
                 {
-                    spriteImageMod.SetSprite(CharmPatch.GetCharmIcon(charm.id));
+                    spriteImageMod.SetSprite(CharmPatch.GetCharmIcon(charm.Id));
                 });
                 togglePanel.Update();
 

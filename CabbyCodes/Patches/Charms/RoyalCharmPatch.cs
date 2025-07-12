@@ -1,14 +1,18 @@
 using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
 using System.Collections.Generic;
+using CabbyCodes.Flags;
 
 namespace CabbyCodes.Patches.Charms
 {
     public class RoyalCharmPatch : ISyncedValueList
     {
+        private static readonly int ROYAL_CHARM_ID = 36;
+
         public int Get()
         {
-            if (PlayerData.instance.gotCharm_36)
+            var royalCharm = CharmData.GetCharm(ROYAL_CHARM_ID);
+            if (PlayerData.instance.GetBool(royalCharm.GotFlag.Id))
             {
                 if (PlayerData.instance.royalCharmState == 3)
                 {
@@ -25,21 +29,22 @@ namespace CabbyCodes.Patches.Charms
 
         public void Set(int value)
         {
+            var royalCharm = CharmData.GetCharm(ROYAL_CHARM_ID);
             if (value == 2)
             {
-                PlayerData.instance.gotCharm_36 = true;
+                PlayerData.instance.SetBool(royalCharm.GotFlag.Id, true);
                 PlayerData.instance.royalCharmState = 4;
                 PlayerData.instance.gotShadeCharm = true;
             }
             else if (value == 1)
             {
-                PlayerData.instance.gotCharm_36 = true;
+                PlayerData.instance.SetBool(royalCharm.GotFlag.Id, true);
                 PlayerData.instance.royalCharmState = 3;
                 PlayerData.instance.gotShadeCharm = false;
             }
             else
             {
-                PlayerData.instance.gotCharm_36 = false;
+                PlayerData.instance.SetBool(royalCharm.GotFlag.Id, false);
                 PlayerData.instance.royalCharmState = 0;
                 PlayerData.instance.gotShadeCharm = false;
             }

@@ -1,13 +1,13 @@
 using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
 using CabbyMenu;
+using CabbyCodes.Flags;
 
 namespace CabbyCodes.Patches.Charms
 {
     public class CharmCostPatch : ISyncedReference<bool>
     {
         public const string key = "CharmCost_Patch";
-        private static readonly string charmCostName = "charmCost_";
         private static readonly BoxedReference<bool> value = CodeState.Get(key, false);
 
         public bool Get()
@@ -19,16 +19,18 @@ namespace CabbyCodes.Patches.Charms
         {
             if (value)
             {
-                foreach (Charm charm in CharmPatch.charms)
+                foreach (var charm in CharmPatch.charms)
                 {
-                    PlayerData.instance.SetInt(charmCostName + charm.id, 0);
+                    PlayerData.instance.SetInt(charm.CostFlag.Id, 0);
                 }
             }
             else
             {
-                foreach (Charm charm in CharmPatch.charms)
+                foreach (var charm in CharmPatch.charms)
                 {
-                    PlayerData.instance.SetInt(charmCostName + charm.id, charm.defaultCost);
+                    // Get the default cost from the game data
+                    int defaultCost = PlayerData.instance.GetInt(charm.CostFlag.Id);
+                    PlayerData.instance.SetInt(charm.CostFlag.Id, defaultCost);
                 }
             }
 
