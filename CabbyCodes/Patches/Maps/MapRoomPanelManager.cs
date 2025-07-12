@@ -1,18 +1,22 @@
 using CabbyMenu.UI.CheatPanels;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
+using CabbyCodes.Scenes;
+using static CabbyCodes.Scenes.Scenes;
+using static CabbyCodes.Scenes.Areas;
 
 namespace CabbyCodes.Patches.Maps
 {
-    public class DynamicMapRoomManager
+    public class MapRoomPanelManager
     {
         private static readonly Vector2 buttonSize = new Vector2(120, 60);
         private readonly MapAreaSelector areaSelector;
         private readonly Dictionary<string, List<string>> areaRooms = new Dictionary<string, List<string>>();
-        private string currentVisibleArea = "Dirtmouth";
+        private string currentVisibleArea = GetAllAreaNames().FirstOrDefault() ?? "Dirtmouth";
         private readonly List<CheatPanel> currentlyAddedPanels = new List<CheatPanel>();
 
-        public DynamicMapRoomManager(MapAreaSelector areaSelector)
+        public MapRoomPanelManager(MapAreaSelector areaSelector)
         {
             this.areaSelector = areaSelector;
             InitializeAreaRooms();
@@ -44,7 +48,9 @@ namespace CabbyCodes.Patches.Maps
             // Add individual room panels for this area
             foreach (string roomName in roomNames)
             {
-                panels.Add(new TogglePanel(new MapRoomPatch(roomName), roomName));
+                var sceneData = GetSceneData(roomName);
+                string displayName = sceneData?.ReadableName ?? roomName;
+                panels.Add(new TogglePanel(new MapRoomPatch(roomName), displayName));
             }
 
             return panels;

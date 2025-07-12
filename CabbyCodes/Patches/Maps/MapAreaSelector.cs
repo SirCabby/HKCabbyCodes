@@ -1,28 +1,15 @@
 using CabbyMenu.SyncedReferences;
 using System.Collections.Generic;
+using System.Linq;
+using CabbyCodes.Scenes;
+using static CabbyCodes.Scenes.Scenes;
+using static CabbyCodes.Scenes.Areas;
 
 namespace CabbyCodes.Patches.Maps
 {
     public class MapAreaSelector : ISyncedValueList
     {
-        private static readonly List<string> areaNames = new List<string>
-        {
-            "Dirtmouth",
-            "Abyss",
-            "City",
-            "Cliffs",
-            "Crossroads",
-            "Mines",
-            "Deepnest",
-            "FogCanyon",
-            "FungalWastes",
-            "Greenpath",
-            "Outskirts",
-            "RoyalGardens",
-            "RestingGrounds",
-            "Waterways"
-        };
-
+        private static readonly List<string> areaNames = GetAreaNames().ToList();
         private int selectedAreaIndex = 0;
 
         public int Get()
@@ -49,7 +36,8 @@ namespace CabbyCodes.Patches.Maps
             {
                 return areaNames[selectedAreaIndex];
             }
-            return "Dirtmouth"; // Default fallback
+            // Default fallback - get the first area name from the list
+            return areaNames.Count > 0 ? areaNames[0] : "Dirtmouth";
         }
     }
 } 

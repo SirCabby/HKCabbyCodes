@@ -2,6 +2,8 @@ using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
 using System;
 using System.Reflection;
+using CabbyCodes.Scenes;
+using static CabbyCodes.Scenes.Scenes;
 
 namespace CabbyCodes.Patches.Maps
 {
@@ -30,7 +32,10 @@ namespace CabbyCodes.Patches.Maps
             foreach (string name in Enum.GetNames(type))
             {
                 string fixedName = char.ToLower(name[0]).ToString() + name.Substring(1);
-                TogglePanel buttonPanel = new TogglePanel(new MapPatch(fixedName), fixedName.Substring(3));
+                string sceneName = fixedName.Substring(3);
+                var sceneData = GetSceneData(sceneName);
+                string displayName = sceneData?.ReadableName ?? sceneName;
+                TogglePanel buttonPanel = new TogglePanel(new MapPatch(fixedName), displayName);
                 CabbyCodesPlugin.cabbyMenu.AddCheatPanel(buttonPanel);
             }
         }
@@ -50,7 +55,7 @@ namespace CabbyCodes.Patches.Maps
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(areaDropdownPanel);
             
             // Add dynamic room manager
-            DynamicMapRoomManager roomManager = new DynamicMapRoomManager(areaSelector);
+            MapRoomPanelManager roomManager = new MapRoomPanelManager(areaSelector);
             roomManager.AddAllPanelsToMenu();
             
             // Add update action to handle area changes (for menu update loop)
