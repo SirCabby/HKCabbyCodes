@@ -179,10 +179,17 @@ namespace CabbyCodes.Flags
         #endregion
 
         #region Grub Bottles
-            // Related Flags
-            
+            /// <summary>
+            /// Related Flags
+            /// </summary>
+            /// 
+            public static readonly FlagDef grubsCollected = new FlagDef("grubsCollected", "Global", false, "PlayerData_Int");
+            // List of scenes that grubs were found in
+            public static readonly FlagDef scenesGrubRescued = new FlagDef("scenesGrubRescued", "Global", false, "PlayerData_List");
 
-            // Individual Bottles
+            /// <summary>
+            /// Individual Bottles
+            /// </summary>
             public static readonly FlagDef Abyss_17__Grub_Bottle = new FlagDef("Grub Bottle", SceneInstances.Abyss_17.SceneName, false, "PersistentBoolData");
             public static readonly FlagDef Abyss_19__Grub_Bottle = new FlagDef("Grub Bottle", SceneInstances.Abyss_19.SceneName, false, "PersistentBoolData");
             public static readonly FlagDef Crossroads_03__Grub_Bottle = new FlagDef("Grub Bottle", SceneInstances.Crossroads_03.SceneName, false, "PersistentBoolData");
@@ -981,8 +988,6 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef greyPrinceDefeats = new FlagDef("greyPrinceDefeats", "Global", false, "PlayerData_Int");
             public static readonly FlagDef greyPrinceOrbsCollected = new FlagDef("greyPrinceOrbsCollected", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef grubRewards = new FlagDef("grubRewards", "Global", false, "PlayerData_Int");
-            public static readonly FlagDef grubsCollected = new FlagDef("grubsCollected", "Global", false, "PlayerData_Int");
-            public static readonly FlagDef scenesGrubRescued = new FlagDef("scenesGrubRescued", "Global", false, "PlayerData_List");
             public static readonly FlagDef guardiansDefeated = new FlagDef("guardiansDefeated", "Global", false, "PlayerData_Int");
             public static readonly FlagDef hasAcidArmour = new FlagDef("hasAcidArmour", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef hasAllNailArts = new FlagDef("hasAllNailArts", "Global", false, "PlayerData_Bool");
@@ -1011,6 +1016,7 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef hasPin = new FlagDef("hasPin", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef hasPinBench = new FlagDef("hasPinBench", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef hasPinBlackEgg = new FlagDef("hasPinBlackEgg", "Global", false, "PlayerData_Bool");
+            public static readonly FlagDef hasPinCocoon = new FlagDef("hasPinCocoon", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef hasPinDreamPlant = new FlagDef("hasPinDreamPlant", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef hasPinGhost = new FlagDef("hasPinGhost", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef hasPinGrub = new FlagDef("hasPinGrub", "Global", false, "PlayerData_Bool");
