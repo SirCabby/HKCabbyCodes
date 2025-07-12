@@ -1,3 +1,38 @@
+using CabbyMenu.SyncedReferences;
+using UnityEngine;
+using UnityEngine.UI;
+
+namespace CabbyCodes.Patches.Flags.Triage
+{
+    public class FlagMonitorReference : ISyncedReference<bool>
+    {
+        private static FlagMonitorReference instance;
+        public static FlagMonitorReference Instance => instance ?? (instance = new FlagMonitorReference());
+
+        private bool isEnabled = false;
+
+        public bool IsEnabled => isEnabled;
+
+        public bool Get()
+        {
+            return isEnabled;
+        }
+
+        public void Set(bool newValue)
+        {
+            isEnabled = newValue;
+            
+            // Create panel if it doesn't exist and we're enabling
+            if (isEnabled && FlagMonitorPatch.notificationPanel == null)
+            {
+                CreateNotificationPanel();
+            }
+            
+            if (FlagMonitorPatch.notificationPanel != null)
+            {
+                FlagMonitorPatch.notificationPanel.SetActive(isEnabled);
+                
+                if (isEnabled)
                 {
                     FlagMonitorPatch.notificationText.text = "Flag Monitor Active\n\nWaiting for flag changes...";
                 }
