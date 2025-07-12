@@ -11,7 +11,6 @@ namespace CabbyCodes.Patches.Flags.Triage
         private static GameObject notificationPanel;
         private static Text notificationText;
         private static Queue<string> notificationQueue = new Queue<string>();
-        private static float lastNotificationTime = 0f;
         private static bool isEnabled = false;
         private static bool logToFile = false;
         private static string logFilePath;
@@ -78,8 +77,6 @@ namespace CabbyCodes.Patches.Flags.Triage
 
         private static void AddNotification(string message)
         {
-            if (Time.time - lastNotificationTime < 0.1f) return; // Throttle notifications
-            
             // Log to console
             Debug.Log($"[Flag Monitor] {message}");
             
@@ -99,7 +96,6 @@ namespace CabbyCodes.Patches.Flags.Triage
             }
             
             notificationQueue.Enqueue(message);
-            lastNotificationTime = Time.time;
             
             // Keep only the last 10 notifications
             while (notificationQueue.Count > 10)
