@@ -337,6 +337,78 @@ namespace CabbyCodes.Flags
         }
 
         /// <summary>
+        /// Sets a float flag to the specified value. Automatically handles global float flags.
+        /// </summary>
+        /// <param name="flagDef">The flag definition containing the flag information.</param>
+        /// <param name="value">The float value to set.</param>
+        public static void SetFloatFlag(FlagDef flagDef, float value)
+        {
+            if (flagDef == null)
+                return;
+
+            if (IsGlobalFlag(flagDef))
+            {
+                PlayerData.instance.SetFloat(flagDef.Id, value);
+            }
+            // Note: Unity doesn't have PersistentFloatData, so scene-specific float flags are not supported
+        }
+
+        /// <summary>
+        /// Sets a float flag to the specified value using direct parameters. Automatically handles global float flags.
+        /// </summary>
+        /// <param name="id">The flag identifier.</param>
+        /// <param name="sceneName">The scene name, or "Global" for global flags.</param>
+        /// <param name="value">The float value to set.</param>
+        public static void SetFloatFlag(string id, string sceneName, float value)
+        {
+            if (string.IsNullOrEmpty(id))
+                return;
+
+            if (sceneName == "Global")
+            {
+                PlayerData.instance.SetFloat(id, value);
+            }
+            // Note: Unity doesn't have PersistentFloatData, so scene-specific float flags are not supported
+        }
+
+        /// <summary>
+        /// Gets the current float value of a flag. Automatically handles global float flags.
+        /// </summary>
+        /// <param name="flagDef">The flag definition containing the flag information.</param>
+        /// <returns>The current float value of the flag, or 0f if not found.</returns>
+        public static float GetFloatFlag(FlagDef flagDef)
+        {
+            if (flagDef == null)
+                return 0f;
+
+            if (IsGlobalFlag(flagDef))
+            {
+                return PlayerData.instance.GetFloat(flagDef.Id);
+            }
+            
+            return 0f;
+        }
+
+        /// <summary>
+        /// Gets the current float value of a flag using direct parameters. Automatically handles global float flags.
+        /// </summary>
+        /// <param name="id">The flag identifier.</param>
+        /// <param name="sceneName">The scene name, or "Global" for global flags.</param>
+        /// <returns>The current float value of the flag, or 0f if not found.</returns>
+        public static float GetFloatFlag(string id, string sceneName)
+        {
+            if (string.IsNullOrEmpty(id))
+                return 0f;
+
+            if (sceneName == "Global")
+            {
+                return PlayerData.instance.GetFloat(id);
+            }
+            
+            return 0f;
+        }
+
+        /// <summary>
         /// Creates or retrieves a PersistentBoolData object for the specified scene and ID.
         /// This method provides the same functionality as PbdMaker.GetPbd for internal use.
         /// </summary>

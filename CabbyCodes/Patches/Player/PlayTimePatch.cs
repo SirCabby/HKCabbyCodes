@@ -1,6 +1,7 @@
 using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
 using CabbyMenu.Utilities;
+using CabbyCodes.Flags;
 
 namespace CabbyCodes.Patches.Player
 {
@@ -8,12 +9,12 @@ namespace CabbyCodes.Patches.Player
     {
         public float Get()
         {
-            return PlayerData.instance.playTime;
+            return FlagManager.GetFloatFlag("playTime", "Global");
         }
 
         public void Set(float value)
         {
-            PlayerData.instance.playTime = value;
+            FlagManager.SetFloatFlag("playTime", "Global", value);
         }
 
         public static void AddPanel()
