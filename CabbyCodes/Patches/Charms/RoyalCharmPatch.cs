@@ -2,6 +2,7 @@ using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
 using System.Collections.Generic;
 using CabbyCodes.Flags.FlagData;
+using CabbyCodes.Flags;
 
 namespace CabbyCodes.Patches.Charms
 {
@@ -12,7 +13,7 @@ namespace CabbyCodes.Patches.Charms
         public int Get()
         {
             var royalCharm = CharmData.GetCharm(ROYAL_CHARM_ID);
-            if (PlayerData.instance.GetBool(royalCharm.GotFlag.Id))
+            if (FlagManager.GetBoolFlag(royalCharm.GotFlag))
             {
                 if (PlayerData.instance.royalCharmState == 3)
                 {
@@ -32,19 +33,19 @@ namespace CabbyCodes.Patches.Charms
             var royalCharm = CharmData.GetCharm(ROYAL_CHARM_ID);
             if (value == 2)
             {
-                PlayerData.instance.SetBool(royalCharm.GotFlag.Id, true);
+                FlagManager.SetBoolFlag(royalCharm.GotFlag, true);
                 PlayerData.instance.royalCharmState = 4;
                 PlayerData.instance.gotShadeCharm = true;
             }
             else if (value == 1)
             {
-                PlayerData.instance.SetBool(royalCharm.GotFlag.Id, true);
+                FlagManager.SetBoolFlag(royalCharm.GotFlag, true);
                 PlayerData.instance.royalCharmState = 3;
                 PlayerData.instance.gotShadeCharm = false;
             }
             else
             {
-                PlayerData.instance.SetBool(royalCharm.GotFlag.Id, false);
+                FlagManager.SetBoolFlag(royalCharm.GotFlag, false);
                 PlayerData.instance.royalCharmState = 0;
                 PlayerData.instance.gotShadeCharm = false;
             }

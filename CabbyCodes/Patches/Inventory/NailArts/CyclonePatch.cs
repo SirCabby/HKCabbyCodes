@@ -1,5 +1,6 @@
 using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
+using CabbyCodes.Flags;
 
 namespace CabbyCodes.Patches.Inventory.NailArts
 {
@@ -7,17 +8,18 @@ namespace CabbyCodes.Patches.Inventory.NailArts
     {
         public bool Get()
         {
-            return PlayerData.instance.hasCyclone;
+            return FlagManager.GetBoolFlag(FlagInstances.hasCyclone);
         }
 
         public void Set(bool value)
         {
-            PlayerData.instance.hasCyclone = value;
+            FlagManager.SetBoolFlag(FlagInstances.hasCyclone, value);
         }
 
         public static void AddPanel()
         {
-            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new TogglePanel(new CyclonePatch(), "Cyclone Slash"));
+            TogglePanel buttonPanel = new TogglePanel(new CyclonePatch(), "Cyclone Slash");
+            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(buttonPanel);
         }
     }
 }

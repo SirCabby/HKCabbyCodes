@@ -1,34 +1,26 @@
 using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
-using System.Collections.Generic;
+using CabbyMenu.Utilities;
+using CabbyCodes.Flags;
 
 namespace CabbyCodes.Patches.Inventory.Spells
 {
-    public class DesolateDivePatch : ISyncedValueList
+    public class DesolateDivePatch : ISyncedReference<int>
     {
         public int Get()
         {
-            return PlayerData.instance.quakeLevel;
+            return FlagManager.GetIntFlag(FlagInstances.quakeLevel);
         }
 
         public void Set(int value)
         {
-            PlayerData.instance.quakeLevel = value;
-        }
-
-        public List<string> GetValueList()
-        {
-            return new List<string>
-            {
-                "NONE", "Desolate Dive", "Descending Dark"
-            };
+            FlagManager.SetIntFlag(FlagInstances.quakeLevel, value);
         }
 
         public static void AddPanel()
         {
-            DesolateDivePatch patch = new DesolateDivePatch();
-            DropdownPanel dropdownPanel = new DropdownPanel(patch, "Desolate Dive / Descending Dark", Constants.DEFAULT_PANEL_HEIGHT);
-            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(dropdownPanel);
+            RangeInputFieldPanel<int> panel = new RangeInputFieldPanel<int>(new DesolateDivePatch(), KeyCodeMap.ValidChars.Decimal, 0, 2, "Desolate Dive / Descending Dark");
+            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(panel);
         }
     }
 }

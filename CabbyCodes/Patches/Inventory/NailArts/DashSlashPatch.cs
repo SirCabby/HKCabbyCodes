@@ -1,5 +1,6 @@
 using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
+using CabbyCodes.Flags;
 
 namespace CabbyCodes.Patches.Inventory.NailArts
 {
@@ -7,17 +8,18 @@ namespace CabbyCodes.Patches.Inventory.NailArts
     {
         public bool Get()
         {
-            return PlayerData.instance.hasUpwardSlash;
+            return FlagManager.GetBoolFlag(FlagInstances.hasUpwardSlash);
         }
 
         public void Set(bool value)
         {
-            PlayerData.instance.hasUpwardSlash = value;
+            FlagManager.SetBoolFlag(FlagInstances.hasUpwardSlash, value);
         }
 
         public static void AddPanel()
         {
-            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new TogglePanel(new DashSlashPatch(), "Dash Slash"));
+            TogglePanel buttonPanel = new TogglePanel(new DashSlashPatch(), "Dash Slash");
+            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(buttonPanel);
         }
     }
 }

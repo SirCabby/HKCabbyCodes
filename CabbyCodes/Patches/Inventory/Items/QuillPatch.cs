@@ -1,5 +1,6 @@
 using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
+using CabbyCodes.Flags;
 
 namespace CabbyCodes.Patches.Inventory.Items
 {
@@ -7,17 +8,18 @@ namespace CabbyCodes.Patches.Inventory.Items
     {
         public bool Get()
         {
-            return PlayerData.instance.hasQuill;
+            return FlagManager.GetBoolFlag(FlagInstances.hasQuill);
         }
 
         public void Set(bool value)
         {
-            PlayerData.instance.hasQuill = value;
+            FlagManager.SetBoolFlag(FlagInstances.hasQuill, value);
         }
 
         public static void AddPanel()
         {
-            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new TogglePanel(new QuillPatch(), "Quill"));
+            TogglePanel buttonPanel = new TogglePanel(new QuillPatch(), "Quill");
+            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(buttonPanel);
         }
     }
 }

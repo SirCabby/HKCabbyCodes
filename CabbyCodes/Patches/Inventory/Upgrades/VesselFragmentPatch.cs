@@ -1,6 +1,7 @@
 using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
 using CabbyMenu.Utilities;
+using CabbyCodes.Flags;
 
 namespace CabbyCodes.Patches.Inventory.Upgrades
 {
@@ -8,18 +9,17 @@ namespace CabbyCodes.Patches.Inventory.Upgrades
     {
         public int Get()
         {
-            return PlayerData.instance.vesselFragments;
+            return FlagManager.GetIntFlag(FlagInstances.vesselFragments);
         }
 
         public void Set(int value)
         {
-            value = ValidationUtils.ValidateRange(value, 0, Constants.MAX_VESSEL_FRAGMENTS, nameof(value));
-            PlayerData.instance.vesselFragments = value;
+            FlagManager.SetIntFlag(FlagInstances.vesselFragments, value);
         }
 
         public static void AddPanel()
         {
-            RangeInputFieldPanel<int> panel = new RangeInputFieldPanel<int>(new VesselFragmentPatch(), KeyCodeMap.ValidChars.Numeric, 0, Constants.MAX_VESSEL_FRAGMENTS, "Vessel Fragments (0-2)");
+            RangeInputFieldPanel<int> panel = new RangeInputFieldPanel<int>(new VesselFragmentPatch(), KeyCodeMap.ValidChars.Decimal, 0, 9, "Vessel Fragments (0-2)");
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(panel);
         }
     }

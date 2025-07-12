@@ -1,5 +1,6 @@
 using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
+using CabbyCodes.Flags;
 
 namespace CabbyCodes.Patches.Inventory.Keys
 {
@@ -7,17 +8,18 @@ namespace CabbyCodes.Patches.Inventory.Keys
     {
         public bool Get()
         {
-            return PlayerData.instance.hasKingsBrand;
+            return FlagManager.GetBoolFlag(FlagInstances.hasKingsBrand);
         }
 
         public void Set(bool value)
         {
-            PlayerData.instance.hasKingsBrand = value;
+            FlagManager.SetBoolFlag(FlagInstances.hasKingsBrand, value);
         }
 
         public static void AddPanel()
         {
-            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new TogglePanel(new KingsBrandPatch(), "King's Brand"));
+            TogglePanel buttonPanel = new TogglePanel(new KingsBrandPatch(), "King's Brand");
+            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(buttonPanel);
         }
     }
 }

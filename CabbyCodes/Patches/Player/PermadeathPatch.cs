@@ -1,5 +1,6 @@
 using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
+using CabbyCodes.Flags;
 
 namespace CabbyCodes.Patches.Player
 {
@@ -7,17 +8,18 @@ namespace CabbyCodes.Patches.Player
     {
         public bool Get()
         {
-            return PlayerData.instance.permadeathMode == Constants.PERMADEATH_MODE_ENABLED;
+            return FlagManager.GetIntFlag(FlagInstances.permadeathMode) == Constants.PERMADEATH_MODE_ENABLED;
         }
 
         public void Set(bool value)
         {
-            PlayerData.instance.permadeathMode = value ? 1 : 0;
+            FlagManager.SetIntFlag(FlagInstances.permadeathMode, value ? 1 : 0);
         }
 
         public static void AddPanel()
         {
-            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new TogglePanel(new PermadeathPatch(), "Steel Soul Mode"));
+            TogglePanel buttonPanel = new TogglePanel(new PermadeathPatch(), "Steel Soul Mode (Permadeath)");
+            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(buttonPanel);
         }
     }
 }

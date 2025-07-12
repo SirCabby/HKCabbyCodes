@@ -1,5 +1,6 @@
 using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
+using CabbyCodes.Flags;
 
 namespace CabbyCodes.Patches.Inventory.Items
 {
@@ -7,17 +8,18 @@ namespace CabbyCodes.Patches.Inventory.Items
     {
         public bool Get()
         {
-            return PlayerData.instance.hasTramPass;
+            return FlagManager.GetBoolFlag(FlagInstances.hasTramPass);
         }
 
         public void Set(bool value)
         {
-            PlayerData.instance.hasTramPass = value;
+            FlagManager.SetBoolFlag(FlagInstances.hasTramPass, value);
         }
 
         public static void AddPanel()
         {
-            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new TogglePanel(new TramPassPatch(), "Tram Pass"));
+            TogglePanel buttonPanel = new TogglePanel(new TramPassPatch(), "Tram Pass");
+            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(buttonPanel);
         }
     }
 }

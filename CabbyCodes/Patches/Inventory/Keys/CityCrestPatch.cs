@@ -1,5 +1,6 @@
 using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
+using CabbyCodes.Flags;
 
 namespace CabbyCodes.Patches.Inventory.Keys
 {
@@ -7,17 +8,18 @@ namespace CabbyCodes.Patches.Inventory.Keys
     {
         public bool Get()
         {
-            return PlayerData.instance.hasCityKey;
+            return FlagManager.GetBoolFlag(FlagInstances.hasCityKey);
         }
 
         public void Set(bool value)
         {
-            PlayerData.instance.hasCityKey = value;
+            FlagManager.SetBoolFlag(FlagInstances.hasCityKey, value);
         }
 
         public static void AddPanel()
         {
-            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new TogglePanel(new CityCrestPatch(), "City Crest"));
+            TogglePanel buttonPanel = new TogglePanel(new CityCrestPatch(), "City Crest");
+            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(buttonPanel);
         }
     }
 }

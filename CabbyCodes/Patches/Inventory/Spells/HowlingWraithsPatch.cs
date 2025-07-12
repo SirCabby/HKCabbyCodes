@@ -1,34 +1,26 @@
 using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
-using System.Collections.Generic;
+using CabbyMenu.Utilities;
+using CabbyCodes.Flags;
 
 namespace CabbyCodes.Patches.Inventory.Spells
 {
-    public class HowlingWraithsPatch : ISyncedValueList
+    public class HowlingWraithsPatch : ISyncedReference<int>
     {
         public int Get()
         {
-            return PlayerData.instance.screamLevel;
+            return FlagManager.GetIntFlag(FlagInstances.screamLevel);
         }
 
         public void Set(int value)
         {
-            PlayerData.instance.screamLevel = value;
-        }
-
-        public List<string> GetValueList()
-        {
-            return new List<string>
-            {
-                "NONE", "Howling Wraiths", "Abyss Shriek"
-            };
+            FlagManager.SetIntFlag(FlagInstances.screamLevel, value);
         }
 
         public static void AddPanel()
         {
-            HowlingWraithsPatch patch = new HowlingWraithsPatch();
-            DropdownPanel dropdownPanel = new DropdownPanel(patch, "Howling Wraiths / Abyss Shriek", Constants.DEFAULT_PANEL_HEIGHT);
-            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(dropdownPanel);
+            RangeInputFieldPanel<int> panel = new RangeInputFieldPanel<int>(new HowlingWraithsPatch(), KeyCodeMap.ValidChars.Decimal, 0, 2, "Howling Wraiths / Abyss Shriek");
+            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(panel);
         }
     }
 }

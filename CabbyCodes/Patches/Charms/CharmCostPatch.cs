@@ -1,6 +1,7 @@
 using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
 using CabbyMenu;
+using CabbyCodes.Flags;
 
 namespace CabbyCodes.Patches.Charms
 {
@@ -20,7 +21,7 @@ namespace CabbyCodes.Patches.Charms
             {
                 foreach (var charm in CharmPatch.charms)
                 {
-                    PlayerData.instance.SetInt(charm.CostFlag.Id, 0);
+                    FlagManager.SetIntFlag(charm.CostFlag, 0);
                 }
             }
             else
@@ -28,8 +29,8 @@ namespace CabbyCodes.Patches.Charms
                 foreach (var charm in CharmPatch.charms)
                 {
                     // Get the default cost from the game data
-                    int defaultCost = PlayerData.instance.GetInt(charm.CostFlag.Id);
-                    PlayerData.instance.SetInt(charm.CostFlag.Id, defaultCost);
+                    int defaultCost = FlagManager.GetIntFlag(charm.CostFlag);
+                    FlagManager.SetIntFlag(charm.CostFlag, defaultCost);
                 }
             }
 

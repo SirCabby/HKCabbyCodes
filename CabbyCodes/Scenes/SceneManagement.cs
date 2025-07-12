@@ -65,6 +65,30 @@ namespace CabbyCodes.Scenes
         }
 
         /// <summary>
+        /// Gets a dictionary mapping area names to lists of scene names in that area.
+        /// </summary>
+        /// <returns>A dictionary where keys are area names and values are lists of scene names.</returns>
+        public static Dictionary<string, List<string>> GetAreaToScenesMapping()
+        {
+            var areaToScenes = new Dictionary<string, List<string>>();
+
+            foreach (var sceneData in sceneMapData)
+            {
+                string areaName = sceneData.AreaName;
+                string sceneName = sceneData.SceneName;
+
+                if (!areaToScenes.ContainsKey(areaName))
+                {
+                    areaToScenes[areaName] = new List<string>();
+                }
+
+                areaToScenes[areaName].Add(sceneName);
+            }
+
+            return areaToScenes;
+        }
+
+        /// <summary>
         /// Gets all scene data from the static SceneInstances class using reflection.
         /// </summary>
         /// <returns>A list of all SceneMapData objects from the static SceneInstances class.</returns>

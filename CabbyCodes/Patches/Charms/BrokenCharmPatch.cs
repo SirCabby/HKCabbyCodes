@@ -2,6 +2,7 @@ using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
 using CabbyMenu.UI.Modders;
 using CabbyCodes.Flags.FlagData;
+using CabbyCodes.Flags;
 
 namespace CabbyCodes.Patches.Charms
 {
@@ -17,13 +18,13 @@ namespace CabbyCodes.Patches.Charms
         public bool Get()
         {
             var charm = CharmData.GetCharm(charmIndex);
-            return PlayerData.instance.GetBool(charm.BrokenFlag.Id);
+            return FlagManager.GetBoolFlag(charm.BrokenFlag);
         }
 
         public void Set(bool value)
         {
             var charm = CharmData.GetCharm(charmIndex);
-            PlayerData.instance.SetBool(charm.BrokenFlag.Id, value);
+            FlagManager.SetBoolFlag(charm.BrokenFlag, value);
             CabbyCodesPlugin.cabbyMenu.UpdateCheatPanels();
         }
 

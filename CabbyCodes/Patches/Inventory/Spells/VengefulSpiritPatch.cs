@@ -1,34 +1,26 @@
 using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
-using System.Collections.Generic;
+using CabbyMenu.Utilities;
+using CabbyCodes.Flags;
 
 namespace CabbyCodes.Patches.Inventory.Spells
 {
-    public class VengefulSpiritPatch : ISyncedValueList
+    public class VengefulSpiritPatch : ISyncedReference<int>
     {
         public int Get()
         {
-            return PlayerData.instance.fireballLevel;
+            return FlagManager.GetIntFlag(FlagInstances.fireballLevel);
         }
 
         public void Set(int value)
         {
-            PlayerData.instance.fireballLevel = value;
-        }
-
-        public List<string> GetValueList()
-        {
-            return new List<string>
-            {
-                "NONE", "Vengeful Spirit", "Shade Soul"
-            };
+            FlagManager.SetIntFlag(FlagInstances.fireballLevel, value);
         }
 
         public static void AddPanel()
         {
-            VengefulSpiritPatch patch = new VengefulSpiritPatch();
-            DropdownPanel dropdownPanel = new DropdownPanel(patch, "Vengeful Spirit / Shade Soul", Constants.DEFAULT_PANEL_HEIGHT);
-            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(dropdownPanel);
+            RangeInputFieldPanel<int> panel = new RangeInputFieldPanel<int>(new VengefulSpiritPatch(), KeyCodeMap.ValidChars.Decimal, 0, 2, "Vengeful Spirit / Shade Soul");
+            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(panel);
         }
     }
 }

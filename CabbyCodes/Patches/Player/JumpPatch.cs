@@ -1,5 +1,6 @@
 using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
+using CabbyCodes.Flags;
 
 namespace CabbyCodes.Patches.Player
 {
@@ -7,17 +8,18 @@ namespace CabbyCodes.Patches.Player
     {
         public bool Get()
         {
-            return PlayerData.instance.infiniteAirJump;
+            return FlagManager.GetBoolFlag(FlagInstances.infiniteAirJump);
         }
 
         public void Set(bool value)
         {
-            PlayerData.instance.infiniteAirJump = value;
+            FlagManager.SetBoolFlag(FlagInstances.infiniteAirJump, value);
         }
 
         public static void AddPanel()
         {
-            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new TogglePanel(new JumpPatch(), "Infinite Jumps"));
+            TogglePanel buttonPanel = new TogglePanel(new JumpPatch(), "Infinite Air Jump");
+            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(buttonPanel);
         }
     }
 }

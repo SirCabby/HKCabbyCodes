@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using CabbyCodes.Flags.FlagInfo;
 using CabbyCodes.Flags.FlagData;
+using CabbyCodes.Flags;
 
 namespace CabbyCodes.Patches.Charms
 {
@@ -24,13 +25,13 @@ namespace CabbyCodes.Patches.Charms
         public bool Get()
         {
             var charm = CharmData.GetCharm(charmIndex);
-            return PlayerData.instance.GetBool(charm.GotFlag.Id);
+            return FlagManager.GetBoolFlag(charm.GotFlag);
         }
 
         public void Set(bool value)
         {
             var charm = CharmData.GetCharm(charmIndex);
-            PlayerData.instance.SetBool(charm.GotFlag.Id, value);
+            FlagManager.SetBoolFlag(charm.GotFlag, value);
             parent?.Update();
         }
 
@@ -104,7 +105,7 @@ namespace CabbyCodes.Patches.Charms
                 togglePanel.updateActions.Add(() =>
                 {
                     spriteImageMod.SetSprite(GetCharmIcon(charm.Id));
-                    if (PlayerData.instance.GetBool(charm.GotFlag.Id))
+                    if (FlagManager.GetBoolFlag(charm.GotFlag))
                     {
                         if (charm.Id == 40 && PlayerData.instance.royalCharmState < 3)
                         {

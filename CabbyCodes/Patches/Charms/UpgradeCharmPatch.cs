@@ -1,18 +1,29 @@
+using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
 using CabbyMenu.UI.Modders;
 using CabbyCodes.Flags.FlagData;
+using CabbyCodes.Flags;
+using CabbyCodes.Flags.FlagInfo;
 
 namespace CabbyCodes.Patches.Charms
 {
-    public class UpgradeCharmPatch : PlayerDataSyncedBool
+    public class UpgradeCharmPatch : ISyncedReference<bool>
     {
-        public UpgradeCharmPatch(string boolName) : base(boolName)
+        private readonly FlagDef upgradeFlag;
+
+        public UpgradeCharmPatch(FlagDef upgradeFlag)
         {
+            this.upgradeFlag = upgradeFlag;
         }
 
-        public override void Set(bool value)
+        public bool Get()
         {
-            base.Set(value);
+            return FlagManager.GetBoolFlag(upgradeFlag);
+        }
+
+        public void Set(bool value)
+        {
+            FlagManager.SetBoolFlag(upgradeFlag, value);
             CabbyCodesPlugin.cabbyMenu.UpdateCheatPanels();
         }
 
@@ -22,7 +33,7 @@ namespace CabbyCodes.Patches.Charms
             
             foreach (var charm in upgradeableCharms)
             {
-                UpgradeCharmPatch patch = new UpgradeCharmPatch(charm.UpgradeFlag.Id);
+                UpgradeCharmPatch patch = new UpgradeCharmPatch(charm.UpgradeFlag);
 
                 int index = CharmPatch.charms.IndexOf(charm) + 1;
                 TogglePanel togglePanel = new TogglePanel(patch, index + ": " + charm.Name + " is Unbreakable");

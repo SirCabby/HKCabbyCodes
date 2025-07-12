@@ -1,5 +1,6 @@
 using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
+using CabbyCodes.Flags;
 
 namespace CabbyCodes.Patches.Inventory.Keys
 {
@@ -7,17 +8,18 @@ namespace CabbyCodes.Patches.Inventory.Keys
     {
         public bool Get()
         {
-            return PlayerData.instance.hasWhiteKey;
+            return FlagManager.GetBoolFlag(FlagInstances.hasWhiteKey);
         }
 
         public void Set(bool value)
         {
-            PlayerData.instance.hasWhiteKey = value;
+            FlagManager.SetBoolFlag(FlagInstances.hasWhiteKey, value);
         }
 
         public static void AddPanel()
         {
-            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new TogglePanel(new ElegantKeyPatch(), "Elegant Key"));
+            TogglePanel buttonPanel = new TogglePanel(new ElegantKeyPatch(), "Elegant Key");
+            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(buttonPanel);
         }
     }
 }

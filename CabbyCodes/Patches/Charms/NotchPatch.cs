@@ -1,6 +1,7 @@
 using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
 using CabbyMenu.Utilities;
+using CabbyCodes.Flags;
 
 namespace CabbyCodes.Patches.Charms
 {
@@ -8,13 +9,13 @@ namespace CabbyCodes.Patches.Charms
     {
         public int Get()
         {
-            return PlayerData.instance.charmSlots;
+            return FlagManager.GetIntFlag(FlagInstances.charmSlots);
         }
 
         public void Set(int value)
         {
             value = ValidationUtils.ValidateRange(value, Constants.MIN_CHARM_NOTCHES, Constants.MAX_CHARM_NOTCHES, nameof(value));
-            PlayerData.instance.charmSlots = value;
+            FlagManager.SetIntFlag(FlagInstances.charmSlots, value);
         }
 
         public static void AddPanel()

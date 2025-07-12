@@ -9,7 +9,7 @@ namespace CabbyCodes.Patches.Maps
 {
     public class MapRoomPatch : ISyncedReference<bool>
     {
-        public static readonly Dictionary<string, List<string>> roomsInMaps = BuildMapRoomDictFromScenes();
+        public static readonly Dictionary<string, List<string>> roomsInMaps = GetAreaToScenesMapping();
         private static readonly Vector2 buttonSize = new Vector2(120, 60);
 
         private readonly string roomName;
@@ -57,45 +57,21 @@ namespace CabbyCodes.Patches.Maps
 
         public static void AddPanels()
         {
-            foreach (KeyValuePair<string, List<string>> kvp in roomsInMaps)
-            {
-                // Get readable area name
-                var areaData = GetAreaData(kvp.Key);
-                string readableAreaName = areaData?.ReadableName ?? kvp.Key;
-                
-                CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Area: " + readableAreaName).SetColor(CheatPanel.subHeaderColor));
-                ButtonPanel toggleAllPanel = new ButtonPanel(() => ToggleAllRooms(kvp.Key, true), "ON", "Toggle All Rooms");
-                PanelAdder.AddButton(toggleAllPanel, 1, () => ToggleAllRooms(kvp.Key, false), "OFF", buttonSize);
-                CabbyCodesPlugin.cabbyMenu.AddCheatPanel(toggleAllPanel);
+            // Add area selector dropdown
+            MapAreaSelector areaSelector = new MapAreaSelector();
+            DropdownPanel areaDropdownPanel = new DropdownPanel(areaSelector, "Select Area", Constants.DEFAULT_PANEL_HEIGHT);
+            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(areaDropdownPanel);
 
-                foreach (string roomName in kvp.Value)
-                {
-                    CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new TogglePanel(new MapRoomPatch(roomName), roomName));
-                }
-            }
+            // Add dynamic room manager
+            MapRoomPanelManager roomManager = new MapRoomPanelManager(areaSelector);
+            roomManager.AddAllPanelsToMenu();
+
+            // Add update action to handle area changes (for menu update loop)
+            areaDropdownPanel.updateActions.Add(roomManager.UpdateVisibleArea);
+            // Hook dropdown value change event for immediate update
+            areaDropdownPanel.GetDropDownSync().GetCustomDropdown().onValueChanged.AddListener(_ => roomManager.UpdateVisibleArea());
         }
 
-        private static Dictionary<string, List<string>> BuildMapRoomDictFromScenes()
-        {
-            var roomsInMaps = new Dictionary<string, List<string>>();
-            
-            // Get all scene data and group by area
-            var allSceneData = GetAllSceneData();
-            
-            foreach (var sceneData in allSceneData)
-            {
-                string areaName = sceneData.AreaName;
-                string sceneName = sceneData.SceneName;
-                
-                if (!roomsInMaps.ContainsKey(areaName))
-                {
-                    roomsInMaps[areaName] = new List<string>();
-                }
-                
-                roomsInMaps[areaName].Add(sceneName);
-            }
-            
-            return roomsInMaps;
-        }
+
     }
 }

@@ -2,6 +2,7 @@ using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
 using CabbyMenu.UI.Modders;
 using System.Collections.Generic;
+using CabbyCodes.Flags;
 
 namespace CabbyCodes.Patches.Charms
 {
@@ -9,14 +10,14 @@ namespace CabbyCodes.Patches.Charms
     {
         public int Get()
         {
-            int result = PlayerData.instance.grimmChildLevel - 1;
+            int result = FlagManager.GetIntFlag(FlagInstances.grimmChildLevel) - 1;
             return result;
         }
 
         public void Set(int value)
         {
             int result = value + 1;
-            PlayerData.instance.grimmChildLevel = result;
+            FlagManager.SetIntFlag(FlagInstances.grimmChildLevel, result);
             CabbyCodesPlugin.cabbyMenu.UpdateCheatPanels();
         }
 
