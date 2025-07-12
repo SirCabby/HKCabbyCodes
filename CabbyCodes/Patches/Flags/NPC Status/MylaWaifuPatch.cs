@@ -1,12 +1,13 @@
 using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
+using CabbyCodes.Scenes;
 
 namespace CabbyCodes.Patches.Flags.NPC_Status
 {
     public class MylaWaifuPatch : ISyncedReference<bool>
     {
         private static readonly string id = "Zombie Myla";
-        private static readonly string sceneName = "Crossroads_45";
+        private static readonly string sceneName = SceneInstances.Crossroads_45.SceneName;
 
         public bool Get()
         {

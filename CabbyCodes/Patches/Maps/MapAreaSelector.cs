@@ -37,7 +37,7 @@ namespace CabbyCodes.Patches.Maps
                 return areaNames[selectedAreaIndex];
             }
             // Default fallback - get the first area name from the list
-            return areaNames.Count > 0 ? areaNames[0] : "Dirtmouth";
+            return areaNames.Count > 0 ? areaNames[0] : AreaInstances.Dirtmouth.MapName;
         }
     }
 } 

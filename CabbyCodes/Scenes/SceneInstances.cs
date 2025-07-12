@@ -157,7 +157,7 @@ namespace CabbyCodes.Scenes
         public static readonly SceneMapData Deepnest_Spider_Town = new SceneMapData("Deepnest_Spider_Town", "Deepnest");
 
         // Dirtmouth
-        public static readonly SceneMapData Town = new SceneMapData("Town", "Dirtmouth");
+        public static readonly SceneMapData Town = new SceneMapData("Town", "Dirtmouth", "Dirtmouth");
         public static readonly SceneMapData Tutorial_01 = new SceneMapData("Tutorial_01", "Dirtmouth");
 
         // FogCanyon

@@ -13,7 +13,7 @@ namespace CabbyCodes.Patches.Maps
         private static readonly Vector2 buttonSize = new Vector2(120, 60);
         private readonly MapAreaSelector areaSelector;
         private readonly Dictionary<string, List<string>> areaRooms = new Dictionary<string, List<string>>();
-        private string currentVisibleArea = GetAllAreaNames().FirstOrDefault() ?? "Dirtmouth";
+        private string currentVisibleArea = GetAllAreaNames().FirstOrDefault() ?? AreaInstances.Dirtmouth.MapName;
         private readonly List<CheatPanel> currentlyAddedPanels = new List<CheatPanel>();
 
         public MapRoomPanelManager(MapAreaSelector areaSelector)

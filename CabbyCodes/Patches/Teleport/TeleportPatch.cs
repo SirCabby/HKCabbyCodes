@@ -8,6 +8,7 @@ using BepInEx.Configuration;
 using System.Linq;
 using GlobalEnums;
 using System.Collections;
+using CabbyCodes.Scenes;
 
 namespace CabbyCodes.Patches.Teleport
 {
@@ -47,7 +48,7 @@ namespace CabbyCodes.Patches.Teleport
         private static readonly List<TeleportLocation> teleportLocations = new List<TeleportLocation>
         {
             new TeleportLocation("", "<Select Location>", Vector2.zero),
-            new TeleportLocation("Town", "Starting Town", new Vector2(Constants.TOWN_X_POSITION, Constants.TOWN_Y_POSITION)),
+            new TeleportLocation(SceneInstances.Town.SceneName, SceneInstances.Town.ReadableName, new Vector2(Constants.TOWN_X_POSITION, Constants.TOWN_Y_POSITION)),
         };
 
         /// <summary>

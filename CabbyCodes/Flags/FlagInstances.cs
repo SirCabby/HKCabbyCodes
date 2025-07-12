@@ -1,221 +1,223 @@
+using CabbyCodes.Scenes;
+
 namespace CabbyCodes.Flags
 {
     public static class FlagInstances
     {
         // Abyss_17
-        public static readonly FlagData Abyss_17__Grub_Bottle = new FlagData("Grub Bottle", "Abyss_17", false, "PersistentBoolData");
+        public static readonly FlagData Abyss_17__Grub_Bottle = new FlagData("Grub Bottle", SceneInstances.Abyss_17.SceneName, false, "PersistentBoolData");
 
         // Abyss_19
-        public static readonly FlagData Abyss_19__Grub_Bottle = new FlagData("Grub Bottle", "Abyss_19", false, "PersistentBoolData");
+        public static readonly FlagData Abyss_19__Grub_Bottle = new FlagData("Grub Bottle", SceneInstances.Abyss_19.SceneName, false, "PersistentBoolData");
 
         // Crossroads_01
-        public static readonly FlagData Crossroads_01__Geo_Rock_2 = new FlagData("Geo Rock 2", "Crossroads_01", false, "GeoRockData");
-        public static readonly FlagData Crossroads_01__Secret_Mask = new FlagData("Secret Mask", "Crossroads_01", false, "PersistentBoolData");
-        public static readonly FlagData Crossroads_01__Shiny_Item = new FlagData("Shiny Item", "Crossroads_01", false, "PersistentBoolData");
-        public static readonly FlagData Crossroads_01__Zombie_Runner = new FlagData("Zombie Runner", "Crossroads_01", true, "PersistentBoolData");
-        public static readonly FlagData Crossroads_01__Zombie_Runner_1 = new FlagData("Zombie Runner 1", "Crossroads_01", true, "PersistentBoolData");
+        public static readonly FlagData Crossroads_01__Geo_Rock_2 = new FlagData("Geo Rock 2", SceneInstances.Crossroads_01.SceneName, false, "GeoRockData");
+        public static readonly FlagData Crossroads_01__Secret_Mask = new FlagData("Secret Mask", SceneInstances.Crossroads_01.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Crossroads_01__Shiny_Item = new FlagData("Shiny Item", SceneInstances.Crossroads_01.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Crossroads_01__Zombie_Runner = new FlagData("Zombie Runner", SceneInstances.Crossroads_01.SceneName, true, "PersistentBoolData");
+        public static readonly FlagData Crossroads_01__Zombie_Runner_1 = new FlagData("Zombie Runner 1", SceneInstances.Crossroads_01.SceneName, true, "PersistentBoolData");
 
         // Crossroads_03
-        public static readonly FlagData Crossroads_03__Break_Wall_2 = new FlagData("Break Wall 2", "Crossroads_03", false, "PersistentBoolData");
-        public static readonly FlagData Crossroads_03__Grub_Bottle = new FlagData("Grub Bottle", "Crossroads_03", false, "PersistentBoolData");
-        public static readonly FlagData Crossroads_03__Toll_Gate_Switch = new FlagData("Toll Gate Switch", "Crossroads_03", false, "PersistentBoolData");
+        public static readonly FlagData Crossroads_03__Break_Wall_2 = new FlagData("Break Wall 2", SceneInstances.Crossroads_03.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Crossroads_03__Grub_Bottle = new FlagData("Grub Bottle", SceneInstances.Crossroads_03.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Crossroads_03__Toll_Gate_Switch = new FlagData("Toll Gate Switch", SceneInstances.Crossroads_03.SceneName, false, "PersistentBoolData");
 
         // Crossroads_05
-        public static readonly FlagData Crossroads_05__Geo_Rock_1 = new FlagData("Geo Rock 1", "Crossroads_05", false, "GeoRockData");
-        public static readonly FlagData Crossroads_05__Grub_Bottle = new FlagData("Grub Bottle", "Crossroads_05", false, "PersistentBoolData");
-        public static readonly FlagData Crossroads_05__Zombie_Runner = new FlagData("Zombie Runner", "Crossroads_05", true, "PersistentBoolData");
+        public static readonly FlagData Crossroads_05__Geo_Rock_1 = new FlagData("Geo Rock 1", SceneInstances.Crossroads_05.SceneName, false, "GeoRockData");
+        public static readonly FlagData Crossroads_05__Grub_Bottle = new FlagData("Grub Bottle", SceneInstances.Crossroads_05.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Crossroads_05__Zombie_Runner = new FlagData("Zombie Runner", SceneInstances.Crossroads_05.SceneName, true, "PersistentBoolData");
 
         // Crossroads_07
-        public static readonly FlagData Crossroads_07__Breakable_Wall_Silhouette = new FlagData("Breakable Wall_Silhouette", "Crossroads_07", false, "PersistentBoolData");
-        public static readonly FlagData Crossroads_07__Dream_Plant = new FlagData("Dream Plant", "Crossroads_07", false, "PersistentBoolData");
-        public static readonly FlagData Crossroads_07__Dream_Plant_Orb = new FlagData("Dream Plant Orb", "Crossroads_07", false, "PersistentBoolData");
-        public static readonly FlagData Crossroads_07__Dream_Plant_Orb_1 = new FlagData("Dream Plant Orb (1)", "Crossroads_07", false, "PersistentBoolData");
-        public static readonly FlagData Crossroads_07__Dream_Plant_Orb_10 = new FlagData("Dream Plant Orb (10)", "Crossroads_07", false, "PersistentBoolData");
-        public static readonly FlagData Crossroads_07__Dream_Plant_Orb_11 = new FlagData("Dream Plant Orb (11)", "Crossroads_07", false, "PersistentBoolData");
-        public static readonly FlagData Crossroads_07__Dream_Plant_Orb_12 = new FlagData("Dream Plant Orb (12)", "Crossroads_07", false, "PersistentBoolData");
-        public static readonly FlagData Crossroads_07__Dream_Plant_Orb_13 = new FlagData("Dream Plant Orb (13)", "Crossroads_07", false, "PersistentBoolData");
-        public static readonly FlagData Crossroads_07__Dream_Plant_Orb_14 = new FlagData("Dream Plant Orb (14)", "Crossroads_07", false, "PersistentBoolData");
-        public static readonly FlagData Crossroads_07__Dream_Plant_Orb_15 = new FlagData("Dream Plant Orb (15)", "Crossroads_07", false, "PersistentBoolData");
-        public static readonly FlagData Crossroads_07__Dream_Plant_Orb_16 = new FlagData("Dream Plant Orb (16)", "Crossroads_07", false, "PersistentBoolData");
-        public static readonly FlagData Crossroads_07__Dream_Plant_Orb_17 = new FlagData("Dream Plant Orb (17)", "Crossroads_07", false, "PersistentBoolData");
-        public static readonly FlagData Crossroads_07__Dream_Plant_Orb_18 = new FlagData("Dream Plant Orb (18)", "Crossroads_07", false, "PersistentBoolData");
-        public static readonly FlagData Crossroads_07__Dream_Plant_Orb_19 = new FlagData("Dream Plant Orb (19)", "Crossroads_07", false, "PersistentBoolData");
-        public static readonly FlagData Crossroads_07__Dream_Plant_Orb_2 = new FlagData("Dream Plant Orb (2)", "Crossroads_07", false, "PersistentBoolData");
-        public static readonly FlagData Crossroads_07__Dream_Plant_Orb_20 = new FlagData("Dream Plant Orb (20)", "Crossroads_07", false, "PersistentBoolData");
-        public static readonly FlagData Crossroads_07__Dream_Plant_Orb_21 = new FlagData("Dream Plant Orb (21)", "Crossroads_07", false, "PersistentBoolData");
-        public static readonly FlagData Crossroads_07__Dream_Plant_Orb_22 = new FlagData("Dream Plant Orb (22)", "Crossroads_07", false, "PersistentBoolData");
-        public static readonly FlagData Crossroads_07__Dream_Plant_Orb_23 = new FlagData("Dream Plant Orb (23)", "Crossroads_07", false, "PersistentBoolData");
-        public static readonly FlagData Crossroads_07__Dream_Plant_Orb_24 = new FlagData("Dream Plant Orb (24)", "Crossroads_07", false, "PersistentBoolData");
-        public static readonly FlagData Crossroads_07__Dream_Plant_Orb_25 = new FlagData("Dream Plant Orb (25)", "Crossroads_07", false, "PersistentBoolData");
-        public static readonly FlagData Crossroads_07__Dream_Plant_Orb_26 = new FlagData("Dream Plant Orb (26)", "Crossroads_07", false, "PersistentBoolData");
-        public static readonly FlagData Crossroads_07__Dream_Plant_Orb_27 = new FlagData("Dream Plant Orb (27)", "Crossroads_07", false, "PersistentBoolData");
-        public static readonly FlagData Crossroads_07__Dream_Plant_Orb_28 = new FlagData("Dream Plant Orb (28)", "Crossroads_07", false, "PersistentBoolData");
-        public static readonly FlagData Crossroads_07__Dream_Plant_Orb_3 = new FlagData("Dream Plant Orb (3)", "Crossroads_07", false, "PersistentBoolData");
-        public static readonly FlagData Crossroads_07__Dream_Plant_Orb_4 = new FlagData("Dream Plant Orb (4)", "Crossroads_07", false, "PersistentBoolData");
-        public static readonly FlagData Crossroads_07__Dream_Plant_Orb_5 = new FlagData("Dream Plant Orb (5)", "Crossroads_07", false, "PersistentBoolData");
-        public static readonly FlagData Crossroads_07__Dream_Plant_Orb_6 = new FlagData("Dream Plant Orb (6)", "Crossroads_07", false, "PersistentBoolData");
-        public static readonly FlagData Crossroads_07__Dream_Plant_Orb_7 = new FlagData("Dream Plant Orb (7)", "Crossroads_07", false, "PersistentBoolData");
-        public static readonly FlagData Crossroads_07__Dream_Plant_Orb_8 = new FlagData("Dream Plant Orb (8)", "Crossroads_07", false, "PersistentBoolData");
-        public static readonly FlagData Crossroads_07__Dream_Plant_Orb_9 = new FlagData("Dream Plant Orb (9)", "Crossroads_07", false, "PersistentBoolData");
-        public static readonly FlagData Crossroads_07__Geo_Rock_1 = new FlagData("Geo Rock 1", "Crossroads_07", false, "GeoRockData");
-        public static readonly FlagData Crossroads_07__Geo_Rock_1_1 = new FlagData("Geo Rock 1 (1)", "Crossroads_07", false, "GeoRockData");
-        public static readonly FlagData Crossroads_07__Geo_Rock_1_2 = new FlagData("Geo Rock 1 (2)", "Crossroads_07", false, "GeoRockData");
-        public static readonly FlagData Crossroads_07__Remasker = new FlagData("Remasker", "Crossroads_07", false, "PersistentBoolData");
-        public static readonly FlagData Crossroads_07__Tute_Door_1 = new FlagData("Tute Door 1", "Crossroads_07", false, "PersistentBoolData");
+        public static readonly FlagData Crossroads_07__Breakable_Wall_Silhouette = new FlagData("Breakable Wall_Silhouette", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Crossroads_07__Dream_Plant = new FlagData("Dream Plant", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Crossroads_07__Dream_Plant_Orb = new FlagData("Dream Plant Orb", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Crossroads_07__Dream_Plant_Orb_1 = new FlagData("Dream Plant Orb (1)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Crossroads_07__Dream_Plant_Orb_10 = new FlagData("Dream Plant Orb (10)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Crossroads_07__Dream_Plant_Orb_11 = new FlagData("Dream Plant Orb (11)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Crossroads_07__Dream_Plant_Orb_12 = new FlagData("Dream Plant Orb (12)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Crossroads_07__Dream_Plant_Orb_13 = new FlagData("Dream Plant Orb (13)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Crossroads_07__Dream_Plant_Orb_14 = new FlagData("Dream Plant Orb (14)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Crossroads_07__Dream_Plant_Orb_15 = new FlagData("Dream Plant Orb (15)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Crossroads_07__Dream_Plant_Orb_16 = new FlagData("Dream Plant Orb (16)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Crossroads_07__Dream_Plant_Orb_17 = new FlagData("Dream Plant Orb (17)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Crossroads_07__Dream_Plant_Orb_18 = new FlagData("Dream Plant Orb (18)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Crossroads_07__Dream_Plant_Orb_19 = new FlagData("Dream Plant Orb (19)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Crossroads_07__Dream_Plant_Orb_2 = new FlagData("Dream Plant Orb (2)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Crossroads_07__Dream_Plant_Orb_20 = new FlagData("Dream Plant Orb (20)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Crossroads_07__Dream_Plant_Orb_21 = new FlagData("Dream Plant Orb (21)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Crossroads_07__Dream_Plant_Orb_22 = new FlagData("Dream Plant Orb (22)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Crossroads_07__Dream_Plant_Orb_23 = new FlagData("Dream Plant Orb (23)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Crossroads_07__Dream_Plant_Orb_24 = new FlagData("Dream Plant Orb (24)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Crossroads_07__Dream_Plant_Orb_25 = new FlagData("Dream Plant Orb (25)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Crossroads_07__Dream_Plant_Orb_26 = new FlagData("Dream Plant Orb (26)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Crossroads_07__Dream_Plant_Orb_27 = new FlagData("Dream Plant Orb (27)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Crossroads_07__Dream_Plant_Orb_28 = new FlagData("Dream Plant Orb (28)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Crossroads_07__Dream_Plant_Orb_3 = new FlagData("Dream Plant Orb (3)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Crossroads_07__Dream_Plant_Orb_4 = new FlagData("Dream Plant Orb (4)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Crossroads_07__Dream_Plant_Orb_5 = new FlagData("Dream Plant Orb (5)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Crossroads_07__Dream_Plant_Orb_6 = new FlagData("Dream Plant Orb (6)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Crossroads_07__Dream_Plant_Orb_7 = new FlagData("Dream Plant Orb (7)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Crossroads_07__Dream_Plant_Orb_8 = new FlagData("Dream Plant Orb (8)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Crossroads_07__Dream_Plant_Orb_9 = new FlagData("Dream Plant Orb (9)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Crossroads_07__Geo_Rock_1 = new FlagData("Geo Rock 1", SceneInstances.Crossroads_07.SceneName, false, "GeoRockData");
+        public static readonly FlagData Crossroads_07__Geo_Rock_1_1 = new FlagData("Geo Rock 1 (1)", SceneInstances.Crossroads_07.SceneName, false, "GeoRockData");
+        public static readonly FlagData Crossroads_07__Geo_Rock_1_2 = new FlagData("Geo Rock 1 (2)", SceneInstances.Crossroads_07.SceneName, false, "GeoRockData");
+        public static readonly FlagData Crossroads_07__Remasker = new FlagData("Remasker", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Crossroads_07__Tute_Door_1 = new FlagData("Tute Door 1", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
 
         // Crossroads_08
-        public static readonly FlagData Crossroads_08__Battle_Scene = new FlagData("Battle Scene", "Crossroads_08", false, "PersistentBoolData");
-        public static readonly FlagData Crossroads_08__Break_Wall_2 = new FlagData("Break Wall 2", "Crossroads_08", false, "PersistentBoolData");
-        public static readonly FlagData Crossroads_08__Geo_Rock_1 = new FlagData("Geo Rock 1", "Crossroads_08", false, "GeoRockData");
-        public static readonly FlagData Crossroads_08__Geo_Rock_1_1 = new FlagData("Geo Rock 1 (1)", "Crossroads_08", false, "GeoRockData");
-        public static readonly FlagData Crossroads_08__Geo_Rock_1_2 = new FlagData("Geo Rock 1 (2)", "Crossroads_08", false, "GeoRockData");
-        public static readonly FlagData Crossroads_08__Geo_Rock_1_3 = new FlagData("Geo Rock 1 (3)", "Crossroads_08", false, "GeoRockData");
-        public static readonly FlagData Crossroads_08__break_wall_masks = new FlagData("break_wall_masks", "Crossroads_08", false, "PersistentBoolData");
+        public static readonly FlagData Crossroads_08__Battle_Scene = new FlagData("Battle Scene", SceneInstances.Crossroads_08.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Crossroads_08__Break_Wall_2 = new FlagData("Break Wall 2", SceneInstances.Crossroads_08.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Crossroads_08__Geo_Rock_1 = new FlagData("Geo Rock 1", SceneInstances.Crossroads_08.SceneName, false, "GeoRockData");
+        public static readonly FlagData Crossroads_08__Geo_Rock_1_1 = new FlagData("Geo Rock 1 (1)", SceneInstances.Crossroads_08.SceneName, false, "GeoRockData");
+        public static readonly FlagData Crossroads_08__Geo_Rock_1_2 = new FlagData("Geo Rock 1 (2)", SceneInstances.Crossroads_08.SceneName, false, "GeoRockData");
+        public static readonly FlagData Crossroads_08__Geo_Rock_1_3 = new FlagData("Geo Rock 1 (3)", SceneInstances.Crossroads_08.SceneName, false, "GeoRockData");
+        public static readonly FlagData Crossroads_08__break_wall_masks = new FlagData("break_wall_masks", SceneInstances.Crossroads_08.SceneName, false, "PersistentBoolData");
 
         // Crossroads_09
-        public static readonly FlagData Crossroads_09__Battle_Scene = new FlagData("Battle Scene", "Crossroads_09", false, "PersistentBoolData");
-        public static readonly FlagData Crossroads_09__Break_Floor_1 = new FlagData("Break Floor 1", "Crossroads_09", false, "PersistentBoolData");
-        public static readonly FlagData Crossroads_09__Mawlek_Body = new FlagData("Mawlek Body", "Crossroads_09", false, "PersistentBoolData");
+        public static readonly FlagData Crossroads_09__Battle_Scene = new FlagData("Battle Scene", SceneInstances.Crossroads_09.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Crossroads_09__Break_Floor_1 = new FlagData("Break Floor 1", SceneInstances.Crossroads_09.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Crossroads_09__Mawlek_Body = new FlagData("Mawlek Body", SceneInstances.Crossroads_09.SceneName, false, "PersistentBoolData");
 
         // Crossroads_11_alt
-        public static readonly FlagData Crossroads_11_alt__Battle_Scene = new FlagData("Battle Scene", "Crossroads_11_alt", false, "PersistentBoolData");
-        public static readonly FlagData Crossroads_11_alt__Blocker = new FlagData("Blocker", "Crossroads_11_alt", false, "PersistentBoolData");
+        public static readonly FlagData Crossroads_11_alt__Battle_Scene = new FlagData("Battle Scene", SceneInstances.Crossroads_11_alt.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Crossroads_11_alt__Blocker = new FlagData("Blocker", SceneInstances.Crossroads_11_alt.SceneName, false, "PersistentBoolData");
 
         // Crossroads_12
-        public static readonly FlagData Crossroads_12__Geo_Rock_2 = new FlagData("Geo Rock 2", "Crossroads_12", false, "GeoRockData");
+        public static readonly FlagData Crossroads_12__Geo_Rock_2 = new FlagData("Geo Rock 2", SceneInstances.Crossroads_12.SceneName, false, "GeoRockData");
 
         // Crossroads_13
-        public static readonly FlagData Crossroads_13__Break_Floor_1 = new FlagData("Break Floor 1", "Crossroads_13", false, "PersistentBoolData");
-        public static readonly FlagData Crossroads_13__Geo_Rock_1 = new FlagData("Geo Rock 1", "Crossroads_13", false, "GeoRockData");
-        public static readonly FlagData Crossroads_13__Geo_Rock_2 = new FlagData("Geo Rock 2", "Crossroads_13", false, "GeoRockData");
-        public static readonly FlagData Crossroads_13__Heart_Piece = new FlagData("Heart Piece", "Crossroads_13", false, "PersistentBoolData");
-        public static readonly FlagData Crossroads_13__Zombie_Barger = new FlagData("Zombie Barger", "Crossroads_13", true, "PersistentBoolData");
+        public static readonly FlagData Crossroads_13__Break_Floor_1 = new FlagData("Break Floor 1", SceneInstances.Crossroads_13.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Crossroads_13__Geo_Rock_1 = new FlagData("Geo Rock 1", SceneInstances.Crossroads_13.SceneName, false, "GeoRockData");
+        public static readonly FlagData Crossroads_13__Geo_Rock_2 = new FlagData("Geo Rock 2", SceneInstances.Crossroads_13.SceneName, false, "GeoRockData");
+        public static readonly FlagData Crossroads_13__Heart_Piece = new FlagData("Heart Piece", SceneInstances.Crossroads_13.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Crossroads_13__Zombie_Barger = new FlagData("Zombie Barger", SceneInstances.Crossroads_13.SceneName, true, "PersistentBoolData");
 
         // Crossroads_16
-        public static readonly FlagData Crossroads_16__Geo_Rock_2 = new FlagData("Geo Rock 2", "Crossroads_16", false, "GeoRockData");
-        public static readonly FlagData Crossroads_16__Zombie_Hornhead = new FlagData("Zombie Hornhead", "Crossroads_16", true, "PersistentBoolData");
+        public static readonly FlagData Crossroads_16__Geo_Rock_2 = new FlagData("Geo Rock 2", SceneInstances.Crossroads_16.SceneName, false, "GeoRockData");
+        public static readonly FlagData Crossroads_16__Zombie_Hornhead = new FlagData("Zombie Hornhead", SceneInstances.Crossroads_16.SceneName, true, "PersistentBoolData");
 
         // Crossroads_18
-        public static readonly FlagData Crossroads_18__Breakable_Wall_Waterways = new FlagData("Breakable Wall Waterways", "Crossroads_18", false, "PersistentBoolData");
-        public static readonly FlagData Crossroads_18__Geo_Rock_1 = new FlagData("Geo Rock 1", "Crossroads_18", false, "GeoRockData");
-        public static readonly FlagData Crossroads_18__Geo_Rock_2 = new FlagData("Geo Rock 2", "Crossroads_18", false, "GeoRockData");
-        public static readonly FlagData Crossroads_18__Geo_Rock_3 = new FlagData("Geo Rock 3", "Crossroads_18", false, "GeoRockData");
-        public static readonly FlagData Crossroads_18__Inverse_Remasker = new FlagData("Inverse Remasker", "Crossroads_18", false, "PersistentBoolData");
-        public static readonly FlagData Crossroads_18__Soul_Totem_mini_horned = new FlagData("Soul Totem mini_horned", "Crossroads_18", true, "PersistentIntData");
+        public static readonly FlagData Crossroads_18__Breakable_Wall_Waterways = new FlagData("Breakable Wall Waterways", SceneInstances.Crossroads_18.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Crossroads_18__Geo_Rock_1 = new FlagData("Geo Rock 1", SceneInstances.Crossroads_18.SceneName, false, "GeoRockData");
+        public static readonly FlagData Crossroads_18__Geo_Rock_2 = new FlagData("Geo Rock 2", SceneInstances.Crossroads_18.SceneName, false, "GeoRockData");
+        public static readonly FlagData Crossroads_18__Geo_Rock_3 = new FlagData("Geo Rock 3", SceneInstances.Crossroads_18.SceneName, false, "GeoRockData");
+        public static readonly FlagData Crossroads_18__Inverse_Remasker = new FlagData("Inverse Remasker", SceneInstances.Crossroads_18.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Crossroads_18__Soul_Totem_mini_horned = new FlagData("Soul Totem mini_horned", SceneInstances.Crossroads_18.SceneName, true, "PersistentIntData");
 
         // Crossroads_19
-        public static readonly FlagData Crossroads_19__Geo_Rock_1 = new FlagData("Geo Rock 1", "Crossroads_19", false, "GeoRockData");
-        public static readonly FlagData Crossroads_19__Hatcher = new FlagData("Hatcher", "Crossroads_19", true, "PersistentBoolData");
-        public static readonly FlagData Crossroads_19__Soul_Totem_mini_two_horned = new FlagData("Soul Totem mini_two_horned", "Crossroads_19", true, "PersistentIntData");
-        public static readonly FlagData Crossroads_19__Zombie_Leaper = new FlagData("Zombie Leaper", "Crossroads_19", true, "PersistentBoolData");
+        public static readonly FlagData Crossroads_19__Geo_Rock_1 = new FlagData("Geo Rock 1", SceneInstances.Crossroads_19.SceneName, false, "GeoRockData");
+        public static readonly FlagData Crossroads_19__Hatcher = new FlagData("Hatcher", SceneInstances.Crossroads_19.SceneName, true, "PersistentBoolData");
+        public static readonly FlagData Crossroads_19__Soul_Totem_mini_two_horned = new FlagData("Soul Totem mini_two_horned", SceneInstances.Crossroads_19.SceneName, true, "PersistentIntData");
+        public static readonly FlagData Crossroads_19__Zombie_Leaper = new FlagData("Zombie Leaper", SceneInstances.Crossroads_19.SceneName, true, "PersistentBoolData");
 
         // Crossroads_25
-        public static readonly FlagData Crossroads_25__Soul_Totem_mini_two_horned = new FlagData("Soul Totem mini_two_horned", "Crossroads_25", true, "PersistentIntData");
+        public static readonly FlagData Crossroads_25__Soul_Totem_mini_two_horned = new FlagData("Soul Totem mini_two_horned", SceneInstances.Crossroads_25.SceneName, true, "PersistentIntData");
 
         // Crossroads_31
-        public static readonly FlagData Crossroads_31__Grub_Bottle = new FlagData("Grub Bottle", "Crossroads_31", false, "PersistentBoolData");
+        public static readonly FlagData Crossroads_31__Grub_Bottle = new FlagData("Grub Bottle", SceneInstances.Crossroads_31.SceneName, false, "PersistentBoolData");
 
         // Crossroads_35
-        public static readonly FlagData Crossroads_35__Grub_Bottle = new FlagData("Grub Bottle", "Crossroads_35", false, "PersistentBoolData");
-        public static readonly FlagData Crossroads_35__Hatcher = new FlagData("Hatcher", "Crossroads_35", true, "PersistentBoolData");
-        public static readonly FlagData Crossroads_35__Remasker = new FlagData("Remasker", "Crossroads_35", false, "PersistentBoolData");
-        public static readonly FlagData Crossroads_35__Soul_Totem_mini_horned = new FlagData("Soul Totem mini_horned", "Crossroads_35", true, "PersistentIntData");
+        public static readonly FlagData Crossroads_35__Grub_Bottle = new FlagData("Grub Bottle", SceneInstances.Crossroads_35.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Crossroads_35__Hatcher = new FlagData("Hatcher", SceneInstances.Crossroads_35.SceneName, true, "PersistentBoolData");
+        public static readonly FlagData Crossroads_35__Remasker = new FlagData("Remasker", SceneInstances.Crossroads_35.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Crossroads_35__Soul_Totem_mini_horned = new FlagData("Soul Totem mini_horned", SceneInstances.Crossroads_35.SceneName, true, "PersistentIntData");
 
         // Crossroads_36
-        public static readonly FlagData Crossroads_36__Collapser_Small = new FlagData("Collapser Small", "Crossroads_36", false, "PersistentBoolData");
-        public static readonly FlagData Crossroads_36__Collapser_Small_1 = new FlagData("Collapser Small 1", "Crossroads_36", false, "PersistentBoolData");
-        public static readonly FlagData Crossroads_36__Force_Hard_Landing = new FlagData("Force Hard Landing", "Crossroads_36", false, "PersistentBoolData");
-        public static readonly FlagData Crossroads_36__Geo_Rock_1 = new FlagData("Geo Rock 1", "Crossroads_36", false, "GeoRockData");
-        public static readonly FlagData Crossroads_36__Mask_Bottom = new FlagData("Mask Bottom", "Crossroads_36", false, "PersistentBoolData");
-        public static readonly FlagData Crossroads_36__Reminder_Look_Down = new FlagData("Reminder Look Down", "Crossroads_36", false, "PersistentBoolData");
-        public static readonly FlagData Crossroads_36__Secret_Mask = new FlagData("Secret Mask", "Crossroads_36", false, "PersistentBoolData");
-        public static readonly FlagData Crossroads_36__Soul_Totem_4 = new FlagData("Soul Totem 4", "Crossroads_36", true, "PersistentIntData");
+        public static readonly FlagData Crossroads_36__Collapser_Small = new FlagData("Collapser Small", SceneInstances.Crossroads_36.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Crossroads_36__Collapser_Small_1 = new FlagData("Collapser Small 1", SceneInstances.Crossroads_36.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Crossroads_36__Force_Hard_Landing = new FlagData("Force Hard Landing", SceneInstances.Crossroads_36.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Crossroads_36__Geo_Rock_1 = new FlagData("Geo Rock 1", SceneInstances.Crossroads_36.SceneName, false, "GeoRockData");
+        public static readonly FlagData Crossroads_36__Mask_Bottom = new FlagData("Mask Bottom", SceneInstances.Crossroads_36.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Crossroads_36__Reminder_Look_Down = new FlagData("Reminder Look Down", SceneInstances.Crossroads_36.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Crossroads_36__Secret_Mask = new FlagData("Secret Mask", SceneInstances.Crossroads_36.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Crossroads_36__Soul_Totem_4 = new FlagData("Soul Totem 4", SceneInstances.Crossroads_36.SceneName, true, "PersistentIntData");
 
         // Crossroads_38
-        public static readonly FlagData Crossroads_38__Reward_10 = new FlagData("Reward 10", "Crossroads_38", false, "PersistentBoolData");
-        public static readonly FlagData Crossroads_38__Reward_16 = new FlagData("Reward 16", "Crossroads_38", false, "PersistentBoolData");
-        public static readonly FlagData Crossroads_38__Reward_23 = new FlagData("Reward 23", "Crossroads_38", false, "PersistentBoolData");
-        public static readonly FlagData Crossroads_38__Reward_31 = new FlagData("Reward 31", "Crossroads_38", false, "PersistentBoolData");
-        public static readonly FlagData Crossroads_38__Reward_38 = new FlagData("Reward 38", "Crossroads_38", false, "PersistentBoolData");
-        public static readonly FlagData Crossroads_38__Reward_46 = new FlagData("Reward 46", "Crossroads_38", false, "PersistentBoolData");
-        public static readonly FlagData Crossroads_38__Reward_5 = new FlagData("Reward 5", "Crossroads_38", false, "PersistentBoolData");
+        public static readonly FlagData Crossroads_38__Reward_10 = new FlagData("Reward 10", SceneInstances.Crossroads_38.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Crossroads_38__Reward_16 = new FlagData("Reward 16", SceneInstances.Crossroads_38.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Crossroads_38__Reward_23 = new FlagData("Reward 23", SceneInstances.Crossroads_38.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Crossroads_38__Reward_31 = new FlagData("Reward 31", SceneInstances.Crossroads_38.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Crossroads_38__Reward_38 = new FlagData("Reward 38", SceneInstances.Crossroads_38.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Crossroads_38__Reward_46 = new FlagData("Reward 46", SceneInstances.Crossroads_38.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Crossroads_38__Reward_5 = new FlagData("Reward 5", SceneInstances.Crossroads_38.SceneName, false, "PersistentBoolData");
 
         // Crossroads_39
-        public static readonly FlagData Crossroads_39__Zombie_Hornhead_1 = new FlagData("Zombie Hornhead 1", "Crossroads_39", true, "PersistentBoolData");
-        public static readonly FlagData Crossroads_39__Zombie_Runner = new FlagData("Zombie Runner", "Crossroads_39", true, "PersistentBoolData");
-        public static readonly FlagData Crossroads_39__Zombie_Runner_1 = new FlagData("Zombie Runner 1", "Crossroads_39", true, "PersistentBoolData");
+        public static readonly FlagData Crossroads_39__Zombie_Hornhead_1 = new FlagData("Zombie Hornhead 1", SceneInstances.Crossroads_39.SceneName, true, "PersistentBoolData");
+        public static readonly FlagData Crossroads_39__Zombie_Runner = new FlagData("Zombie Runner", SceneInstances.Crossroads_39.SceneName, true, "PersistentBoolData");
+        public static readonly FlagData Crossroads_39__Zombie_Runner_1 = new FlagData("Zombie Runner 1", SceneInstances.Crossroads_39.SceneName, true, "PersistentBoolData");
 
         // Crossroads_40
-        public static readonly FlagData Crossroads_40__Zombie_Hornhead = new FlagData("Zombie Hornhead", "Crossroads_40", true, "PersistentBoolData");
-        public static readonly FlagData Crossroads_40__Zombie_Leaper = new FlagData("Zombie Leaper", "Crossroads_40", true, "PersistentBoolData");
-        public static readonly FlagData Crossroads_40__Zombie_Leaper_1 = new FlagData("Zombie Leaper 1", "Crossroads_40", true, "PersistentBoolData");
-        public static readonly FlagData Crossroads_40__Zombie_Runner_2 = new FlagData("Zombie Runner 2", "Crossroads_40", true, "PersistentBoolData");
+        public static readonly FlagData Crossroads_40__Zombie_Hornhead = new FlagData("Zombie Hornhead", SceneInstances.Crossroads_40.SceneName, true, "PersistentBoolData");
+        public static readonly FlagData Crossroads_40__Zombie_Leaper = new FlagData("Zombie Leaper", SceneInstances.Crossroads_40.SceneName, true, "PersistentBoolData");
+        public static readonly FlagData Crossroads_40__Zombie_Leaper_1 = new FlagData("Zombie Leaper 1", SceneInstances.Crossroads_40.SceneName, true, "PersistentBoolData");
+        public static readonly FlagData Crossroads_40__Zombie_Runner_2 = new FlagData("Zombie Runner 2", SceneInstances.Crossroads_40.SceneName, true, "PersistentBoolData");
 
         // Crossroads_42
-        public static readonly FlagData Crossroads_42__Geo_Rock_1 = new FlagData("Geo Rock 1", "Crossroads_42", false, "GeoRockData");
-        public static readonly FlagData Crossroads_42__Geo_Rock_2 = new FlagData("Geo Rock 2", "Crossroads_42", false, "GeoRockData");
+        public static readonly FlagData Crossroads_42__Geo_Rock_1 = new FlagData("Geo Rock 1", SceneInstances.Crossroads_42.SceneName, false, "GeoRockData");
+        public static readonly FlagData Crossroads_42__Geo_Rock_2 = new FlagData("Geo Rock 2", SceneInstances.Crossroads_42.SceneName, false, "GeoRockData");
 
         // Crossroads_45
-        public static readonly FlagData Crossroads_45__Soul_Totem_5 = new FlagData("Soul Totem 5", "Crossroads_45", true, "PersistentIntData");
-        public static readonly FlagData Crossroads_45__Zombie_Myla = new FlagData("Zombie Myla", "Crossroads_45", false, "PersistentBoolData");
+        public static readonly FlagData Crossroads_45__Soul_Totem_5 = new FlagData("Soul Totem 5", SceneInstances.Crossroads_45.SceneName, true, "PersistentIntData");
+        public static readonly FlagData Crossroads_45__Zombie_Myla = new FlagData("Zombie Myla", SceneInstances.Crossroads_45.SceneName, false, "PersistentBoolData");
 
         // Crossroads_48
-        public static readonly FlagData Crossroads_48__Grub_Bottle = new FlagData("Grub Bottle", "Crossroads_48", false, "PersistentBoolData");
-        public static readonly FlagData Crossroads_48__Zombie_Guard = new FlagData("Zombie Guard", "Crossroads_48", true, "PersistentBoolData");
+        public static readonly FlagData Crossroads_48__Grub_Bottle = new FlagData("Grub Bottle", SceneInstances.Crossroads_48.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Crossroads_48__Zombie_Guard = new FlagData("Zombie Guard", SceneInstances.Crossroads_48.SceneName, true, "PersistentBoolData");
 
         // Deepnest_03
-        public static readonly FlagData Deepnest_03__Grub_Bottle = new FlagData("Grub Bottle", "Deepnest_03", false, "PersistentBoolData");
+        public static readonly FlagData Deepnest_03__Grub_Bottle = new FlagData("Grub Bottle", SceneInstances.Deepnest_03.SceneName, false, "PersistentBoolData");
 
         // Deepnest_31
-        public static readonly FlagData Deepnest_31__Grub_Bottle = new FlagData("Grub Bottle", "Deepnest_31", false, "PersistentBoolData");
+        public static readonly FlagData Deepnest_31__Grub_Bottle = new FlagData("Grub Bottle", SceneInstances.Deepnest_31.SceneName, false, "PersistentBoolData");
 
         // Deepnest_36
-        public static readonly FlagData Deepnest_36__Grub_Bottle = new FlagData("Grub Bottle", "Deepnest_36", false, "PersistentBoolData");
+        public static readonly FlagData Deepnest_36__Grub_Bottle = new FlagData("Grub Bottle", SceneInstances.Deepnest_36.SceneName, false, "PersistentBoolData");
 
         // Deepnest_39
-        public static readonly FlagData Deepnest_39__Grub_Bottle = new FlagData("Grub Bottle", "Deepnest_39", false, "PersistentBoolData");
+        public static readonly FlagData Deepnest_39__Grub_Bottle = new FlagData("Grub Bottle", SceneInstances.Deepnest_39.SceneName, false, "PersistentBoolData");
 
         // Deepnest_East_11
-        public static readonly FlagData Deepnest_East_11__Grub_Bottle = new FlagData("Grub Bottle", "Deepnest_East_11", false, "PersistentBoolData");
+        public static readonly FlagData Deepnest_East_11__Grub_Bottle = new FlagData("Grub Bottle", SceneInstances.Deepnest_East_11.SceneName, false, "PersistentBoolData");
 
         // Deepnest_East_14
-        public static readonly FlagData Deepnest_East_14__Grub_Bottle = new FlagData("Grub Bottle", "Deepnest_East_14", false, "PersistentBoolData");
+        public static readonly FlagData Deepnest_East_14__Grub_Bottle = new FlagData("Grub Bottle", SceneInstances.Deepnest_East_14.SceneName, false, "PersistentBoolData");
 
         // Deepnest_Spider_Town
-        public static readonly FlagData Deepnest_Spider_Town__Grub_Bottle = new FlagData("Grub Bottle", "Deepnest_Spider_Town", false, "PersistentBoolData");
+        public static readonly FlagData Deepnest_Spider_Town__Grub_Bottle = new FlagData("Grub Bottle", SceneInstances.Deepnest_Spider_Town.SceneName, false, "PersistentBoolData");
 
         // Fungus1_06
-        public static readonly FlagData Fungus1_06__Grub_Bottle = new FlagData("Grub Bottle", "Fungus1_06", false, "PersistentBoolData");
+        public static readonly FlagData Fungus1_06__Grub_Bottle = new FlagData("Grub Bottle", SceneInstances.Fungus1_06.SceneName, false, "PersistentBoolData");
 
         // Fungus1_07
-        public static readonly FlagData Fungus1_07__Grub_Bottle = new FlagData("Grub Bottle", "Fungus1_07", false, "PersistentBoolData");
+        public static readonly FlagData Fungus1_07__Grub_Bottle = new FlagData("Grub Bottle", SceneInstances.Fungus1_07.SceneName, false, "PersistentBoolData");
 
         // Fungus1_13
-        public static readonly FlagData Fungus1_13__Grub_Bottle = new FlagData("Grub Bottle", "Fungus1_13", false, "PersistentBoolData");
+        public static readonly FlagData Fungus1_13__Grub_Bottle = new FlagData("Grub Bottle", SceneInstances.Fungus1_13.SceneName, false, "PersistentBoolData");
 
         // Fungus1_21
-        public static readonly FlagData Fungus1_21__Grub_Bottle = new FlagData("Grub Bottle", "Fungus1_21", false, "PersistentBoolData");
+        public static readonly FlagData Fungus1_21__Grub_Bottle = new FlagData("Grub Bottle", SceneInstances.Fungus1_21.SceneName, false, "PersistentBoolData");
 
         // Fungus1_28
-        public static readonly FlagData Fungus1_28__Grub_Bottle = new FlagData("Grub Bottle", "Fungus1_28", false, "PersistentBoolData");
+        public static readonly FlagData Fungus1_28__Grub_Bottle = new FlagData("Grub Bottle", SceneInstances.Fungus1_28.SceneName, false, "PersistentBoolData");
 
         // Fungus2_18
-        public static readonly FlagData Fungus2_18__Grub_Bottle = new FlagData("Grub Bottle", "Fungus2_18", false, "PersistentBoolData");
+        public static readonly FlagData Fungus2_18__Grub_Bottle = new FlagData("Grub Bottle", SceneInstances.Fungus2_18.SceneName, false, "PersistentBoolData");
 
         // Fungus2_20
-        public static readonly FlagData Fungus2_20__Grub_Bottle = new FlagData("Grub Bottle", "Fungus2_20", false, "PersistentBoolData");
+        public static readonly FlagData Fungus2_20__Grub_Bottle = new FlagData("Grub Bottle", SceneInstances.Fungus2_20.SceneName, false, "PersistentBoolData");
 
         // Fungus3_10
-        public static readonly FlagData Fungus3_10__Grub_Bottle = new FlagData("Grub Bottle", "Fungus3_10", false, "PersistentBoolData");
+        public static readonly FlagData Fungus3_10__Grub_Bottle = new FlagData("Grub Bottle", SceneInstances.Fungus3_10.SceneName, false, "PersistentBoolData");
 
         // Fungus3_22
-        public static readonly FlagData Fungus3_22__Grub_Bottle = new FlagData("Grub Bottle", "Fungus3_22", false, "PersistentBoolData");
+        public static readonly FlagData Fungus3_22__Grub_Bottle = new FlagData("Grub Bottle", SceneInstances.Fungus3_22.SceneName, false, "PersistentBoolData");
 
         // Fungus3_47
-        public static readonly FlagData Fungus3_47__Grub_Bottle = new FlagData("Grub Bottle", "Fungus3_47", false, "PersistentBoolData");
+        public static readonly FlagData Fungus3_47__Grub_Bottle = new FlagData("Grub Bottle", SceneInstances.Fungus3_47.SceneName, false, "PersistentBoolData");
 
         // Fungus3_48
-        public static readonly FlagData Fungus3_48__Grub_Bottle = new FlagData("Grub Bottle", "Fungus3_48", false, "PersistentBoolData");
+        public static readonly FlagData Fungus3_48__Grub_Bottle = new FlagData("Grub Bottle", SceneInstances.Fungus3_48.SceneName, false, "PersistentBoolData");
 
         // Global
         public static readonly FlagData ALADAR_encountered = new FlagData("ALADAR_encountered", "Global", false, "PlayerData_Bool");
@@ -1649,100 +1651,100 @@ namespace CabbyCodes.Flags
         public static readonly FlagData zoteTrappedDeepnest = new FlagData("zoteTrappedDeepnest", "Global", false, "PlayerData_Bool");
 
         // Hive_03
-        public static readonly FlagData Hive_03__Grub_Bottle = new FlagData("Grub Bottle", "Hive_03", false, "PersistentBoolData");
+        public static readonly FlagData Hive_03__Grub_Bottle = new FlagData("Grub Bottle", SceneInstances.Hive_03.SceneName, false, "PersistentBoolData");
 
         // Hive_04
-        public static readonly FlagData Hive_04__Grub_Bottle = new FlagData("Grub Bottle", "Hive_04", false, "PersistentBoolData");
+        public static readonly FlagData Hive_04__Grub_Bottle = new FlagData("Grub Bottle", SceneInstances.Hive_04.SceneName, false, "PersistentBoolData");
 
         // Mines_01
-        public static readonly FlagData Mines_01__Egg_Sac = new FlagData("Egg Sac", "Mines_01", false, "PersistentBoolData");
-        public static readonly FlagData Mines_01__mine_1_quake_floor = new FlagData("mine_1_quake_floor", "Mines_01", false, "PersistentBoolData");
+        public static readonly FlagData Mines_01__Egg_Sac = new FlagData("Egg Sac", SceneInstances.Mines_01.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Mines_01__mine_1_quake_floor = new FlagData("mine_1_quake_floor", SceneInstances.Mines_01.SceneName, false, "PersistentBoolData");
 
         // Mines_03
-        public static readonly FlagData Mines_03__Grub_Bottle = new FlagData("Grub Bottle", "Mines_03", false, "PersistentBoolData");
+        public static readonly FlagData Mines_03__Grub_Bottle = new FlagData("Grub Bottle", SceneInstances.Mines_03.SceneName, false, "PersistentBoolData");
 
         // Mines_04
-        public static readonly FlagData Mines_04__Grub_Bottle = new FlagData("Grub Bottle", "Mines_04", false, "PersistentBoolData");
+        public static readonly FlagData Mines_04__Grub_Bottle = new FlagData("Grub Bottle", SceneInstances.Mines_04.SceneName, false, "PersistentBoolData");
 
         // Mines_16
-        public static readonly FlagData Mines_16__Grub_Bottle = new FlagData("Grub Bottle", "Mines_16", false, "PersistentBoolData");
+        public static readonly FlagData Mines_16__Grub_Bottle = new FlagData("Grub Bottle", SceneInstances.Mines_16.SceneName, false, "PersistentBoolData");
 
         // Mines_19
-        public static readonly FlagData Mines_19__Grub_Bottle = new FlagData("Grub Bottle", "Mines_19", false, "PersistentBoolData");
+        public static readonly FlagData Mines_19__Grub_Bottle = new FlagData("Grub Bottle", SceneInstances.Mines_19.SceneName, false, "PersistentBoolData");
 
         // Mines_24
-        public static readonly FlagData Mines_24__Grub_Bottle = new FlagData("Grub Bottle", "Mines_24", false, "PersistentBoolData");
+        public static readonly FlagData Mines_24__Grub_Bottle = new FlagData("Grub Bottle", SceneInstances.Mines_24.SceneName, false, "PersistentBoolData");
 
         // Mines_31
-        public static readonly FlagData Mines_31__Grub_Bottle = new FlagData("Grub Bottle", "Mines_31", false, "PersistentBoolData");
+        public static readonly FlagData Mines_31__Grub_Bottle = new FlagData("Grub Bottle", SceneInstances.Mines_31.SceneName, false, "PersistentBoolData");
 
         // Mines_35
-        public static readonly FlagData Mines_35__Grub_Bottle = new FlagData("Grub Bottle", "Mines_35", false, "PersistentBoolData");
+        public static readonly FlagData Mines_35__Grub_Bottle = new FlagData("Grub Bottle", SceneInstances.Mines_35.SceneName, false, "PersistentBoolData");
 
         // RestingGrounds_10
-        public static readonly FlagData RestingGrounds_10__Grub_Bottle = new FlagData("Grub Bottle", "RestingGrounds_10", false, "PersistentBoolData");
+        public static readonly FlagData RestingGrounds_10__Grub_Bottle = new FlagData("Grub Bottle", SceneInstances.RestingGrounds_10.SceneName, false, "PersistentBoolData");
 
         // Ruins1_05
-        public static readonly FlagData Ruins1_05__Grub_Bottle = new FlagData("Grub Bottle", "Ruins1_05", false, "PersistentBoolData");
+        public static readonly FlagData Ruins1_05__Grub_Bottle = new FlagData("Grub Bottle", SceneInstances.Ruins1_05.SceneName, false, "PersistentBoolData");
 
         // Ruins1_32
-        public static readonly FlagData Ruins1_32__Grub_Bottle = new FlagData("Grub Bottle", "Ruins1_32", false, "PersistentBoolData");
+        public static readonly FlagData Ruins1_32__Grub_Bottle = new FlagData("Grub Bottle", SceneInstances.Ruins1_32.SceneName, false, "PersistentBoolData");
 
         // Ruins2_03
-        public static readonly FlagData Ruins2_03__Grub_Bottle = new FlagData("Grub Bottle", "Ruins2_03", false, "PersistentBoolData");
+        public static readonly FlagData Ruins2_03__Grub_Bottle = new FlagData("Grub Bottle", SceneInstances.Ruins2_03.SceneName, false, "PersistentBoolData");
 
         // Ruins2_07
-        public static readonly FlagData Ruins2_07__Grub_Bottle = new FlagData("Grub Bottle", "Ruins2_07", false, "PersistentBoolData");
+        public static readonly FlagData Ruins2_07__Grub_Bottle = new FlagData("Grub Bottle", SceneInstances.Ruins2_07.SceneName, false, "PersistentBoolData");
 
         // Ruins2_11
-        public static readonly FlagData Ruins2_11__Grub_Bottle = new FlagData("Grub Bottle", "Ruins2_11", false, "PersistentBoolData");
+        public static readonly FlagData Ruins2_11__Grub_Bottle = new FlagData("Grub Bottle", SceneInstances.Ruins2_11.SceneName, false, "PersistentBoolData");
 
         // Ruins_House_01
-        public static readonly FlagData Ruins_House_01__Grub_Bottle = new FlagData("Grub Bottle", "Ruins_House_01", false, "PersistentBoolData");
+        public static readonly FlagData Ruins_House_01__Grub_Bottle = new FlagData("Grub Bottle", SceneInstances.Ruins_House_01.SceneName, false, "PersistentBoolData");
 
         // Town
-        public static readonly FlagData Town__Death_Respawn_Trigger = new FlagData("Death Respawn Trigger", "Town", false, "PersistentBoolData");
-        public static readonly FlagData Town__Death_Respawn_Trigger_1 = new FlagData("Death Respawn Trigger 1", "Town", false, "PersistentBoolData");
-        public static readonly FlagData Town__Door_Destroyer = new FlagData("Door Destroyer", "Town", false, "PersistentBoolData");
-        public static readonly FlagData Town__Gravedigger_NPC = new FlagData("Gravedigger NPC", "Town", false, "PersistentBoolData");
-        public static readonly FlagData Town__Interact_Reminder = new FlagData("Interact Reminder", "Town", false, "PersistentBoolData");
-        public static readonly FlagData Town__Mines_Lever = new FlagData("Mines Lever", "Town", false, "PersistentBoolData");
+        public static readonly FlagData Town__Death_Respawn_Trigger = new FlagData("Death Respawn Trigger", SceneInstances.Town.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Town__Death_Respawn_Trigger_1 = new FlagData("Death Respawn Trigger 1", SceneInstances.Town.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Town__Door_Destroyer = new FlagData("Door Destroyer", SceneInstances.Town.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Town__Gravedigger_NPC = new FlagData("Gravedigger NPC", SceneInstances.Town.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Town__Interact_Reminder = new FlagData("Interact Reminder", SceneInstances.Town.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Town__Mines_Lever = new FlagData("Mines Lever", SceneInstances.Town.SceneName, false, "PersistentBoolData");
 
         // Tutorial_01
-        public static readonly FlagData Tutorial_01__Break_Floor_1 = new FlagData("Break Floor 1", "Tutorial_01", false, "PersistentBoolData");
-        public static readonly FlagData Tutorial_01__Chest = new FlagData("Chest", "Tutorial_01", false, "PersistentBoolData");
-        public static readonly FlagData Tutorial_01__Collapser_Tute_01 = new FlagData("Collapser Tute 01", "Tutorial_01", false, "PersistentBoolData");
-        public static readonly FlagData Tutorial_01__Door = new FlagData("Door", "Tutorial_01", false, "PersistentBoolData");
-        public static readonly FlagData Tutorial_01__Geo_Rock_1 = new FlagData("Geo Rock 1", "Tutorial_01", false, "GeoRockData");
-        public static readonly FlagData Tutorial_01__Geo_Rock_2 = new FlagData("Geo Rock 2", "Tutorial_01", false, "GeoRockData");
-        public static readonly FlagData Tutorial_01__Geo_Rock_3 = new FlagData("Geo Rock 3", "Tutorial_01", false, "GeoRockData");
-        public static readonly FlagData Tutorial_01__Geo_Rock_4 = new FlagData("Geo Rock 4", "Tutorial_01", false, "GeoRockData");
-        public static readonly FlagData Tutorial_01__Geo_Rock_5 = new FlagData("Geo Rock 5", "Tutorial_01", false, "GeoRockData");
-        public static readonly FlagData Tutorial_01__Health_Cocoon = new FlagData("Health Cocoon", "Tutorial_01", true, "PersistentBoolData");
-        public static readonly FlagData Tutorial_01__Initial_Fall_Impact = new FlagData("Initial Fall Impact", "Tutorial_01", false, "PersistentBoolData");
-        public static readonly FlagData Tutorial_01__Interact_Reminder = new FlagData("Interact Reminder", "Tutorial_01", false, "PersistentBoolData");
-        public static readonly FlagData Tutorial_01__Inverse_Remasker = new FlagData("Inverse Remasker", "Tutorial_01", false, "PersistentBoolData");
-        public static readonly FlagData Tutorial_01__Secret_Mask = new FlagData("Secret Mask", "Tutorial_01", false, "PersistentBoolData");
-        public static readonly FlagData Tutorial_01__Secret_Sound_Region = new FlagData("Secret Sound Region", "Tutorial_01", false, "PersistentBoolData");
-        public static readonly FlagData Tutorial_01__Secret_Sound_Region_1 = new FlagData("Secret Sound Region (1)", "Tutorial_01", false, "PersistentBoolData");
-        public static readonly FlagData Tutorial_01__Shiny_Item_1 = new FlagData("Shiny Item (1)", "Tutorial_01", false, "PersistentBoolData");
-        public static readonly FlagData Tutorial_01__Tute_Door_1 = new FlagData("Tute Door 1", "Tutorial_01", false, "PersistentBoolData");
-        public static readonly FlagData Tutorial_01__Tute_Door_2 = new FlagData("Tute Door 2", "Tutorial_01", false, "PersistentBoolData");
-        public static readonly FlagData Tutorial_01__Tute_Door_3 = new FlagData("Tute Door 3", "Tutorial_01", false, "PersistentBoolData");
-        public static readonly FlagData Tutorial_01__Tute_Door_4 = new FlagData("Tute Door 4", "Tutorial_01", false, "PersistentBoolData");
-        public static readonly FlagData Tutorial_01__Tute_Door_5 = new FlagData("Tute Door 5", "Tutorial_01", false, "PersistentBoolData");
-        public static readonly FlagData Tutorial_01__Tute_Door_6 = new FlagData("Tute Door 6", "Tutorial_01", false, "PersistentBoolData");
-        public static readonly FlagData Tutorial_01__Tute_Door_7 = new FlagData("Tute Door 7", "Tutorial_01", false, "PersistentBoolData");
-        public static readonly FlagData Tutorial_01__fury_charm_remask = new FlagData("fury charm_remask", "Tutorial_01", false, "PersistentBoolData");
-        public static readonly FlagData Tutorial_01__inverse_remask_right = new FlagData("inverse_remask_right", "Tutorial_01", false, "PersistentBoolData");
+        public static readonly FlagData Tutorial_01__Break_Floor_1 = new FlagData("Break Floor 1", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Tutorial_01__Chest = new FlagData("Chest", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Tutorial_01__Collapser_Tute_01 = new FlagData("Collapser Tute 01", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Tutorial_01__Door = new FlagData("Door", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Tutorial_01__Geo_Rock_1 = new FlagData("Geo Rock 1", SceneInstances.Tutorial_01.SceneName, false, "GeoRockData");
+        public static readonly FlagData Tutorial_01__Geo_Rock_2 = new FlagData("Geo Rock 2", SceneInstances.Tutorial_01.SceneName, false, "GeoRockData");
+        public static readonly FlagData Tutorial_01__Geo_Rock_3 = new FlagData("Geo Rock 3", SceneInstances.Tutorial_01.SceneName, false, "GeoRockData");
+        public static readonly FlagData Tutorial_01__Geo_Rock_4 = new FlagData("Geo Rock 4", SceneInstances.Tutorial_01.SceneName, false, "GeoRockData");
+        public static readonly FlagData Tutorial_01__Geo_Rock_5 = new FlagData("Geo Rock 5", SceneInstances.Tutorial_01.SceneName, false, "GeoRockData");
+        public static readonly FlagData Tutorial_01__Health_Cocoon = new FlagData("Health Cocoon", SceneInstances.Tutorial_01.SceneName, true, "PersistentBoolData");
+        public static readonly FlagData Tutorial_01__Initial_Fall_Impact = new FlagData("Initial Fall Impact", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Tutorial_01__Interact_Reminder = new FlagData("Interact Reminder", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Tutorial_01__Inverse_Remasker = new FlagData("Inverse Remasker", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Tutorial_01__Secret_Mask = new FlagData("Secret Mask", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Tutorial_01__Secret_Sound_Region = new FlagData("Secret Sound Region", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Tutorial_01__Secret_Sound_Region_1 = new FlagData("Secret Sound Region (1)", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Tutorial_01__Shiny_Item_1 = new FlagData("Shiny Item (1)", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Tutorial_01__Tute_Door_1 = new FlagData("Tute Door 1", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Tutorial_01__Tute_Door_2 = new FlagData("Tute Door 2", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Tutorial_01__Tute_Door_3 = new FlagData("Tute Door 3", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Tutorial_01__Tute_Door_4 = new FlagData("Tute Door 4", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Tutorial_01__Tute_Door_5 = new FlagData("Tute Door 5", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Tutorial_01__Tute_Door_6 = new FlagData("Tute Door 6", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Tutorial_01__Tute_Door_7 = new FlagData("Tute Door 7", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Tutorial_01__fury_charm_remask = new FlagData("fury charm_remask", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
+        public static readonly FlagData Tutorial_01__inverse_remask_right = new FlagData("inverse_remask_right", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
 
         // Waterways_04
-        public static readonly FlagData Waterways_04__Grub_Bottle = new FlagData("Grub Bottle", "Waterways_04", false, "PersistentBoolData");
+        public static readonly FlagData Waterways_04__Grub_Bottle = new FlagData("Grub Bottle", SceneInstances.Waterways_04.SceneName, false, "PersistentBoolData");
 
         // Waterways_13
-        public static readonly FlagData Waterways_13__Grub_Bottle = new FlagData("Grub Bottle", "Waterways_13", false, "PersistentBoolData");
+        public static readonly FlagData Waterways_13__Grub_Bottle = new FlagData("Grub Bottle", SceneInstances.Waterways_13.SceneName, false, "PersistentBoolData");
 
         // Waterways_14
-        public static readonly FlagData Waterways_14__Grub_Bottle = new FlagData("Grub Bottle", "Waterways_14", false, "PersistentBoolData");
+        public static readonly FlagData Waterways_14__Grub_Bottle = new FlagData("Grub Bottle", SceneInstances.Waterways_14.SceneName, false, "PersistentBoolData");
     }
 }
