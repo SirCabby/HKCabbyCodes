@@ -1,6 +1,7 @@
 using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
 using System.Collections.Generic;
+using CabbyCodes.Flags;
 
 namespace CabbyCodes.Patches.Inventory.Abilities
 {
@@ -8,11 +9,11 @@ namespace CabbyCodes.Patches.Inventory.Abilities
     {
         public int Get()
         {
-            if (!PlayerData.instance.hasDash)
+            if (!FlagManager.GetBoolFlag(FlagInstances.hasDash))
             {
                 return 0;
             }
-            else if (!PlayerData.instance.hasSuperDash)
+            else if (!FlagManager.GetBoolFlag(FlagInstances.hasSuperDash))
             {
                 return 1;
             }
@@ -24,18 +25,18 @@ namespace CabbyCodes.Patches.Inventory.Abilities
         {
             if (value > 1)
             {
-                PlayerData.instance.hasDash = true;
-                PlayerData.instance.hasShadowDash = true;
+                FlagManager.SetBoolFlag(FlagInstances.hasDash, true);
+                FlagManager.SetBoolFlag(FlagInstances.hasShadowDash, true);
             }
             else if (value == 1)
             {
-                PlayerData.instance.hasDash = true;
-                PlayerData.instance.hasShadowDash = false;
+                FlagManager.SetBoolFlag(FlagInstances.hasDash, true);
+                FlagManager.SetBoolFlag(FlagInstances.hasShadowDash, false);
             }
             else
             {
-                PlayerData.instance.hasDash = false;
-                PlayerData.instance.hasShadowDash = false;
+                FlagManager.SetBoolFlag(FlagInstances.hasDash, false);
+                FlagManager.SetBoolFlag(FlagInstances.hasShadowDash, false);
             }
         }
 

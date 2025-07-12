@@ -1,6 +1,7 @@
 using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
 using System.Collections.Generic;
+using CabbyCodes.Flags;
 
 namespace CabbyCodes.Patches.Inventory.Abilities
 {
@@ -8,11 +9,11 @@ namespace CabbyCodes.Patches.Inventory.Abilities
     {
         public int Get()
         {
-            if (PlayerData.instance.dreamNailUpgraded)
+            if (FlagManager.GetBoolFlag(FlagInstances.dreamNailUpgraded))
             {
                 return 2;
             }
-            else if (PlayerData.instance.hasDreamNail)
+            else if (FlagManager.GetBoolFlag(FlagInstances.hasDreamNail))
             {
                 return 1;
             }
@@ -24,18 +25,18 @@ namespace CabbyCodes.Patches.Inventory.Abilities
         {
             if (value == 2)
             {
-                PlayerData.instance.hasDreamNail = true;
-                PlayerData.instance.dreamNailUpgraded = true;
+                FlagManager.SetBoolFlag(FlagInstances.hasDreamNail, true);
+                FlagManager.SetBoolFlag(FlagInstances.dreamNailUpgraded, true);
             }
             else if (value == 1)
             {
-                PlayerData.instance.hasDreamNail = true;
-                PlayerData.instance.dreamNailUpgraded = false;
+                FlagManager.SetBoolFlag(FlagInstances.hasDreamNail, true);
+                FlagManager.SetBoolFlag(FlagInstances.dreamNailUpgraded, false);
             }
             else
             {
-                PlayerData.instance.hasDreamNail = false;
-                PlayerData.instance.dreamNailUpgraded = false;
+                FlagManager.SetBoolFlag(FlagInstances.hasDreamNail, false);
+                FlagManager.SetBoolFlag(FlagInstances.dreamNailUpgraded, false);
             }
         }
 

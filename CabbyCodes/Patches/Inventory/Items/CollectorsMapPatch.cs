@@ -1,5 +1,6 @@
 using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
+using CabbyCodes.Flags;
 
 namespace CabbyCodes.Patches.Inventory.Items
 {
@@ -7,16 +8,14 @@ namespace CabbyCodes.Patches.Inventory.Items
     {
         public bool Get()
         {
-            return PlayerData.instance.hasPinGrub;
+            return FlagManager.GetBoolFlag(FlagInstances.hasPinGrub);
         }
 
         public void Set(bool value)
         {
-            PlayerData.instance.hasPinGrub = value;
+            FlagManager.SetBoolFlag(FlagInstances.hasPinGrub, value);
             if (value)
-            {
-                PlayerData.instance.hasPin = true;
-            }
+                FlagManager.SetBoolFlag(FlagInstances.hasPin, true);
         }
 
         public static void AddPanel()

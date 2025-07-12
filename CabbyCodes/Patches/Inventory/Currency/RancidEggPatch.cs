@@ -1,6 +1,7 @@
 using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
 using CabbyMenu.Utilities;
+using CabbyCodes.Flags;
 
 namespace CabbyCodes.Patches.Inventory.Currency
 {
@@ -8,19 +9,18 @@ namespace CabbyCodes.Patches.Inventory.Currency
     {
         public int Get()
         {
-            return PlayerData.instance.rancidEggs;
+            return FlagManager.GetIntFlag(FlagInstances.rancidEggs);
         }
 
         public void Set(int value)
         {
             value = ValidationUtils.ValidateRange(value, 0, Constants.MAX_RANCID_EGGS, nameof(value));
-            PlayerData.instance.rancidEggs = value;
+            FlagManager.SetIntFlag(FlagInstances.rancidEggs, value);
         }
 
         public static void AddPanel()
         {
-            RangeInputFieldPanel<int> panel = new RangeInputFieldPanel<int>(new RancidEggPatch(), KeyCodeMap.ValidChars.Numeric, 0, Constants.MAX_RANCID_EGGS, "Rancid Eggs (0-80)");
-            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(panel);
+            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new RangeInputFieldPanel<int>(new RancidEggPatch(), KeyCodeMap.ValidChars.Numeric, 0, Constants.MAX_RANCID_EGGS, "Rancid Eggs"));
         }
     }
 }

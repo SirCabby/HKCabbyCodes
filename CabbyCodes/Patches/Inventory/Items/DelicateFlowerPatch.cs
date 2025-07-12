@@ -1,6 +1,7 @@
 using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
 using System.Collections.Generic;
+using CabbyCodes.Flags;
 
 namespace CabbyCodes.Patches.Inventory.Items
 {
@@ -8,11 +9,11 @@ namespace CabbyCodes.Patches.Inventory.Items
     {
         public int Get()
         {
-            if (PlayerData.instance.hasXunFlower && !PlayerData.instance.xunFlowerBroken)
+            if (FlagManager.GetBoolFlag(FlagInstances.hasXunFlower) && !FlagManager.GetBoolFlag(FlagInstances.xunFlowerBroken))
             {
                 return 2;
             }
-            else if (PlayerData.instance.hasXunFlower && PlayerData.instance.xunFlowerBroken)
+            else if (FlagManager.GetBoolFlag(FlagInstances.hasXunFlower) && FlagManager.GetBoolFlag(FlagInstances.xunFlowerBroken))
             {
                 return 1;
             }
@@ -24,18 +25,18 @@ namespace CabbyCodes.Patches.Inventory.Items
         {
             if (value == Constants.DELICATE_FLOWER_BROKEN_STATE)
             {
-                PlayerData.instance.hasXunFlower = true;
-                PlayerData.instance.xunFlowerBroken = true;
+                FlagManager.SetBoolFlag(FlagInstances.hasXunFlower, true);
+                FlagManager.SetBoolFlag(FlagInstances.xunFlowerBroken, true);
             }
             else if (value == Constants.DELICATE_FLOWER_RETURNED_STATE)
             {
-                PlayerData.instance.hasXunFlower = true;
-                PlayerData.instance.xunFlowerBroken = false;
+                FlagManager.SetBoolFlag(FlagInstances.hasXunFlower, true);
+                FlagManager.SetBoolFlag(FlagInstances.xunFlowerBroken, false);
             }
             else
             {
-                PlayerData.instance.hasXunFlower = false;
-                PlayerData.instance.xunFlowerBroken = false;
+                FlagManager.SetBoolFlag(FlagInstances.hasXunFlower, false);
+                FlagManager.SetBoolFlag(FlagInstances.xunFlowerBroken, false);
             }
         }
 

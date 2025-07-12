@@ -1,6 +1,7 @@
 using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
 using CabbyMenu.Utilities;
+using CabbyCodes.Flags;
 
 namespace CabbyCodes.Patches.Player
 {
@@ -8,15 +9,15 @@ namespace CabbyCodes.Patches.Player
     {
         public int Get()
         {
-            return PlayerData.instance.maxHealthBase;
+            return FlagManager.GetIntFlag(FlagInstances.maxHealthBase);
         }
 
         public void Set(int value)
         {
             value = ValidationUtils.ValidateRange(value, Constants.MIN_HEALTH, Constants.MAX_HEALTH, nameof(value));
 
-            PlayerData.instance.maxHealthBase = value;
-            PlayerData.instance.maxHealth = value;
+            FlagManager.SetIntFlag(FlagInstances.maxHealthBase, value);
+            FlagManager.SetIntFlag(FlagInstances.maxHealth, value);
 
             CabbyCodesPlugin.BLogger.LogDebug(string.Format("Health updated to {0}", value));
         }

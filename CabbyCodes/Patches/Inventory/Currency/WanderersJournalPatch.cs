@@ -1,6 +1,7 @@
 using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
 using CabbyMenu.Utilities;
+using CabbyCodes.Flags;
 
 namespace CabbyCodes.Patches.Inventory.Currency
 {
@@ -8,7 +9,7 @@ namespace CabbyCodes.Patches.Inventory.Currency
     {
         public int Get()
         {
-            return PlayerData.instance.trinket1;
+            return FlagManager.GetIntFlag(FlagInstances.trinket1);
         }
 
         public void Set(int value)
@@ -16,9 +17,9 @@ namespace CabbyCodes.Patches.Inventory.Currency
             value = ValidationUtils.ValidateRange(value, 0, Constants.MAX_WANDERERS_JOURNALS, nameof(value));
             if (value > 0)
             {
-                PlayerData.instance.foundTrinket1 = true;
+                FlagManager.SetBoolFlag(FlagInstances.foundTrinket1, true);
             }
-            PlayerData.instance.trinket1 = value;
+            FlagManager.SetIntFlag(FlagInstances.trinket1, value);
         }
 
         public static void AddPanel()

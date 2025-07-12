@@ -1,5 +1,6 @@
 using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
+using CabbyCodes.Flags;
 
 namespace CabbyCodes.Patches.Inventory.Abilities
 {
@@ -7,17 +8,17 @@ namespace CabbyCodes.Patches.Inventory.Abilities
     {
         public bool Get()
         {
-            return PlayerData.instance.hasDreamGate;
+            return FlagManager.GetBoolFlag(FlagInstances.hasDreamGate);
         }
 
         public void Set(bool value)
         {
-            PlayerData.instance.hasDreamGate = value;
+            FlagManager.SetBoolFlag(FlagInstances.hasDreamGate, value);
         }
 
         public static void AddPanel()
         {
-            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new TogglePanel(new DreamgatePatch(), "Dreamgate"));
+            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new TogglePanel(new DreamgatePatch(), "Dream Gate"));
         }
     }
 }

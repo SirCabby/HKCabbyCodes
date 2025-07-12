@@ -2,6 +2,7 @@ using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
 using System.Collections.Generic;
 using static CabbyCodes.Scenes.SceneManagement;
+using CabbyCodes.Flags;
 
 namespace CabbyCodes.Patches.Maps
 {
@@ -18,18 +19,18 @@ namespace CabbyCodes.Patches.Maps
 
         public bool Get()
         {
-            return PlayerData.instance.scenesMapped.Contains(roomName);
+            return FlagManager.ListFlagContains("scenesMapped", "Global", roomName);
         }
 
         public void Set(bool value)
         {
             if (value && !Get())
             {
-                PlayerData.instance.scenesMapped.Add(roomName);
+                FlagManager.AddToListFlag("scenesMapped", "Global", roomName);
             }
             else if (!value && Get())
             {
-                PlayerData.instance.scenesMapped.Remove(roomName);
+                FlagManager.RemoveFromListFlag("scenesMapped", "Global", roomName);
             }
         }
 

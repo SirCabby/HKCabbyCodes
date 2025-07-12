@@ -5,6 +5,7 @@ using UnityEngine;
 using CabbyCodes.Scenes;
 using static CabbyCodes.Scenes.SceneManagement;
 using static CabbyCodes.Scenes.Areas;
+using CabbyCodes.Flags;
 
 namespace CabbyCodes.Patches.Maps
 {
@@ -103,17 +104,15 @@ namespace CabbyCodes.Patches.Maps
 
         private void ToggleAllRooms(string mapName, bool setToOn)
         {
-            List<string> scenesMapped = PlayerData.instance.scenesMapped;
-
             foreach (string roomName in MapRoomPatch.roomsInMaps[mapName])
             {
-                if (setToOn && !scenesMapped.Contains(roomName))
+                if (setToOn && !FlagManager.ListFlagContains("scenesMapped", "Global", roomName))
                 {
-                    scenesMapped.Add(roomName);
+                    FlagManager.AddToListFlag("scenesMapped", "Global", roomName);
                 }
-                else if (!setToOn && scenesMapped.Contains(roomName))
+                else if (!setToOn && FlagManager.ListFlagContains("scenesMapped", "Global", roomName))
                 {
-                    scenesMapped.Remove(roomName);
+                    FlagManager.RemoveFromListFlag("scenesMapped", "Global", roomName);
                 }
             }
 

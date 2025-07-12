@@ -1,5 +1,6 @@
 using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
+using CabbyCodes.Flags;
 
 namespace CabbyCodes.Patches.Inventory.Abilities
 {
@@ -7,12 +8,12 @@ namespace CabbyCodes.Patches.Inventory.Abilities
     {
         public bool Get()
         {
-            return PlayerData.instance.hasSuperDash;
+            return FlagManager.GetBoolFlag(FlagInstances.hasSuperDash);
         }
 
         public void Set(bool value)
         {
-            PlayerData.instance.hasSuperDash = value;
+            FlagManager.SetBoolFlag(FlagInstances.hasSuperDash, value);
         }
 
         public static void AddPanel()

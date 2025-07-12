@@ -1,5 +1,6 @@
 using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
+using CabbyCodes.Flags;
 
 namespace CabbyCodes.Patches.Inventory.Abilities
 {
@@ -7,12 +8,12 @@ namespace CabbyCodes.Patches.Inventory.Abilities
     {
         public bool Get()
         {
-            return PlayerData.instance.hasDoubleJump;
+            return FlagManager.GetBoolFlag(FlagInstances.hasDoubleJump);
         }
 
         public void Set(bool value)
         {
-            PlayerData.instance.hasDoubleJump = value;
+            FlagManager.SetBoolFlag(FlagInstances.hasDoubleJump, value);
         }
 
         public static void AddPanel()

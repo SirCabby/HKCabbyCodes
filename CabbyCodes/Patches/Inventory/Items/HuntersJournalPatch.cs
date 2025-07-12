@@ -1,11 +1,19 @@
+using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
+using CabbyCodes.Flags;
 
 namespace CabbyCodes.Patches.Inventory.Items
 {
-    public class HuntersJournalPatch : PlayerDataSyncedBool
+    public class HuntersJournalPatch : ISyncedReference<bool>
     {
-        public HuntersJournalPatch() : base("hasJournal")
+        public bool Get()
         {
+            return FlagManager.GetBoolFlag(FlagInstances.hasJournal);
+        }
+
+        public void Set(bool value)
+        {
+            FlagManager.SetBoolFlag(FlagInstances.hasJournal, value);
         }
 
         public static void AddPanel()
