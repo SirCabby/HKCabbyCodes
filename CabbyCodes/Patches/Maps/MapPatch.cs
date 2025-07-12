@@ -2,7 +2,6 @@ using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
 using System;
 using System.Reflection;
-using CabbyCodes.Scenes;
 using static CabbyCodes.Scenes.Scenes;
 
 namespace CabbyCodes.Patches.Maps

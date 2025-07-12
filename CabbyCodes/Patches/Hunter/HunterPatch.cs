@@ -4,42 +4,37 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using CabbyMenu.Utilities;
+using CabbyCodes.Flags;
+using CabbyCodes.Flags.FlagTypes;
 
 namespace CabbyCodes.Patches.Hunter
 {
     public class HunterPatch : ISyncedReference<int>
     {
-        public static List<string> hunterTargets = BuildHunterNames();
+        public static List<HunterInfo> hunterTargets = HunterData.GetAllHunterTargets();
 
-        private readonly string targetName;
+        private readonly HunterInfo hunterInfo;
 
         public HunterPatch(string targetName)
         {
-            this.targetName = targetName;
+            this.hunterInfo = HunterData.GetHunterTarget(targetName);
         }
 
         public int Get()
         {
-            return PlayerData.instance.GetInt("kills" + targetName);
+            return PlayerData.instance.GetInt(hunterInfo.KillsFlag.Id);
         }
 
         public void Set(int value)
         {
             value = ValidationUtils.ValidateRange(value, Constants.MIN_HUNTER_KILLS, Constants.MAX_HUNTER_KILLS, nameof(value));
-            PlayerData.instance.SetInt("kills" + targetName, value);
+            PlayerData.instance.SetInt(hunterInfo.KillsFlag.Id, value);
         }
 
-        private static List<string> BuildHunterNames()
+        private static RangeInputFieldPanel<int> BuildCheatPanel(HunterInfo hunterInfo)
         {
-            List<string> hunterNames = typeof(PlayerData).GetFields().Where(x => x.Name.StartsWith("killed")).Select(x => x.Name.Substring(6)).ToList();
-            hunterNames.Remove("Dummy");
-            return hunterNames;
-        }
-
-        private static RangeInputFieldPanel<int> BuildCheatPanel(string targetName)
-        {
-            RangeInputFieldPanel<int> panel = new RangeInputFieldPanel<int>(new HunterPatch(targetName), KeyCodeMap.ValidChars.Numeric, Constants.MIN_HUNTER_KILLS, Constants.MAX_HUNTER_KILLS, targetName);
-            PanelAdder.AddToggleButton(panel, 0, new HunterKilledPatch(targetName));
+            RangeInputFieldPanel<int> panel = new RangeInputFieldPanel<int>(new HunterPatch(hunterInfo.EnemyName), KeyCodeMap.ValidChars.Numeric, Constants.MIN_HUNTER_KILLS, Constants.MAX_HUNTER_KILLS, hunterInfo.ReadableName);
+            PanelAdder.AddToggleButton(panel, 0, new HunterKilledPatch(hunterInfo.EnemyName));
 
             return panel;
         }
@@ -51,9 +46,9 @@ namespace CabbyCodes.Patches.Hunter
             // Unlock All toggle
             ButtonPanel buttonPanel = new ButtonPanel(() =>
             {
-                foreach (string targetName in hunterTargets)
+                foreach (HunterInfo hunterInfo in hunterTargets)
                 {
-                    PlayerData.instance.SetBool("killed" + targetName, true);
+                    PlayerData.instance.SetBool(hunterInfo.KilledFlag.Id, true);
                 }
 
                 CabbyCodesPlugin.cabbyMenu.UpdateCheatPanels();
@@ -62,9 +57,9 @@ namespace CabbyCodes.Patches.Hunter
             // Lock all toggle
             PanelAdder.AddButton(buttonPanel, 1, () =>
             {
-                foreach (string targetName in hunterTargets)
+                foreach (HunterInfo hunterInfo in hunterTargets)
                 {
-                    PlayerData.instance.SetBool("killed" + targetName, false);
+                    PlayerData.instance.SetBool(hunterInfo.KilledFlag.Id, false);
                 }
 
                 CabbyCodesPlugin.cabbyMenu.UpdateCheatPanels();
@@ -74,9 +69,9 @@ namespace CabbyCodes.Patches.Hunter
             // Set kills remaining 0
             ButtonPanel setPanel = new ButtonPanel(() =>
             {
-                foreach (string targetName in hunterTargets)
+                foreach (HunterInfo hunterInfo in hunterTargets)
                 {
-                    PlayerData.instance.SetInt("kills" + targetName, 0);
+                    PlayerData.instance.SetInt(hunterInfo.KillsFlag.Id, 0);
                 }
 
                 CabbyCodesPlugin.cabbyMenu.UpdateCheatPanels();
@@ -85,9 +80,9 @@ namespace CabbyCodes.Patches.Hunter
             // Set kills remaining 1
             PanelAdder.AddButton(setPanel, 1, () =>
             {
-                foreach (string targetName in hunterTargets)
+                foreach (HunterInfo hunterInfo in hunterTargets)
                 {
-                    PlayerData.instance.SetInt("kills" + targetName, 1);
+                    PlayerData.instance.SetInt(hunterInfo.KillsFlag.Id, 1);
                 }
 
                 CabbyCodesPlugin.cabbyMenu.UpdateCheatPanels();
@@ -95,9 +90,9 @@ namespace CabbyCodes.Patches.Hunter
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(setPanel);
 
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("<ON> to unlock entry, kills left to unlock notes (0 = unlocked)").SetColor(CheatPanel.subHeaderColor));
-            foreach (string targetName in hunterTargets)
+            foreach (HunterInfo hunterInfo in hunterTargets)
             {
-                CabbyCodesPlugin.cabbyMenu.AddCheatPanel(BuildCheatPanel(targetName));
+                CabbyCodesPlugin.cabbyMenu.AddCheatPanel(BuildCheatPanel(hunterInfo));
             }
         }
     }

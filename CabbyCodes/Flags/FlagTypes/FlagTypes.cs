@@ -9,6 +9,7 @@ namespace CabbyCodes.Flags.FlagTypes
         public static readonly CharmCost CharmCost = new CharmCost();
         public static readonly GeoRocks GeoRocks = new GeoRocks();
         public static readonly GrubBottles GrubBottles = new GrubBottles();
+        public static readonly HunterData HunterData = new HunterData();
 
         // UNCATEGORIZED
         public static class Uncategorized_Persistentbooldata

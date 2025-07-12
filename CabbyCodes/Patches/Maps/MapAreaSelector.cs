@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using CabbyCodes.Scenes;
 using static CabbyCodes.Scenes.Scenes;
-using static CabbyCodes.Scenes.Areas;
 
 namespace CabbyCodes.Patches.Maps
 {

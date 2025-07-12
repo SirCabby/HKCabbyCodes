@@ -10,7 +10,7 @@ namespace CabbyCodes.Patches.Charms
     public class CharmPatch : ISyncedReference<bool>
     {
         private static readonly Color unearnedColor = CabbyMenu.Constants.UNEARNED_COLOR;
-        public static readonly List<CharmData.CharmInfo> charms = CharmData.GetAllCharms();
+        public static readonly List<CharmInfo> charms = CharmData.GetAllCharms();
 
         private readonly int charmIndex;
         private TogglePanel parent;

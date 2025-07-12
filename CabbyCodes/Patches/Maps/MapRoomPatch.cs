@@ -2,7 +2,6 @@ using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
 using System.Collections.Generic;
 using UnityEngine;
-using CabbyCodes.Scenes;
 using static CabbyCodes.Scenes.Scenes;
 using static CabbyCodes.Scenes.Areas;
 
