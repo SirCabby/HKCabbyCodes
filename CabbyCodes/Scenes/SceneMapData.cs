@@ -5,6 +5,8 @@ namespace CabbyCodes.Scenes
     /// </summary>
     public class SceneMapData
     {
+        private readonly string _readableName;
+
         /// <summary>
         /// The internal scene name used by the game.
         /// </summary>
@@ -17,8 +19,9 @@ namespace CabbyCodes.Scenes
 
         /// <summary>
         /// The human-readable display name for this scene.
+        /// Returns SceneName if ReadableName is null or empty.
         /// </summary>
-        public string ReadableName { get; }
+        public string ReadableName => string.IsNullOrEmpty(_readableName) ? SceneName : _readableName;
 
         /// <summary>
         /// Initializes a new instance of the SceneMapData class.
@@ -30,7 +33,7 @@ namespace CabbyCodes.Scenes
         {
             SceneName = sceneName;
             AreaName = areaName;
-            ReadableName = readableName;
+            _readableName = readableName;
         }
     }
 } 
