@@ -1,11 +1,11 @@
 using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
-using CabbyMenu.Utilities;
+using System.Collections.Generic;
 using CabbyCodes.Flags;
 
 namespace CabbyCodes.Patches.Inventory.Spells
 {
-    public class VengefulSpiritPatch : ISyncedReference<int>
+    public class VengefulSpiritPatch : ISyncedValueList
     {
         public int Get()
         {
@@ -17,10 +17,19 @@ namespace CabbyCodes.Patches.Inventory.Spells
             FlagManager.SetIntFlag(FlagInstances.fireballLevel, value);
         }
 
+        public List<string> GetValueList()
+        {
+            return new List<string>
+            {
+                "NONE", "Vengeful Spirit", "Shade Soul"
+            };
+        }
+
         public static void AddPanel()
         {
-            RangeInputFieldPanel<int> panel = new RangeInputFieldPanel<int>(new VengefulSpiritPatch(), KeyCodeMap.ValidChars.Decimal, 0, 2, "Vengeful Spirit / Shade Soul");
-            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(panel);
+            VengefulSpiritPatch patch = new VengefulSpiritPatch();
+            DropdownPanel dropdownPanel = new DropdownPanel(patch, "Vengeful Spirit / Shade Soul", Constants.DEFAULT_PANEL_HEIGHT);
+            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(dropdownPanel);
         }
     }
 }
