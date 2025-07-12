@@ -93,15 +93,14 @@ namespace CabbyCodes.Patches.Flags.Triage
         {
             if (notificationPanel == null) return;
             
-            string displayText = "Flag Monitor Active\n\n";
-            int count = 0;
+            int count = notificationQueue.Count;
+            string displayText = $"Flag Monitor Active - Total Notifications: {count}\n\n";
+            
             foreach (string notification in notificationQueue)
             {
                 displayText += notification + "\n";
-                count++;
             }
             
-            displayText += $"\nTotal notifications: {count}";
             notificationText.text = displayText;
             
             // Force layout update for scroll view
@@ -122,7 +121,7 @@ namespace CabbyCodes.Patches.Flags.Triage
             notificationQueue.Clear();
             if (notificationText != null)
             {
-                notificationText.text = "Flag Monitor Active\n\nNotifications cleared.";
+                notificationText.text = "Flag Monitor Active - Total Notifications: 0\n\nNotifications cleared.";
             }
         }
 
