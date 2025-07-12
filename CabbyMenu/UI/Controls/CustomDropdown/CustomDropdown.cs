@@ -19,6 +19,7 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
         private const float SCROLLBAR_WIDTH = 10f;
         private const float MIN_DROPDOWN_WIDTH = 120f; // Minimum width for dropdown
         private const float TEXT_PADDING = 20f; // Padding for text within buttons
+        private const float DEFAULT_SCROLL_SENSITIVITY = 50f; // Default scroll sensitivity for faster scrolling
 
         /// <summary>
         /// Builds a custom dropdown GameObject with default styling.
@@ -811,7 +812,7 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
             scrollRectComponent.vertical = true;
             scrollRectComponent.movementType = ScrollRect.MovementType.Clamped;
             scrollRectComponent.inertia = false;
-            scrollRectComponent.scrollSensitivity = 10f;
+            scrollRectComponent.scrollSensitivity = DEFAULT_SCROLL_SENSITIVITY; // Increased from 10f for faster scrolling
 
             return scrollViewObj;
         }
@@ -1402,7 +1403,7 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
                     scrollRectComponent.vertical = true;
                     scrollRectComponent.movementType = ScrollRect.MovementType.Clamped;
                     scrollRectComponent.inertia = false;
-                    scrollRectComponent.scrollSensitivity = 10f;
+                    scrollRectComponent.scrollSensitivity = DEFAULT_SCROLL_SENSITIVITY; // Increased from 10f for faster scrolling
                     scrollRectComponent.elasticity = 0f; // Prevent over-scrolling
 
                 }
