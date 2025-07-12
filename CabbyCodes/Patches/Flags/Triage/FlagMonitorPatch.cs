@@ -22,7 +22,7 @@ namespace CabbyCodes.Patches.Flags.Triage
             {
                 if (!isEnabled) return;
                 
-                string notification = $"Flag Changed: {persistentBoolData.id} in {persistentBoolData.sceneName} = {persistentBoolData.activated}";
+                string notification = $"[{persistentBoolData.sceneName}]: {persistentBoolData.id} = {persistentBoolData.activated}";
                 AddNotification(notification);
             }
         }
@@ -34,7 +34,7 @@ namespace CabbyCodes.Patches.Flags.Triage
             {
                 if (!isEnabled) return;
                 
-                string notification = $"Flag Changed: {persistentIntData.id} in {persistentIntData.sceneName} = {persistentIntData.value}";
+                string notification = $"[{persistentIntData.sceneName}]: {persistentIntData.id} = {persistentIntData.value}";
                 AddNotification(notification);
             }
         }
@@ -46,7 +46,7 @@ namespace CabbyCodes.Patches.Flags.Triage
             {
                 if (!isEnabled) return;
                 
-                string notification = $"GeoRock Changed: {geoRockData.id} in {geoRockData.sceneName}";
+                string notification = $"[{geoRockData.sceneName}]: {geoRockData.id} = GeoRock";
                 AddNotification(notification);
             }
         }
@@ -58,7 +58,7 @@ namespace CabbyCodes.Patches.Flags.Triage
             {
                 if (!isEnabled) return;
                 
-                string notification = $"PlayerData Bool: {boolName} = {value}";
+                string notification = $"[PlayerData]: {boolName} = {value}";
                 AddNotification(notification);
             }
         }
@@ -70,7 +70,7 @@ namespace CabbyCodes.Patches.Flags.Triage
             {
                 if (!isEnabled) return;
                 
-                string notification = $"PlayerData Int: {intName} = {value}";
+                string notification = $"[PlayerData]: {intName} = {value}";
                 AddNotification(notification);
             }
         }
@@ -97,12 +97,6 @@ namespace CabbyCodes.Patches.Flags.Triage
             
             notificationQueue.Enqueue(message);
             
-            // Keep only the last 10 notifications
-            while (notificationQueue.Count > 10)
-            {
-                notificationQueue.Dequeue();
-            }
-            
             UpdateNotificationDisplay();
         }
 
@@ -111,12 +105,25 @@ namespace CabbyCodes.Patches.Flags.Triage
             if (notificationPanel == null) return;
             
             string displayText = "Flag Monitor Active\n\n";
+            int count = 0;
             foreach (string notification in notificationQueue)
             {
                 displayText += notification + "\n";
+                count++;
             }
             
+            displayText += $"\nTotal notifications: {count}";
             notificationText.text = displayText;
+            
+            // Force layout update for scroll view
+            Canvas.ForceUpdateCanvases();
+            
+            // Auto-scroll to bottom to show latest notifications
+            ScrollRect scrollRect = notificationPanel.GetComponentInChildren<ScrollRect>();
+            if (scrollRect != null)
+            {
+                scrollRect.verticalNormalizedPosition = 0f;
+            }
         }
 
         public static void CreateNotificationPanel()
@@ -147,21 +154,68 @@ namespace CabbyCodes.Patches.Flags.Triage
             backgroundRect.offsetMin = Vector2.zero;
             backgroundRect.offsetMax = Vector2.zero;
             
+            // Create scroll view for text
+            GameObject scrollViewObject = new GameObject("ScrollView");
+            scrollViewObject.transform.SetParent(backgroundPanel.transform, false);
+            
+            ScrollRect scrollRect = scrollViewObject.AddComponent<ScrollRect>();
+            RectTransform scrollRectTransform = scrollViewObject.GetComponent<RectTransform>();
+            scrollRectTransform.anchorMin = Vector2.zero;
+            scrollRectTransform.anchorMax = Vector2.one;
+            scrollRectTransform.offsetMin = new Vector2(10, 10);
+            scrollRectTransform.offsetMax = new Vector2(-10, -10);
+            
+            // Create viewport
+            GameObject viewportObject = new GameObject("Viewport");
+            viewportObject.transform.SetParent(scrollViewObject.transform, false);
+            
+            RectTransform viewportRect = viewportObject.AddComponent<RectTransform>();
+            viewportRect.anchorMin = Vector2.zero;
+            viewportRect.anchorMax = Vector2.one;
+            viewportRect.offsetMin = Vector2.zero;
+            viewportRect.offsetMax = Vector2.zero;
+            
+            Image viewportImage = viewportObject.AddComponent<Image>();
+            viewportImage.color = new Color(0, 0, 0, 0.5f);
+            
+            Mask viewportMask = viewportObject.AddComponent<Mask>();
+            viewportMask.showMaskGraphic = false;
+            
+            // Create content area
+            GameObject contentObject = new GameObject("Content");
+            contentObject.transform.SetParent(viewportObject.transform, false);
+            
+            RectTransform contentRect = contentObject.AddComponent<RectTransform>();
+            contentRect.anchorMin = new Vector2(0, 1);
+            contentRect.anchorMax = new Vector2(1, 1);
+            contentRect.pivot = new Vector2(0.5f, 1);
+            contentRect.offsetMin = new Vector2(10, 0);
+            contentRect.offsetMax = new Vector2(-10, 0);
+            
             // Create text component
             GameObject textObject = new GameObject("NotificationText");
-            textObject.transform.SetParent(backgroundPanel.transform, false);
+            textObject.transform.SetParent(contentObject.transform, false);
             
             notificationText = textObject.AddComponent<Text>();
             notificationText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-            notificationText.fontSize = 14;
+            notificationText.fontSize = 12;
             notificationText.color = Color.white;
             notificationText.alignment = TextAnchor.UpperLeft;
+            notificationText.horizontalOverflow = HorizontalWrapMode.Wrap;
+            notificationText.verticalOverflow = VerticalWrapMode.Overflow;
             
             RectTransform textRect = textObject.GetComponent<RectTransform>();
             textRect.anchorMin = Vector2.zero;
             textRect.anchorMax = Vector2.one;
-            textRect.offsetMin = new Vector2(10, 10);
-            textRect.offsetMax = new Vector2(-10, -10);
+            textRect.offsetMin = Vector2.zero;
+            textRect.offsetMax = Vector2.zero;
+            
+            // Setup scroll rect
+            scrollRect.viewport = viewportRect;
+            scrollRect.content = contentRect;
+            scrollRect.horizontal = false;
+            scrollRect.vertical = true;
+            scrollRect.scrollSensitivity = 10f;
             
             // Initially hide the panel
             notificationPanel.SetActive(false);
@@ -256,9 +310,15 @@ namespace CabbyCodes.Patches.Flags.Triage
                 ToggleFileLogging();
             }, "Toggle File Logging", "Enable/disable logging flag changes to a file in CabbySaves folder");
             
+            var testButton = new ButtonPanel(() =>
+            {
+                TestFlagNotifications();
+            }, "Test Flag Notifications", "Print example flag change messages to test the monitor display");
+            
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(toggleButton);
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(clearButton);
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(fileLogButton);
+            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(testButton);
         }
 
         // Helper methods for UI-triggered flag changes
@@ -288,6 +348,22 @@ namespace CabbyCodes.Patches.Flags.Triage
         public static void NotifySceneDataInt(string flagName, int value, string sceneName)
         {
             NotifyFlagChange($"{flagName} ({sceneName})", value, "SceneData_Int");
+        }
+
+        private static int testCounter = 0;
+        
+        public static void TestFlagNotifications()
+        {
+            testCounter++;
+            
+            // Test messages in the same format as the actual patches
+            AddNotification($"[TestScene]: test_flag_{testCounter} = true");
+            AddNotification($"[TestScene]: test_int_{testCounter} = {testCounter}");
+            AddNotification($"[TestScene]: test_georock_{testCounter} = GeoRock");
+            AddNotification($"[PlayerData]: test_player_bool_{testCounter} = true");
+            AddNotification($"[PlayerData]: test_player_int_{testCounter} = {testCounter * 100}");
+            
+            Debug.Log($"[Flag Monitor] Test notifications added (counter: {testCounter})");
         }
     }
 } 
