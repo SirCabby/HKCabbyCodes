@@ -98,6 +98,9 @@ namespace CabbyCodes
             // Apply custom save/load patches
             CustomSaveLoadPatch.ApplyPatches();
 
+            // Initialize scene monitoring for flag monitor
+            FlagMonitorPatch.InitializeSceneMonitoring();
+
             BLogger.LogInfo("CabbyCodes menu initialized successfully");
         }
 

@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 using System.Collections.Generic;
 using HarmonyLib;
 using CabbyMenu.UI.CheatPanels;
@@ -73,6 +74,29 @@ namespace CabbyCodes.Patches.Flags.Triage
                 string notification = $"[PlayerData]: {intName} = {value}";
                 AddNotification(notification);
             }
+        }
+
+        // Static initialization flag to prevent multiple registrations
+        private static bool sceneEventsRegistered = false;
+
+        /// <summary>
+        /// Initialize scene change monitoring. Should be called from the mod's Start method.
+        /// </summary>
+        public static void InitializeSceneMonitoring()
+        {
+            if (sceneEventsRegistered) return;
+            
+            UnityEngine.SceneManagement.SceneManager.activeSceneChanged += OnActiveSceneChanged;
+            
+            sceneEventsRegistered = true;
+        }
+
+        private static void OnActiveSceneChanged(Scene oldScene, Scene newScene)
+        {
+            if (!monitorReference.IsEnabled) return;
+            
+            string notification = $"[SceneChange]: {oldScene.name} -> {newScene.name}";
+            AddNotification(notification);
         }
 
         private static void AddNotification(string message)
@@ -239,6 +263,15 @@ namespace CabbyCodes.Patches.Flags.Triage
         {
             NotifyFlagChange($"{flagName} ({sceneName})", value, "SceneData_Int");
         }
+        
+        public static void NotifySceneChange(string sceneName, string entryGate = null)
+        {
+            if (!monitorReference.IsEnabled) return;
+            
+            string entryInfo = !string.IsNullOrEmpty(entryGate) ? $" (Entry: {entryGate})" : "";
+            string message = $"[SceneChange]: Transitioning to {sceneName}{entryInfo}";
+            AddNotificationDirect(message);
+        }
 
         private static int testCounter = 0;
         
@@ -258,6 +291,9 @@ namespace CabbyCodes.Patches.Flags.Triage
             AddNotification($"[TestScene]: test_georock_{testCounter} = GeoRock");
             AddNotification($"[PlayerData]: test_player_bool_{testCounter} = true");
             AddNotification($"[PlayerData]: test_player_int_{testCounter} = {testCounter * 100}");
+            
+            // Test scene change notification
+            AddNotification("[SceneChange]: oldscene -> newscene");
         }
     }
 } 

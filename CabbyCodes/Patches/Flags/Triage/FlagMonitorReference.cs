@@ -127,6 +127,7 @@ namespace CabbyCodes.Patches.Flags.Triage
 
             // Create the main panel
             FlagMonitorPatch.notificationPanel = new GameObject("FlagMonitorPanel");
+            Object.DontDestroyOnLoad(FlagMonitorPatch.notificationPanel);
             Canvas canvas = FlagMonitorPatch.notificationPanel.AddComponent<Canvas>();
             canvas.renderMode = RenderMode.ScreenSpaceOverlay;
             canvas.sortingOrder = 999; // Lower than CabbyMainMenu (1000) so menu appears on top when paused
