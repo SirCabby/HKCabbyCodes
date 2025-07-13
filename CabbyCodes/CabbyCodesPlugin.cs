@@ -102,6 +102,9 @@ namespace CabbyCodes
             // Apply custom save/load patches
             CustomSaveLoadPatch.ApplyPatches();
 
+            // Apply flag monitor patches
+            FlagMonitorPatch.ApplyPatches();
+            
             // Initialize scene monitoring for flag monitor
             FlagMonitorPatch.InitializeSceneMonitoring();
 

@@ -178,6 +178,7 @@ namespace CabbyCodes.Flags
         #endregion
 
         #region Game State
+            public static readonly FlagDef disablePause = new FlagDef("disablePause", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef permadeathMode = new FlagDef("permadeathMode", "Global", false, "PlayerData_Int");
             public static readonly FlagDef unlockedCompletionRate = new FlagDef("unlockedCompletionRate", "Global", false, "PlayerData_Bool");
         #endregion
@@ -696,17 +697,27 @@ namespace CabbyCodes.Flags
         #region Player Status
             public static readonly FlagDef charmSlots = new FlagDef("charmSlots", "Global", false, "PlayerData_Int");
             public static readonly FlagDef charmSlotsFilled = new FlagDef("charmSlotsFilled", "Global", false, "PlayerData_Int");
+            public static readonly FlagDef firstGeo = new FlagDef("firstGeo", "Global", false, "PlayerData_Bool");
+            public static readonly FlagDef hazardRespawnFacingRight = new FlagDef("hazardRespawnFacingRight", "Global", false, "PlayerData_Bool");
+            public static readonly FlagDef health = new FlagDef("health", "Global", false, "PlayerData_Int");
+            public static readonly FlagDef healthBlue = new FlagDef("healthBlue", "Global", false, "PlayerData_Int");
             public static readonly FlagDef maxHealth = new FlagDef("maxHealth", "Global", false, "PlayerData_Int");
             public static readonly FlagDef maxHealthBase = new FlagDef("maxHealthBase", "Global", false, "PlayerData_Int");
             public static readonly FlagDef maxHealthCap = new FlagDef("maxHealthCap", "Global", false, "PlayerData_Int");
             public static readonly FlagDef maxMP = new FlagDef("maxMP", "Global", false, "PlayerData_Int");
+            public static readonly FlagDef MPCharge = new FlagDef("MPCharge", "Global", false, "PlayerData_Int");
+            public static readonly FlagDef MPReserve = new FlagDef("MPReserve", "Global", false, "PlayerData_Int");
+            public static readonly FlagDef MPReserveCap = new FlagDef("MPReserveCap", "Global", false, "PlayerData_Int");
+            public static readonly FlagDef MPReserveMax = new FlagDef("MPReserveMax", "Global", false, "PlayerData_Int");
+            public static readonly FlagDef prevHealth = new FlagDef("prevHealth", "Global", false, "PlayerData_Int");
         #endregion
 
         #region Scene Updates
             public static readonly FlagDef crossroadsInfected = new FlagDef("crossroadsInfected", "Global", false, "PlayerData_Bool");
         #endregion
 
-        #region 
+        #region UI
+            public static readonly FlagDef showHealthUI = new FlagDef("showHealthUI", "Global", false, "PlayerData_Bool");
         #endregion
 
         #region UNCATEGORIZED
@@ -838,10 +849,6 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef GALIEN_encountered = new FlagDef("GALIEN_encountered", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef HU_encountered = new FlagDef("HU_encountered", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef MARKOTH_encountered = new FlagDef("MARKOTH_encountered", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef MPCharge = new FlagDef("MPCharge", "Global", false, "PlayerData_Int");
-            public static readonly FlagDef MPReserve = new FlagDef("MPReserve", "Global", false, "PlayerData_Int");
-            public static readonly FlagDef MPReserveCap = new FlagDef("MPReserveCap", "Global", false, "PlayerData_Int");
-            public static readonly FlagDef MPReserveMax = new FlagDef("MPReserveMax", "Global", false, "PlayerData_Int");
             public static readonly FlagDef MUMCAT_encountered = new FlagDef("MUMCAT_encountered", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef NOEYES_encountered = new FlagDef("NOEYES_encountered", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef XERO_encountered = new FlagDef("XERO_encountered", "Global", false, "PlayerData_Bool");
@@ -970,7 +977,6 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef defeatedMegaJelly = new FlagDef("defeatedMegaJelly", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef defeatedNightmareGrimm = new FlagDef("defeatedNightmareGrimm", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef destroyedNightmareLantern = new FlagDef("destroyedNightmareLantern", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef disablePause = new FlagDef("disablePause", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef divineEatenConvos = new FlagDef("divineEatenConvos", "Global", false, "PlayerData_Int");
             public static readonly FlagDef divineFinalConvo = new FlagDef("divineFinalConvo", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef divineInTown = new FlagDef("divineInTown", "Global", false, "PlayerData_Bool");
@@ -1050,7 +1056,6 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef fillJournal = new FlagDef("fillJournal", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef finalBossDoorUnlocked = new FlagDef("finalBossDoorUnlocked", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef finalGrubRewardCollected = new FlagDef("finalGrubRewardCollected", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef firstGeo = new FlagDef("firstGeo", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef flamesCollected = new FlagDef("flamesCollected", "Global", false, "PlayerData_Int");
             public static readonly FlagDef flamesRequired = new FlagDef("flamesRequired", "Global", false, "PlayerData_Int");
             public static readonly FlagDef flukeMotherDefeated = new FlagDef("flukeMotherDefeated", "Global", false, "PlayerData_Bool");
@@ -1094,9 +1099,6 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef greyPrinceOrbsCollected = new FlagDef("greyPrinceOrbsCollected", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef grubRewards = new FlagDef("grubRewards", "Global", false, "PlayerData_Int");
             public static readonly FlagDef guardiansDefeated = new FlagDef("guardiansDefeated", "Global", false, "PlayerData_Int");
-            public static readonly FlagDef hazardRespawnFacingRight = new FlagDef("hazardRespawnFacingRight", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef health = new FlagDef("health", "Global", false, "PlayerData_Int");
-            public static readonly FlagDef healthBlue = new FlagDef("healthBlue", "Global", false, "PlayerData_Int");
             public static readonly FlagDef heartPieceCollected = new FlagDef("heartPieceCollected", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef heartPieceMax = new FlagDef("heartPieceMax", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef hegemolDefeated = new FlagDef("hegemolDefeated", "Global", false, "PlayerData_Bool");
@@ -1515,7 +1517,6 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef pooedFragileGreed = new FlagDef("pooedFragileGreed", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef pooedFragileHeart = new FlagDef("pooedFragileHeart", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef pooedFragileStrength = new FlagDef("pooedFragileStrength", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef prevHealth = new FlagDef("prevHealth", "Global", false, "PlayerData_Int");
             public static readonly FlagDef previousDarkness = new FlagDef("previousDarkness", "Global", false, "PlayerData_Int");
             public static readonly FlagDef profileID = new FlagDef("profileID", "Global", false, "PlayerData_Int");
             public static readonly FlagDef promptFocus = new FlagDef("promptFocus", "Global", false, "PlayerData_Bool");
@@ -1587,7 +1588,6 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef sheoConvoOro = new FlagDef("sheoConvoOro", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef sheoConvoSly = new FlagDef("sheoConvoSly", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef showGeoUI = new FlagDef("showGeoUI", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef showHealthUI = new FlagDef("showHealthUI", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef simpleKeys = new FlagDef("simpleKeys", "Global", false, "PlayerData_Int");
             public static readonly FlagDef slugEncounterComplete = new FlagDef("slugEncounterComplete", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef slyBeta = new FlagDef("slyBeta", "Global", false, "PlayerData_Bool");

@@ -8,6 +8,15 @@ namespace CabbyCodes.Patches.Flags.Triage
     /// </summary>
     public class FlagMonitorMonoBehaviour : MonoBehaviour
     {
-        // This class exists solely to provide MonoBehaviour functionality for coroutines
+        private static FlagMonitorMonoBehaviour instance;
+        public static FlagMonitorMonoBehaviour Instance => instance;
+
+        public static void EnsureInstance()
+        {
+            if (instance != null) return;
+            var go = GameObject.Find("FlagMonitorMonoBehaviour") ?? new GameObject("FlagMonitorMonoBehaviour");
+            DontDestroyOnLoad(go);
+            instance = go.GetComponent<FlagMonitorMonoBehaviour>() ?? go.AddComponent<FlagMonitorMonoBehaviour>();
+        }
     }
 } 

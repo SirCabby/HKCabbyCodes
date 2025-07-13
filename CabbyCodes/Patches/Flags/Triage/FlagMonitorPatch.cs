@@ -2,8 +2,12 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System.Collections.Generic;
-using HarmonyLib;
 using CabbyMenu.UI.CheatPanels;
+using System.Reflection;
+using System.Collections;
+using CabbyCodes.Flags;
+using CabbyCodes.Flags.FlagInfo;
+using System;
 
 namespace CabbyCodes.Patches.Flags.Triage
 {
@@ -11,73 +15,142 @@ namespace CabbyCodes.Patches.Flags.Triage
     {
         public static GameObject notificationPanel;
         public static Text notificationText;
-        private static Queue<string> notificationQueue = new Queue<string>();
-        private static FlagMonitorReference monitorReference = FlagMonitorReference.Instance;
-        private static FlagFileLoggingReference fileLoggingReference = FlagFileLoggingReference.Instance;
-        private const int MAX_NOTIFICATIONS = 100; // Limit to prevent memory issues
-
-        [HarmonyPatch(typeof(SceneData), "SaveMyState", typeof(PersistentBoolData))]
-        public static class PersistentBoolDataMonitor
-        {
-            static void Postfix(PersistentBoolData persistentBoolData)
-            {
-                if (!monitorReference.IsEnabled) return;
-                
-                string notification = $"[{persistentBoolData.sceneName}]: {persistentBoolData.id} = {persistentBoolData.activated}";
-                AddNotification(notification);
-            }
-        }
-
-        [HarmonyPatch(typeof(SceneData), "SaveMyState", typeof(PersistentIntData))]
-        public static class PersistentIntDataMonitor
-        {
-            static void Postfix(PersistentIntData persistentIntData)
-            {
-                if (!monitorReference.IsEnabled) return;
-                
-                string notification = $"[{persistentIntData.sceneName}]: {persistentIntData.id} = {persistentIntData.value}";
-                AddNotification(notification);
-            }
-        }
-
-        [HarmonyPatch(typeof(SceneData), "SaveMyState", typeof(GeoRockData))]
-        public static class GeoRockDataMonitor
-        {
-            static void Postfix(GeoRockData geoRockData)
-            {
-                if (!monitorReference.IsEnabled) return;
-                
-                string notification = $"[{geoRockData.sceneName}]: {geoRockData.id} = GeoRock";
-                AddNotification(notification);
-            }
-        }
-
-        [HarmonyPatch(typeof(PlayerData), "SetBool")]
-        public static class PlayerDataBoolMonitor
-        {
-            static void Postfix(string boolName, bool value)
-            {
-                if (!monitorReference.IsEnabled) return;
-                
-                string notification = $"[PlayerData]: {boolName} = {value}";
-                AddNotification(notification);
-            }
-        }
-
-        [HarmonyPatch(typeof(PlayerData), "SetInt")]
-        public static class PlayerDataIntMonitor
-        {
-            static void Postfix(string intName, int value)
-            {
-                if (!monitorReference.IsEnabled) return;
-                
-                string notification = $"[PlayerData]: {intName} = {value}";
-                AddNotification(notification);
-            }
-        }
+        private static readonly Queue<string> notificationQueue = new Queue<string>();
+        private static readonly FlagMonitorReference monitorReference = FlagMonitorReference.Instance;
+        private static readonly FlagFileLoggingReference fileLoggingReference = FlagFileLoggingReference.Instance;
+        
+        private static bool patchesApplied = false;
 
         // Static initialization flag to prevent multiple registrations
         private static bool sceneEventsRegistered = false;
+
+        // Tracked fields from FlagInstances
+        private static readonly HashSet<string> trackedPlayerDataFields = new HashSet<string>();
+        private static readonly HashSet<string> trackedSceneDataFields = new HashSet<string>();
+
+        // Fields to ignore during polling (noisy or not useful)
+        private static readonly HashSet<string> ignoredFields = new HashSet<string>
+        {
+            "disablePause",
+            "hazardRespawnFacingRight",
+            "health",
+            "geo",
+            "MPCharge"
+        };
+
+        // --- Performance optimizations ---
+        private static readonly Dictionary<string, (FieldInfo fieldInfo, Type fieldType)> fieldInfoCache = new Dictionary<string, (FieldInfo, Type)>();
+        private static PlayerData lastKnownInstance = null;
+
+        // --- Polling state ---
+        private static readonly Dictionary<string, object> previousPlayerDataValues = new Dictionary<string, object>();
+        private static bool pollingStarted = false;
+        private static bool hasLeftTitleScreen = false;
+
+        /// <summary>
+        /// Initialize flag monitoring. Should be called from the mod's Start method.
+        /// </summary>
+        public static void ApplyPatches()
+        {
+            if (patchesApplied) return;
+            
+            try
+            {
+                ExtractTrackedFields();
+                InitializeSceneMonitoring();
+                
+                patchesApplied = true;
+                
+                StartPolling();
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"[Flag Monitor] Failed to initialize flag monitoring: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// Extract all field names from FlagInstances that need to be monitored
+        /// </summary>
+        private static void ExtractTrackedFields()
+        {
+            try
+            {
+                var flagInstancesType = typeof(FlagInstances);
+                var fields = flagInstancesType.GetFields(BindingFlags.Public | BindingFlags.Static);
+                
+                foreach (var field in fields)
+                {
+                    if (field.FieldType == typeof(FlagDef))
+                    {
+                        var flagDef = (FlagDef)field.GetValue(null);
+                        if (flagDef != null)
+                        {
+                            if (flagDef.Type == "PlayerData_Bool" || flagDef.Type == "PlayerData_Int")
+                            {
+                                trackedPlayerDataFields.Add(flagDef.Id);
+                            }
+                            else if (flagDef.Type == "PersistentBoolData" || flagDef.Type == "PersistentIntData" || flagDef.Type == "GeoRockData")
+                            {
+                                trackedSceneDataFields.Add(flagDef.Id);
+                            }
+                        }
+                    }
+                }
+                
+                // Remove ignored fields from tracking set
+                foreach (var ignoredField in ignoredFields)
+                {
+                    trackedPlayerDataFields.Remove(ignoredField);
+                }
+                
+                // Build FieldInfo cache for performance
+                BuildFieldInfoCache();
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"[Flag Monitor] Failed to extract tracked fields: {ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// Build FieldInfo cache for all tracked PlayerData fields
+        /// </summary>
+        private static void BuildFieldInfoCache()
+        {
+            fieldInfoCache.Clear();
+            var playerDataType = typeof(PlayerData);
+            
+            foreach (var fieldName in trackedPlayerDataFields)
+            {
+                var fieldInfo = playerDataType.GetField(fieldName);
+                if (fieldInfo != null)
+                {
+                    fieldInfoCache[fieldName] = (fieldInfo, fieldInfo.FieldType);
+                }
+                else
+                {
+                    Debug.LogWarning($"[Flag Monitor] Could not find field '{fieldName}' in PlayerData");
+                }
+            }
+        }
+
+        /// <summary>
+        /// Handle PlayerData instance changes (new save file, etc.)
+        /// </summary>
+        private static void HandleInstanceChange()
+        {
+            lastKnownInstance = PlayerData.instance;
+            previousPlayerDataValues.Clear(); // Reset previous values for new instance
+        }
+
+        /// <summary>
+        /// Rebuild FieldInfo cache if needed
+        /// </summary>
+        private static void RebuildFieldInfoCache()
+        {
+            BuildFieldInfoCache();
+        }
 
         /// <summary>
         /// Initialize scene change monitoring. Should be called from the mod's Start method.
@@ -93,6 +166,13 @@ namespace CabbyCodes.Patches.Flags.Triage
 
         private static void OnActiveSceneChanged(Scene oldScene, Scene newScene)
         {
+            // Track when we leave the title screen for the first time
+            if (oldScene.name == "Menu_Title" && newScene.name != "Menu_Title")
+            {
+                hasLeftTitleScreen = true;
+                Debug.Log("[Flag Monitor] Left title screen, flag monitoring will now be active");
+            }
+            
             if (!monitorReference.IsEnabled) return;
             
             string notification = $"[SceneChange]: {oldScene.name} -> {newScene.name}";
@@ -101,9 +181,6 @@ namespace CabbyCodes.Patches.Flags.Triage
 
         private static void AddNotification(string message)
         {
-            // Log to console
-            Debug.Log($"[Flag Monitor] {message}");
-            
             // Log to file if enabled
             fileLoggingReference.LogMessage(message);
             
@@ -111,13 +188,6 @@ namespace CabbyCodes.Patches.Flags.Triage
             if (monitorReference.IsEnabled)
             {
                 notificationQueue.Enqueue(message);
-                
-                // Limit queue size to prevent memory issues
-                while (notificationQueue.Count > MAX_NOTIFICATIONS)
-                {
-                    notificationQueue.Dequeue();
-                }
-                
                 UpdateNotificationDisplay();
             }
         }
@@ -136,7 +206,7 @@ namespace CabbyCodes.Patches.Flags.Triage
             
             notificationText.text = displayText;
             
-            // Force layout rebuild like CabbyMainMenu does
+            // Force layout rebuild
             if (notificationText != null)
             {
                 LayoutRebuilder.ForceRebuildLayoutImmediate(notificationText.GetComponent<RectTransform>());
@@ -161,7 +231,7 @@ namespace CabbyCodes.Patches.Flags.Triage
             }
         }
         
-        private static System.Collections.IEnumerator ScrollToBottomAfterLayout(ScrollRect scrollRect)
+        private static IEnumerator ScrollToBottomAfterLayout(ScrollRect scrollRect)
         {
             // Wait for the end of frame to ensure layout is complete
             yield return new WaitForEndOfFrame();
@@ -206,11 +276,6 @@ namespace CabbyCodes.Patches.Flags.Triage
             return monitorReference.IsEnabled;
         }
 
-        public static void AddNotificationDirect(string message)
-        {
-            AddNotification(message);
-        }
-
         public static void AddPanel()
         {
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Flag Monitor").SetColor(CheatPanel.headerColor));
@@ -247,15 +312,113 @@ namespace CabbyCodes.Patches.Flags.Triage
             
             testCounter++;
             
-            // Test messages in the same format as the actual patches
-            AddNotification($"[TestScene]: test_flag_{testCounter} = true");
-            AddNotification($"[TestScene]: test_int_{testCounter} = {testCounter}");
-            AddNotification($"[TestScene]: test_georock_{testCounter} = GeoRock");
-            AddNotification($"[PlayerData]: test_player_bool_{testCounter} = true");
-            AddNotification($"[PlayerData]: test_player_int_{testCounter} = {testCounter * 100}");
+            // Test messages in the same format as the actual monitoring
+            AddNotification($"[SceneChange]: TestScene1 -> TestScene2");
+            AddNotification($"[PlayerData]: test_field_{testCounter} = true");
+            AddNotification($"[PlayerData]: test_int_{testCounter} = {testCounter * 100}");
             
-            // Test scene change notification
-            AddNotification("[SceneChange]: oldscene -> newscene");
+            // Test actual PlayerData field changes
+            if (PlayerData.instance != null)
+            {
+                Debug.Log("[Flag Monitor] Testing actual PlayerData field changes...");
+                PlayerData.instance.geo = PlayerData.instance.geo + 1;
+                PlayerData.instance.hasDash = !PlayerData.instance.hasDash;
+            }
+        }
+
+        /// <summary>
+        /// Start polling for PlayerData field changes every 0.25s. Should be called from mod Start.
+        /// </summary>
+        public static void StartPolling()
+        {
+            if (pollingStarted) return;
+            pollingStarted = true;
+            // Find or create a MonoBehaviour to run the coroutine
+            FlagMonitorMonoBehaviour.EnsureInstance();
+            FlagMonitorMonoBehaviour.Instance.StartCoroutine(PollPlayerDataFields());
+        }
+
+        private static IEnumerator PollPlayerDataFields()
+        {
+            while (true)
+            {
+                // Only poll if we've left the title screen and we're not currently in Menu_Title
+                if (monitorReference.IsEnabled && 
+                    hasLeftTitleScreen && 
+                    PlayerData.instance != null && 
+                    UnityEngine.SceneManagement.SceneManager.GetActiveScene().name != "Menu_Title")
+                {
+                    // Check for instance change
+                    if (PlayerData.instance != lastKnownInstance)
+                    {
+                        HandleInstanceChange();
+                    }
+
+                    foreach (var fieldName in trackedPlayerDataFields)
+                    {
+                        // Use cached FieldInfo
+                        if (!fieldInfoCache.TryGetValue(fieldName, out var fieldData))
+                        {
+                            continue; // Field not in cache, skip
+                        }
+
+                        var (fieldInfo, fieldType) = fieldData;
+
+                        try
+                        {
+                            object currentValue = fieldInfo.GetValue(PlayerData.instance);
+                            previousPlayerDataValues.TryGetValue(fieldName, out object previousValue);
+
+                            // Type-specific comparison for better performance
+                            bool valueChanged = false;
+                            if (previousValue == null)
+                            {
+                                // Don't print initial state - just store the current value as baseline
+                                // This ensures we only show actual changes that happen during gameplay
+                                valueChanged = false;
+                                // Store the baseline value
+                                previousPlayerDataValues[fieldName] = currentValue;
+                            }
+                            else if (fieldType == typeof(bool))
+                            {
+                                valueChanged = (bool)currentValue != (bool)previousValue;
+                            }
+                            else if (fieldType == typeof(int))
+                            {
+                                valueChanged = (int)currentValue != (int)previousValue;
+                            }
+                            else if (fieldType == typeof(float))
+                            {
+                                valueChanged = !Mathf.Approximately((float)currentValue, (float)previousValue);
+                            }
+                            else if (fieldType == typeof(string))
+                            {
+                                valueChanged = !string.Equals((string)currentValue, (string)previousValue);
+                            }
+                            else
+                            {
+                                // Fallback to object.Equals for other types
+                                valueChanged = !Equals(currentValue, previousValue);
+                            }
+
+                            if (valueChanged)
+                            {
+                                previousPlayerDataValues[fieldName] = currentValue;
+                                string notification = $"[PlayerData]: {fieldName} = {currentValue}";
+                                AddNotification(notification);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Debug.LogWarning($"[Flag Monitor] Field access failed for '{fieldName}', rebuilding cache: {ex.Message}");
+                            RebuildFieldInfoCache();
+                            break; // Skip rest of this poll cycle
+                        }
+                    }
+                }
+
+                yield return new WaitForSeconds(0.25f);
+            }
         }
     }
 } 
