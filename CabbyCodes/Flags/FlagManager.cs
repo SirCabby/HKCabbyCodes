@@ -1,5 +1,4 @@
-﻿using CabbyCodes.Flags.FlagInfo;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace CabbyCodes.Flags
 {

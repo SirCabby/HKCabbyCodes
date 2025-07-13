@@ -1,4 +1,4 @@
-namespace CabbyCodes.Flags.FlagInfo
+namespace CabbyCodes.Flags
 {
     public class FlagDef
     {

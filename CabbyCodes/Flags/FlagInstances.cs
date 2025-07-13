@@ -1,4 +1,3 @@
-using CabbyCodes.Flags.FlagInfo;
 using CabbyCodes.Scenes;
 
 namespace CabbyCodes.Flags

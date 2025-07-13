@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using CabbyCodes.Flags.FlagInfo;
+using CabbyCodes.Flags;
 
 namespace CabbyCodes.Patches.Flags.Triage
 {
