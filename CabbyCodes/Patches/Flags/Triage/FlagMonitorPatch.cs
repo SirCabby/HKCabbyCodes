@@ -83,15 +83,19 @@ namespace CabbyCodes.Patches.Flags.Triage
             // Log to file if enabled
             fileLoggingReference.LogMessage(message);
             
-            notificationQueue.Enqueue(message);
-            
-            // Limit queue size to prevent memory issues
-            while (notificationQueue.Count > MAX_NOTIFICATIONS)
+            // Only queue notifications if the monitor is enabled
+            if (monitorReference.IsEnabled)
             {
-                notificationQueue.Dequeue();
+                notificationQueue.Enqueue(message);
+                
+                // Limit queue size to prevent memory issues
+                while (notificationQueue.Count > MAX_NOTIFICATIONS)
+                {
+                    notificationQueue.Dequeue();
+                }
+                
+                UpdateNotificationDisplay();
             }
-            
-            UpdateNotificationDisplay();
         }
 
         public static void UpdateNotificationDisplay()
@@ -240,6 +244,12 @@ namespace CabbyCodes.Patches.Flags.Triage
         
         public static void TestFlagNotifications()
         {
+            if (!monitorReference.IsEnabled)
+            {
+                Debug.Log("[Flag Monitor] Test notifications skipped - monitor is not enabled");
+                return;
+            }
+            
             testCounter++;
             
             // Test messages in the same format as the actual patches
