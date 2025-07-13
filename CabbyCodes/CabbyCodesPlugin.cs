@@ -5,6 +5,7 @@ using BepInEx.Unity.Mono;
 using CabbyCodes.Patches;
 using CabbyCodes.Patches.Achievements;
 using CabbyCodes.Patches.Flags;
+using CabbyCodes.Patches.Flags.Triage;
 using CabbyCodes.Patches.Hunter;
 using CabbyCodes.Patches.Inventory;
 using CabbyCodes.Patches.Maps;
@@ -107,6 +108,7 @@ namespace CabbyCodes
         private void Update()
         {
             cabbyMenu.Update();
+            FlagMonitorReference.UpdatePanelVisibility();
         }
     }
 }

@@ -118,11 +118,14 @@ namespace CabbyCodes.Patches.Flags.Triage
             // Force canvas update
             Canvas.ForceUpdateCanvases();
             
+            // Ensure background transparency is maintained based on hover state
+            FlagMonitorReference.EnsureBackgroundTransparency();
+            
             // Get scroll rect for auto-scrolling
             ScrollRect scrollRect = notificationPanel.GetComponentInChildren<ScrollRect>();
             
             // Auto-scroll to bottom to show latest notifications
-            if (scrollRect != null)
+            if (scrollRect != null && notificationPanel.activeSelf)
             {
                 // Use a coroutine to ensure the layout is fully updated before scrolling
                 FlagMonitorMonoBehaviour monoBehaviour = notificationPanel.GetComponent<FlagMonitorMonoBehaviour>();
@@ -157,9 +160,12 @@ namespace CabbyCodes.Patches.Flags.Triage
             // Force canvas update
             Canvas.ForceUpdateCanvases();
             
+            // Ensure background transparency is maintained based on hover state
+            FlagMonitorReference.EnsureBackgroundTransparency();
+            
             // Get scroll rect and reset to bottom
             ScrollRect scrollRect = notificationPanel?.GetComponentInChildren<ScrollRect>();
-            if (scrollRect != null)
+            if (scrollRect != null && notificationPanel.activeSelf)
             {
                 // Use a coroutine to ensure the layout is fully updated before scrolling
                 FlagMonitorMonoBehaviour monoBehaviour = notificationPanel.GetComponent<FlagMonitorMonoBehaviour>();

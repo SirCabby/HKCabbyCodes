@@ -2,6 +2,7 @@ using CabbyMenu.SyncedReferences;
 using UnityEngine;
 using UnityEngine.UI;
 using CabbyMenu.UI.Modders;
+using UnityEngine.EventSystems;
 
 namespace CabbyCodes.Patches.Flags.Triage
 {
@@ -11,6 +12,12 @@ namespace CabbyCodes.Patches.Flags.Triage
         public static FlagMonitorReference Instance => instance ?? (instance = new FlagMonitorReference());
 
         private bool isEnabled = false;
+        private static Image backgroundImage;
+        private static Scrollbar verticalScrollbar;
+        private static Color originalBackgroundColor;
+        private static Color originalScrollbarColor;
+        private static Color originalScrollbarHandleColor;
+        private static bool isHovering = false;
 
         public bool IsEnabled => isEnabled;
 
@@ -31,12 +38,85 @@ namespace CabbyCodes.Patches.Flags.Triage
             
             if (FlagMonitorPatch.notificationPanel != null)
             {
-                FlagMonitorPatch.notificationPanel.SetActive(isEnabled);
+                // Check if game is paused - hide panel when paused
+                bool shouldShow = isEnabled && !IsGamePaused();
+                FlagMonitorPatch.notificationPanel.SetActive(shouldShow);
                 
-                if (isEnabled)
+                if (isEnabled && shouldShow)
                 {
-                    // Update the display to show existing notifications instead of default message
+                    // Always update the display to ensure text is visible, even if no notifications yet
                     FlagMonitorPatch.UpdateNotificationDisplay();
+                    
+                    // Force canvas update to ensure everything is rendered
+                    Canvas.ForceUpdateCanvases();
+                }
+            }
+        }
+        
+        /// <summary>
+        /// Checks if the game is currently paused, using the same logic as GameStateProvider.
+        /// </summary>
+        /// <returns>True if the game is paused, false otherwise.</returns>
+        private static bool IsGamePaused()
+        {
+            return GameManager._instance != null && GameManager.instance.IsGamePaused();
+        }
+        
+        /// <summary>
+        /// Updates the panel visibility based on game pause state.
+        /// This should be called regularly to ensure proper visibility.
+        /// </summary>
+        public static void UpdatePanelVisibility()
+        {
+            if (FlagMonitorPatch.notificationPanel != null && instance != null && instance.isEnabled)
+            {
+                bool shouldShow = !IsGamePaused();
+                bool wasActive = FlagMonitorPatch.notificationPanel.activeSelf;
+                
+                FlagMonitorPatch.notificationPanel.SetActive(shouldShow);
+                
+                // If panel was hidden due to pausing, reset hover state
+                if (wasActive && !shouldShow)
+                {
+                    isHovering = false;
+                }
+                
+                // If panel is being shown again after being hidden, ensure correct transparency
+                if (!wasActive && shouldShow)
+                {
+                    // Force reset hover state and ensure transparency is correct
+                    isHovering = false;
+                    EnsureBackgroundTransparency();
+                }
+            }
+        }
+        
+        /// <summary>
+        /// Ensures the background transparency is correct based on the current hover state.
+        /// This should be called after any UI updates that might affect the background.
+        /// </summary>
+        public static void EnsureBackgroundTransparency()
+        {
+            if (backgroundImage != null)
+            {
+                backgroundImage.color = isHovering ? originalBackgroundColor : new Color(0, 0, 0, 0f);
+            }
+            
+            if (verticalScrollbar != null)
+            {
+                Image scrollbarImage = verticalScrollbar.GetComponent<Image>();
+                if (scrollbarImage != null)
+                {
+                    scrollbarImage.color = isHovering ? originalScrollbarColor : new Color(1f, 1f, 1f, 0f);
+                }
+                
+                if (verticalScrollbar.handleRect != null)
+                {
+                    Image handleImage = verticalScrollbar.handleRect.GetComponent<Image>();
+                    if (handleImage != null)
+                    {
+                        handleImage.color = isHovering ? originalScrollbarHandleColor : new Color(0.85f, 0.85f, 0.85f, 0f);
+                    }
                 }
             }
         }
@@ -49,7 +129,7 @@ namespace CabbyCodes.Patches.Flags.Triage
             FlagMonitorPatch.notificationPanel = new GameObject("FlagMonitorPanel");
             Canvas canvas = FlagMonitorPatch.notificationPanel.AddComponent<Canvas>();
             canvas.renderMode = RenderMode.ScreenSpaceOverlay;
-            canvas.sortingOrder = 1000; // Ensure it's on top
+            canvas.sortingOrder = 999; // Lower than CabbyMainMenu (1000) so menu appears on top when paused
             
             // Add GraphicRaycaster for UI interaction (like CabbyMainMenu)
             FlagMonitorPatch.notificationPanel.AddComponent<GraphicRaycaster>();
@@ -74,14 +154,28 @@ namespace CabbyCodes.Patches.Flags.Triage
             GameObject backgroundPanel = new GameObject("Background");
             backgroundPanel.transform.SetParent(FlagMonitorPatch.notificationPanel.transform, false);
             
-            Image backgroundImage = backgroundPanel.AddComponent<Image>();
-            backgroundImage.color = new Color(0, 0, 0, 0.8f); // Semi-transparent black
+            backgroundImage = backgroundPanel.AddComponent<Image>();
+            backgroundImage.color = new Color(0, 0, 0, 0f); // Start fully transparent
+            originalBackgroundColor = new Color(0, 0, 0, 0.8f); // Store original semi-transparent color for hover
             
             RectTransform backgroundRect = backgroundPanel.GetComponent<RectTransform>();
             backgroundRect.anchorMin = new Vector2(0, 0.7f);
             backgroundRect.anchorMax = new Vector2(0.2f, 1f);
             backgroundRect.offsetMin = Vector2.zero;
             backgroundRect.offsetMax = Vector2.zero;
+            
+            // Add hover detection to background panel
+            EventTrigger eventTrigger = backgroundPanel.AddComponent<EventTrigger>();
+            
+            EventTrigger.Entry enterEntry = new EventTrigger.Entry();
+            enterEntry.eventID = EventTriggerType.PointerEnter;
+            enterEntry.callback.AddListener((data) => { OnPanelHoverEnter(); });
+            eventTrigger.triggers.Add(enterEntry);
+            
+            EventTrigger.Entry exitEntry = new EventTrigger.Entry();
+            exitEntry.eventID = EventTriggerType.PointerExit;
+            exitEntry.callback.AddListener((data) => { OnPanelHoverExit(); });
+            eventTrigger.triggers.Add(exitEntry);
             
             // Create scroll view using DefaultControls (like CabbyMainMenu)
             GameObject scrollViewObject = DefaultControls.CreateScrollView(new DefaultControls.Resources());
@@ -131,7 +225,7 @@ namespace CabbyCodes.Patches.Flags.Triage
             Transform scrollbarTransform = scrollViewObject.transform.Find("Scrollbar Vertical");
             if (scrollbarTransform != null)
             {
-                Scrollbar verticalScrollbar = scrollbarTransform.GetComponent<Scrollbar>();
+                verticalScrollbar = scrollbarTransform.GetComponent<Scrollbar>();
                 if (verticalScrollbar != null)
                 {
                     // Use ScrollBarMod to configure the scrollbar (like CabbyMainMenu)
@@ -141,15 +235,17 @@ namespace CabbyCodes.Patches.Flags.Triage
                     Image scrollbarImage = verticalScrollbar.GetComponent<Image>();
                     if (scrollbarImage != null)
                     {
-                        scrollbarImage.color = Color.white; // White background
+                        scrollbarImage.color = new Color(1f, 1f, 1f, 0f); // Start transparent
+                        originalScrollbarColor = new Color(1f, 1f, 1f, 1f); // Store original white color for hover
                     }
                     if (verticalScrollbar.handleRect != null)
                     {
                         Image handleImage = verticalScrollbar.handleRect.GetComponent<Image>();
                         if (handleImage != null)
                         {
-                            // Normal state: very light gray
-                            handleImage.color = new Color(0.85f, 0.85f, 0.85f, 1f);
+                            // Start transparent
+                            handleImage.color = new Color(0.85f, 0.85f, 0.85f, 0f);
+                            originalScrollbarHandleColor = new Color(0.85f, 0.85f, 0.85f, 1f); // Store original color for hover
                         }
                         // Set Button ColorBlock for hover/pressed/disabled
                         Button handleButton = verticalScrollbar.handleRect.GetComponent<Button>();
@@ -194,8 +290,76 @@ namespace CabbyCodes.Patches.Flags.Triage
             textFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
             textFitter.horizontalFit = ContentSizeFitter.FitMode.Unconstrained;
             
+            // Set initial text to ensure the component is properly initialized
+            FlagMonitorPatch.notificationText.text = "Flag Monitor Active - Total Notifications: 0\n\nWaiting for flag changes...";
+            
+            // Force layout rebuild to ensure proper sizing
+            LayoutRebuilder.ForceRebuildLayoutImmediate(textRect);
+            LayoutRebuilder.ForceRebuildLayoutImmediate(contentObject.GetComponent<RectTransform>());
+            
             // Initially hide the panel
             FlagMonitorPatch.notificationPanel.SetActive(false);
+        }
+        
+        private static void OnPanelHoverEnter()
+        {
+            if (isHovering) return;
+            isHovering = true;
+            
+            // Restore original colors
+            if (backgroundImage != null)
+            {
+                backgroundImage.color = originalBackgroundColor;
+            }
+            
+            if (verticalScrollbar != null)
+            {
+                Image scrollbarImage = verticalScrollbar.GetComponent<Image>();
+                if (scrollbarImage != null)
+                {
+                    scrollbarImage.color = originalScrollbarColor;
+                }
+                
+                if (verticalScrollbar.handleRect != null)
+                {
+                    Image handleImage = verticalScrollbar.handleRect.GetComponent<Image>();
+                    if (handleImage != null)
+                    {
+                        handleImage.color = originalScrollbarHandleColor;
+                    }
+                }
+            }
+        }
+        
+        private static void OnPanelHoverExit()
+        {
+            if (!isHovering) return;
+            isHovering = false;
+            
+            // Make background fully transparent
+            if (backgroundImage != null)
+            {
+                backgroundImage.color = new Color(0, 0, 0, 0f);
+            }
+            
+            // Make scrollbar fully transparent
+            if (verticalScrollbar != null)
+            {
+                Image scrollbarImage = verticalScrollbar.GetComponent<Image>();
+                if (scrollbarImage != null)
+                {
+                    scrollbarImage.color = new Color(1f, 1f, 1f, 0f);
+                }
+                
+                if (verticalScrollbar.handleRect != null)
+                {
+                    Image handleImage = verticalScrollbar.handleRect.GetComponent<Image>();
+                    if (handleImage != null)
+                    {
+                        handleImage.color = new Color(0.85f, 0.85f, 0.85f, 0f);
+                    }
+                }
+            }
         }
     }
 } 
