@@ -31,12 +31,21 @@ namespace CabbyCodes.Patches.Flags.Triage
                 {
                     Directory.CreateDirectory(savesPath);
                 }
-                string timestamp = System.DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss");
-                logFilePath = Path.Combine(savesPath, $"flag_monitor_{timestamp}.log");
-                // Write header to log file
-                string header = $"Flag Monitor Log - Started at {System.DateTime.Now}\n" +
-                               "==========================================\n";
-                File.WriteAllText(logFilePath, header);
+                logFilePath = Path.Combine(savesPath, "flag_monitor.log");
+                
+                // Check if file exists - if not, write header
+                if (!File.Exists(logFilePath))
+                {
+                    string header = $"Flag Monitor Log - Started at {System.DateTime.Now}\n" +
+                                   "==========================================\n";
+                    File.WriteAllText(logFilePath, header);
+                }
+                else
+                {
+                    // Append session separator to existing file
+                    string sessionHeader = $"\n\n--- New Session Started at {System.DateTime.Now} ---\n";
+                    File.AppendAllText(logFilePath, sessionHeader);
+                }
                 Debug.Log($"[Flag Monitor] File logging enabled: {logFilePath}");
             }
             else
