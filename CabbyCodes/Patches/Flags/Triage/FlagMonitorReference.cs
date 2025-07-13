@@ -35,7 +35,8 @@ namespace CabbyCodes.Patches.Flags.Triage
                 
                 if (isEnabled)
                 {
-                    FlagMonitorPatch.notificationText.text = "Flag Monitor Active\n\nWaiting for flag changes...";
+                    // Update the display to show existing notifications instead of default message
+                    FlagMonitorPatch.UpdateNotificationDisplay();
                 }
             }
         }

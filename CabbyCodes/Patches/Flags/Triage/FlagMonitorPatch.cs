@@ -96,7 +96,7 @@ namespace CabbyCodes.Patches.Flags.Triage
             UpdateNotificationDisplay();
         }
 
-        private static void UpdateNotificationDisplay()
+        public static void UpdateNotificationDisplay()
         {
             if (notificationPanel == null) return;
             
