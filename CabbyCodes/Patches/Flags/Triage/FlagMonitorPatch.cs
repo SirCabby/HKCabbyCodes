@@ -148,6 +148,22 @@ namespace CabbyCodes.Patches.Flags.Triage
             if (notificationText != null)
             {
                 notificationText.text = "Flag Monitor Active - Total Notifications: 0\n\nNotifications cleared.";
+                
+                // Force layout rebuild like CabbyMainMenu does
+                LayoutRebuilder.ForceRebuildLayoutImmediate(notificationText.GetComponent<RectTransform>());
+                LayoutRebuilder.ForceRebuildLayoutImmediate(notificationText.transform.parent.GetComponent<RectTransform>());
+            }
+            
+            // Force canvas update
+            Canvas.ForceUpdateCanvases();
+            
+            // Get scroll rect and reset to bottom
+            ScrollRect scrollRect = notificationPanel?.GetComponentInChildren<ScrollRect>();
+            if (scrollRect != null)
+            {
+                // Use a coroutine to ensure the layout is fully updated before scrolling
+                FlagMonitorMonoBehaviour monoBehaviour = notificationPanel.GetComponent<FlagMonitorMonoBehaviour>();
+                monoBehaviour?.StartCoroutine(ScrollToBottomAfterLayout(scrollRect));
             }
         }
 
