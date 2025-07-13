@@ -3,8 +3,6 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using HarmonyLib;
 using CabbyMenu.UI.CheatPanels;
-using CabbyMenu.SyncedReferences;
-using CabbyCodes.Patches.Flags.Triage;
 
 namespace CabbyCodes.Patches.Flags.Triage
 {
@@ -22,7 +20,7 @@ namespace CabbyCodes.Patches.Flags.Triage
         {
             static void Postfix(PersistentBoolData persistentBoolData)
             {
-                if (!FlagMonitorPatch.monitorReference.IsEnabled) return;
+                if (!monitorReference.IsEnabled) return;
                 
                 string notification = $"[{persistentBoolData.sceneName}]: {persistentBoolData.id} = {persistentBoolData.activated}";
                 AddNotification(notification);
@@ -34,7 +32,7 @@ namespace CabbyCodes.Patches.Flags.Triage
         {
             static void Postfix(PersistentIntData persistentIntData)
             {
-                if (!FlagMonitorPatch.monitorReference.IsEnabled) return;
+                if (!monitorReference.IsEnabled) return;
                 
                 string notification = $"[{persistentIntData.sceneName}]: {persistentIntData.id} = {persistentIntData.value}";
                 AddNotification(notification);
@@ -46,7 +44,7 @@ namespace CabbyCodes.Patches.Flags.Triage
         {
             static void Postfix(GeoRockData geoRockData)
             {
-                if (!FlagMonitorPatch.monitorReference.IsEnabled) return;
+                if (!monitorReference.IsEnabled) return;
                 
                 string notification = $"[{geoRockData.sceneName}]: {geoRockData.id} = GeoRock";
                 AddNotification(notification);
@@ -58,7 +56,7 @@ namespace CabbyCodes.Patches.Flags.Triage
         {
             static void Postfix(string boolName, bool value)
             {
-                if (!FlagMonitorPatch.monitorReference.IsEnabled) return;
+                if (!monitorReference.IsEnabled) return;
                 
                 string notification = $"[PlayerData]: {boolName} = {value}";
                 AddNotification(notification);
@@ -70,7 +68,7 @@ namespace CabbyCodes.Patches.Flags.Triage
         {
             static void Postfix(string intName, int value)
             {
-                if (!FlagMonitorPatch.monitorReference.IsEnabled) return;
+                if (!monitorReference.IsEnabled) return;
                 
                 string notification = $"[PlayerData]: {intName} = {value}";
                 AddNotification(notification);
@@ -128,10 +126,7 @@ namespace CabbyCodes.Patches.Flags.Triage
             {
                 // Use a coroutine to ensure the layout is fully updated before scrolling
                 FlagMonitorMonoBehaviour monoBehaviour = notificationPanel.GetComponent<FlagMonitorMonoBehaviour>();
-                if (monoBehaviour != null)
-                {
-                    monoBehaviour.StartCoroutine(ScrollToBottomAfterLayout(scrollRect));
-                }
+                monoBehaviour?.StartCoroutine(ScrollToBottomAfterLayout(scrollRect));
             }
         }
         
@@ -146,8 +141,6 @@ namespace CabbyCodes.Patches.Flags.Triage
             // Scroll to bottom (0 = bottom, 1 = top)
             scrollRect.verticalNormalizedPosition = 0f;
         }
-
-
 
         public static void ClearNotifications()
         {

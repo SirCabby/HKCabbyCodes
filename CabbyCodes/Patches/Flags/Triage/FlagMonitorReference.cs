@@ -63,7 +63,7 @@ namespace CabbyCodes.Patches.Flags.Triage
             scaler.referenceResolution = new Vector2(1920, 1080);
             
             // Ensure EventSystem exists (like CabbyMainMenu)
-            if (UnityEngine.Object.FindObjectOfType<UnityEngine.EventSystems.EventSystem>() == null)
+            if (Object.FindObjectOfType<UnityEngine.EventSystems.EventSystem>() == null)
             {
                 GameObject eventSystem = new GameObject("EventSystem");
                 eventSystem.AddComponent<UnityEngine.EventSystems.EventSystem>();
@@ -79,7 +79,7 @@ namespace CabbyCodes.Patches.Flags.Triage
             
             RectTransform backgroundRect = backgroundPanel.GetComponent<RectTransform>();
             backgroundRect.anchorMin = new Vector2(0, 0.7f);
-            backgroundRect.anchorMax = new Vector2(0.4f, 1f);
+            backgroundRect.anchorMax = new Vector2(0.2f, 1f);
             backgroundRect.offsetMin = Vector2.zero;
             backgroundRect.offsetMax = Vector2.zero;
             
@@ -193,8 +193,6 @@ namespace CabbyCodes.Patches.Flags.Triage
             ContentSizeFitter textFitter = textObject.AddComponent<ContentSizeFitter>();
             textFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
             textFitter.horizontalFit = ContentSizeFitter.FitMode.Unconstrained;
-            
-
             
             // Initially hide the panel
             FlagMonitorPatch.notificationPanel.SetActive(false);
