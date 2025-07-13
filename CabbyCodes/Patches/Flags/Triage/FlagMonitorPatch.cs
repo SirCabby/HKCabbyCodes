@@ -35,7 +35,8 @@ namespace CabbyCodes.Patches.Flags.Triage
             "hazardRespawnFacingRight",
             "health",
             "geo",
-            "MPCharge"
+            "MPCharge",
+            "previousDarkness"
         };
 
         // --- Performance optimizations ---
@@ -46,6 +47,10 @@ namespace CabbyCodes.Patches.Flags.Triage
         private static readonly Dictionary<string, object> previousPlayerDataValues = new Dictionary<string, object>();
         private static bool pollingStarted = false;
         private static bool hasLeftTitleScreen = false;
+
+        // --- Scene data polling state ---
+        private static readonly Dictionary<string, object> previousSceneDataValues = new Dictionary<string, object>();
+        private static SceneData lastKnownSceneDataInstance = null;
 
         /// <summary>
         /// Initialize flag monitoring. Should be called from the mod's Start method.
@@ -142,6 +147,15 @@ namespace CabbyCodes.Patches.Flags.Triage
         {
             lastKnownInstance = PlayerData.instance;
             previousPlayerDataValues.Clear(); // Reset previous values for new instance
+        }
+
+        /// <summary>
+        /// Handle SceneData instance changes (new save file, etc.)
+        /// </summary>
+        private static void HandleSceneDataInstanceChange()
+        {
+            lastKnownSceneDataInstance = SceneData.instance;
+            previousSceneDataValues.Clear(); // Reset previous values for new instance
         }
 
         /// <summary>
@@ -316,6 +330,7 @@ namespace CabbyCodes.Patches.Flags.Triage
             AddNotification($"[SceneChange]: TestScene1 -> TestScene2");
             AddNotification($"[PlayerData]: test_field_{testCounter} = true");
             AddNotification($"[PlayerData]: test_int_{testCounter} = {testCounter * 100}");
+            AddNotification($"[Scene: TestScene] test_scene_flag_{testCounter} = true");
             
             // Test actual PlayerData field changes
             if (PlayerData.instance != null)
@@ -327,7 +342,7 @@ namespace CabbyCodes.Patches.Flags.Triage
         }
 
         /// <summary>
-        /// Start polling for PlayerData field changes every 0.25s. Should be called from mod Start.
+        /// Start polling for PlayerData and SceneData field changes every 0.25s. Should be called from mod Start.
         /// </summary>
         public static void StartPolling()
         {
@@ -335,90 +350,225 @@ namespace CabbyCodes.Patches.Flags.Triage
             pollingStarted = true;
             // Find or create a MonoBehaviour to run the coroutine
             FlagMonitorMonoBehaviour.EnsureInstance();
-            FlagMonitorMonoBehaviour.Instance.StartCoroutine(PollPlayerDataFields());
+            FlagMonitorMonoBehaviour.Instance.StartCoroutine(PollDataFields());
         }
 
-        private static IEnumerator PollPlayerDataFields()
+        private static IEnumerator PollDataFields()
         {
             while (true)
             {
                 // Only poll if we've left the title screen and we're not currently in Menu_Title
                 if (monitorReference.IsEnabled && 
                     hasLeftTitleScreen && 
-                    PlayerData.instance != null && 
                     UnityEngine.SceneManagement.SceneManager.GetActiveScene().name != "Menu_Title")
                 {
-                    // Check for instance change
-                    if (PlayerData.instance != lastKnownInstance)
-                    {
-                        HandleInstanceChange();
-                    }
+                    // Save scene data before polling to ensure we see the latest updates immediately
+                    GameManager._instance?.SaveLevelState();
 
-                    foreach (var fieldName in trackedPlayerDataFields)
-                    {
-                        // Use cached FieldInfo
-                        if (!fieldInfoCache.TryGetValue(fieldName, out var fieldData))
-                        {
-                            continue; // Field not in cache, skip
-                        }
-
-                        var (fieldInfo, fieldType) = fieldData;
-
-                        try
-                        {
-                            object currentValue = fieldInfo.GetValue(PlayerData.instance);
-                            previousPlayerDataValues.TryGetValue(fieldName, out object previousValue);
-
-                            // Type-specific comparison for better performance
-                            bool valueChanged = false;
-                            if (previousValue == null)
-                            {
-                                // Don't print initial state - just store the current value as baseline
-                                // This ensures we only show actual changes that happen during gameplay
-                                valueChanged = false;
-                                // Store the baseline value
-                                previousPlayerDataValues[fieldName] = currentValue;
-                            }
-                            else if (fieldType == typeof(bool))
-                            {
-                                valueChanged = (bool)currentValue != (bool)previousValue;
-                            }
-                            else if (fieldType == typeof(int))
-                            {
-                                valueChanged = (int)currentValue != (int)previousValue;
-                            }
-                            else if (fieldType == typeof(float))
-                            {
-                                valueChanged = !Mathf.Approximately((float)currentValue, (float)previousValue);
-                            }
-                            else if (fieldType == typeof(string))
-                            {
-                                valueChanged = !string.Equals((string)currentValue, (string)previousValue);
-                            }
-                            else
-                            {
-                                // Fallback to object.Equals for other types
-                                valueChanged = !Equals(currentValue, previousValue);
-                            }
-
-                            if (valueChanged)
-                            {
-                                previousPlayerDataValues[fieldName] = currentValue;
-                                string notification = $"[PlayerData]: {fieldName} = {currentValue}";
-                                AddNotification(notification);
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            Debug.LogWarning($"[Flag Monitor] Field access failed for '{fieldName}', rebuilding cache: {ex.Message}");
-                            RebuildFieldInfoCache();
-                            break; // Skip rest of this poll cycle
-                        }
-                    }
+                    // Poll PlayerData fields
+                    PollPlayerDataFields();
+                    
+                    // Poll SceneData fields
+                    PollSceneDataFields();
                 }
 
                 yield return new WaitForSeconds(0.25f);
             }
         }
+
+        private static void PollPlayerDataFields()
+        {
+            if (PlayerData.instance == null) return;
+
+            // Check for instance change
+            if (PlayerData.instance != lastKnownInstance)
+            {
+                HandleInstanceChange();
+            }
+
+            foreach (var fieldName in trackedPlayerDataFields)
+            {
+                // Use cached FieldInfo
+                if (!fieldInfoCache.TryGetValue(fieldName, out var fieldData))
+                {
+                    continue; // Field not in cache, skip
+                }
+
+                var (fieldInfo, fieldType) = fieldData;
+
+                try
+                {
+                    object currentValue = fieldInfo.GetValue(PlayerData.instance);
+                    previousPlayerDataValues.TryGetValue(fieldName, out object previousValue);
+
+                    // Type-specific comparison for better performance
+                    bool valueChanged = false;
+                    if (previousValue == null)
+                    {
+                        // Don't print initial state - just store the current value as baseline
+                        // This ensures we only show actual changes that happen during gameplay
+                        valueChanged = false;
+                        // Store the baseline value
+                        previousPlayerDataValues[fieldName] = currentValue;
+                    }
+                    else if (fieldType == typeof(bool))
+                    {
+                        valueChanged = (bool)currentValue != (bool)previousValue;
+                    }
+                    else if (fieldType == typeof(int))
+                    {
+                        valueChanged = (int)currentValue != (int)previousValue;
+                    }
+                    else if (fieldType == typeof(float))
+                    {
+                        valueChanged = !Mathf.Approximately((float)currentValue, (float)previousValue);
+                    }
+                    else if (fieldType == typeof(string))
+                    {
+                        valueChanged = !string.Equals((string)currentValue, (string)previousValue);
+                    }
+                    else
+                    {
+                        // Fallback to object.Equals for other types
+                        valueChanged = !Equals(currentValue, previousValue);
+                    }
+
+                    if (valueChanged)
+                    {
+                        previousPlayerDataValues[fieldName] = currentValue;
+                        string notification = $"[PlayerData]: {fieldName} = {currentValue}";
+                        AddNotification(notification);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogWarning($"[Flag Monitor] Field access failed for '{fieldName}', rebuilding cache: {ex.Message}");
+                    RebuildFieldInfoCache();
+                    break; // Skip rest of this poll cycle
+                }
+            }
+        }
+
+        private static void PollSceneDataFields()
+        {
+            if (SceneData.instance == null) return;
+
+            // Check for instance change
+            if (SceneData.instance != lastKnownSceneDataInstance)
+            {
+                HandleSceneDataInstanceChange();
+            }
+
+            // Poll PersistentBoolData
+            PollPersistentBoolData();
+            
+            // Poll PersistentIntData
+            PollPersistentIntData();
+            
+            // Poll GeoRockData - TODO: Determine correct property name
+            // PollGeoRockData();
+        }
+
+        private static void PollPersistentBoolData()
+        {
+            if (SceneData.instance.persistentBoolItems == null) return;
+
+            foreach (var pbd in SceneData.instance.persistentBoolItems)
+            {
+                if (!trackedSceneDataFields.Contains(pbd.id)) continue;
+
+                string key = $"PersistentBool_{pbd.id}_{pbd.sceneName}";
+                bool currentValue = pbd.activated;
+                previousSceneDataValues.TryGetValue(key, out object previousValue);
+
+                bool valueChanged = false;
+                if (previousValue == null)
+                {
+                    // Don't print initial state - just store the current value as baseline
+                    valueChanged = false;
+                    previousSceneDataValues[key] = currentValue;
+                }
+                else
+                {
+                    valueChanged = (bool)previousValue != currentValue;
+                }
+
+                if (valueChanged)
+                {
+                    previousSceneDataValues[key] = currentValue;
+                    string notification = $"[Scene: {pbd.sceneName}] {pbd.id} = {currentValue}";
+                    AddNotification(notification);
+                }
+            }
+        }
+
+        private static void PollPersistentIntData()
+        {
+            if (SceneData.instance.persistentIntItems == null) return;
+
+            foreach (var pid in SceneData.instance.persistentIntItems)
+            {
+                if (!trackedSceneDataFields.Contains(pid.id)) continue;
+
+                string key = $"PersistentInt_{pid.id}_{pid.sceneName}";
+                int currentValue = pid.value;
+                previousSceneDataValues.TryGetValue(key, out object previousValue);
+
+                bool valueChanged = false;
+                if (previousValue == null)
+                {
+                    // Don't print initial state - just store the current value as baseline
+                    valueChanged = false;
+                    previousSceneDataValues[key] = currentValue;
+                }
+                else
+                {
+                    valueChanged = (int)previousValue != currentValue;
+                }
+
+                if (valueChanged)
+                {
+                    previousSceneDataValues[key] = currentValue;
+                    string notification = $"[Scene: {pid.sceneName}] {pid.id} = {currentValue}";
+                    AddNotification(notification);
+                }
+            }
+        }
+
+        // TODO: Determine correct property name for GeoRockData
+        /*
+        private static void PollGeoRockData()
+        {
+            if (SceneData.instance.geoRocks == null) return;
+
+            foreach (var grd in SceneData.instance.geoRocks)
+            {
+                if (!trackedSceneDataFields.Contains(grd.id)) continue;
+
+                string key = $"GeoRock_{grd.id}_{grd.sceneName}";
+                bool currentValue = grd.broken; // Need to determine correct property name
+                previousSceneDataValues.TryGetValue(key, out object previousValue);
+
+                bool valueChanged = false;
+                if (previousValue == null)
+                {
+                    // Don't print initial state - just store the current value as baseline
+                    valueChanged = false;
+                    previousSceneDataValues[key] = currentValue;
+                }
+                else
+                {
+                    valueChanged = (bool)previousValue != currentValue;
+                }
+
+                if (valueChanged)
+                {
+                    previousSceneDataValues[key] = currentValue;
+                    string notification = $"[Scene: {grd.sceneName}] {grd.id} = {currentValue}";
+                    AddNotification(notification);
+                }
+            }
+        }
+        */
     }
 } 

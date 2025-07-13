@@ -211,6 +211,10 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef Tutorial_01__Geo_Rock_5 = new FlagDef("Geo Rock 5", SceneInstances.Tutorial_01.SceneName, false, "GeoRockData");
         #endregion
 
+        #region Graphics
+            public static readonly FlagDef previousDarkness = new FlagDef("previousDarkness", "Global", false, "PlayerData_Int");
+        #endregion
+
         #region Grub Bottles
             /// <summary>
             /// Related Flags
@@ -1517,7 +1521,6 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef pooedFragileGreed = new FlagDef("pooedFragileGreed", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef pooedFragileHeart = new FlagDef("pooedFragileHeart", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef pooedFragileStrength = new FlagDef("pooedFragileStrength", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef previousDarkness = new FlagDef("previousDarkness", "Global", false, "PlayerData_Int");
             public static readonly FlagDef profileID = new FlagDef("profileID", "Global", false, "PlayerData_Int");
             public static readonly FlagDef promptFocus = new FlagDef("promptFocus", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef queenConvo_grimm1 = new FlagDef("queenConvo_grimm1", "Global", false, "PlayerData_Bool");
