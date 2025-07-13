@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using CabbyMenu.UI.Modders;
 using UnityEngine.EventSystems;
+using BepInEx.Configuration;
 
 namespace CabbyCodes.Patches.Flags.Triage
 {
@@ -19,16 +20,58 @@ namespace CabbyCodes.Patches.Flags.Triage
         private static Color originalScrollbarHandleColor;
         private static bool isHovering = false;
 
+        /// <summary>
+        /// Configuration entry for flag monitor enabled state.
+        /// </summary>
+        private static ConfigEntry<bool> flagMonitorEnabled;
+
         public bool IsEnabled => isEnabled;
+
+        /// <summary>
+        /// Initializes the configuration entries for flag monitor settings.
+        /// </summary>
+        public static void InitializeConfig()
+        {
+            flagMonitorEnabled = CabbyCodesPlugin.configFile.Bind("FlagMonitor", "Enabled", false, 
+                "Enable real-time flag change notifications on screen");
+        }
+
+        /// <summary>
+        /// Ensures the notification panel is created if the monitor is enabled.
+        /// This should be called after the configuration is loaded to ensure the panel exists.
+        /// </summary>
+        public static void EnsurePanelExists()
+        {
+            if (flagMonitorEnabled != null && flagMonitorEnabled.Value && FlagMonitorPatch.notificationPanel == null)
+            {
+                instance.CreateNotificationPanel();
+                instance.Set(true); // This will show the panel and update the display
+            }
+        }
 
         public bool Get()
         {
+            // Ensure config is initialized
+            if (flagMonitorEnabled == null)
+            {
+                InitializeConfig();
+            }
+            
+            // Synchronize the local field with the config value
+            isEnabled = flagMonitorEnabled.Value;
             return isEnabled;
         }
 
         public void Set(bool newValue)
         {
+            // Ensure config is initialized
+            if (flagMonitorEnabled == null)
+            {
+                InitializeConfig();
+            }
+            
             isEnabled = newValue;
+            flagMonitorEnabled.Value = newValue;
             
             // Create panel if it doesn't exist and we're enabling
             if (isEnabled && FlagMonitorPatch.notificationPanel == null)
@@ -52,6 +95,8 @@ namespace CabbyCodes.Patches.Flags.Triage
                 }
             }
         }
+
+
         
         /// <summary>
         /// Checks if the game is currently paused, using the same logic as GameStateProvider.

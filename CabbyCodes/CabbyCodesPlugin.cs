@@ -54,6 +54,10 @@ namespace CabbyCodes
             BLogger.LogInfo("Plugin cabby.cabbycodes is loaded!");
             BLogger.LogInfo(string.Format("Config location: {0}", Config.ConfigFilePath));
             configFile = Config;
+
+            // Initialize flag monitor configuration early so it's available when panels are created
+            FlagMonitorReference.InitializeConfig();
+            FlagFileLoggingReference.InitializeConfig();
         }
 
         /// <summary>
@@ -100,6 +104,12 @@ namespace CabbyCodes
 
             // Initialize scene monitoring for flag monitor
             FlagMonitorPatch.InitializeSceneMonitoring();
+
+            // Ensure flag monitor panel exists if it was previously enabled
+            FlagMonitorReference.EnsurePanelExists();
+
+            // Ensure file logging is set up if it was previously enabled
+            FlagFileLoggingReference.EnsureFileExists();
 
             BLogger.LogInfo("CabbyCodes menu initialized successfully");
         }
