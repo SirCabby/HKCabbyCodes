@@ -15,6 +15,7 @@ namespace CabbyCodes.Patches.Flags.Triage
         private static Queue<string> notificationQueue = new Queue<string>();
         private static FlagMonitorReference monitorReference = FlagMonitorReference.Instance;
         private static FlagFileLoggingReference fileLoggingReference = FlagFileLoggingReference.Instance;
+        private const int MAX_NOTIFICATIONS = 100; // Limit to prevent memory issues
 
         [HarmonyPatch(typeof(SceneData), "SaveMyState", typeof(PersistentBoolData))]
         public static class PersistentBoolDataMonitor
@@ -86,6 +87,12 @@ namespace CabbyCodes.Patches.Flags.Triage
             
             notificationQueue.Enqueue(message);
             
+            // Limit queue size to prevent memory issues
+            while (notificationQueue.Count > MAX_NOTIFICATIONS)
+            {
+                notificationQueue.Dequeue();
+            }
+            
             UpdateNotificationDisplay();
         }
 
@@ -103,15 +110,41 @@ namespace CabbyCodes.Patches.Flags.Triage
             
             notificationText.text = displayText;
             
-            // Force layout update for scroll view
+            // Force layout rebuild like CabbyMainMenu does
+            if (notificationText != null)
+            {
+                LayoutRebuilder.ForceRebuildLayoutImmediate(notificationText.GetComponent<RectTransform>());
+                LayoutRebuilder.ForceRebuildLayoutImmediate(notificationText.transform.parent.GetComponent<RectTransform>());
+            }
+            
+            // Force canvas update
             Canvas.ForceUpdateCanvases();
             
-            // Auto-scroll to bottom to show latest notifications
+            // Get scroll rect for auto-scrolling
             ScrollRect scrollRect = notificationPanel.GetComponentInChildren<ScrollRect>();
+            
+            // Auto-scroll to bottom to show latest notifications
             if (scrollRect != null)
             {
-                scrollRect.verticalNormalizedPosition = 0f;
+                // Use a coroutine to ensure the layout is fully updated before scrolling
+                FlagMonitorMonoBehaviour monoBehaviour = notificationPanel.GetComponent<FlagMonitorMonoBehaviour>();
+                if (monoBehaviour != null)
+                {
+                    monoBehaviour.StartCoroutine(ScrollToBottomAfterLayout(scrollRect));
+                }
             }
+        }
+        
+        private static System.Collections.IEnumerator ScrollToBottomAfterLayout(ScrollRect scrollRect)
+        {
+            // Wait for the end of frame to ensure layout is complete
+            yield return new WaitForEndOfFrame();
+            
+            // Force another canvas update to ensure content size is calculated
+            Canvas.ForceUpdateCanvases();
+            
+            // Scroll to bottom (0 = bottom, 1 = top)
+            scrollRect.verticalNormalizedPosition = 0f;
         }
 
 
@@ -200,8 +233,6 @@ namespace CabbyCodes.Patches.Flags.Triage
             AddNotification($"[TestScene]: test_georock_{testCounter} = GeoRock");
             AddNotification($"[PlayerData]: test_player_bool_{testCounter} = true");
             AddNotification($"[PlayerData]: test_player_int_{testCounter} = {testCounter * 100}");
-            
-            Debug.Log($"[Flag Monitor] Test notifications added (counter: {testCounter})");
         }
     }
 } 
