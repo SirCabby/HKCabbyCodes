@@ -235,44 +235,6 @@ namespace CabbyCodes.Patches.Flags.Triage
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(testButton);
         }
 
-        // Helper methods for UI-triggered flag changes
-        public static void NotifyFlagChange(string flagName, object value, string flagType = "UI")
-        {
-            if (!monitorReference.IsEnabled) return;
-            
-            string message = $"[{flagType}] {flagName} = {value}";
-            AddNotificationDirect(message);
-        }
-        
-        public static void NotifyPlayerDataBool(string flagName, bool value)
-        {
-            NotifyFlagChange(flagName, value, "PlayerData_Bool");
-        }
-        
-        public static void NotifyPlayerDataInt(string flagName, int value)
-        {
-            NotifyFlagChange(flagName, value, "PlayerData_Int");
-        }
-        
-        public static void NotifySceneDataBool(string flagName, bool value, string sceneName)
-        {
-            NotifyFlagChange($"{flagName} ({sceneName})", value, "SceneData_Bool");
-        }
-        
-        public static void NotifySceneDataInt(string flagName, int value, string sceneName)
-        {
-            NotifyFlagChange($"{flagName} ({sceneName})", value, "SceneData_Int");
-        }
-        
-        public static void NotifySceneChange(string sceneName, string entryGate = null)
-        {
-            if (!monitorReference.IsEnabled) return;
-            
-            string entryInfo = !string.IsNullOrEmpty(entryGate) ? $" (Entry: {entryGate})" : "";
-            string message = $"[SceneChange]: Transitioning to {sceneName}{entryInfo}";
-            AddNotificationDirect(message);
-        }
-
         private static int testCounter = 0;
         
         public static void TestFlagNotifications()
