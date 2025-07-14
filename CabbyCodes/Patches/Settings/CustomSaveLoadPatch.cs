@@ -172,7 +172,7 @@ namespace CabbyCodes.Patches.Settings
         {
             // Calculate width for 35 characters but allow 50 characters
             int widthFor35Chars = CalculatePanelWidth(35);
-            customSaveNameInputPanel = new InputFieldPanel<string>(customSaveNameRef, KeyCodeMap.ValidChars.AlphaNumeric, 60, widthFor35Chars, "(Optional) Save game name");
+            customSaveNameInputPanel = new InputFieldPanel<string>(customSaveNameRef, KeyCodeMap.ValidChars.AlphaNumericWithSpaces, 60, widthFor35Chars, "(Optional) Save game name");
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(customSaveNameInputPanel);
         }
 
@@ -235,7 +235,10 @@ namespace CabbyCodes.Patches.Settings
         /// <param name="saveFileName">The name of the save file to create a panel for.</param>
         private static void AddCustomSavePanel(string saveFileName)
         {
-            ButtonPanel buttonPanel = new ButtonPanel(() => { LoadCustomSave(saveFileName); }, "Load", saveFileName);
+            // Convert file name to display name for the UI
+            string displayName = GetDisplayNameFromFileName(saveFileName);
+            
+            ButtonPanel buttonPanel = new ButtonPanel(() => { LoadCustomSave(saveFileName); }, "Load", displayName);
 
             // Add the panel to the menu first so it has a parent
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(buttonPanel);
@@ -403,10 +406,31 @@ namespace CabbyCodes.Patches.Settings
             }
             else
             {
-                // Sanitize the filename to remove invalid characters
+                // Sanitize the filename to remove invalid characters and convert spaces to underscores
                 string sanitizedName = string.Join("_", saveName.Split(Path.GetInvalidFileNameChars()));
+                // Convert spaces to underscores for the actual file name
+                sanitizedName = sanitizedName.Replace(" ", "_");
                 return sanitizedName + SAVE_FILE_EXTENSION;
             }
+        }
+
+        /// <summary>
+        /// Converts a file name back to a display name by removing extension and converting underscores to spaces.
+        /// </summary>
+        /// <param name="fileName">The file name to convert.</param>
+        /// <returns>The display name without extension and with spaces instead of underscores.</returns>
+        private static string GetDisplayNameFromFileName(string fileName)
+        {
+            if (string.IsNullOrEmpty(fileName))
+            {
+                return fileName;
+            }
+
+            // Remove the file extension
+            string nameWithoutExtension = Path.GetFileNameWithoutExtension(fileName);
+            
+            // Convert underscores back to spaces for display
+            return nameWithoutExtension.Replace("_", " ");
         }
 
         /// <summary>

@@ -31,7 +31,12 @@ namespace CabbyMenu.Utilities
             /// <summary>
             /// Numeric characters (0-9) plus decimal point.
             /// </summary>
-            Decimal
+            Decimal,
+
+            /// <summary>
+            /// Alphabetic, numeric characters, and spaces.
+            /// </summary>
+            AlphaNumericWithSpaces
         }
 
         /// <summary>
@@ -53,6 +58,11 @@ namespace CabbyMenu.Utilities
         /// HashSet of decimal KeyCodes (numeric + decimal point) for fast lookup.
         /// </summary>
         private static readonly HashSet<KeyCode> _decimalKeys = new HashSet<KeyCode>();
+
+        /// <summary>
+        /// HashSet of alphanumeric with spaces KeyCodes for fast lookup.
+        /// </summary>
+        private static readonly HashSet<KeyCode> _alphaNumericWithSpacesKeys = new HashSet<KeyCode>();
 
         static KeyCodeMap()
         {
@@ -81,6 +91,9 @@ namespace CabbyMenu.Utilities
             // Decimal point keys
             _keyCodeMap.Add(KeyCode.Period, '.');
             _keyCodeMap.Add(KeyCode.KeypadPeriod, '.');
+
+            // Space key
+            _keyCodeMap.Add(KeyCode.Space, ' ');
 
             // Alphabetic keys
             _keyCodeMap.Add(KeyCode.A, 'A');
@@ -167,6 +180,17 @@ namespace CabbyMenu.Utilities
             }
             _decimalKeys.Add(KeyCode.Period);
             _decimalKeys.Add(KeyCode.KeypadPeriod);
+
+            // AlphaNumeric with spaces KeyCodes - combine alpha, numeric, and space
+            foreach (var alphaKey in _alphaKeys)
+            {
+                _alphaNumericWithSpacesKeys.Add(alphaKey);
+            }
+            foreach (var numericKey in _numericKeys)
+            {
+                _alphaNumericWithSpacesKeys.Add(numericKey);
+            }
+            _alphaNumericWithSpacesKeys.Add(KeyCode.Space);
         }
 
         /// <summary>
@@ -187,6 +211,9 @@ namespace CabbyMenu.Utilities
                     break;
                 case ValidChars.Decimal:
                     keysToCheck = _decimalKeys;
+                    break;
+                case ValidChars.AlphaNumericWithSpaces:
+                    keysToCheck = _alphaNumericWithSpacesKeys;
                     break;
                 case ValidChars.AlphaNumeric:
                 default:

@@ -35,7 +35,8 @@ namespace CabbyCodes.Patches.Flags.Triage
             "health",
             "geo",
             "MPCharge",
-            "previousDarkness"
+            "previousDarkness",
+            "profileID"
         };
 
         // --- Performance optimizations ---

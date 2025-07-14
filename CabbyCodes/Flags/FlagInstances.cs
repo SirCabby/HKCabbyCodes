@@ -187,9 +187,12 @@ namespace CabbyCodes.Flags
         #endregion
 
         #region Game State
-            public static readonly FlagDef disablePause =           new FlagDef("disablePause",             "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef permadeathMode =         new FlagDef("permadeathMode",           "Global", false, "PlayerData_Int",  "Steel Soul Mode (Permadeath)");
-            public static readonly FlagDef unlockedCompletionRate = new FlagDef("unlockedCompletionRate",   "Global", false, "PlayerData_Bool", "World Sense");
+            public static readonly FlagDef disablePause =               new FlagDef("disablePause",             "Global", false, "PlayerData_Bool");
+            public static readonly FlagDef enteredTutorialFirstTime =   new FlagDef("enteredTutorialFirstTime", "Global", false, "PlayerData_Bool", "Entered game start");
+            public static readonly FlagDef openingCreditsPlayed =       new FlagDef("openingCreditsPlayed",     "Global", false, "PlayerData_Bool", "Opening Credits Played on Game Start");
+            public static readonly FlagDef permadeathMode =             new FlagDef("permadeathMode",           "Global", false, "PlayerData_Int",  "Steel Soul Mode (Permadeath)");
+            public static readonly FlagDef profileID =                  new FlagDef("profileID",                "Global", false, "PlayerData_Int");
+            public static readonly FlagDef unlockedCompletionRate =     new FlagDef("unlockedCompletionRate",   "Global", false, "PlayerData_Bool", "World Sense");
         #endregion
 
         #region Geo Rocks
@@ -876,7 +879,7 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef Tutorial_01__Collapser_Tute_01 =     new FlagDef("Collapser Tute 01",        SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
             public static readonly FlagDef Tutorial_01__Door =                  new FlagDef("Door",                     SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
             public static readonly FlagDef Tutorial_01__Health_Cocoon =         new FlagDef("Health Cocoon",            SceneInstances.Tutorial_01.SceneName, true, "PersistentBoolData");
-            public static readonly FlagDef Tutorial_01__Initial_Fall_Impact =   new FlagDef("Initial Fall Impact",      SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
+            public static readonly FlagDef Tutorial_01__Initial_Fall_Impact =   new FlagDef("Initial Fall Impact",      SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData", "Player fell hard on game start");
             public static readonly FlagDef Tutorial_01__Interact_Reminder =     new FlagDef("Interact Reminder",        SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData", "Told how to Focus");
             public static readonly FlagDef Tutorial_01__Inverse_Remasker =      new FlagDef("Inverse Remasker",         SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
             public static readonly FlagDef Tutorial_01__Secret_Mask =           new FlagDef("Secret Mask",              SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
@@ -1090,7 +1093,6 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef enteredDreamWorld = new FlagDef("enteredDreamWorld", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef enteredGGAtrium = new FlagDef("enteredGGAtrium", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef enteredMantisLordArea = new FlagDef("enteredMantisLordArea", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef enteredTutorialFirstTime = new FlagDef("enteredTutorialFirstTime", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef environmentType = new FlagDef("environmentType", "Global", false, "PlayerData_Int");
             public static readonly FlagDef environmentTypeDefault = new FlagDef("environmentTypeDefault", "Global", false, "PlayerData_Int");
             public static readonly FlagDef extendedGramophone = new FlagDef("extendedGramophone", "Global", false, "PlayerData_Bool");
@@ -1554,7 +1556,6 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef openedTramLower = new FlagDef("openedTramLower", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef openedTramRestingGrounds = new FlagDef("openedTramRestingGrounds", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef openedWaterwaysManhole = new FlagDef("openedWaterwaysManhole", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef openingCreditsPlayed = new FlagDef("openingCreditsPlayed", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef ordealAchieved = new FlagDef("ordealAchieved", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef oroConvoMato = new FlagDef("oroConvoMato", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef oroConvoSheo = new FlagDef("oroConvoSheo", "Global", false, "PlayerData_Bool");
@@ -1565,7 +1566,6 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef pooedFragileGreed = new FlagDef("pooedFragileGreed", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef pooedFragileHeart = new FlagDef("pooedFragileHeart", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef pooedFragileStrength = new FlagDef("pooedFragileStrength", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef profileID = new FlagDef("profileID", "Global", false, "PlayerData_Int");
             public static readonly FlagDef promptFocus = new FlagDef("promptFocus", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef queenConvo_grimm1 = new FlagDef("queenConvo_grimm1", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef queenConvo_grimm2 = new FlagDef("queenConvo_grimm2", "Global", false, "PlayerData_Bool");
