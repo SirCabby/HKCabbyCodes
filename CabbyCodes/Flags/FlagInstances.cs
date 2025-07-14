@@ -8,7 +8,7 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef dreamNailUpgraded =  new FlagDef("dreamNailUpgraded",    "Global", false, "PlayerData_Bool", "Awoken Dream Nail");
             public static readonly FlagDef fireballLevel =      new FlagDef("fireballLevel",        "Global", false, "PlayerData_Int",  "Vengeful Spirit / Shade Soul");
             public static readonly FlagDef hasAcidArmour =      new FlagDef("hasAcidArmour",        "Global", false, "PlayerData_Bool", "Isma's Tear");
-            public static readonly FlagDef hasAllNailArts =     new FlagDef("hasAllNailArts",       "Global", false, "PlayerData_Bool"); // has all nail arts
+            // public static readonly FlagDef hasAllNailArts =     new FlagDef("hasAllNailArts",       "Global", false, "PlayerData_Bool"); // has all nail arts
             public static readonly FlagDef hasCyclone =         new FlagDef("hasCyclone",           "Global", false, "PlayerData_Bool", "Cyclone Slash");
             public static readonly FlagDef hasDash =            new FlagDef("hasDash",              "Global", false, "PlayerData_Bool", "Mothwing Cloak");
             public static readonly FlagDef hasDoubleJump =      new FlagDef("hasDoubleJump",        "Global", false, "PlayerData_Bool", "Monarch Wings");
@@ -187,11 +187,11 @@ namespace CabbyCodes.Flags
         #endregion
 
         #region Game State
-            public static readonly FlagDef disablePause =               new FlagDef("disablePause",             "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef enteredTutorialFirstTime =   new FlagDef("enteredTutorialFirstTime", "Global", false, "PlayerData_Bool", "Entered game start");
-            public static readonly FlagDef openingCreditsPlayed =       new FlagDef("openingCreditsPlayed",     "Global", false, "PlayerData_Bool", "Opening Credits Played on Game Start");
+            // public static readonly FlagDef disablePause =               new FlagDef("disablePause",             "Global", false, "PlayerData_Bool");
+            // public static readonly FlagDef enteredTutorialFirstTime =   new FlagDef("enteredTutorialFirstTime", "Global", false, "PlayerData_Bool", "Entered game start");
+            // public static readonly FlagDef openingCreditsPlayed =       new FlagDef("openingCreditsPlayed",     "Global", false, "PlayerData_Bool", "Opening Credits Played on Game Start");
             public static readonly FlagDef permadeathMode =             new FlagDef("permadeathMode",           "Global", false, "PlayerData_Int",  "Steel Soul Mode (Permadeath)");
-            public static readonly FlagDef profileID =                  new FlagDef("profileID",                "Global", false, "PlayerData_Int");
+            // public static readonly FlagDef profileID =                  new FlagDef("profileID",                "Global", false, "PlayerData_Int");
             public static readonly FlagDef unlockedCompletionRate =     new FlagDef("unlockedCompletionRate",   "Global", false, "PlayerData_Bool", "World Sense");
         #endregion
 
@@ -224,7 +224,7 @@ namespace CabbyCodes.Flags
         #endregion
 
         #region Graphics
-            public static readonly FlagDef previousDarkness = new FlagDef("previousDarkness", "Global", false, "PlayerData_Int");
+            // public static readonly FlagDef previousDarkness = new FlagDef("previousDarkness", "Global", false, "PlayerData_Int");
         #endregion
 
         #region Grub Bottles
@@ -300,7 +300,7 @@ namespace CabbyCodes.Flags
             /// <summary>
             /// Individual Items
             /// </summary>
-            public static readonly FlagDef hasCharm =           new FlagDef("hasCharm",         "Global", false, "PlayerData_Bool"); // has any charm
+            // public static readonly FlagDef hasCharm =           new FlagDef("hasCharm",         "Global", false, "PlayerData_Bool"); // has any charm
             public static readonly FlagDef hasCityKey =         new FlagDef("hasCityKey",       "Global", false, "PlayerData_Bool", "City Crest");
             public static readonly FlagDef hasGodfinder =       new FlagDef("hasGodfinder",     "Global", false, "PlayerData_Bool", "Godtuner");
             public static readonly FlagDef hasHuntersMark =     new FlagDef("hasHuntersMark",   "Global", false, "PlayerData_Bool", "Hunter's Mark");
@@ -315,7 +315,7 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef hasMarker_w =        new FlagDef("hasMarker_w",      "Global", false, "PlayerData_Bool", "Gleaming Marker");
             public static readonly FlagDef hasMarker_y =        new FlagDef("hasMarker_y",      "Global", false, "PlayerData_Bool", "Token Marker");
             public static readonly FlagDef hasMenderKey =       new FlagDef("hasMenderKey",     "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef hasNailArt =         new FlagDef("hasNailArt",       "Global", false, "PlayerData_Bool");
+            // public static readonly FlagDef hasNailArt =         new FlagDef("hasNailArt",       "Global", false, "PlayerData_Bool");
             public static readonly FlagDef hasPin =             new FlagDef("hasPin",           "Global", false, "PlayerData_Bool"); // has any pin
             public static readonly FlagDef hasPinBench =        new FlagDef("hasPinBench",      "Global", false, "PlayerData_Bool", "Bench Pin");
             public static readonly FlagDef hasPinBlackEgg =     new FlagDef("hasPinBlackEgg",   "Global", false, "PlayerData_Bool");
@@ -718,8 +718,8 @@ namespace CabbyCodes.Flags
         #region Player Status
             public static readonly FlagDef charmSlots =                 new FlagDef("charmSlots",               "Global", false, "PlayerData_Int");
             public static readonly FlagDef charmSlotsFilled =           new FlagDef("charmSlotsFilled",         "Global", false, "PlayerData_Int");
-            public static readonly FlagDef firstGeo =                   new FlagDef("firstGeo",                 "Global", false, "PlayerData_Bool"); // Found first geo
-            public static readonly FlagDef hazardRespawnFacingRight =   new FlagDef("hazardRespawnFacingRight", "Global", false, "PlayerData_Bool");
+            // public static readonly FlagDef firstGeo =                   new FlagDef("firstGeo",                 "Global", false, "PlayerData_Bool"); // Found first geo
+            // public static readonly FlagDef hazardRespawnFacingRight =   new FlagDef("hazardRespawnFacingRight", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef health =                     new FlagDef("health",                   "Global", false, "PlayerData_Int");
             public static readonly FlagDef healthBlue =                 new FlagDef("healthBlue",               "Global", false, "PlayerData_Int");
             public static readonly FlagDef maxHealth =                  new FlagDef("maxHealth",                "Global", false, "PlayerData_Int");
@@ -730,11 +730,11 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef MPReserve =                  new FlagDef("MPReserve",                "Global", false, "PlayerData_Int");
             public static readonly FlagDef MPReserveCap =               new FlagDef("MPReserveCap",             "Global", false, "PlayerData_Int");
             public static readonly FlagDef MPReserveMax =               new FlagDef("MPReserveMax",             "Global", false, "PlayerData_Int");
-            public static readonly FlagDef prevHealth =                 new FlagDef("prevHealth",               "Global", false, "PlayerData_Int");
+            // public static readonly FlagDef prevHealth =                 new FlagDef("prevHealth",               "Global", false, "PlayerData_Int");
         #endregion
 
         #region UI
-            public static readonly FlagDef showHealthUI = new FlagDef("showHealthUI", "Global", false, "PlayerData_Bool");
+            // public static readonly FlagDef showHealthUI = new FlagDef("showHealthUI", "Global", false, "PlayerData_Bool");
         #endregion
 
         #region UNCATEGORIZED SCENE FLAGS
