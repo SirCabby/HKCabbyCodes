@@ -7,9 +7,12 @@ namespace CabbyCodes.Patches.Inventory.Currency
 {
     public class WanderersJournalPatch : ISyncedReference<int>
     {
+        private static readonly FlagDef flag1 = FlagInstances.trinket1;
+        private static readonly FlagDef flag2 = FlagInstances.foundTrinket1;
+
         public int Get()
         {
-            return FlagManager.GetIntFlag(FlagInstances.trinket1);
+            return FlagManager.GetIntFlag(flag1);
         }
 
         public void Set(int value)
@@ -17,14 +20,14 @@ namespace CabbyCodes.Patches.Inventory.Currency
             value = ValidationUtils.ValidateRange(value, 0, Constants.MAX_WANDERERS_JOURNALS, nameof(value));
             if (value > 0)
             {
-                FlagManager.SetBoolFlag(FlagInstances.foundTrinket1, true);
+                FlagManager.SetBoolFlag(flag2, true);
             }
-            FlagManager.SetIntFlag(FlagInstances.trinket1, value);
+            FlagManager.SetIntFlag(flag1, value);
         }
 
         public static void AddPanel()
         {
-            RangeInputFieldPanel<int> panel = new RangeInputFieldPanel<int>(new WanderersJournalPatch(), KeyCodeMap.ValidChars.Numeric, 0, Constants.MAX_WANDERERS_JOURNALS, "Wanderer's Journals (0-14)");
+            RangeInputFieldPanel<int> panel = new RangeInputFieldPanel<int>(new WanderersJournalPatch(), KeyCodeMap.ValidChars.Numeric, 0, Constants.MAX_WANDERERS_JOURNALS, flag1.ReadableName);
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(panel);
         }
     }

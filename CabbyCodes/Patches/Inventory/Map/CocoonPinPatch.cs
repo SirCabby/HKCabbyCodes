@@ -6,21 +6,24 @@ namespace CabbyCodes.Patches.Inventory.Map
 {
     public class CocoonPinPatch : ISyncedReference<bool>
     {
+        private static readonly FlagDef flag1 = FlagInstances.hasPinCocoon;
+        private static readonly FlagDef flag2 = FlagInstances.hasPin;
+
         public bool Get()
         {
-            return FlagManager.GetBoolFlag(FlagInstances.hasPinCocoon);
+            return FlagManager.GetBoolFlag(flag1);
         }
 
         public void Set(bool value)
         {
-            FlagManager.SetBoolFlag(FlagInstances.hasPinCocoon, value);
+            FlagManager.SetBoolFlag(flag1, value);
             if (value)
-                FlagManager.SetBoolFlag(FlagInstances.hasPin, true);
+                FlagManager.SetBoolFlag(flag2, true);
         }
 
         public static void AddPanel()
         {
-            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new TogglePanel(new CocoonPinPatch(), "Cocoon Pin"));
+            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new TogglePanel(new CocoonPinPatch(), flag1.ReadableName));
         }
     }
 }

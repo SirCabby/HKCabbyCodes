@@ -6,19 +6,21 @@ namespace CabbyCodes.Patches.Inventory.Keys
 {
     public class KingsBrandPatch : ISyncedReference<bool>
     {
+        private static readonly FlagDef flag = FlagInstances.hasKingsBrand;
+
         public bool Get()
         {
-            return FlagManager.GetBoolFlag(FlagInstances.hasKingsBrand);
+            return FlagManager.GetBoolFlag(flag);
         }
 
         public void Set(bool value)
         {
-            FlagManager.SetBoolFlag(FlagInstances.hasKingsBrand, value);
+            FlagManager.SetBoolFlag(flag, value);
         }
 
         public static void AddPanel()
         {
-            TogglePanel buttonPanel = new TogglePanel(new KingsBrandPatch(), "King's Brand");
+            TogglePanel buttonPanel = new TogglePanel(new KingsBrandPatch(), flag.ReadableName);
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(buttonPanel);
         }
     }

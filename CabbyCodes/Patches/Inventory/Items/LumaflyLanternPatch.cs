@@ -6,19 +6,21 @@ namespace CabbyCodes.Patches.Inventory.Items
 {
     public class LumaflyLanternPatch : ISyncedReference<bool>
     {
+        private static readonly FlagDef flag = FlagInstances.hasLantern;
+
         public bool Get()
         {
-            return FlagManager.GetBoolFlag(FlagInstances.hasLantern);
+            return FlagManager.GetBoolFlag(flag);
         }
 
         public void Set(bool value)
         {
-            FlagManager.SetBoolFlag(FlagInstances.hasLantern, value);
+            FlagManager.SetBoolFlag(flag, value);
         }
 
         public static void AddPanel()
         {
-            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new TogglePanel(new LumaflyLanternPatch(), "Lumafly Lantern"));
+            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new TogglePanel(new LumaflyLanternPatch(), flag.ReadableName));
         }
     }
 }

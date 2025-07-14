@@ -6,19 +6,21 @@ namespace CabbyCodes.Patches.Inventory.Items
 {
     public class MapItemPatch : ISyncedReference<bool>
     {
+        private static readonly FlagDef flag = FlagInstances.hasMap;
+
         public bool Get()
         {
-            return FlagManager.GetBoolFlag(FlagInstances.hasMap);
+            return FlagManager.GetBoolFlag(flag);
         }
 
         public void Set(bool value)
         {
-            FlagManager.SetBoolFlag(FlagInstances.hasMap, value);
+            FlagManager.SetBoolFlag(flag, value);
         }
 
         public static void AddPanel()
         {
-            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new TogglePanel(new MapItemPatch(), "Map"));
+            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new TogglePanel(new MapItemPatch(), flag.ReadableName));
         }
     }
 }

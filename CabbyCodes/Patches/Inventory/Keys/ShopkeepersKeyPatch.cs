@@ -6,19 +6,21 @@ namespace CabbyCodes.Patches.Inventory.Keys
 {
     public class ShopkeepersKeyPatch : ISyncedReference<bool>
     {
+        private static readonly FlagDef flag = FlagInstances.hasSlykey;
+
         public bool Get()
         {
-            return FlagManager.GetBoolFlag(FlagInstances.hasSlykey);
+            return FlagManager.GetBoolFlag(flag);
         }
 
         public void Set(bool value)
         {
-            FlagManager.SetBoolFlag(FlagInstances.hasSlykey, value);
+            FlagManager.SetBoolFlag(flag, value);
         }
 
         public static void AddPanel()
         {
-            TogglePanel buttonPanel = new TogglePanel(new ShopkeepersKeyPatch(), "Shopkeeper's Key");
+            TogglePanel buttonPanel = new TogglePanel(new ShopkeepersKeyPatch(), flag.ReadableName);
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(buttonPanel);
         }
     }

@@ -6,21 +6,24 @@ namespace CabbyCodes.Patches.Inventory.Map
 {
     public class TokenMarkerPatch : ISyncedReference<bool>
     {
+        private static readonly FlagDef flag1 = FlagInstances.hasMarker_y;
+        private static readonly FlagDef flag2 = FlagInstances.hasMarker;
+
         public bool Get()
         {
-            return FlagManager.GetBoolFlag(FlagInstances.hasMarker_y);
+            return FlagManager.GetBoolFlag(flag1);
         }
 
         public void Set(bool value)
         {
-            FlagManager.SetBoolFlag(FlagInstances.hasMarker_y, value);
+            FlagManager.SetBoolFlag(flag1, value);
             if (value)
-                FlagManager.SetBoolFlag(FlagInstances.hasMarker, true);
+                FlagManager.SetBoolFlag(flag2, true);
         }
 
         public static void AddPanel()
         {
-            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new TogglePanel(new TokenMarkerPatch(), "Token Marker"));
+            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new TogglePanel(new TokenMarkerPatch(), flag1.ReadableName));
         }
     }
 }

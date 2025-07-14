@@ -6,19 +6,21 @@ namespace CabbyCodes.Patches.Inventory.Abilities
 {
     public class DreamgatePatch : ISyncedReference<bool>
     {
+        private static readonly FlagDef flag = FlagInstances.hasDreamGate;
+
         public bool Get()
         {
-            return FlagManager.GetBoolFlag(FlagInstances.hasDreamGate);
+            return FlagManager.GetBoolFlag(flag);
         }
 
         public void Set(bool value)
         {
-            FlagManager.SetBoolFlag(FlagInstances.hasDreamGate, value);
+            FlagManager.SetBoolFlag(flag, value);
         }
 
         public static void AddPanel()
         {
-            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new TogglePanel(new DreamgatePatch(), "Dream Gate"));
+            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new TogglePanel(new DreamgatePatch(), flag.ReadableName));
         }
     }
 }

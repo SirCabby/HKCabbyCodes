@@ -6,19 +6,21 @@ namespace CabbyCodes.Patches.Inventory.Abilities
 {
     public class CrystalHeartPatch : ISyncedReference<bool>
     {
+        private static readonly FlagDef flag = FlagInstances.hasSuperDash;
+
         public bool Get()
         {
-            return FlagManager.GetBoolFlag(FlagInstances.hasSuperDash);
+            return FlagManager.GetBoolFlag(flag);
         }
 
         public void Set(bool value)
         {
-            FlagManager.SetBoolFlag(FlagInstances.hasSuperDash, value);
+            FlagManager.SetBoolFlag(flag, value);
         }
 
         public static void AddPanel()
         {
-            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new TogglePanel(new CrystalHeartPatch(), "Crystal Heart"));
+            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new TogglePanel(new CrystalHeartPatch(), flag.ReadableName));
         }
     }
 }

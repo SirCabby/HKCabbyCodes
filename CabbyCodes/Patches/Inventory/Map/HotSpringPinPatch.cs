@@ -6,21 +6,24 @@ namespace CabbyCodes.Patches.Inventory.Map
 {
     public class HotSpringPinPatch : ISyncedReference<bool>
     {
+        private static readonly FlagDef flag1 = FlagInstances.hasPinSpa;
+        private static readonly FlagDef flag2 = FlagInstances.hasPin;
+
         public bool Get()
         {
-            return FlagManager.GetBoolFlag(FlagInstances.hasPinSpa);
+            return FlagManager.GetBoolFlag(flag1);
         }
 
         public void Set(bool value)
         {
-            FlagManager.SetBoolFlag(FlagInstances.hasPinSpa, value);
+            FlagManager.SetBoolFlag(flag1, value);
             if (value)
-                FlagManager.SetBoolFlag(FlagInstances.hasPin, true);
+                FlagManager.SetBoolFlag(flag2, true);
         }
 
         public static void AddPanel()
         {
-            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new TogglePanel(new HotSpringPinPatch(), "Hot Spring Pin"));
+            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new TogglePanel(new HotSpringPinPatch(), flag1.ReadableName));
         }
     }
 }

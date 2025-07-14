@@ -6,19 +6,21 @@ namespace CabbyCodes.Patches.Inventory.Keys
 {
     public class ElegantKeyPatch : ISyncedReference<bool>
     {
+        private static readonly FlagDef flag = FlagInstances.hasWhiteKey;
+
         public bool Get()
         {
-            return FlagManager.GetBoolFlag(FlagInstances.hasWhiteKey);
+            return FlagManager.GetBoolFlag(flag);
         }
 
         public void Set(bool value)
         {
-            FlagManager.SetBoolFlag(FlagInstances.hasWhiteKey, value);
+            FlagManager.SetBoolFlag(flag, value);
         }
 
         public static void AddPanel()
         {
-            TogglePanel buttonPanel = new TogglePanel(new ElegantKeyPatch(), "Elegant Key");
+            TogglePanel buttonPanel = new TogglePanel(new ElegantKeyPatch(), flag.ReadableName);
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(buttonPanel);
         }
     }

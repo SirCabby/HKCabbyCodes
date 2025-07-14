@@ -6,21 +6,24 @@ namespace CabbyCodes.Patches.Inventory.Map
 {
     public class WhisperingRootPinPatch : ISyncedReference<bool>
     {
+        private static readonly FlagDef flag1 = FlagInstances.hasPinDreamPlant;
+        private static readonly FlagDef flag2 = FlagInstances.hasPin;
+
         public bool Get()
         {
-            return FlagManager.GetBoolFlag(FlagInstances.hasPinDreamPlant);
+            return FlagManager.GetBoolFlag(flag1);
         }
 
         public void Set(bool value)
         {
-            FlagManager.SetBoolFlag(FlagInstances.hasPinDreamPlant, value);
+            FlagManager.SetBoolFlag(flag1, value);
             if (value)
-                FlagManager.SetBoolFlag(FlagInstances.hasPin, true);
+                FlagManager.SetBoolFlag(flag2, true);
         }
 
         public static void AddPanel()
         {
-            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new TogglePanel(new WhisperingRootPinPatch(), "Whispering Root Pin"));
+            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new TogglePanel(new WhisperingRootPinPatch(), flag1.ReadableName));
         }
     }
 }

@@ -6,19 +6,21 @@ namespace CabbyCodes.Patches.Inventory.Items
 {
     public class GodtunerPatch : ISyncedReference<bool>
     {
+        private static readonly FlagDef flag = FlagInstances.hasGodfinder;
+
         public bool Get()
         {
-            return FlagManager.GetBoolFlag(FlagInstances.hasGodfinder);
+            return FlagManager.GetBoolFlag(flag);
         }
 
         public void Set(bool value)
         {
-            FlagManager.SetBoolFlag(FlagInstances.hasGodfinder, value);
+            FlagManager.SetBoolFlag(flag, value);
         }
 
         public static void AddPanel()
         {
-            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new TogglePanel(new GodtunerPatch(), "Godtuner"));
+            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new TogglePanel(new GodtunerPatch(), flag.ReadableName));
         }
     }
 }

@@ -6,19 +6,21 @@ namespace CabbyCodes.Patches.Inventory.Items
 {
     public class TramPassPatch : ISyncedReference<bool>
     {
+        private static readonly FlagDef flag = FlagInstances.hasTramPass;
+
         public bool Get()
         {
-            return FlagManager.GetBoolFlag(FlagInstances.hasTramPass);
+            return FlagManager.GetBoolFlag(flag);
         }
 
         public void Set(bool value)
         {
-            FlagManager.SetBoolFlag(FlagInstances.hasTramPass, value);
+            FlagManager.SetBoolFlag(flag, value);
         }
 
         public static void AddPanel()
         {
-            TogglePanel buttonPanel = new TogglePanel(new TramPassPatch(), "Tram Pass");
+            TogglePanel buttonPanel = new TogglePanel(new TramPassPatch(), flag.ReadableName);
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(buttonPanel);
         }
     }

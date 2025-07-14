@@ -7,24 +7,27 @@ namespace CabbyCodes.Patches.Player
 {
     public class HealthPatch : ISyncedReference<int>
     {
+        private static readonly FlagDef flag1 = FlagInstances.maxHealthBase;
+        private static readonly FlagDef flag2 = FlagInstances.maxHealth;
+
         public int Get()
         {
-            return FlagManager.GetIntFlag(FlagInstances.maxHealthBase);
+            return FlagManager.GetIntFlag(flag1);
         }
 
         public void Set(int value)
         {
             value = ValidationUtils.ValidateRange(value, Constants.MIN_HEALTH, Constants.MAX_HEALTH, nameof(value));
 
-            FlagManager.SetIntFlag(FlagInstances.maxHealthBase, value);
-            FlagManager.SetIntFlag(FlagInstances.maxHealth, value);
+            FlagManager.SetIntFlag(flag1, value);
+            FlagManager.SetIntFlag(flag2, value);
 
             CabbyCodesPlugin.BLogger.LogDebug(string.Format("Health updated to {0}", value));
         }
 
         public static void AddPanel()
         {
-            RangeInputFieldPanel<int> panel = new RangeInputFieldPanel<int>(new HealthPatch(), KeyCodeMap.ValidChars.Numeric, Constants.MIN_HEALTH, Constants.MAX_HEALTH, "Max Health (5-9)");
+            RangeInputFieldPanel<int> panel = new RangeInputFieldPanel<int>(new HealthPatch(), KeyCodeMap.ValidChars.Numeric, Constants.MIN_HEALTH, Constants.MAX_HEALTH, flag1.ReadableName);
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(panel);
         }
     }

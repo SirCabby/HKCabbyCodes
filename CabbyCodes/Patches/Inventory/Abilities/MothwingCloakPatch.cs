@@ -7,13 +7,16 @@ namespace CabbyCodes.Patches.Inventory.Abilities
 {
     public class MothwingCloakPatch : ISyncedValueList
     {
+        private static readonly FlagDef flag1 = FlagInstances.hasDash;
+        private static readonly FlagDef flag2 = FlagInstances.hasShadowDash;
+
         public int Get()
         {
-            if (!FlagManager.GetBoolFlag(FlagInstances.hasDash))
+            if (!FlagManager.GetBoolFlag(flag1))
             {
                 return 0;
             }
-            else if (!FlagManager.GetBoolFlag(FlagInstances.hasSuperDash))
+            else if (!FlagManager.GetBoolFlag(flag2))
             {
                 return 1;
             }
@@ -25,18 +28,18 @@ namespace CabbyCodes.Patches.Inventory.Abilities
         {
             if (value > 1)
             {
-                FlagManager.SetBoolFlag(FlagInstances.hasDash, true);
-                FlagManager.SetBoolFlag(FlagInstances.hasShadowDash, true);
+                FlagManager.SetBoolFlag(flag1, true);
+                FlagManager.SetBoolFlag(flag2, true);
             }
             else if (value == 1)
             {
-                FlagManager.SetBoolFlag(FlagInstances.hasDash, true);
-                FlagManager.SetBoolFlag(FlagInstances.hasShadowDash, false);
+                FlagManager.SetBoolFlag(flag1, true);
+                FlagManager.SetBoolFlag(flag2, false);
             }
             else
             {
-                FlagManager.SetBoolFlag(FlagInstances.hasDash, false);
-                FlagManager.SetBoolFlag(FlagInstances.hasShadowDash, false);
+                FlagManager.SetBoolFlag(flag1, false);
+                FlagManager.SetBoolFlag(flag2, false);
             }
         }
 
@@ -44,14 +47,14 @@ namespace CabbyCodes.Patches.Inventory.Abilities
         {
             return new List<string>
             {
-                "NONE", "Mothwing Cloak", "Shade Cloak"
+                "NONE", flag1.ReadableName, flag2.ReadableName
             };
         }
 
         public static void AddPanel()
         {
             MothwingCloakPatch patch = new MothwingCloakPatch();
-            DropdownPanel dropdownPanel = new DropdownPanel(patch, "Mothwing Cloak / Shade Cloak", Constants.DEFAULT_PANEL_HEIGHT);
+            DropdownPanel dropdownPanel = new DropdownPanel(patch, flag1.ReadableName + " / " + flag2.ReadableName, Constants.DEFAULT_PANEL_HEIGHT);
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(dropdownPanel);
         }
     }

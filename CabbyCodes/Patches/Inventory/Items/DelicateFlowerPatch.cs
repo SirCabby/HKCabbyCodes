@@ -7,13 +7,16 @@ namespace CabbyCodes.Patches.Inventory.Items
 {
     public class DelicateFlowerPatch : ISyncedValueList
     {
+        private static readonly FlagDef flag1 = FlagInstances.hasXunFlower;
+        private static readonly FlagDef flag2 = FlagInstances.xunFlowerBroken;
+
         public int Get()
         {
-            if (FlagManager.GetBoolFlag(FlagInstances.hasXunFlower) && !FlagManager.GetBoolFlag(FlagInstances.xunFlowerBroken))
+            if (FlagManager.GetBoolFlag(flag1) && !FlagManager.GetBoolFlag(flag2))
             {
                 return 2;
             }
-            else if (FlagManager.GetBoolFlag(FlagInstances.hasXunFlower) && FlagManager.GetBoolFlag(FlagInstances.xunFlowerBroken))
+            else if (FlagManager.GetBoolFlag(flag1) && FlagManager.GetBoolFlag(flag2))
             {
                 return 1;
             }
@@ -25,18 +28,18 @@ namespace CabbyCodes.Patches.Inventory.Items
         {
             if (value == Constants.DELICATE_FLOWER_BROKEN_STATE)
             {
-                FlagManager.SetBoolFlag(FlagInstances.hasXunFlower, true);
-                FlagManager.SetBoolFlag(FlagInstances.xunFlowerBroken, true);
+                FlagManager.SetBoolFlag(flag1, true);
+                FlagManager.SetBoolFlag(flag2, true);
             }
             else if (value == Constants.DELICATE_FLOWER_RETURNED_STATE)
             {
-                FlagManager.SetBoolFlag(FlagInstances.hasXunFlower, true);
-                FlagManager.SetBoolFlag(FlagInstances.xunFlowerBroken, false);
+                FlagManager.SetBoolFlag(flag1, true);
+                FlagManager.SetBoolFlag(flag2, false);
             }
             else
             {
-                FlagManager.SetBoolFlag(FlagInstances.hasXunFlower, false);
-                FlagManager.SetBoolFlag(FlagInstances.xunFlowerBroken, false);
+                FlagManager.SetBoolFlag(flag1, false);
+                FlagManager.SetBoolFlag(flag2, false);
             }
         }
 
@@ -44,14 +47,14 @@ namespace CabbyCodes.Patches.Inventory.Items
         {
             return new List<string>
             {
-                "NONE", "Ruined Flower", "Delicate Flower"
+                "NONE", flag2.ReadableName, flag1.ReadableName
             };
         }
 
         public static void AddPanel()
         {
             DelicateFlowerPatch patch = new DelicateFlowerPatch();
-            DropdownPanel dropdownPanel = new DropdownPanel(patch, "Delicate Flower", Constants.DEFAULT_PANEL_HEIGHT);
+            DropdownPanel dropdownPanel = new DropdownPanel(patch, flag1.ReadableName, Constants.DEFAULT_PANEL_HEIGHT);
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(dropdownPanel);
         }
     }

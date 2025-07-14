@@ -7,13 +7,16 @@ namespace CabbyCodes.Patches.Inventory.Abilities
 {
     public class DreamNailPatch : ISyncedValueList
     {
+        private static readonly FlagDef flag1 = FlagInstances.hasDreamNail;
+        private static readonly FlagDef flag2 = FlagInstances.dreamNailUpgraded;
+
         public int Get()
         {
-            if (FlagManager.GetBoolFlag(FlagInstances.dreamNailUpgraded))
+            if (FlagManager.GetBoolFlag(flag2))
             {
                 return 2;
             }
-            else if (FlagManager.GetBoolFlag(FlagInstances.hasDreamNail))
+            else if (FlagManager.GetBoolFlag(flag1))
             {
                 return 1;
             }
@@ -25,18 +28,18 @@ namespace CabbyCodes.Patches.Inventory.Abilities
         {
             if (value == 2)
             {
-                FlagManager.SetBoolFlag(FlagInstances.hasDreamNail, true);
-                FlagManager.SetBoolFlag(FlagInstances.dreamNailUpgraded, true);
+                FlagManager.SetBoolFlag(flag1, true);
+                FlagManager.SetBoolFlag(flag2, true);
             }
             else if (value == 1)
             {
-                FlagManager.SetBoolFlag(FlagInstances.hasDreamNail, true);
-                FlagManager.SetBoolFlag(FlagInstances.dreamNailUpgraded, false);
+                FlagManager.SetBoolFlag(flag1, true);
+                FlagManager.SetBoolFlag(flag2, false);
             }
             else
             {
-                FlagManager.SetBoolFlag(FlagInstances.hasDreamNail, false);
-                FlagManager.SetBoolFlag(FlagInstances.dreamNailUpgraded, false);
+                FlagManager.SetBoolFlag(flag1, false);
+                FlagManager.SetBoolFlag(flag2, false);
             }
         }
 
@@ -44,14 +47,14 @@ namespace CabbyCodes.Patches.Inventory.Abilities
         {
             return new List<string>
             {
-                "NONE", "Dream Nail", "Awoken Dream Nail"
+                "NONE", flag1.ReadableName, flag2.ReadableName
             };
         }
 
         public static void AddPanel()
         {
             DreamNailPatch patch = new DreamNailPatch();
-            DropdownPanel dropdownPanel = new DropdownPanel(patch, "Dream Nail / Awoken Dream Nail", Constants.DEFAULT_PANEL_HEIGHT);
+            DropdownPanel dropdownPanel = new DropdownPanel(patch, flag1.ReadableName + " / " + flag2.ReadableName, Constants.DEFAULT_PANEL_HEIGHT);
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(dropdownPanel);
         }
     }

@@ -7,9 +7,12 @@ namespace CabbyCodes.Patches.Inventory.Currency
 {
     public class KingsIdolPatch : ISyncedReference<int>
     {
+        private static readonly FlagDef flag1 = FlagInstances.trinket3;
+        private static readonly FlagDef flag2 = FlagInstances.foundTrinket3;
+
         public int Get()
         {
-            return FlagManager.GetIntFlag(FlagInstances.trinket3);
+            return FlagManager.GetIntFlag(flag1);
         }
 
         public void Set(int value)
@@ -17,14 +20,14 @@ namespace CabbyCodes.Patches.Inventory.Currency
             value = ValidationUtils.ValidateRange(value, 0, Constants.MAX_KINGS_IDOLS, nameof(value));
             if (value > 0)
             {
-                FlagManager.SetBoolFlag(FlagInstances.foundTrinket3, true);
+                FlagManager.SetBoolFlag(flag2, true);
             }
-            FlagManager.SetIntFlag(FlagInstances.trinket3, value);
+            FlagManager.SetIntFlag(flag1, value);
         }
 
         public static void AddPanel()
         {
-            RangeInputFieldPanel<int> panel = new RangeInputFieldPanel<int>(new KingsIdolPatch(), KeyCodeMap.ValidChars.Numeric, 0, Constants.MAX_KINGS_IDOLS, "King's Idols (0-8)");
+            RangeInputFieldPanel<int> panel = new RangeInputFieldPanel<int>(new KingsIdolPatch(), KeyCodeMap.ValidChars.Numeric, 0, Constants.MAX_KINGS_IDOLS, flag1.ReadableName);
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(panel);
         }
     }

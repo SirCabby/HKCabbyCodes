@@ -6,19 +6,21 @@ namespace CabbyCodes.Patches.Player
 {
     public class JumpPatch : ISyncedReference<bool>
     {
+        private static readonly FlagDef flag = FlagInstances.infiniteAirJump;
+
         public bool Get()
         {
-            return FlagManager.GetBoolFlag(FlagInstances.infiniteAirJump);
+            return FlagManager.GetBoolFlag(flag);
         }
 
         public void Set(bool value)
         {
-            FlagManager.SetBoolFlag(FlagInstances.infiniteAirJump, value);
+            FlagManager.SetBoolFlag(flag, value);
         }
 
         public static void AddPanel()
         {
-            TogglePanel buttonPanel = new TogglePanel(new JumpPatch(), "Infinite Air Jump");
+            TogglePanel buttonPanel = new TogglePanel(new JumpPatch(), flag.ReadableName);
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(buttonPanel);
         }
     }

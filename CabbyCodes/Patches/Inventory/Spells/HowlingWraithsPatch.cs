@@ -7,14 +7,16 @@ namespace CabbyCodes.Patches.Inventory.Spells
 {
     public class HowlingWraithsPatch : ISyncedValueList
     {
+        private static readonly FlagDef flag = FlagInstances.screamLevel;
+
         public int Get()
         {
-            return FlagManager.GetIntFlag(FlagInstances.screamLevel);
+            return FlagManager.GetIntFlag(flag);
         }
 
         public void Set(int value)
         {
-            FlagManager.SetIntFlag(FlagInstances.screamLevel, value);
+            FlagManager.SetIntFlag(flag, value);
         }
 
         public List<string> GetValueList()
@@ -28,7 +30,7 @@ namespace CabbyCodes.Patches.Inventory.Spells
         public static void AddPanel()
         {
             HowlingWraithsPatch patch = new HowlingWraithsPatch();
-            DropdownPanel dropdownPanel = new DropdownPanel(patch, "Howling Wraiths / Abyss Shriek", Constants.DEFAULT_PANEL_HEIGHT);
+            DropdownPanel dropdownPanel = new DropdownPanel(patch, flag.ReadableName, Constants.DEFAULT_PANEL_HEIGHT);
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(dropdownPanel);
         }
     }

@@ -6,19 +6,21 @@ namespace CabbyCodes.Patches.Inventory.NailArts
 {
     public class UpwardSlashPatch : ISyncedReference<bool>
     {
+        private static readonly FlagDef flag = FlagInstances.hasDashSlash;
+
         public bool Get()
         {
-            return FlagManager.GetBoolFlag(FlagInstances.hasDashSlash);
+            return FlagManager.GetBoolFlag(flag);
         }
 
         public void Set(bool value)
         {
-            FlagManager.SetBoolFlag(FlagInstances.hasDashSlash, value);
+            FlagManager.SetBoolFlag(flag, value);
         }
 
         public static void AddPanel()
         {
-            TogglePanel buttonPanel = new TogglePanel(new UpwardSlashPatch(), "Great Slash");
+            TogglePanel buttonPanel = new TogglePanel(new UpwardSlashPatch(), flag.ReadableName);
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(buttonPanel);
         }
     }

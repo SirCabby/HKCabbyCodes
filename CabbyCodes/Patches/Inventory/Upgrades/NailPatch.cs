@@ -7,19 +7,21 @@ namespace CabbyCodes.Patches.Inventory.Upgrades
 {
     public class NailPatch : ISyncedReference<int>
     {
+        private static readonly FlagDef flag = FlagInstances.nailSmithUpgrades;
+
         public int Get()
         {
-            return FlagManager.GetIntFlag(FlagInstances.nailSmithUpgrades);
+            return FlagManager.GetIntFlag(flag);
         }
 
         public void Set(int value)
         {
-            FlagManager.SetIntFlag(FlagInstances.nailSmithUpgrades, value);
+            FlagManager.SetIntFlag(flag, value);
         }
 
         public static void AddPanel()
         {
-            RangeInputFieldPanel<int> panel = new RangeInputFieldPanel<int>(new NailPatch(), KeyCodeMap.ValidChars.Decimal, 0, 4, "Nail Upgrades (0-4)");
+            RangeInputFieldPanel<int> panel = new RangeInputFieldPanel<int>(new NailPatch(), KeyCodeMap.ValidChars.Decimal, 0, 4, flag.ReadableName);
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(panel);
         }
     }

@@ -18,7 +18,7 @@ namespace CabbyCodes.Patches.Player
 
         public static void AddPanel()
         {
-            TogglePanel buttonPanel = new TogglePanel(new PermadeathPatch(), "Steel Soul Mode (Permadeath)");
+            TogglePanel buttonPanel = new TogglePanel(new PermadeathPatch(), FlagInstances.permadeathMode.ReadableName);
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(buttonPanel);
         }
     }

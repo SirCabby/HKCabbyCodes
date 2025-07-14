@@ -3,6 +3,7 @@ using CabbyMenu.UI.CheatPanels;
 using System.Reflection;
 using HarmonyLib;
 using CabbyMenu;
+using CabbyCodes.Flags;
 
 namespace CabbyCodes.Patches.Player
 {
@@ -13,6 +14,7 @@ namespace CabbyCodes.Patches.Player
         private static readonly Harmony harmony = new Harmony(key);
         private static readonly MethodInfo mOriginal = AccessTools.Method(typeof(PlayerData), nameof(PlayerData.TakeHealth));
         private static readonly MethodInfo mOriginal2 = AccessTools.Method(typeof(PlayerData), nameof(PlayerData.WouldDie));
+        private static readonly FlagDef flag = FlagInstances.isInvincible;
         private static bool sceneTransitionHandlerRegistered = false;
 
         public bool Get()
@@ -23,12 +25,12 @@ namespace CabbyCodes.Patches.Player
         public void Set(bool value)
         {
             InvulPatch.value.Set(value);
+            FlagManager.SetBoolFlag(flag, value);
 
             if (Get())
             {
                 harmony.Patch(mOriginal, prefix: new HarmonyMethod(typeof(CommonPatches).GetMethod("Prefix_SkipOriginal")));
                 harmony.Patch(mOriginal2, prefix: new HarmonyMethod(typeof(CommonPatches).GetMethod("Prefix_SkipOriginal")));
-                PlayerData.instance.isInvincible = true;
                 PlayerData.instance.MaxHealth();
                 
                 // Register for scene transition events if not already registered
@@ -40,7 +42,6 @@ namespace CabbyCodes.Patches.Player
             else
             {
                 harmony.UnpatchSelf();
-                PlayerData.instance.isInvincible = false;
             }
         }
 
@@ -65,7 +66,7 @@ namespace CabbyCodes.Patches.Player
             // Reapply invulnerability state if it's currently enabled
             if (value.Get())
             {
-                PlayerData.instance.isInvincible = true;
+                FlagManager.SetBoolFlag(flag, true);
                 PlayerData.instance.MaxHealth();
                 CabbyCodesPlugin.BLogger.LogDebug("Reapplied invulnerability state after scene transition");
             }
@@ -73,7 +74,7 @@ namespace CabbyCodes.Patches.Player
 
         public static void AddPanel()
         {
-            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new TogglePanel(new InvulPatch(), "Invulnerability"));
+            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new TogglePanel(new InvulPatch(), flag.ReadableName));
         }
     }
 }

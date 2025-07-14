@@ -6,21 +6,24 @@ namespace CabbyCodes.Patches.Inventory.Map
 {
     public class WarriorsGravePinPatch : ISyncedReference<bool>
     {
+        private static readonly FlagDef flag1 = FlagInstances.hasPinGhost;
+        private static readonly FlagDef flag2 = FlagInstances.hasPin;
+
         public bool Get()
         {
-            return FlagManager.GetBoolFlag(FlagInstances.hasPinGhost);
+            return FlagManager.GetBoolFlag(flag1);
         }
 
         public void Set(bool value)
         {
-            FlagManager.SetBoolFlag(FlagInstances.hasPinGhost, value);
+            FlagManager.SetBoolFlag(flag1, value);
             if (value)
-                FlagManager.SetBoolFlag(FlagInstances.hasPin, true);
+                FlagManager.SetBoolFlag(flag2, true);
         }
 
         public static void AddPanel()
         {
-            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new TogglePanel(new WarriorsGravePinPatch(), "Warrior's Grave Pin"));
+            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new TogglePanel(new WarriorsGravePinPatch(), flag1.ReadableName));
         }
     }
 }

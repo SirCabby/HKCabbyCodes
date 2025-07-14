@@ -6,21 +6,24 @@ namespace CabbyCodes.Patches.Inventory.Map
 {
     public class GleamingMarkerPatch : ISyncedReference<bool>
     {
+        private static readonly FlagDef flag1 = FlagInstances.hasMarker_w;
+        private static readonly FlagDef flag2 = FlagInstances.hasMarker;
+
         public bool Get()
         {
-            return FlagManager.GetBoolFlag(FlagInstances.hasMarker_w);
+            return FlagManager.GetBoolFlag(flag1);
         }
 
         public void Set(bool value)
         {
-            FlagManager.SetBoolFlag(FlagInstances.hasMarker_w, value);
+            FlagManager.SetBoolFlag(flag1, value);
             if (value)
-                FlagManager.SetBoolFlag(FlagInstances.hasMarker, true);
+                FlagManager.SetBoolFlag(flag2, true);
         }
 
         public static void AddPanel()
         {
-            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new TogglePanel(new GleamingMarkerPatch(), "Gleaming Marker"));
+            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new TogglePanel(new GleamingMarkerPatch(), flag1.ReadableName));
         }
     }
 }

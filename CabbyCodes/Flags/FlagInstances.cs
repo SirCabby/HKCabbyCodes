@@ -5,26 +5,26 @@ namespace CabbyCodes.Flags
     public static class FlagInstances
     {
         #region Abilities
-            public static readonly FlagDef dreamNailUpgraded = new FlagDef("dreamNailUpgraded", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef fireballLevel = new FlagDef("fireballLevel", "Global", false, "PlayerData_Int");
-            public static readonly FlagDef hasAcidArmour = new FlagDef("hasAcidArmour", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef hasCyclone = new FlagDef("hasCyclone", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef hasDash = new FlagDef("hasDash", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef hasDoubleJump = new FlagDef("hasDoubleJump", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef hasDashSlash = new FlagDef("hasDashSlash", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef hasDreamGate = new FlagDef("hasDreamGate", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef hasDreamNail = new FlagDef("hasDreamNail", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef hasShadowDash = new FlagDef("hasShadowDash", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef hasSpell = new FlagDef("hasSpell", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef hasSuperDash = new FlagDef("hasSuperDash", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef hasUpwardSlash = new FlagDef("hasUpwardSlash", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef hasWalljump = new FlagDef("hasWalljump", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef heartPieces = new FlagDef("heartPieces", "Global", false, "PlayerData_Int");
-            public static readonly FlagDef nailSmithUpgrades = new FlagDef("nailSmithUpgrades", "Global", false, "PlayerData_Int");
-            public static readonly FlagDef quakeLevel = new FlagDef("quakeLevel", "Global", false, "PlayerData_Int");
-            public static readonly FlagDef salubraBlessing = new FlagDef("salubraBlessing", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef screamLevel = new FlagDef("screamLevel", "Global", false, "PlayerData_Int");
-            public static readonly FlagDef vesselFragments = new FlagDef("vesselFragments", "Global", false, "PlayerData_Int");
+            public static readonly FlagDef dreamNailUpgraded =  new FlagDef("dreamNailUpgraded",    "Global", false, "PlayerData_Bool", "Awoken Dream Nail");
+            public static readonly FlagDef fireballLevel =      new FlagDef("fireballLevel",        "Global", false, "PlayerData_Int",  "Vengeful Spirit / Shade Soul");
+            public static readonly FlagDef hasAcidArmour =      new FlagDef("hasAcidArmour",        "Global", false, "PlayerData_Bool", "Isma's Tear");
+            public static readonly FlagDef hasAllNailArts =     new FlagDef("hasAllNailArts",       "Global", false, "PlayerData_Bool"); // has all nail arts
+            public static readonly FlagDef hasCyclone =         new FlagDef("hasCyclone",           "Global", false, "PlayerData_Bool", "Cyclone Slash");
+            public static readonly FlagDef hasDash =            new FlagDef("hasDash",              "Global", false, "PlayerData_Bool", "Mothwing Cloak");
+            public static readonly FlagDef hasDoubleJump =      new FlagDef("hasDoubleJump",        "Global", false, "PlayerData_Bool", "Monarch Wings");
+            public static readonly FlagDef hasDashSlash =       new FlagDef("hasDashSlash",         "Global", false, "PlayerData_Bool", "Great Slash");
+            public static readonly FlagDef hasDreamGate =       new FlagDef("hasDreamGate",         "Global", false, "PlayerData_Bool", "Dream Gate");
+            public static readonly FlagDef hasDreamNail =       new FlagDef("hasDreamNail",         "Global", false, "PlayerData_Bool", "Dream Nail");
+            public static readonly FlagDef hasShadowDash =      new FlagDef("hasShadowDash",        "Global", false, "PlayerData_Bool", "Shade Cloak");
+            public static readonly FlagDef hasSpell =           new FlagDef("hasSpell",             "Global", false, "PlayerData_Bool", "Focus");
+            public static readonly FlagDef hasSuperDash =       new FlagDef("hasSuperDash",         "Global", false, "PlayerData_Bool", "Crystal Heart");
+            public static readonly FlagDef hasUpwardSlash =     new FlagDef("hasUpwardSlash",       "Global", false, "PlayerData_Bool", "Dash Slash");
+            public static readonly FlagDef hasWalljump =        new FlagDef("hasWalljump",          "Global", false, "PlayerData_Bool", "Mantis Claw");
+            public static readonly FlagDef nailSmithUpgrades =  new FlagDef("nailSmithUpgrades",    "Global", false, "PlayerData_Int",  "Nail Upgrades (0-4)");
+            public static readonly FlagDef quakeLevel =         new FlagDef("quakeLevel",           "Global", false, "PlayerData_Int",  "Desolate Dive / Descending Dark");
+            public static readonly FlagDef salubraBlessing =    new FlagDef("salubraBlessing",      "Global", false, "PlayerData_Bool", "Salubra's Blessing");
+            public static readonly FlagDef screamLevel =        new FlagDef("screamLevel",          "Global", false, "PlayerData_Int",  "Howling Wraiths / Abyss Shriek");
+            public static readonly FlagDef vesselFragments =    new FlagDef("vesselFragments",      "Global", false, "PlayerData_Int",  "Vessel Fragments (0-2)");
         #endregion
 
         #region Charm Cost
@@ -172,14 +172,24 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef royalCharmState = new FlagDef("royalCharmState", "Global", false, "PlayerData_Int"); 
         #endregion
 
+        #region Currency
+            public static readonly FlagDef dreamOrbs =  new FlagDef("dreamOrbs",    "Global", false, "PlayerData_Int", "Dream Essence (0-9999)");
+            public static readonly FlagDef geo =        new FlagDef("geo",          "Global", false, "PlayerData_Int", "Geo (0-999999)");
+        #endregion
+
         #region In-Game Cheats
-            public static readonly FlagDef infiniteAirJump = new FlagDef("infiniteAirJump", "Global", false, "PlayerData_Bool");
+            public static readonly FlagDef infiniteAirJump =    new FlagDef("infiniteAirJump",  "Global", false, "PlayerData_Bool", "Infinite Air Jump");
+            public static readonly FlagDef isInvincible =       new FlagDef("isInvincible",     "Global", false, "PlayerData_Bool", "Invulnerability");
+        #endregion
+
+        #region Environment Updates
+            public static readonly FlagDef crossroadsInfected = new FlagDef("crossroadsInfected", "Global", false, "PlayerData_Bool", "Crossroads Infected");
         #endregion
 
         #region Game State
-            public static readonly FlagDef disablePause = new FlagDef("disablePause", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef permadeathMode = new FlagDef("permadeathMode", "Global", false, "PlayerData_Int");
-            public static readonly FlagDef unlockedCompletionRate = new FlagDef("unlockedCompletionRate", "Global", false, "PlayerData_Bool");
+            public static readonly FlagDef disablePause =           new FlagDef("disablePause",             "Global", false, "PlayerData_Bool");
+            public static readonly FlagDef permadeathMode =         new FlagDef("permadeathMode",           "Global", false, "PlayerData_Int",  "Steel Soul Mode (Permadeath)");
+            public static readonly FlagDef unlockedCompletionRate = new FlagDef("unlockedCompletionRate",   "Global", false, "PlayerData_Bool", "World Sense");
         #endregion
 
         #region Geo Rocks
@@ -276,73 +286,78 @@ namespace CabbyCodes.Flags
             /// <summary>
             /// State Flags
             /// </summary>
-            public static readonly FlagDef hasAllNailArts = new FlagDef("hasAllNailArts", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef xunFlowerBroken = new FlagDef("xunFlowerBroken", "Global", false, "PlayerData_Bool");
+            public static readonly FlagDef xunFlowerBroken =    new FlagDef("xunFlowerBroken",  "Global", false, "PlayerData_Bool", "Ruined Flower");
 
             /// <summary>
-            /// Parts
+            /// Upgrade Parts
             /// </summary>
-            public static readonly FlagDef ore = new FlagDef("ore", "Global", false, "PlayerData_Int");
-            public static readonly FlagDef rancidEggs = new FlagDef("rancidEggs", "Global", false, "PlayerData_Int");
+            public static readonly FlagDef heartPieces =        new FlagDef("heartPieces",      "Global", false, "PlayerData_Int",  "Mask Shards (0-4)");
+            public static readonly FlagDef ore =                new FlagDef("ore",              "Global", false, "PlayerData_Int",  "Pale Ore (0-6)");
 
             /// <summary>
             /// Individual Items
             /// </summary>
-            public static readonly FlagDef hasCharm = new FlagDef("hasCharm", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef hasCityKey = new FlagDef("hasCityKey", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef hasGodfinder = new FlagDef("hasGodfinder", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef hasHuntersMark = new FlagDef("hasHuntersMark", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef hasJournal = new FlagDef("hasJournal", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef hasKingsBrand = new FlagDef("hasKingsBrand", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef hasLantern = new FlagDef("hasLantern", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef hasLoveKey = new FlagDef("hasLoveKey", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef hasMap = new FlagDef("hasMap", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef hasMarker = new FlagDef("hasMarker", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef hasMarker_b = new FlagDef("hasMarker_b", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef hasMarker_r = new FlagDef("hasMarker_r", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef hasMarker_w = new FlagDef("hasMarker_w", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef hasMarker_y = new FlagDef("hasMarker_y", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef hasMenderKey = new FlagDef("hasMenderKey", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef hasNailArt = new FlagDef("hasNailArt", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef hasPin = new FlagDef("hasPin", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef hasPinBench = new FlagDef("hasPinBench", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef hasPinBlackEgg = new FlagDef("hasPinBlackEgg", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef hasPinCocoon = new FlagDef("hasPinCocoon", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef hasPinDreamPlant = new FlagDef("hasPinDreamPlant", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef hasPinGhost = new FlagDef("hasPinGhost", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef hasPinGrub = new FlagDef("hasPinGrub", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef hasPinGuardian = new FlagDef("hasPinGuardian", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef hasPinShop = new FlagDef("hasPinShop", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef hasPinSpa = new FlagDef("hasPinSpa", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef hasPinStag = new FlagDef("hasPinStag", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef hasPinTram = new FlagDef("hasPinTram", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef hasQuill = new FlagDef("hasQuill", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef hasSlykey = new FlagDef("hasSlykey", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef hasSpaKey = new FlagDef("hasSpaKey", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef hasTramPass = new FlagDef("hasTramPass", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef hasWaterwaysKey = new FlagDef("hasWaterwaysKey", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef hasWhiteKey = new FlagDef("hasWhiteKey", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef hasXunFlower = new FlagDef("hasXunFlower", "Global", false, "PlayerData_Bool");
+            public static readonly FlagDef hasCharm =           new FlagDef("hasCharm",         "Global", false, "PlayerData_Bool"); // has any charm
+            public static readonly FlagDef hasCityKey =         new FlagDef("hasCityKey",       "Global", false, "PlayerData_Bool", "City Crest");
+            public static readonly FlagDef hasGodfinder =       new FlagDef("hasGodfinder",     "Global", false, "PlayerData_Bool", "Godtuner");
+            public static readonly FlagDef hasHuntersMark =     new FlagDef("hasHuntersMark",   "Global", false, "PlayerData_Bool", "Hunter's Mark");
+            public static readonly FlagDef hasJournal =         new FlagDef("hasJournal",       "Global", false, "PlayerData_Bool", "Hunter's Journal");
+            public static readonly FlagDef hasKingsBrand =      new FlagDef("hasKingsBrand",    "Global", false, "PlayerData_Bool", "King's Brand");
+            public static readonly FlagDef hasLantern =         new FlagDef("hasLantern",       "Global", false, "PlayerData_Bool", "Lumafly Lantern");
+            public static readonly FlagDef hasLoveKey =         new FlagDef("hasLoveKey",       "Global", false, "PlayerData_Bool", "Love Key");
+            public static readonly FlagDef hasMap =             new FlagDef("hasMap",           "Global", false, "PlayerData_Bool", "Map");
+            public static readonly FlagDef hasMarker =          new FlagDef("hasMarker",        "Global", false, "PlayerData_Bool"); // has any marker
+            public static readonly FlagDef hasMarker_b =        new FlagDef("hasMarker_b",      "Global", false, "PlayerData_Bool", "Scarab Marker");
+            public static readonly FlagDef hasMarker_r =        new FlagDef("hasMarker_r",      "Global", false, "PlayerData_Bool", "Shell Marker");
+            public static readonly FlagDef hasMarker_w =        new FlagDef("hasMarker_w",      "Global", false, "PlayerData_Bool", "Gleaming Marker");
+            public static readonly FlagDef hasMarker_y =        new FlagDef("hasMarker_y",      "Global", false, "PlayerData_Bool", "Token Marker");
+            public static readonly FlagDef hasMenderKey =       new FlagDef("hasMenderKey",     "Global", false, "PlayerData_Bool");
+            public static readonly FlagDef hasNailArt =         new FlagDef("hasNailArt",       "Global", false, "PlayerData_Bool");
+            public static readonly FlagDef hasPin =             new FlagDef("hasPin",           "Global", false, "PlayerData_Bool"); // has any pin
+            public static readonly FlagDef hasPinBench =        new FlagDef("hasPinBench",      "Global", false, "PlayerData_Bool", "Bench Pin");
+            public static readonly FlagDef hasPinBlackEgg =     new FlagDef("hasPinBlackEgg",   "Global", false, "PlayerData_Bool");
+            public static readonly FlagDef hasPinCocoon =       new FlagDef("hasPinCocoon",     "Global", false, "PlayerData_Bool", "Cocoon Pin");
+            public static readonly FlagDef hasPinDreamPlant =   new FlagDef("hasPinDreamPlant", "Global", false, "PlayerData_Bool", "Whispering Root Pin");
+            public static readonly FlagDef hasPinGhost =        new FlagDef("hasPinGhost",      "Global", false, "PlayerData_Bool", "Warrior's Grave Pin");
+            public static readonly FlagDef hasPinGrub =         new FlagDef("hasPinGrub",       "Global", false, "PlayerData_Bool", "Collector's Map");
+            public static readonly FlagDef hasPinGuardian =     new FlagDef("hasPinGuardian",   "Global", false, "PlayerData_Bool");
+            public static readonly FlagDef hasPinShop =         new FlagDef("hasPinShop",       "Global", false, "PlayerData_Bool", "Vendor Pin");
+            public static readonly FlagDef hasPinSpa =          new FlagDef("hasPinSpa",        "Global", false, "PlayerData_Bool", "Hot Spring Pin");
+            public static readonly FlagDef hasPinStag =         new FlagDef("hasPinStag",       "Global", false, "PlayerData_Bool", "Stag Station Pin");
+            public static readonly FlagDef hasPinTram =         new FlagDef("hasPinTram",       "Global", false, "PlayerData_Bool", "Tram Pin");
+            public static readonly FlagDef hasQuill =           new FlagDef("hasQuill",         "Global", false, "PlayerData_Bool", "Quill");
+            public static readonly FlagDef hasSlykey =          new FlagDef("hasSlykey",        "Global", false, "PlayerData_Bool", "Shopkeeper's Key");
+            public static readonly FlagDef hasSpaKey =          new FlagDef("hasSpaKey",        "Global", false, "PlayerData_Bool");
+            public static readonly FlagDef hasTramPass =        new FlagDef("hasTramPass",      "Global", false, "PlayerData_Bool", "Tram Pass");
+            public static readonly FlagDef hasWaterwaysKey =    new FlagDef("hasWaterwaysKey",  "Global", false, "PlayerData_Bool");
+            public static readonly FlagDef hasWhiteKey =        new FlagDef("hasWhiteKey",      "Global", false, "PlayerData_Bool", "Elegant Key");
+            public static readonly FlagDef hasXunFlower =       new FlagDef("hasXunFlower",     "Global", false, "PlayerData_Bool", "Delicate Flower");
+
+            /// <summary>
+            /// Consumables
+            /// </summary>
+            public static readonly FlagDef rancidEggs =         new FlagDef("rancidEggs",       "Global", false, "PlayerData_Int",  "Rancid Eggs (0-80)");
+            public static readonly FlagDef simpleKeys =         new FlagDef("simpleKeys",       "Global", false, "PlayerData_Int",  "Simple Keys (0-4)");
 
             /// <summary>
             /// Trinkets
             /// </summary>
-            public static readonly FlagDef foundTrinket1 = new FlagDef("foundTrinket1", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef foundTrinket2 = new FlagDef("foundTrinket2", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef foundTrinket3 = new FlagDef("foundTrinket3", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef foundTrinket4 = new FlagDef("foundTrinket4", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef noTrinket1 = new FlagDef("noTrinket1", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef noTrinket2 = new FlagDef("noTrinket2", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef noTrinket3 = new FlagDef("noTrinket3", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef noTrinket4 = new FlagDef("noTrinket4", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef soldTrinket1 = new FlagDef("soldTrinket1", "Global", false, "PlayerData_Int");
-            public static readonly FlagDef soldTrinket2 = new FlagDef("soldTrinket2", "Global", false, "PlayerData_Int");
-            public static readonly FlagDef soldTrinket3 = new FlagDef("soldTrinket3", "Global", false, "PlayerData_Int");
-            public static readonly FlagDef soldTrinket4 = new FlagDef("soldTrinket4", "Global", false, "PlayerData_Int");
-            public static readonly FlagDef trinket1 = new FlagDef("trinket1", "Global", false, "PlayerData_Int");
-            public static readonly FlagDef trinket2 = new FlagDef("trinket2", "Global", false, "PlayerData_Int");
-            public static readonly FlagDef trinket3 = new FlagDef("trinket3", "Global", false, "PlayerData_Int");
-            public static readonly FlagDef trinket4 = new FlagDef("trinket4", "Global", false, "PlayerData_Int");
+            public static readonly FlagDef foundTrinket1 =      new FlagDef("foundTrinket1",    "Global", false, "PlayerData_Bool");
+            public static readonly FlagDef foundTrinket2 =      new FlagDef("foundTrinket2",    "Global", false, "PlayerData_Bool");
+            public static readonly FlagDef foundTrinket3 =      new FlagDef("foundTrinket3",    "Global", false, "PlayerData_Bool");
+            public static readonly FlagDef foundTrinket4 =      new FlagDef("foundTrinket4",    "Global", false, "PlayerData_Bool");
+            public static readonly FlagDef noTrinket1 =         new FlagDef("noTrinket1",       "Global", false, "PlayerData_Bool");
+            public static readonly FlagDef noTrinket2 =         new FlagDef("noTrinket2",       "Global", false, "PlayerData_Bool");
+            public static readonly FlagDef noTrinket3 =         new FlagDef("noTrinket3",       "Global", false, "PlayerData_Bool");
+            public static readonly FlagDef noTrinket4 =         new FlagDef("noTrinket4",       "Global", false, "PlayerData_Bool");
+            public static readonly FlagDef soldTrinket1 =       new FlagDef("soldTrinket1",     "Global", false, "PlayerData_Int");
+            public static readonly FlagDef soldTrinket2 =       new FlagDef("soldTrinket2",     "Global", false, "PlayerData_Int");
+            public static readonly FlagDef soldTrinket3 =       new FlagDef("soldTrinket3",     "Global", false, "PlayerData_Int");
+            public static readonly FlagDef soldTrinket4 =       new FlagDef("soldTrinket4",     "Global", false, "PlayerData_Int");
+            public static readonly FlagDef trinket1 =           new FlagDef("trinket1",         "Global", false, "PlayerData_Int",  "Wanderer's Journals (0-14)");
+            public static readonly FlagDef trinket2 =           new FlagDef("trinket2",         "Global", false, "PlayerData_Int",  "Hallownest Seals (0-17)");
+            public static readonly FlagDef trinket3 =           new FlagDef("trinket3",         "Global", false, "PlayerData_Int",  "King's Idols (0-8)");
+            public static readonly FlagDef trinket4 =           new FlagDef("trinket4",         "Global", false, "PlayerData_Int",  "Arcane Eggs (0-4)");
         #endregion
 
         #region Killed Enemy
@@ -694,36 +709,32 @@ namespace CabbyCodes.Flags
         #endregion
 
         #region NPC Status
-            public static readonly FlagDef Crossroads_45__Zombie_Myla = new FlagDef("Zombie Myla", SceneInstances.Crossroads_45.SceneName, false, "PersistentBoolData");
+            public static readonly FlagDef Crossroads_45__Zombie_Myla = new FlagDef("Zombie Myla", SceneInstances.Crossroads_45.SceneName, false, "PersistentBoolData", "Myla Zombied");
         #endregion
 
         #region Player Status
-            public static readonly FlagDef charmSlots = new FlagDef("charmSlots", "Global", false, "PlayerData_Int");
-            public static readonly FlagDef charmSlotsFilled = new FlagDef("charmSlotsFilled", "Global", false, "PlayerData_Int");
-            public static readonly FlagDef firstGeo = new FlagDef("firstGeo", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef hazardRespawnFacingRight = new FlagDef("hazardRespawnFacingRight", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef health = new FlagDef("health", "Global", false, "PlayerData_Int");
-            public static readonly FlagDef healthBlue = new FlagDef("healthBlue", "Global", false, "PlayerData_Int");
-            public static readonly FlagDef maxHealth = new FlagDef("maxHealth", "Global", false, "PlayerData_Int");
-            public static readonly FlagDef maxHealthBase = new FlagDef("maxHealthBase", "Global", false, "PlayerData_Int");
-            public static readonly FlagDef maxHealthCap = new FlagDef("maxHealthCap", "Global", false, "PlayerData_Int");
-            public static readonly FlagDef maxMP = new FlagDef("maxMP", "Global", false, "PlayerData_Int");
-            public static readonly FlagDef MPCharge = new FlagDef("MPCharge", "Global", false, "PlayerData_Int");
-            public static readonly FlagDef MPReserve = new FlagDef("MPReserve", "Global", false, "PlayerData_Int");
-            public static readonly FlagDef MPReserveCap = new FlagDef("MPReserveCap", "Global", false, "PlayerData_Int");
-            public static readonly FlagDef MPReserveMax = new FlagDef("MPReserveMax", "Global", false, "PlayerData_Int");
-            public static readonly FlagDef prevHealth = new FlagDef("prevHealth", "Global", false, "PlayerData_Int");
-        #endregion
-
-        #region Scene Updates
-            public static readonly FlagDef crossroadsInfected = new FlagDef("crossroadsInfected", "Global", false, "PlayerData_Bool");
+            public static readonly FlagDef charmSlots =                 new FlagDef("charmSlots",               "Global", false, "PlayerData_Int");
+            public static readonly FlagDef charmSlotsFilled =           new FlagDef("charmSlotsFilled",         "Global", false, "PlayerData_Int");
+            public static readonly FlagDef firstGeo =                   new FlagDef("firstGeo",                 "Global", false, "PlayerData_Bool"); // Found first geo
+            public static readonly FlagDef hazardRespawnFacingRight =   new FlagDef("hazardRespawnFacingRight", "Global", false, "PlayerData_Bool");
+            public static readonly FlagDef health =                     new FlagDef("health",                   "Global", false, "PlayerData_Int");
+            public static readonly FlagDef healthBlue =                 new FlagDef("healthBlue",               "Global", false, "PlayerData_Int");
+            public static readonly FlagDef maxHealth =                  new FlagDef("maxHealth",                "Global", false, "PlayerData_Int");
+            public static readonly FlagDef maxHealthBase =              new FlagDef("maxHealthBase",            "Global", false, "PlayerData_Int",  "Max Health (5-9)");
+            public static readonly FlagDef maxHealthCap =               new FlagDef("maxHealthCap",             "Global", false, "PlayerData_Int");
+            public static readonly FlagDef maxMP =                      new FlagDef("maxMP",                    "Global", false, "PlayerData_Int");
+            public static readonly FlagDef MPCharge =                   new FlagDef("MPCharge",                 "Global", false, "PlayerData_Int");
+            public static readonly FlagDef MPReserve =                  new FlagDef("MPReserve",                "Global", false, "PlayerData_Int");
+            public static readonly FlagDef MPReserveCap =               new FlagDef("MPReserveCap",             "Global", false, "PlayerData_Int");
+            public static readonly FlagDef MPReserveMax =               new FlagDef("MPReserveMax",             "Global", false, "PlayerData_Int");
+            public static readonly FlagDef prevHealth =                 new FlagDef("prevHealth",               "Global", false, "PlayerData_Int");
         #endregion
 
         #region UI
             public static readonly FlagDef showHealthUI = new FlagDef("showHealthUI", "Global", false, "PlayerData_Bool");
         #endregion
 
-        #region UNCATEGORIZED
+        #region UNCATEGORIZED SCENE FLAGS
             // Crossroads_01
             public static readonly FlagDef Crossroads_01__Secret_Mask = new FlagDef("Secret Mask", SceneInstances.Crossroads_01.SceneName, false, "PersistentBoolData");
             public static readonly FlagDef Crossroads_01__Shiny_Item = new FlagDef("Shiny Item", SceneInstances.Crossroads_01.SceneName, false, "PersistentBoolData");
@@ -847,6 +858,43 @@ namespace CabbyCodes.Flags
             // Crossroads_48
             public static readonly FlagDef Crossroads_48__Zombie_Guard = new FlagDef("Zombie Guard", SceneInstances.Crossroads_48.SceneName, true, "PersistentBoolData");
 
+            // Mines_01
+            public static readonly FlagDef Mines_01__Egg_Sac = new FlagDef("Egg Sac", SceneInstances.Mines_01.SceneName, false, "PersistentBoolData");
+            public static readonly FlagDef Mines_01__mine_1_quake_floor = new FlagDef("mine_1_quake_floor", SceneInstances.Mines_01.SceneName, false, "PersistentBoolData");
+
+            // Town
+            public static readonly FlagDef Town__Death_Respawn_Trigger = new FlagDef("Death Respawn Trigger", SceneInstances.Town.SceneName, false, "PersistentBoolData");
+            public static readonly FlagDef Town__Death_Respawn_Trigger_1 = new FlagDef("Death Respawn Trigger 1", SceneInstances.Town.SceneName, false, "PersistentBoolData");
+            public static readonly FlagDef Town__Door_Destroyer = new FlagDef("Door Destroyer", SceneInstances.Town.SceneName, false, "PersistentBoolData");
+            public static readonly FlagDef Town__Gravedigger_NPC = new FlagDef("Gravedigger NPC", SceneInstances.Town.SceneName, false, "PersistentBoolData");
+            public static readonly FlagDef Town__Interact_Reminder = new FlagDef("Interact Reminder", SceneInstances.Town.SceneName, false, "PersistentBoolData");
+            public static readonly FlagDef Town__Mines_Lever = new FlagDef("Mines Lever", SceneInstances.Town.SceneName, false, "PersistentBoolData");
+
+            // Tutorial_01
+            public static readonly FlagDef Tutorial_01__Break_Floor_1 = new FlagDef("Break Floor 1", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
+            public static readonly FlagDef Tutorial_01__Chest = new FlagDef("Chest", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
+            public static readonly FlagDef Tutorial_01__Collapser_Tute_01 = new FlagDef("Collapser Tute 01", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
+            public static readonly FlagDef Tutorial_01__Door = new FlagDef("Door", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
+            public static readonly FlagDef Tutorial_01__Health_Cocoon = new FlagDef("Health Cocoon", SceneInstances.Tutorial_01.SceneName, true, "PersistentBoolData");
+            public static readonly FlagDef Tutorial_01__Initial_Fall_Impact = new FlagDef("Initial Fall Impact", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
+            public static readonly FlagDef Tutorial_01__Interact_Reminder = new FlagDef("Interact Reminder", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
+            public static readonly FlagDef Tutorial_01__Inverse_Remasker = new FlagDef("Inverse Remasker", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
+            public static readonly FlagDef Tutorial_01__Secret_Mask = new FlagDef("Secret Mask", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
+            public static readonly FlagDef Tutorial_01__Secret_Sound_Region = new FlagDef("Secret Sound Region", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
+            public static readonly FlagDef Tutorial_01__Secret_Sound_Region_1 = new FlagDef("Secret Sound Region (1)", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
+            public static readonly FlagDef Tutorial_01__Shiny_Item_1 = new FlagDef("Shiny Item (1)", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
+            public static readonly FlagDef Tutorial_01__Tute_Door_1 = new FlagDef("Tute Door 1", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
+            public static readonly FlagDef Tutorial_01__Tute_Door_2 = new FlagDef("Tute Door 2", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
+            public static readonly FlagDef Tutorial_01__Tute_Door_3 = new FlagDef("Tute Door 3", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
+            public static readonly FlagDef Tutorial_01__Tute_Door_4 = new FlagDef("Tute Door 4", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
+            public static readonly FlagDef Tutorial_01__Tute_Door_5 = new FlagDef("Tute Door 5", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
+            public static readonly FlagDef Tutorial_01__Tute_Door_6 = new FlagDef("Tute Door 6", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
+            public static readonly FlagDef Tutorial_01__Tute_Door_7 = new FlagDef("Tute Door 7", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
+            public static readonly FlagDef Tutorial_01__fury_charm_remask = new FlagDef("fury charm_remask", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
+            public static readonly FlagDef Tutorial_01__inverse_remask_right = new FlagDef("inverse_remask_right", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
+        #endregion
+
+        #region UNCATEGORIZED GLOBAL FLAGS
             // Global
             public static readonly FlagDef ALADAR_encountered = new FlagDef("ALADAR_encountered", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef GALIEN_encountered = new FlagDef("GALIEN_encountered", "Global", false, "PlayerData_Bool");
@@ -985,7 +1033,6 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef divineInTown = new FlagDef("divineInTown", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef dreamMothConvo1 = new FlagDef("dreamMothConvo1", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef dreamNailConvo = new FlagDef("dreamNailConvo", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef dreamOrbs = new FlagDef("dreamOrbs", "Global", false, "PlayerData_Int");
             public static readonly FlagDef dreamOrbsSpent = new FlagDef("dreamOrbsSpent", "Global", false, "PlayerData_Int");
             public static readonly FlagDef dreamReward1 = new FlagDef("dreamReward1", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef dreamReward2 = new FlagDef("dreamReward2", "Global", false, "PlayerData_Bool");
@@ -1074,7 +1121,6 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef gaveFragileHeart = new FlagDef("gaveFragileHeart", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef gaveFragileStrength = new FlagDef("gaveFragileStrength", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef gaveSlykey = new FlagDef("gaveSlykey", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef geo = new FlagDef("geo", "Global", false, "PlayerData_Int");
             public static readonly FlagDef geoPool = new FlagDef("geoPool", "Global", false, "PlayerData_Int");
             public static readonly FlagDef ghostCoins = new FlagDef("ghostCoins", "Global", false, "PlayerData_Int");
             public static readonly FlagDef giantBuzzerDefeated = new FlagDef("giantBuzzerDefeated", "Global", false, "PlayerData_Bool");
@@ -1127,7 +1173,6 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef infectedKnightOrbsCollected = new FlagDef("infectedKnightOrbsCollected", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef invinciTest = new FlagDef("invinciTest", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef isFirstGame = new FlagDef("isFirstGame", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef isInvincible = new FlagDef("isInvincible", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef iseldaConvo1 = new FlagDef("iseldaConvo1", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef iseldaConvoGrimm = new FlagDef("iseldaConvoGrimm", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef iseldaCorniferHomeConvo = new FlagDef("iseldaCorniferHomeConvo", "Global", false, "PlayerData_Bool");
@@ -1590,7 +1635,6 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef sheoConvoOro = new FlagDef("sheoConvoOro", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef sheoConvoSly = new FlagDef("sheoConvoSly", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef showGeoUI = new FlagDef("showGeoUI", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef simpleKeys = new FlagDef("simpleKeys", "Global", false, "PlayerData_Int");
             public static readonly FlagDef slugEncounterComplete = new FlagDef("slugEncounterComplete", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef slyBeta = new FlagDef("slyBeta", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef slyConvoGrimm = new FlagDef("slyConvoGrimm", "Global", false, "PlayerData_Bool");
@@ -1706,41 +1750,6 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef zoteStatueWallBroken = new FlagDef("zoteStatueWallBroken", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef zoteTownConvo = new FlagDef("zoteTownConvo", "Global", false, "PlayerData_Int");
             public static readonly FlagDef zoteTrappedDeepnest = new FlagDef("zoteTrappedDeepnest", "Global", false, "PlayerData_Bool");
-
-            // Mines_01
-            public static readonly FlagDef Mines_01__Egg_Sac = new FlagDef("Egg Sac", SceneInstances.Mines_01.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Mines_01__mine_1_quake_floor = new FlagDef("mine_1_quake_floor", SceneInstances.Mines_01.SceneName, false, "PersistentBoolData");
-
-            // Town
-            public static readonly FlagDef Town__Death_Respawn_Trigger = new FlagDef("Death Respawn Trigger", SceneInstances.Town.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Town__Death_Respawn_Trigger_1 = new FlagDef("Death Respawn Trigger 1", SceneInstances.Town.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Town__Door_Destroyer = new FlagDef("Door Destroyer", SceneInstances.Town.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Town__Gravedigger_NPC = new FlagDef("Gravedigger NPC", SceneInstances.Town.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Town__Interact_Reminder = new FlagDef("Interact Reminder", SceneInstances.Town.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Town__Mines_Lever = new FlagDef("Mines Lever", SceneInstances.Town.SceneName, false, "PersistentBoolData");
-
-            // Tutorial_01
-            public static readonly FlagDef Tutorial_01__Break_Floor_1 = new FlagDef("Break Floor 1", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Tutorial_01__Chest = new FlagDef("Chest", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Tutorial_01__Collapser_Tute_01 = new FlagDef("Collapser Tute 01", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Tutorial_01__Door = new FlagDef("Door", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Tutorial_01__Health_Cocoon = new FlagDef("Health Cocoon", SceneInstances.Tutorial_01.SceneName, true, "PersistentBoolData");
-            public static readonly FlagDef Tutorial_01__Initial_Fall_Impact = new FlagDef("Initial Fall Impact", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Tutorial_01__Interact_Reminder = new FlagDef("Interact Reminder", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Tutorial_01__Inverse_Remasker = new FlagDef("Inverse Remasker", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Tutorial_01__Secret_Mask = new FlagDef("Secret Mask", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Tutorial_01__Secret_Sound_Region = new FlagDef("Secret Sound Region", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Tutorial_01__Secret_Sound_Region_1 = new FlagDef("Secret Sound Region (1)", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Tutorial_01__Shiny_Item_1 = new FlagDef("Shiny Item (1)", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Tutorial_01__Tute_Door_1 = new FlagDef("Tute Door 1", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Tutorial_01__Tute_Door_2 = new FlagDef("Tute Door 2", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Tutorial_01__Tute_Door_3 = new FlagDef("Tute Door 3", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Tutorial_01__Tute_Door_4 = new FlagDef("Tute Door 4", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Tutorial_01__Tute_Door_5 = new FlagDef("Tute Door 5", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Tutorial_01__Tute_Door_6 = new FlagDef("Tute Door 6", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Tutorial_01__Tute_Door_7 = new FlagDef("Tute Door 7", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Tutorial_01__fury_charm_remask = new FlagDef("fury charm_remask", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Tutorial_01__inverse_remask_right = new FlagDef("inverse_remask_right", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
         #endregion
     }
 }

@@ -6,19 +6,21 @@ namespace CabbyCodes.Patches.Inventory.Abilities
 {
     public class IsmasTearPatch : ISyncedReference<bool>
     {
+        private static readonly FlagDef flag = FlagInstances.hasAcidArmour;
+
         public bool Get()
         {
-            return FlagManager.GetBoolFlag(FlagInstances.hasAcidArmour);
+            return FlagManager.GetBoolFlag(flag);
         }
 
         public void Set(bool value)
         {
-            FlagManager.SetBoolFlag(FlagInstances.hasAcidArmour, value);
+            FlagManager.SetBoolFlag(flag, value);
         }
 
         public static void AddPanel()
         {
-            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new TogglePanel(new IsmasTearPatch(), "Isma's Tear"));
+            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new TogglePanel(new IsmasTearPatch(), flag.ReadableName));
         }
     }
 }

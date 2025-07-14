@@ -6,19 +6,21 @@ namespace CabbyCodes.Patches.Inventory.Upgrades
 {
     public class SalubrasBlessingPatch : ISyncedReference<bool>
     {
+        private static readonly FlagDef flag = FlagInstances.salubraBlessing;
+
         public bool Get()
         {
-            return FlagManager.GetBoolFlag(FlagInstances.salubraBlessing);
+            return FlagManager.GetBoolFlag(flag);
         }
 
         public void Set(bool value)
         {
-            FlagManager.SetBoolFlag(FlagInstances.salubraBlessing, value);
+            FlagManager.SetBoolFlag(flag, value);
         }
 
         public static void AddPanel()
         {
-            TogglePanel buttonPanel = new TogglePanel(new SalubrasBlessingPatch(), "Salubra's Blessing");
+            TogglePanel buttonPanel = new TogglePanel(new SalubrasBlessingPatch(), flag.ReadableName);
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(buttonPanel);
         }
     }

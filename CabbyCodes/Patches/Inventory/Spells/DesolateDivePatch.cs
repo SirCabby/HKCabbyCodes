@@ -7,14 +7,16 @@ namespace CabbyCodes.Patches.Inventory.Spells
 {
     public class DesolateDivePatch : ISyncedValueList
     {
+        private static readonly FlagDef flag = FlagInstances.quakeLevel;
+
         public int Get()
         {
-            return FlagManager.GetIntFlag(FlagInstances.quakeLevel);
+            return FlagManager.GetIntFlag(flag);
         }
 
         public void Set(int value)
         {
-            FlagManager.SetIntFlag(FlagInstances.quakeLevel, value);
+            FlagManager.SetIntFlag(flag, value);
         }
 
         public List<string> GetValueList()
@@ -28,7 +30,7 @@ namespace CabbyCodes.Patches.Inventory.Spells
         public static void AddPanel()
         {
             DesolateDivePatch patch = new DesolateDivePatch();
-            DropdownPanel dropdownPanel = new DropdownPanel(patch, "Desolate Dive / Descending Dark", Constants.DEFAULT_PANEL_HEIGHT);
+            DropdownPanel dropdownPanel = new DropdownPanel(patch, flag.ReadableName, Constants.DEFAULT_PANEL_HEIGHT);
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(dropdownPanel);
         }
     }

@@ -7,34 +7,21 @@ namespace CabbyCodes.Patches.Flags.NPC_Status
 {
     public class MylaWaifuPatch : ISyncedReference<bool>
     {
-        private static readonly string id = "Zombie Myla";
-        private static readonly string sceneName = SceneInstances.Crossroads_45.SceneName;
+        private static readonly FlagDef flag = FlagInstances.Crossroads_45__Zombie_Myla;
 
         public bool Get()
         {
-            // true = alive
-            return !FlagManager.GetBoolFlag(id, sceneName);
+            return FlagManager.GetBoolFlag(flag);
         }
 
         public void Set(bool value)
         {
-            bool wasAlive = Get();
-
-            if (value && !wasAlive)
-            {
-                // Set to false (alive) when we want Myla to be alive
-                FlagManager.SetBoolFlag(id, sceneName, false);
-            }
-            else if (!value && wasAlive)
-            {
-                // Set to true (zombie) when we want Myla to be dead
-                FlagManager.SetBoolFlag(id, sceneName, true);
-            }
+            FlagManager.SetBoolFlag(flag, value);
         }
 
         public static void AddPanel()
         {
-            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new TogglePanel(new MylaWaifuPatch(), "Myla Alive"));
+            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new TogglePanel(new MylaWaifuPatch(), flag.ReadableName));
         }
     }
 }

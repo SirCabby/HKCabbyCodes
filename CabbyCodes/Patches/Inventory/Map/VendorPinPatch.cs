@@ -6,21 +6,24 @@ namespace CabbyCodes.Patches.Inventory.Map
 {
     public class VendorPinPatch : ISyncedReference<bool>
     {
+        private static readonly FlagDef flag1 = FlagInstances.hasPinShop;
+        private static readonly FlagDef flag2 = FlagInstances.hasPin;
+
         public bool Get()
         {
-            return FlagManager.GetBoolFlag(FlagInstances.hasPinShop);
+            return FlagManager.GetBoolFlag(flag1);
         }
 
         public void Set(bool value)
         {
-            FlagManager.SetBoolFlag(FlagInstances.hasPinShop, value);
+            FlagManager.SetBoolFlag(flag1, value);
             if (value)
-                FlagManager.SetBoolFlag(FlagInstances.hasPin, true);
+                FlagManager.SetBoolFlag(flag2, true);
         }
 
         public static void AddPanel()
         {
-            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new TogglePanel(new VendorPinPatch(), "Vendor Pin"));
+            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new TogglePanel(new VendorPinPatch(), flag1.ReadableName));
         }
     }
 }

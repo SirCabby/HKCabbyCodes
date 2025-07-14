@@ -7,14 +7,16 @@ namespace CabbyCodes.Patches.Inventory.Spells
 {
     public class VengefulSpiritPatch : ISyncedValueList
     {
+        private static readonly FlagDef flag = FlagInstances.fireballLevel;
+
         public int Get()
         {
-            return FlagManager.GetIntFlag(FlagInstances.fireballLevel);
+            return FlagManager.GetIntFlag(flag);
         }
 
         public void Set(int value)
         {
-            FlagManager.SetIntFlag(FlagInstances.fireballLevel, value);
+            FlagManager.SetIntFlag(flag, value);
         }
 
         public List<string> GetValueList()
@@ -28,7 +30,7 @@ namespace CabbyCodes.Patches.Inventory.Spells
         public static void AddPanel()
         {
             VengefulSpiritPatch patch = new VengefulSpiritPatch();
-            DropdownPanel dropdownPanel = new DropdownPanel(patch, "Vengeful Spirit / Shade Soul", Constants.DEFAULT_PANEL_HEIGHT);
+            DropdownPanel dropdownPanel = new DropdownPanel(patch, flag.ReadableName, Constants.DEFAULT_PANEL_HEIGHT);
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(dropdownPanel);
         }
     }

@@ -6,19 +6,21 @@ namespace CabbyCodes.Patches.Inventory.Keys
 {
     public class CityCrestPatch : ISyncedReference<bool>
     {
+        private static readonly FlagDef flag = FlagInstances.hasCityKey;
+
         public bool Get()
         {
-            return FlagManager.GetBoolFlag(FlagInstances.hasCityKey);
+            return FlagManager.GetBoolFlag(flag);
         }
 
         public void Set(bool value)
         {
-            FlagManager.SetBoolFlag(FlagInstances.hasCityKey, value);
+            FlagManager.SetBoolFlag(flag, value);
         }
 
         public static void AddPanel()
         {
-            TogglePanel buttonPanel = new TogglePanel(new CityCrestPatch(), "City Crest");
+            TogglePanel buttonPanel = new TogglePanel(new CityCrestPatch(), flag.ReadableName);
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(buttonPanel);
         }
     }
