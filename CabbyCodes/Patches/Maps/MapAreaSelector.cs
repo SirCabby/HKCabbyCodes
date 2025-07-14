@@ -1,7 +1,6 @@
 using CabbyMenu.SyncedReferences;
 using System.Collections.Generic;
 using System.Linq;
-using CabbyCodes.Scenes;
 using static CabbyCodes.Scenes.SceneManagement;
 
 namespace CabbyCodes.Patches.Maps
@@ -10,6 +9,12 @@ namespace CabbyCodes.Patches.Maps
     {
         private static readonly List<string> areaNames = GetAreaNames().ToList();
         private int selectedAreaIndex = 0;
+
+        public MapAreaSelector()
+        {
+            // Set to current player area on initialization
+            SetToCurrentPlayerArea();
+        }
 
         public int Get()
         {
@@ -29,14 +34,26 @@ namespace CabbyCodes.Patches.Maps
             return areaNames;
         }
 
-        public string GetSelectedAreaName()
+        private void SetToCurrentPlayerArea()
         {
-            if (selectedAreaIndex >= 0 && selectedAreaIndex < areaNames.Count)
+            try
             {
-                return areaNames[selectedAreaIndex];
+                var currentScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
+                var sceneData = GetSceneData(currentScene);
+                if (sceneData != null)
+                {
+                    var currentAreaIndex = areaNames.IndexOf(sceneData.AreaName);
+                    if (currentAreaIndex >= 0)
+                    {
+                        selectedAreaIndex = currentAreaIndex;
+                    }
+                }
             }
-            // Default fallback - get the first area name from the list
-            return areaNames.Count > 0 ? areaNames[0] : AreaInstances.Dirtmouth.MapName;
+            catch
+            {
+                // If we can't get the current area, default to 0
+                selectedAreaIndex = 0;
+            }
         }
     }
 } 

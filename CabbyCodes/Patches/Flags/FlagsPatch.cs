@@ -21,6 +21,24 @@ namespace CabbyCodes.Patches.Flags
             FlagExtractionPatch.AddPanel();
             FlagMonitorPatch.AddPanel();
 
+            // Add Room Flags section
+            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Room Flags").SetColor(CheatPanel.headerColor));
+            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Toggling room flags will not update until entering the room").SetColor(CheatPanel.warningColor));
+            
+            // Add area selector dropdown
+            SceneFlagsAreaSelector areaSelector = new SceneFlagsAreaSelector();
+            DropdownPanel areaDropdownPanel = new DropdownPanel(areaSelector, "Select Area", Constants.DEFAULT_PANEL_HEIGHT);
+            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(areaDropdownPanel);
+            
+            // Add dynamic scene flags manager
+            SceneFlagsPanelManager sceneFlagsManager = new SceneFlagsPanelManager(areaSelector);
+            sceneFlagsManager.AddAllPanelsToMenu();
+            
+            // Add update action to handle area changes (for menu update loop)
+            areaDropdownPanel.updateActions.Add(sceneFlagsManager.UpdateVisibleArea);
+            // Hook dropdown value change event for immediate update
+            areaDropdownPanel.GetDropDownSync().GetCustomDropdown().onValueChanged.AddListener(_ => sceneFlagsManager.UpdateVisibleArea());
+
             //CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Boss Defeated").SetColor(CheatPanel.subHeaderColor));
             //CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Stag Stations").SetColor(CheatPanel.subHeaderColor));
         }

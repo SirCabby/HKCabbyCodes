@@ -30,9 +30,12 @@ namespace CabbyCodes.Patches.Flags.Triage
         // Fields to ignore during polling (noisy or not useful)
         private static readonly HashSet<string> ignoredFields = new HashSet<string>
         {
+            "damagedBlue",
             "disablePause",
             "hazardRespawnFacingRight",
             "health",
+            "healthBlue",
+            "isFirstGame",
             "geo",
             "MPCharge",
             "previousDarkness",

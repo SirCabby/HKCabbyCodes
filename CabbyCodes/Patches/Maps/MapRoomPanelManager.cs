@@ -98,8 +98,13 @@ namespace CabbyCodes.Patches.Maps
 
         public void AddAllPanelsToMenu()
         {
-            // Only add panels for the default area
-            ShowAreaPanels(currentVisibleArea);
+            // Get the selected area from the selector and show panels for that area
+            var areaNames = SceneManagement.GetAreaNames().ToList();
+            var selectedAreaIndex = areaSelector.Get();
+            string selectedArea = (selectedAreaIndex >= 0 && selectedAreaIndex < areaNames.Count)
+                ? areaNames[selectedAreaIndex]
+                : areaNames.Count > 0 ? areaNames[0] : AreaInstances.Dirtmouth.MapName;
+            ShowAreaPanels(selectedArea);
         }
 
         private void ToggleAllRooms(string mapName, bool setToOn)
@@ -128,7 +133,11 @@ namespace CabbyCodes.Patches.Maps
 
         public void UpdateVisibleArea()
         {
-            string selectedArea = areaSelector.GetSelectedAreaName();
+            var areaNames = SceneManagement.GetAreaNames().ToList();
+            var selectedAreaIndex = areaSelector.Get();
+            string selectedArea = (selectedAreaIndex >= 0 && selectedAreaIndex < areaNames.Count)
+                ? areaNames[selectedAreaIndex]
+                : areaNames.Count > 0 ? areaNames[0] : AreaInstances.Dirtmouth.MapName;
             // Always update panels, even if it's the same area (in case panels were cleared)
             ShowAreaPanels(selectedArea);
         }

@@ -26,13 +26,11 @@ namespace CabbyCodes.Flags.FlagData
             ["Crossroads_03"] = new List<FlagDef>
             {
                 FlagInstances.Crossroads_03__Break_Wall_2,
-                FlagInstances.Crossroads_03__Grub_Bottle,
                 FlagInstances.Crossroads_03__Toll_Gate_Switch
             },
             ["Crossroads_05"] = new List<FlagDef>
             {
                 FlagInstances.Crossroads_05__Geo_Rock_1,
-                FlagInstances.Crossroads_05__Grub_Bottle,
                 FlagInstances.Crossroads_05__Zombie_Runner
             },
             ["Crossroads_07"] = new List<FlagDef>
@@ -132,13 +130,8 @@ namespace CabbyCodes.Flags.FlagData
             {
                 FlagInstances.Crossroads_25__Soul_Totem_mini_two_horned
             },
-            ["Crossroads_31"] = new List<FlagDef>
-            {
-                FlagInstances.Crossroads_31__Grub_Bottle
-            },
             ["Crossroads_35"] = new List<FlagDef>
             {
-                FlagInstances.Crossroads_35__Grub_Bottle,
                 FlagInstances.Crossroads_35__Hatcher,
                 FlagInstances.Crossroads_35__Remasker,
                 FlagInstances.Crossroads_35__Soul_Totem_mini_horned
@@ -189,104 +182,7 @@ namespace CabbyCodes.Flags.FlagData
             },
             ["Crossroads_48"] = new List<FlagDef>
             {
-                FlagInstances.Crossroads_48__Grub_Bottle,
                 FlagInstances.Crossroads_48__Zombie_Guard
-            },
-
-            // Abyss
-            ["Abyss_17"] = new List<FlagDef>
-            {
-                FlagInstances.Abyss_17__Grub_Bottle
-            },
-            ["Abyss_19"] = new List<FlagDef>
-            {
-                FlagInstances.Abyss_19__Grub_Bottle
-            },
-
-            // Deepnest
-            ["Deepnest_03"] = new List<FlagDef>
-            {
-                FlagInstances.Deepnest_03__Grub_Bottle
-            },
-            ["Deepnest_31"] = new List<FlagDef>
-            {
-                FlagInstances.Deepnest_31__Grub_Bottle
-            },
-            ["Deepnest_36"] = new List<FlagDef>
-            {
-                FlagInstances.Deepnest_36__Grub_Bottle
-            },
-            ["Deepnest_39"] = new List<FlagDef>
-            {
-                FlagInstances.Deepnest_39__Grub_Bottle
-            },
-            ["Deepnest_East_11"] = new List<FlagDef>
-            {
-                FlagInstances.Deepnest_East_11__Grub_Bottle
-            },
-            ["Deepnest_East_14"] = new List<FlagDef>
-            {
-                FlagInstances.Deepnest_East_14__Grub_Bottle
-            },
-            ["Deepnest_Spider_Town"] = new List<FlagDef>
-            {
-                FlagInstances.Deepnest_Spider_Town__Grub_Bottle
-            },
-
-            // Fungus
-            ["Fungus1_06"] = new List<FlagDef>
-            {
-                FlagInstances.Fungus1_06__Grub_Bottle
-            },
-            ["Fungus1_07"] = new List<FlagDef>
-            {
-                FlagInstances.Fungus1_07__Grub_Bottle
-            },
-            ["Fungus1_13"] = new List<FlagDef>
-            {
-                FlagInstances.Fungus1_13__Grub_Bottle
-            },
-            ["Fungus1_21"] = new List<FlagDef>
-            {
-                FlagInstances.Fungus1_21__Grub_Bottle
-            },
-            ["Fungus1_28"] = new List<FlagDef>
-            {
-                FlagInstances.Fungus1_28__Grub_Bottle
-            },
-            ["Fungus2_18"] = new List<FlagDef>
-            {
-                FlagInstances.Fungus2_18__Grub_Bottle
-            },
-            ["Fungus2_20"] = new List<FlagDef>
-            {
-                FlagInstances.Fungus2_20__Grub_Bottle
-            },
-            ["Fungus3_10"] = new List<FlagDef>
-            {
-                FlagInstances.Fungus3_10__Grub_Bottle
-            },
-            ["Fungus3_22"] = new List<FlagDef>
-            {
-                FlagInstances.Fungus3_22__Grub_Bottle
-            },
-            ["Fungus3_47"] = new List<FlagDef>
-            {
-                FlagInstances.Fungus3_47__Grub_Bottle
-            },
-            ["Fungus3_48"] = new List<FlagDef>
-            {
-                FlagInstances.Fungus3_48__Grub_Bottle
-            },
-
-            // Hive
-            ["Hive_03"] = new List<FlagDef>
-            {
-                FlagInstances.Hive_03__Grub_Bottle
-            },
-            ["Hive_04"] = new List<FlagDef>
-            {
-                FlagInstances.Hive_04__Grub_Bottle
             },
 
             // Mines
@@ -295,67 +191,7 @@ namespace CabbyCodes.Flags.FlagData
                 FlagInstances.Mines_01__Egg_Sac,
                 FlagInstances.Mines_01__mine_1_quake_floor
             },
-            ["Mines_03"] = new List<FlagDef>
-            {
-                FlagInstances.Mines_03__Grub_Bottle
-            },
-            ["Mines_04"] = new List<FlagDef>
-            {
-                FlagInstances.Mines_04__Grub_Bottle
-            },
-            ["Mines_16"] = new List<FlagDef>
-            {
-                FlagInstances.Mines_16__Grub_Bottle
-            },
-            ["Mines_19"] = new List<FlagDef>
-            {
-                FlagInstances.Mines_19__Grub_Bottle
-            },
-            ["Mines_24"] = new List<FlagDef>
-            {
-                FlagInstances.Mines_24__Grub_Bottle
-            },
-            ["Mines_31"] = new List<FlagDef>
-            {
-                FlagInstances.Mines_31__Grub_Bottle
-            },
-            ["Mines_35"] = new List<FlagDef>
-            {
-                FlagInstances.Mines_35__Grub_Bottle
-            },
-
-            // Resting Grounds
-            ["RestingGrounds_10"] = new List<FlagDef>
-            {
-                FlagInstances.RestingGrounds_10__Grub_Bottle
-            },
-
-            // Ruins
-            ["Ruins1_05"] = new List<FlagDef>
-            {
-                FlagInstances.Ruins1_05__Grub_Bottle
-            },
-            ["Ruins1_32"] = new List<FlagDef>
-            {
-                FlagInstances.Ruins1_32__Grub_Bottle
-            },
-            ["Ruins2_03"] = new List<FlagDef>
-            {
-                FlagInstances.Ruins2_03__Grub_Bottle
-            },
-            ["Ruins2_07"] = new List<FlagDef>
-            {
-                FlagInstances.Ruins2_07__Grub_Bottle
-            },
-            ["Ruins2_11"] = new List<FlagDef>
-            {
-                FlagInstances.Ruins2_11__Grub_Bottle
-            },
-            ["Ruins_House_01"] = new List<FlagDef>
-            {
-                FlagInstances.Ruins_House_01__Grub_Bottle
-            },
-
+            
             // Town
             ["Town"] = new List<FlagDef>
             {
@@ -396,20 +232,6 @@ namespace CabbyCodes.Flags.FlagData
                 FlagInstances.Tutorial_01__Tute_Door_5,
                 FlagInstances.Tutorial_01__Tute_Door_6,
                 FlagInstances.Tutorial_01__Tute_Door_7
-            },
-
-            // Waterways
-            ["Waterways_04"] = new List<FlagDef>
-            {
-                FlagInstances.Waterways_04__Grub_Bottle
-            },
-            ["Waterways_13"] = new List<FlagDef>
-            {
-                FlagInstances.Waterways_13__Grub_Bottle
-            },
-            ["Waterways_14"] = new List<FlagDef>
-            {
-                FlagInstances.Waterways_14__Grub_Bottle
             }
         };
 
@@ -439,6 +261,15 @@ namespace CabbyCodes.Flags.FlagData
                 return flags.Count;
             }
             return 0;
+        }
+
+        /// <summary>
+        /// Gets all scene names that have flags defined.
+        /// </summary>
+        /// <returns>Collection of scene names that have flags</returns>
+        public static IEnumerable<string> GetAllSceneNamesWithFlags()
+        {
+            return FlagsByScene.Keys;
         }
     }
 } 
