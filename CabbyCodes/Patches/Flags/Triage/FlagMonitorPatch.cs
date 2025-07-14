@@ -6,7 +6,6 @@ using CabbyMenu.UI.CheatPanels;
 using System.Reflection;
 using System.Collections;
 using CabbyCodes.Flags;
-using CabbyCodes.Flags.FlagInfo;
 using System;
 
 namespace CabbyCodes.Patches.Flags.Triage
@@ -459,14 +458,9 @@ namespace CabbyCodes.Patches.Flags.Triage
                 HandleSceneDataInstanceChange();
             }
 
-            // Poll PersistentBoolData
             PollPersistentBoolData();
-            
-            // Poll PersistentIntData
             PollPersistentIntData();
-            
-            // Poll GeoRockData - TODO: Determine correct property name
-            // PollGeoRockData();
+            PollGeoRockData();
         }
 
         private static void PollPersistentBoolData()
@@ -481,7 +475,7 @@ namespace CabbyCodes.Patches.Flags.Triage
                 bool currentValue = pbd.activated;
                 previousSceneDataValues.TryGetValue(key, out object previousValue);
 
-                bool valueChanged = false;
+                bool valueChanged;
                 if (previousValue == null)
                 {
                     // Don't print initial state - just store the current value as baseline
@@ -514,7 +508,7 @@ namespace CabbyCodes.Patches.Flags.Triage
                 int currentValue = pid.value;
                 previousSceneDataValues.TryGetValue(key, out object previousValue);
 
-                bool valueChanged = false;
+                bool valueChanged;
                 if (previousValue == null)
                 {
                     // Don't print initial state - just store the current value as baseline
@@ -535,21 +529,27 @@ namespace CabbyCodes.Patches.Flags.Triage
             }
         }
 
-        // TODO: Determine correct property name for GeoRockData
-        /*
+        /// <summary>
+        /// Polls GeoRockData for changes and logs notifications when georocks are broken.
+        /// GeoRockData uses 'hitsLeft' integer to track state:
+        /// - hitsLeft > 0 = Georock is intact
+        /// - hitsLeft <= 0 = Georock is broken
+        /// </summary>
         private static void PollGeoRockData()
         {
-            if (SceneData.instance.geoRocks == null) return;
+            if (SceneData.instance?.geoRocks == null) return;
 
             foreach (var grd in SceneData.instance.geoRocks)
             {
                 if (!trackedSceneDataFields.Contains(grd.id)) continue;
 
                 string key = $"GeoRock_{grd.id}_{grd.sceneName}";
-                bool currentValue = grd.broken; // Need to determine correct property name
+                int currentHitsLeft = grd.hitsLeft;
+                bool currentValue = currentHitsLeft <= 0; // True if broken (no hits left)
+
                 previousSceneDataValues.TryGetValue(key, out object previousValue);
 
-                bool valueChanged = false;
+                bool valueChanged;
                 if (previousValue == null)
                 {
                     // Don't print initial state - just store the current value as baseline
@@ -564,11 +564,11 @@ namespace CabbyCodes.Patches.Flags.Triage
                 if (valueChanged)
                 {
                     previousSceneDataValues[key] = currentValue;
-                    string notification = $"[Scene: {grd.sceneName}] {grd.id} = {currentValue}";
+                    string status = currentValue ? "Broken" : $"Intact ({currentHitsLeft} hits left)";
+                    string notification = $"[Scene: {grd.sceneName}] GeoRock: {grd.id} = {status}";
                     AddNotification(notification);
                 }
             }
         }
-        */
     }
 } 
