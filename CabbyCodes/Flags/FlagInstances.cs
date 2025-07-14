@@ -194,6 +194,8 @@ namespace CabbyCodes.Flags
             // public static readonly FlagDef openingCreditsPlayed =       new FlagDef("openingCreditsPlayed",     "Global", false, "PlayerData_Bool", "Opening Credits Played on Game Start");
             public static readonly FlagDef permadeathMode =             new FlagDef("permadeathMode",           "Global", false, "PlayerData_Int",  "Steel Soul Mode (Permadeath)");
             // public static readonly FlagDef profileID =                  new FlagDef("profileID",                "Global", false, "PlayerData_Int");
+            // public static readonly FlagDef promptFocus =                new FlagDef("promptFocus",              "Global", false, "PlayerData_Bool", "Took damage after seeing Focus Tablet");
+            //public static readonly FlagDef seenFocusTablet =            new FlagDef("seenFocusTablet",          "Global", false, "PlayerData_Bool", "Passed by Focus Tablet");
             public static readonly FlagDef unlockedCompletionRate =     new FlagDef("unlockedCompletionRate",   "Global", false, "PlayerData_Bool", "World Sense");
         #endregion
 
@@ -1042,25 +1044,25 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef Mines_01__mine_1_quake_floor = new FlagDef("mine_1_quake_floor", SceneInstances.Mines_01.SceneName, false, "PersistentBoolData");
 
             // Town
-            public static readonly FlagDef Town__Death_Respawn_Trigger = new FlagDef("Death Respawn Trigger", SceneInstances.Town.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Town__Death_Respawn_Trigger_1 = new FlagDef("Death Respawn Trigger 1", SceneInstances.Town.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Town__Door_Destroyer = new FlagDef("Door Destroyer", SceneInstances.Town.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Town__Gravedigger_NPC = new FlagDef("Gravedigger NPC", SceneInstances.Town.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Town__Interact_Reminder = new FlagDef("Interact Reminder", SceneInstances.Town.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Town__Mines_Lever = new FlagDef("Mines Lever", SceneInstances.Town.SceneName, false, "PersistentBoolData");
+            // public static readonly FlagDef Town__Death_Respawn_Trigger =    new FlagDef("Death Respawn Trigger",    SceneInstances.Town.SceneName, false, "PersistentBoolData");
+            // public static readonly FlagDef Town__Death_Respawn_Trigger_1 =  new FlagDef("Death Respawn Trigger 1",  SceneInstances.Town.SceneName, false, "PersistentBoolData");
+            public static readonly FlagDef Town__Door_Destroyer =           new FlagDef("Door Destroyer",           SceneInstances.Town.SceneName, false, "PersistentBoolData", "Door broken open from King's Pass");
+            public static readonly FlagDef Town__Gravedigger_NPC =          new FlagDef("Gravedigger NPC",          SceneInstances.Town.SceneName, false, "PersistentBoolData");
+            public static readonly FlagDef Town__Interact_Reminder =        new FlagDef("Interact Reminder",        SceneInstances.Town.SceneName, false, "PersistentBoolData");
+            public static readonly FlagDef Town__Mines_Lever =              new FlagDef("Mines Lever",              SceneInstances.Town.SceneName, false, "PersistentBoolData");
 
             // Tutorial_01
-            public static readonly FlagDef Tutorial_01__Break_Floor_1 =         new FlagDef("Break Floor 1",            SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
+            public static readonly FlagDef Tutorial_01__Break_Floor_1 =         new FlagDef("Break Floor 1",            SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData", "Broke floor back up to top");
             public static readonly FlagDef Tutorial_01__Chest =                 new FlagDef("Chest",                    SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
             public static readonly FlagDef Tutorial_01__Collapser_Tute_01 =     new FlagDef("Collapser Tute 01",        SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData", "Fell through the collaspable floor");
-            public static readonly FlagDef Tutorial_01__Door =                  new FlagDef("Door",                     SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
+            public static readonly FlagDef Tutorial_01__Door =                  new FlagDef("Door",                     SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData", "Broke door open to Dirtmouth");
             public static readonly FlagDef Tutorial_01__Health_Cocoon =         new FlagDef("Health Cocoon",            SceneInstances.Tutorial_01.SceneName, true, "PersistentBoolData"); // Lifeblood Cocoon destroyed
             public static readonly FlagDef Tutorial_01__Initial_Fall_Impact =   new FlagDef("Initial Fall Impact",      SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData", "Player fell hard on game start");
             public static readonly FlagDef Tutorial_01__Interact_Reminder =     new FlagDef("Interact Reminder",        SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData", "Told how to Focus");
             public static readonly FlagDef Tutorial_01__Inverse_Remasker =      new FlagDef("Inverse Remasker",         SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
             public static readonly FlagDef Tutorial_01__Secret_Mask =           new FlagDef("Secret Mask",              SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
             public static readonly FlagDef Tutorial_01__Secret_Sound_Region =   new FlagDef("Secret Sound Region",      SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Tutorial_01__Secret_Sound_Region_1 = new FlagDef("Secret Sound Region (1)",  SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
+            public static readonly FlagDef Tutorial_01__Secret_Sound_Region_1 = new FlagDef("Secret Sound Region (1)",  SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData", "Found dark area right of spike pit");
             public static readonly FlagDef Tutorial_01__Shiny_Item_1 =          new FlagDef("Shiny Item (1)",           SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
             public static readonly FlagDef Tutorial_01__Tute_Door_1 =           new FlagDef("Tute Door 1",              SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData", "Intro Door 1");
             public static readonly FlagDef Tutorial_01__Tute_Door_2 =           new FlagDef("Tute Door 2",              SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData", "Intro Door 2");
@@ -1069,7 +1071,7 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef Tutorial_01__Tute_Door_5 =           new FlagDef("Tute Door 5",              SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData", "Intro Door 5");
             public static readonly FlagDef Tutorial_01__Tute_Door_6 =           new FlagDef("Tute Door 6",              SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData", "Intro Door 6");
             public static readonly FlagDef Tutorial_01__Tute_Door_7 =           new FlagDef("Tute Door 7",              SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData", "Intro Door 7");
-            public static readonly FlagDef Tutorial_01__fury_charm_remask =     new FlagDef("fury charm_remask",        SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
+            public static readonly FlagDef Tutorial_01__fury_charm_remask =     new FlagDef("fury charm_remask",        SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData", "Found dark area right of spike pit");
             public static readonly FlagDef Tutorial_01__inverse_remask_right =  new FlagDef("inverse_remask_right",     SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
         #endregion
 
@@ -1569,7 +1571,6 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef pooedFragileGreed = new FlagDef("pooedFragileGreed", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef pooedFragileHeart = new FlagDef("pooedFragileHeart", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef pooedFragileStrength = new FlagDef("pooedFragileStrength", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef promptFocus = new FlagDef("promptFocus", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef queenConvo_grimm1 = new FlagDef("queenConvo_grimm1", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef queenConvo_grimm2 = new FlagDef("queenConvo_grimm2", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef queenDung1 = new FlagDef("queenDung1", "Global", false, "PlayerData_Bool");
@@ -1616,7 +1617,6 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef seenColosseumTitle = new FlagDef("seenColosseumTitle", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef seenDoor4Finale = new FlagDef("seenDoor4Finale", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef seenDreamNailPrompt = new FlagDef("seenDreamNailPrompt", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef seenFocusTablet = new FlagDef("seenFocusTablet", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef seenGGWastes = new FlagDef("seenGGWastes", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef seenHunterMsg = new FlagDef("seenHunterMsg", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef seenJournalMsg = new FlagDef("seenJournalMsg", "Global", false, "PlayerData_Bool");
