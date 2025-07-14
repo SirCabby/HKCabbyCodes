@@ -871,27 +871,27 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef Town__Mines_Lever = new FlagDef("Mines Lever", SceneInstances.Town.SceneName, false, "PersistentBoolData");
 
             // Tutorial_01
-            public static readonly FlagDef Tutorial_01__Break_Floor_1 = new FlagDef("Break Floor 1", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Tutorial_01__Chest = new FlagDef("Chest", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Tutorial_01__Collapser_Tute_01 = new FlagDef("Collapser Tute 01", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Tutorial_01__Door = new FlagDef("Door", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Tutorial_01__Health_Cocoon = new FlagDef("Health Cocoon", SceneInstances.Tutorial_01.SceneName, true, "PersistentBoolData");
-            public static readonly FlagDef Tutorial_01__Initial_Fall_Impact = new FlagDef("Initial Fall Impact", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Tutorial_01__Interact_Reminder = new FlagDef("Interact Reminder", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Tutorial_01__Inverse_Remasker = new FlagDef("Inverse Remasker", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Tutorial_01__Secret_Mask = new FlagDef("Secret Mask", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Tutorial_01__Secret_Sound_Region = new FlagDef("Secret Sound Region", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Tutorial_01__Secret_Sound_Region_1 = new FlagDef("Secret Sound Region (1)", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Tutorial_01__Shiny_Item_1 = new FlagDef("Shiny Item (1)", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Tutorial_01__Tute_Door_1 = new FlagDef("Tute Door 1", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Tutorial_01__Tute_Door_2 = new FlagDef("Tute Door 2", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Tutorial_01__Tute_Door_3 = new FlagDef("Tute Door 3", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Tutorial_01__Tute_Door_4 = new FlagDef("Tute Door 4", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Tutorial_01__Tute_Door_5 = new FlagDef("Tute Door 5", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Tutorial_01__Tute_Door_6 = new FlagDef("Tute Door 6", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Tutorial_01__Tute_Door_7 = new FlagDef("Tute Door 7", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Tutorial_01__fury_charm_remask = new FlagDef("fury charm_remask", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Tutorial_01__inverse_remask_right = new FlagDef("inverse_remask_right", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
+            public static readonly FlagDef Tutorial_01__Break_Floor_1 =         new FlagDef("Break Floor 1",            SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
+            public static readonly FlagDef Tutorial_01__Chest =                 new FlagDef("Chest",                    SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
+            public static readonly FlagDef Tutorial_01__Collapser_Tute_01 =     new FlagDef("Collapser Tute 01",        SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
+            public static readonly FlagDef Tutorial_01__Door =                  new FlagDef("Door",                     SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
+            public static readonly FlagDef Tutorial_01__Health_Cocoon =         new FlagDef("Health Cocoon",            SceneInstances.Tutorial_01.SceneName, true, "PersistentBoolData");
+            public static readonly FlagDef Tutorial_01__Initial_Fall_Impact =   new FlagDef("Initial Fall Impact",      SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
+            public static readonly FlagDef Tutorial_01__Interact_Reminder =     new FlagDef("Interact Reminder",        SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData", "Told how to Focus");
+            public static readonly FlagDef Tutorial_01__Inverse_Remasker =      new FlagDef("Inverse Remasker",         SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
+            public static readonly FlagDef Tutorial_01__Secret_Mask =           new FlagDef("Secret Mask",              SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
+            public static readonly FlagDef Tutorial_01__Secret_Sound_Region =   new FlagDef("Secret Sound Region",      SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
+            public static readonly FlagDef Tutorial_01__Secret_Sound_Region_1 = new FlagDef("Secret Sound Region (1)",  SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
+            public static readonly FlagDef Tutorial_01__Shiny_Item_1 =          new FlagDef("Shiny Item (1)",           SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
+            public static readonly FlagDef Tutorial_01__Tute_Door_1 =           new FlagDef("Tute Door 1",              SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData", "Intro Door 1");
+            public static readonly FlagDef Tutorial_01__Tute_Door_2 =           new FlagDef("Tute Door 2",              SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData", "Intro Door 2");
+            public static readonly FlagDef Tutorial_01__Tute_Door_3 =           new FlagDef("Tute Door 3",              SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData", "Intro Door 3");
+            public static readonly FlagDef Tutorial_01__Tute_Door_4 =           new FlagDef("Tute Door 4",              SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData", "Intro Door 4");
+            public static readonly FlagDef Tutorial_01__Tute_Door_5 =           new FlagDef("Tute Door 5",              SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData", "Intro Door 5");
+            public static readonly FlagDef Tutorial_01__Tute_Door_6 =           new FlagDef("Tute Door 6",              SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData", "Intro Door 6");
+            public static readonly FlagDef Tutorial_01__Tute_Door_7 =           new FlagDef("Tute Door 7",              SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData", "Intro Door 7");
+            public static readonly FlagDef Tutorial_01__fury_charm_remask =     new FlagDef("fury charm_remask",        SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
+            public static readonly FlagDef Tutorial_01__inverse_remask_right =  new FlagDef("inverse_remask_right",     SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
         #endregion
 
         #region UNCATEGORIZED GLOBAL FLAGS
