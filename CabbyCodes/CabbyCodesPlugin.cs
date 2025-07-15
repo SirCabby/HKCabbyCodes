@@ -93,6 +93,7 @@ namespace CabbyCodes
             cabbyMenu.RegisterCategory("Grubs", GrubPatch.AddPanels);
             cabbyMenu.RegisterCategory("Hunter", HunterPatch.AddPanels);
             cabbyMenu.RegisterCategory("Flags", FlagsPatch.AddPanels);
+            cabbyMenu.RegisterCategory("Sprite Viewer", SpriteViewerPatch.AddPanels);
             cabbyMenu.RegisterCategory("Achievements", AchievementPatch.AddPanels);
             cabbyMenu.RegisterCategory("Settings", SettingsPatch.AddPanels);
 

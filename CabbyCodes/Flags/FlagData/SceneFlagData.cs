@@ -195,8 +195,8 @@ namespace CabbyCodes.Flags.FlagData
             // Town
             ["Town"] = new List<FlagDef>
             {
-                FlagInstances.Town__Death_Respawn_Trigger,
-                FlagInstances.Town__Death_Respawn_Trigger_1,
+                // FlagInstances.Town__Death_Respawn_Trigger,
+                // FlagInstances.Town__Death_Respawn_Trigger_1,
                 FlagInstances.Town__Door_Destroyer,
                 FlagInstances.Town__Gravedigger_NPC,
                 FlagInstances.Town__Interact_Reminder,

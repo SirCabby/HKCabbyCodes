@@ -5,6 +5,8 @@ using UnityEngine;
 using CabbyMenu.Utilities;
 using CabbyCodes.Flags.FlagInfo;
 using CabbyCodes.Flags.FlagData;
+using CabbyMenu.UI.Modders;
+using CabbyCodes.Flags;
 
 namespace CabbyCodes.Patches.Hunter
 {
@@ -34,7 +36,6 @@ namespace CabbyCodes.Patches.Hunter
         {
             RangeInputFieldPanel<int> panel = new RangeInputFieldPanel<int>(new HunterPatch(hunterInfo.EnemyName), KeyCodeMap.ValidChars.Numeric, Constants.MIN_HUNTER_KILLS, Constants.MAX_HUNTER_KILLS, hunterInfo.ReadableName);
             PanelAdder.AddToggleButton(panel, 0, new HunterKilledPatch(hunterInfo.EnemyName));
-
             return panel;
         }
 

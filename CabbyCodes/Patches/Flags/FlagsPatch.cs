@@ -38,9 +38,6 @@ namespace CabbyCodes.Patches.Flags
             areaDropdownPanel.updateActions.Add(sceneFlagsManager.UpdateVisibleArea);
             // Hook dropdown value change event for immediate update
             areaDropdownPanel.GetDropDownSync().GetCustomDropdown().onValueChanged.AddListener(_ => sceneFlagsManager.UpdateVisibleArea());
-
-            //CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Boss Defeated").SetColor(CheatPanel.subHeaderColor));
-            //CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Stag Stations").SetColor(CheatPanel.subHeaderColor));
         }
     }
 }
