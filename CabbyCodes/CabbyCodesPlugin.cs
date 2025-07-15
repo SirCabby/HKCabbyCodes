@@ -15,6 +15,7 @@ using CabbyCodes.Patches.Settings;
 using CabbyCodes.Patches.Teleport;
 using CabbyMenu.UI;
 using CabbyMenu.UI.Controls.InputField;
+using CabbyCodes.Patches.SpriteViewer;
 
 namespace CabbyCodes
 {

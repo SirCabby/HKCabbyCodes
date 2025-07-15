@@ -4,9 +4,8 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
-using CabbyCodes.Patches.SpriteViewer;
 
-namespace CabbyCodes.Patches
+namespace CabbyCodes.Patches.SpriteViewer
 {
     public class SpriteViewerPatch
     {
@@ -83,7 +82,18 @@ namespace CabbyCodes.Patches
 
             spriteDropdown.GetDropDownSync().GetCustomDropdown().onValueChanged.AddListener(_ => 
             {
-                spriteDisplay.UpdateSprite();
+                // Store the current panel's background color
+                var spriteDisplayColor = spriteDisplay.cheatPanel.GetComponent<Image>().color;
+
+                // Remove the current sprite display panel
+                CabbyCodesPlugin.cabbyMenu.RemoveCheatPanel(spriteDisplay);
+
+                // Create a new sprite display panel
+                spriteDisplay = new SpriteDisplayPanel();
+                spriteDisplay.cheatPanel.GetComponent<Image>().color = spriteDisplayColor;
+
+                // Add the new panel back to the menu
+                CabbyCodesPlugin.cabbyMenu.AddCheatPanel(spriteDisplay);
             });
 
             // Initialize with first collection if available
@@ -252,7 +262,6 @@ namespace CabbyCodes.Patches
             public void Set(int value)
             {
                 selectedCollectionIndex.Set(value);
-                var collectionName = GetSelectedCollection();
             }
 
             public List<string> GetValueList()
@@ -313,7 +322,5 @@ namespace CabbyCodes.Patches
                 return sprites;
             }
         }
-
-
     }
 } 
