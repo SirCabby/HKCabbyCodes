@@ -1,12 +1,9 @@
 using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
-using CabbyMenu.UI.Modders;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
-using CabbyCodes.Patches.Hunter;
-using CabbyMenu.UI;
 using CabbyCodes.Patches.SpriteViewer;
 
 namespace CabbyCodes.Patches

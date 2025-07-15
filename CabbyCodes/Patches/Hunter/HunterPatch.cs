@@ -5,8 +5,6 @@ using UnityEngine;
 using CabbyMenu.Utilities;
 using CabbyCodes.Flags.FlagInfo;
 using CabbyCodes.Flags.FlagData;
-using CabbyMenu.UI.Modders;
-using CabbyCodes.Flags;
 
 namespace CabbyCodes.Patches.Hunter
 {
