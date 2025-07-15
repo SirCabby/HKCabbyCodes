@@ -188,12 +188,12 @@ namespace CabbyCodes.Patches.Flags.Triage
             scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
             scaler.referenceResolution = new Vector2(1920, 1080);
             
-            // Ensure EventSystem exists (like CabbyMainMenu)
-            if (Object.FindObjectOfType<UnityEngine.EventSystems.EventSystem>() == null)
+            // Ensure EventSystem exists
+            if (Object.FindObjectOfType<EventSystem>() == null)
             {
                 GameObject eventSystem = new GameObject("EventSystem");
-                eventSystem.AddComponent<UnityEngine.EventSystems.EventSystem>();
-                eventSystem.AddComponent<UnityEngine.EventSystems.StandaloneInputModule>();
+                eventSystem.AddComponent<EventSystem>();
+                eventSystem.AddComponent<StandaloneInputModule>();
             }
             
             // Create background panel
