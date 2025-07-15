@@ -4,6 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using CabbyCodes.Patches.Hunter;
 using CabbyMenu.UI;
+using System.Linq;
 
 namespace CabbyCodes.Patches.SpriteViewer
 {
@@ -73,14 +74,114 @@ namespace CabbyCodes.Patches.SpriteViewer
                 var sprite = EnemySpriteManager.Instance.GetSprite(collectionName, spriteName);
                 if (sprite != null)
                 {
-                    spriteImageMod.SetSprite(sprite);
-
-                    // --- Dynamic panel resizing logic ---
+                    // --- Dynamic panel resizing logic (do this first to set up the panel and image correctly) ---
                     float nativeWidth = sprite.rect.width;
                     float nativeHeight = sprite.rect.height;
                     float scale = 2f;
                     float targetWidth = nativeWidth * scale;
                     float targetHeight = nativeHeight * scale;
+
+                    // We'll determine if we need to swap width/height after checking rotation below
+                    bool flipX = false;
+                    bool flipY = false;
+                    bool rotate90 = false;
+                    string flipModeStr = "None";
+
+                    // Set the sprite first
+                    spriteImageMod.SetSprite(sprite);
+
+                    // Set up the image anchors and size to fill the panel
+                    var image = spriteImageMod.Get();
+                    var imageRectTransform = image.rectTransform;
+                    imageRectTransform.anchorMin = Vector2.zero;
+                    imageRectTransform.anchorMax = Vector2.one;
+                    imageRectTransform.pivot = new Vector2(0.5f, 0.5f);
+                    imageRectTransform.anchoredPosition = Vector2.zero;
+                    imageRectTransform.sizeDelta = Vector2.zero;
+                    image.preserveAspect = true;
+
+                    // --- Flip/rotation logic based on FlipMode and tk2dSprite FlipX/FlipY ---
+                    try
+                    {
+                        // Find the tk2dSprite instance for this collection and sprite
+                        var allSprites = Object.FindObjectsOfType<MonoBehaviour>()
+                            .Where(mb => mb.GetType().Name == "tk2dSprite")
+                            .ToArray();
+                        foreach (var tk2dSprite in allSprites)
+                        {
+                            var collectionProp = tk2dSprite.GetType().GetProperty("Collection");
+                            if (collectionProp == null) continue;
+                            var collection = collectionProp.GetValue(tk2dSprite, null);
+                            if (collection == null) continue;
+                            var nameProp = collection.GetType().GetProperty("name");
+                            string colName = nameProp != null ? (string)nameProp.GetValue(collection, null) : "<unknown>";
+                            if (colName != collectionName) continue;
+
+                            // Try to get spriteDefinitions
+                            var spriteDefsProp = collection.GetType().GetProperty("spriteDefinitions");
+                            System.Array spriteDefs = null;
+                            if (spriteDefsProp != null)
+                                spriteDefs = spriteDefsProp.GetValue(collection, null) as System.Array;
+                            if (spriteDefs == null)
+                            {
+                                var spriteDefsField = collection.GetType().GetField("spriteDefinitions");
+                                if (spriteDefsField != null)
+                                    spriteDefs = spriteDefsField.GetValue(collection) as System.Array;
+                            }
+                            if (spriteDefs != null)
+                            {
+                                foreach (var def in spriteDefs)
+                                {
+                                    var nameField = def.GetType().GetField("name");
+                                    string defName = nameField != null ? (string)nameField.GetValue(def) : null;
+                                    if (defName == spriteName)
+                                    {
+                                        // --- Only log and use FlipMode flipped field ---
+                                        var flipModeField = def.GetType().GetField("flipped");
+                                        if (flipModeField != null)
+                                        {
+                                            var flipModeValue = flipModeField.GetValue(def);
+                                            if (flipModeValue != null)
+                                            {
+                                                flipModeStr = flipModeValue.ToString();
+                                                // Debug.Log($"[SpriteViewer] tk2dSpriteDefinition '{defName}' FlipMode flipped = {flipModeStr}");
+                                                if (flipModeStr == "TPackerCW" || flipModeStr == "Tk2d")
+                                                {
+                                                    rotate90 = true;
+                                                }
+                                            }
+                                        }
+
+                                        // Only log and use tk2dSprite FlipX/FlipY fields/properties
+                                        // var flipXProp = tk2dSprite.GetType().GetProperty("FlipX");
+                                        // var flipYProp = tk2dSprite.GetType().GetProperty("FlipY");
+                                        // if (flipXProp != null)
+                                        // {
+                                        //     flipX = (bool)flipXProp.GetValue(tk2dSprite, null);
+                                        //     Debug.Log($"[SpriteViewer] tk2dSprite FlipX = {flipX}");
+                                        // }
+                                        // if (flipYProp != null)
+                                        // {
+                                        //     flipY = (bool)flipYProp.GetValue(tk2dSprite, null);
+                                        //     Debug.Log($"[SpriteViewer] tk2dSprite FlipY = {flipY}");
+                                        // }
+
+                                        // Only process the first matching sprite
+                                        break;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    catch (System.Exception)
+                    {
+                    }
+
+                    // Now that we know if we need to rotate, swap width/height for the background panel if needed
+                    if (rotate90)
+                    {
+                        (targetHeight, targetWidth) = (targetWidth, targetHeight);
+                    }
 
                     // Resize the background panel and layout element
                     var panelRect = spriteDisplayPanel.GetComponent<RectTransform>();
@@ -90,15 +191,16 @@ namespace CabbyCodes.Patches.SpriteViewer
                     panelLayout.minWidth = targetWidth;
                     panelLayout.minHeight = targetHeight;
 
-                    // Make the image fill the panel
-                    var image = spriteImageMod.Get();
-                    var rectTransform = image.rectTransform;
-                    rectTransform.anchorMin = Vector2.zero;
-                    rectTransform.anchorMax = Vector2.one;
-                    rectTransform.pivot = new Vector2(0.5f, 0.5f);
-                    rectTransform.anchoredPosition = Vector2.zero;
-                    rectTransform.sizeDelta = Vector2.zero;
-                    image.preserveAspect = true;
+                    // Now apply rotation/flipping to the image
+                    if (rotate90)
+                    {
+                        imageRectTransform.localEulerAngles = new Vector3(0, 0, 90f);
+                    }
+                    else
+                    {
+                        imageRectTransform.localEulerAngles = Vector3.zero;
+                    }
+                    imageRectTransform.localScale = new Vector3(flipX ? -1 : 1, flipY ? -1 : 1, 1);
 
                     // Force layout rebuild on this cheat panel and the parent cheat content area
                     LayoutRebuilder.ForceRebuildLayoutImmediate(cheatPanel.GetComponent<RectTransform>());
