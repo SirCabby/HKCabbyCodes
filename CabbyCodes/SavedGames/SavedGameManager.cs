@@ -180,6 +180,20 @@ namespace CabbyCodes.SavedGames
                 gameManager.playerData = saveGameData.playerData;
                 SceneData.instance = saveGameData.sceneData;
                 gameManager.sceneData = saveGameData.sceneData;
+                
+                // Restore the last loaded slot after loading custom save
+                if (Patches.Settings.CustomSaveLoadPatch.LastLoadedSlot >= 0)
+                {
+                    if (GameManager.instance != null)
+                    {
+                        GameManager.instance.profileID = Patches.Settings.CustomSaveLoadPatch.LastLoadedSlot;
+                    }
+                    if (PlayerData.instance != null && PlayerData.instance.profileID != GameManager.instance.profileID)
+                    {
+                        PlayerData.instance.profileID = GameManager.instance.profileID;
+                    }
+                }
+
                 gameManager.inputHandler.RefreshPlayerData();
                 gameManager.ContinueGame();
                 if (!string.IsNullOrEmpty(saveGameData.sceneName))

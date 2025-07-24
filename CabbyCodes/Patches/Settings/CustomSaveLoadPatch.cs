@@ -183,6 +183,11 @@ namespace CabbyCodes.Patches.Settings
         /// <param name="saveFileName">The name of the save file to load.</param>
         private static void LoadCustomSave(string saveFileName)
         {
+            // Cache the current slot before leaving (in case it changed)
+            if (GameManager.instance != null)
+            {
+                LastLoadedSlot = GameManager.instance.profileID;
+            }
             // Instead of loading immediately, set up QuickStartPatch to load after menu
             QuickStartPatch.CustomFileToLoad = saveFileName;
             // Start coroutine to return to main menu
@@ -242,6 +247,11 @@ namespace CabbyCodes.Patches.Settings
         /// List of save file panels that need to be refreshed.
         /// </summary>
         private static readonly List<CheatPanel> saveFilePanels = new List<CheatPanel>();
+
+        /// <summary>
+        /// Tracks the last loaded vanilla slot (profileID) for restoring after custom save load.
+        /// </summary>
+        public static int LastLoadedSlot = -1;
 
         /// <summary>
         /// Applies Harmony patches for custom save/load functionality.

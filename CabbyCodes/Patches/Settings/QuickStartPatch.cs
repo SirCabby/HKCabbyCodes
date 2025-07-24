@@ -286,6 +286,12 @@ namespace CabbyCodes.Patches.Settings
             
             // Now that main menu is initialized, load the game directly
             gameManager.LoadGameFromUI(slotNumber);
+            
+            // Update the slot cache when loading a normal slot
+            if (PlayerData.instance != null)
+            {
+                CustomSaveLoadPatch.LastLoadedSlot = PlayerData.instance.profileID;
+            }
         }
 
         /// <summary>
@@ -296,7 +302,7 @@ namespace CabbyCodes.Patches.Settings
             if (!skipIntroScreens.Value) return true; // Continue with original method
 
             // Start the coroutine that skips intro and goes directly to main menu
-            __instance.StartCoroutine(SkipIntroAndGoToMainMenu(__instance));
+            __instance.StartCoroutine(SkipIntroAndGoToMainMenu());
             
             return false; // Skip the original method
         }
@@ -304,7 +310,7 @@ namespace CabbyCodes.Patches.Settings
         /// <summary>
         /// Coroutine to skip intro and go directly to main menu.
         /// </summary>
-        private static IEnumerator SkipIntroAndGoToMainMenu(StartManager startManager)
+        private static IEnumerator SkipIntroAndGoToMainMenu()
         {
             // Wait a short moment for any initialization
             yield return new WaitForSeconds(0.1f);
