@@ -3,6 +3,7 @@ using CabbyMenu.UI.CheatPanels;
 using System.Collections.Generic;
 using static CabbyCodes.Scenes.SceneManagement;
 using CabbyCodes.Flags;
+using CabbyCodes.SavedGames;
 
 namespace CabbyCodes.Patches.Maps
 {
@@ -30,7 +31,10 @@ namespace CabbyCodes.Patches.Maps
             }
             else if (!value && Get())
             {
+                // Remove the flag first
                 FlagManager.RemoveFromListFlag("scenesMapped", "Global", roomName);
+                // Reload to refresh map ui
+                GameReloadManager.SaveAndReload();
             }
         }
 

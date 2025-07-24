@@ -1,14 +1,10 @@
 using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
-using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Runtime.Serialization.Formatters.Binary;
-using System.Text;
 using UnityEngine;
 using CabbyMenu.Utilities;
 using GlobalEnums;
+using CabbyCodes.SavedGames;
 
 namespace CabbyCodes.Patches.Settings
 {
@@ -18,126 +14,9 @@ namespace CabbyCodes.Patches.Settings
     public class CustomSaveLoadPatch
     {
         /// <summary>
-        /// File extension for custom save files.
-        /// </summary>
-        private const string SAVE_FILE_EXTENSION = ".dat";
-
-        /// <summary>
         /// Flag to track if patches have been applied.
         /// </summary>
         private static bool patchesApplied = false;
-
-        /// <summary>
-        /// Gets the CabbySaves directory path.
-        /// </summary>
-        /// <returns>The full path to the CabbySaves directory.</returns>
-        public static string GetCabbySavesDirectory()
-        {
-            // Get the base save directory from the game
-            string baseSaveDir = Application.persistentDataPath;
-            string cabbySavesDir = Path.Combine(baseSaveDir, "CabbySaves");
-            
-            // Ensure the directory exists
-            if (!Directory.Exists(cabbySavesDir))
-            {
-                Directory.CreateDirectory(cabbySavesDir);
-            }
-            
-            return cabbySavesDir;
-        }
-
-        /// <summary>
-        /// Saves the current game state to a custom save file.
-        /// </summary>
-        /// <param name="saveName">The name for the save file (optional, will use timestamp if null/empty).</param>
-        /// <param name="callback">Callback to execute when save completes.</param>
-        public static void SaveCustomGame(string saveName, Action<bool> callback = null)
-        {
-            if (GameManager.instance == null)
-            {
-                callback?.Invoke(false);
-                return;
-            }
-
-            // Generate filename
-            string fileName = GenerateSaveFileName(saveName);
-            string filePath = Path.Combine(GetCabbySavesDirectory(), fileName);
-
-            // Use the vanilla save logic but redirect the output
-            SaveCustomGameInternal(filePath, callback);
-        }
-
-        /// <summary>
-        /// Loads a custom save file.
-        /// </summary>
-        /// <param name="fileName">The name of the save file to load.</param>
-        /// <param name="callback">Callback to execute when load completes.</param>
-        public static void LoadCustomGame(string fileName, Action<bool> callback = null)
-        {
-            if (GameManager.instance == null)
-            {
-                callback?.Invoke(false);
-                return;
-            }
-
-            // Ensure UI is set up for continue (matches vanilla flow)
-            GameManager.instance.ui?.ContinueGame();
-
-            string filePath = Path.Combine(GetCabbySavesDirectory(), fileName);
-            
-            if (!File.Exists(filePath))
-            {
-                callback?.Invoke(false);
-                return;
-            }
-
-            // Use the vanilla load logic but read from our custom file
-            LoadCustomGameInternal(filePath, callback);
-        }
-
-        /// <summary>
-        /// Gets a list of available custom save files.
-        /// </summary>
-        /// <returns>List of save file names.</returns>
-        public static List<string> GetCustomSaveFiles()
-        {
-            string cabbySavesDir = GetCabbySavesDirectory();
-            
-            if (!Directory.Exists(cabbySavesDir))
-            {
-                return new List<string>();
-            }
-
-            return Directory.GetFiles(cabbySavesDir, "*" + SAVE_FILE_EXTENSION)
-                           .Select(Path.GetFileName)
-                           .Where(name => !string.IsNullOrEmpty(name))
-                           .ToList();
-        }
-
-        /// <summary>
-        /// Deletes a custom save file.
-        /// </summary>
-        /// <param name="fileName">The name of the save file to delete.</param>
-        /// <returns>True if the file was deleted successfully, false otherwise.</returns>
-        public static bool DeleteCustomSave(string fileName)
-        {
-            string filePath = Path.Combine(GetCabbySavesDirectory(), fileName);
-            
-            if (File.Exists(filePath))
-            {
-                try
-                {
-                    File.Delete(filePath);
-                    return true;
-                }
-                catch (Exception ex)
-                {
-                    Debug.LogError($"Failed to delete custom save file {fileName}: {ex.Message}");
-                }
-            }
-            
-            return false;
-        }
 
         /// <summary>
         /// Adds all custom save/load panels to the mod menu.
@@ -208,7 +87,7 @@ namespace CabbyCodes.Patches.Settings
         /// </summary>
         private static void LoadExistingSaveFiles()
         {
-            List<string> saveFiles = GetCustomSaveFiles();
+            List<string> saveFiles = SavedGameManager.GetCustomSaveFiles();
             
             foreach (string saveFileName in saveFiles)
             {
@@ -239,7 +118,7 @@ namespace CabbyCodes.Patches.Settings
         private static void AddCustomSavePanel(string saveFileName)
         {
             // Convert file name to display name for the UI
-            string displayName = GetDisplayNameFromFileName(saveFileName);
+            string displayName = SavedGameManager.GetDisplayNameFromFileName(saveFileName);
             
             ButtonPanel buttonPanel = new ButtonPanel(() => { LoadCustomSave(saveFileName); }, "Load", displayName);
 
@@ -253,7 +132,7 @@ namespace CabbyCodes.Patches.Settings
             GameObject destroyButton = PanelAdder.AddDestroyButtonToPanel(buttonPanel, () =>
             {
                 // Remove the save file
-                bool deleted = DeleteCustomSave(saveFileName);
+                bool deleted = SavedGameManager.DeleteCustomSave(saveFileName);
                 if (deleted)
                 {
                     // Remove the panel from tracking and menu
@@ -276,7 +155,7 @@ namespace CabbyCodes.Patches.Settings
             // Get the custom name if provided
             string customName = ((customSaveNameRef?.Get()) ?? "").Trim();
             
-            SaveCustomGame(customName, (success) =>
+            SavedGameManager.SaveCustomGame(customName, (success) =>
             {
                 if (success)
                 {
@@ -384,187 +263,6 @@ namespace CabbyCodes.Patches.Settings
         private static void InitializeConfig()
         {
             // No configuration entries needed for custom save/load
-        }
-
-        /// <summary>
-        /// Generates a save file name from the provided name or timestamp.
-        /// </summary>
-        /// <param name="saveName">The user-provided save name (can be null/empty).</param>
-        /// <returns>The generated filename with SAVE_FILE_EXTENSION extension.</returns>
-        private static string GenerateSaveFileName(string saveName)
-        {
-            if (string.IsNullOrWhiteSpace(saveName))
-            {
-                // Use timestamp format: YYYY-MM-DD_HH-MM-SS
-                return DateTime.Now.ToString("yyyy-MM-dd_HH-mm-ss") + SAVE_FILE_EXTENSION;
-            }
-            else
-            {
-                // Sanitize the filename to remove invalid characters and convert spaces to underscores
-                string sanitizedName = string.Join("_", saveName.Split(Path.GetInvalidFileNameChars()));
-                // Convert spaces to underscores for the actual file name
-                sanitizedName = sanitizedName.Replace(" ", "_");
-                return sanitizedName + SAVE_FILE_EXTENSION;
-            }
-        }
-
-        /// <summary>
-        /// Converts a file name back to a display name by removing extension and converting underscores to spaces.
-        /// </summary>
-        /// <param name="fileName">The file name to convert.</param>
-        /// <returns>The display name without extension and with spaces instead of underscores.</returns>
-        private static string GetDisplayNameFromFileName(string fileName)
-        {
-            if (string.IsNullOrEmpty(fileName))
-            {
-                return fileName;
-            }
-
-            // Remove the file extension
-            string nameWithoutExtension = Path.GetFileNameWithoutExtension(fileName);
-            
-            // Convert underscores back to spaces for display
-            return nameWithoutExtension.Replace("_", " ");
-        }
-
-        /// <summary>
-        /// Internal method to save the game using vanilla logic but to a custom file.
-        /// </summary>
-        /// <param name="filePath">The full path where to save the file.</param>
-        /// <param name="callback">Callback to execute when save completes.</param>
-        private static void SaveCustomGameInternal(string filePath, Action<bool> callback)
-        {
-            try
-            {
-                // Get the current game state
-                GameManager gameManager = GameManager.instance;
-                if (gameManager.playerData == null || gameManager.sceneData == null)
-                {
-                    callback?.Invoke(false);
-                    return;
-                }
-
-                // Save level state first (like vanilla does)
-                gameManager.SaveLevelState();
-
-                // Update player data like vanilla does
-                // Note: sessionPlayTimer is private, so we'll use the current play time
-                gameManager.playerData.playTime = gameManager.PlayTime;
-                gameManager.playerData.version = "1.5.78.11833";
-                gameManager.playerData.profileID = -1; // Use -1 to indicate custom save
-                gameManager.playerData.CountGameCompletion();
-
-                // Capture current scene and position
-                string currentSceneName = GameManager.GetBaseSceneName(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
-                Vector2 currentPosition = Vector2.zero;
-                
-                // Get current player position if hero is available
-                if (gameManager.hero_ctrl != null && gameManager.hero_ctrl.transform != null)
-                {
-                    currentPosition = new Vector2(gameManager.hero_ctrl.transform.position.x, gameManager.hero_ctrl.transform.position.y);
-                }
-
-                // Create the save data structure (extends vanilla with scene/position data)
-                var saveGameData = new SaveGameData(gameManager.playerData, gameManager.sceneData, currentSceneName, currentPosition);
-                
-                // Serialize to JSON (same as vanilla)
-                string jsonData = JsonUtility.ToJson(saveGameData);
-                
-                // Apply encryption if the game uses it
-                byte[] fileData;
-                if (gameManager.gameConfig.useSaveEncryption && !Platform.Current.IsFileSystemProtected)
-                {
-                    string encryptedData = Encryption.Encrypt(jsonData);
-                    BinaryFormatter binaryFormatter = new BinaryFormatter();
-                    using (MemoryStream memoryStream = new MemoryStream())
-                    {
-                        binaryFormatter.Serialize(memoryStream, encryptedData);
-                        fileData = memoryStream.ToArray();
-                    }
-                }
-                else
-                {
-                    fileData = Encoding.UTF8.GetBytes(jsonData);
-                }
-
-                // Write to our custom file
-                File.WriteAllBytes(filePath, fileData);
-                
-                callback?.Invoke(true);
-            }
-            catch (Exception ex)
-            {
-                Debug.LogError($"Failed to save custom game to {filePath}: {ex.Message}");
-                callback?.Invoke(false);
-            }
-        }
-
-        /// <summary>
-        /// Internal method to load the game using vanilla logic but from a custom file.
-        /// </summary>
-        /// <param name="filePath">The full path of the file to load.</param>
-        /// <param name="callback">Callback to execute when load completes.</param>
-        private static void LoadCustomGameInternal(string filePath, Action<bool> callback)
-        {
-            try
-            {
-                // Read the file data
-                byte[] fileData = File.ReadAllBytes(filePath);
-                
-                GameManager gameManager = GameManager.instance;
-                
-                // Deserialize using the same logic as vanilla
-                string jsonData;
-                if (gameManager.gameConfig.useSaveEncryption && !Platform.Current.IsFileSystemProtected)
-                {
-                    BinaryFormatter binaryFormatter = new BinaryFormatter();
-                    using (MemoryStream memoryStream = new MemoryStream(fileData))
-                    {
-                        string encryptedData = (string)binaryFormatter.Deserialize(memoryStream);
-                        jsonData = Encryption.Decrypt(encryptedData);
-                    }
-                }
-                else
-                {
-                    jsonData = Encoding.UTF8.GetString(fileData);
-                }
-
-                SaveGameData saveGameData = JsonUtility.FromJson<SaveGameData>(jsonData);
-                
-                // Apply the loaded data like vanilla does
-                PlayerData.instance = saveGameData.playerData;
-                gameManager.playerData = saveGameData.playerData;
-                SceneData.instance = saveGameData.sceneData;
-                gameManager.sceneData = saveGameData.sceneData;
-                
-                // Update input handler
-                gameManager.inputHandler.RefreshPlayerData();
-
-                // Call ContinueGame to trigger the normal transition (matches vanilla flow)
-                // Note: This will fade out, load the correct scene, and handle all state
-                gameManager.ContinueGame();
-
-                // Restore the hero position after the scene loads (if available)
-                if (!string.IsNullOrEmpty(saveGameData.sceneName))
-                {
-                    Vector2 targetPosition = saveGameData.GetPlayerPosition();
-                    // Use a local handler to ensure correct unsubscription
-                    void handler()
-                    {
-                        OnFinishedEnteringSceneLoad(targetPosition);
-                        gameManager.OnFinishedEnteringScene -= handler;
-                    }
-
-                    gameManager.OnFinishedEnteringScene += handler;
-                }
-
-                callback?.Invoke(true);
-            }
-            catch (Exception ex)
-            {
-                Debug.LogError($"Failed to load custom game from {filePath}: {ex.Message}");
-                callback?.Invoke(false);
-            }
         }
     }
 } 

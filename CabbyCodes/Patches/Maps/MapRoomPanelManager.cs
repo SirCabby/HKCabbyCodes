@@ -4,8 +4,8 @@ using System.Linq;
 using UnityEngine;
 using CabbyCodes.Scenes;
 using static CabbyCodes.Scenes.SceneManagement;
-using static CabbyCodes.Scenes.Areas;
 using CabbyCodes.Flags;
+using CabbyCodes.SavedGames;
 
 namespace CabbyCodes.Patches.Maps
 {
@@ -14,7 +14,6 @@ namespace CabbyCodes.Patches.Maps
         private static readonly Vector2 buttonSize = new Vector2(120, 60);
         private readonly MapAreaSelector areaSelector;
         private readonly Dictionary<string, List<string>> areaRooms = new Dictionary<string, List<string>>();
-        private string currentVisibleArea = GetAllAreaNames().FirstOrDefault() ?? AreaInstances.Dirtmouth.MapName;
         private readonly List<CheatPanel> currentlyAddedPanels = new List<CheatPanel>();
 
         public MapRoomPanelManager(MapAreaSelector areaSelector)
@@ -79,7 +78,6 @@ namespace CabbyCodes.Patches.Maps
                 CabbyCodesPlugin.cabbyMenu.AddCheatPanel(panel);
                 currentlyAddedPanels.Add(panel);
             }
-            currentVisibleArea = areaName;
         }
 
         public void HideAllPanels()
@@ -99,7 +97,7 @@ namespace CabbyCodes.Patches.Maps
         public void AddAllPanelsToMenu()
         {
             // Get the selected area from the selector and show panels for that area
-            var areaNames = SceneManagement.GetAreaNames().ToList();
+            var areaNames = GetAreaNames().ToList();
             var selectedAreaIndex = areaSelector.Get();
             string selectedArea = (selectedAreaIndex >= 0 && selectedAreaIndex < areaNames.Count)
                 ? areaNames[selectedAreaIndex]
@@ -109,6 +107,7 @@ namespace CabbyCodes.Patches.Maps
 
         private void ToggleAllRooms(string mapName, bool setToOn)
         {
+            bool anyToggledOff = false;
             foreach (string roomName in MapRoomPatch.roomsInMaps[mapName])
             {
                 if (setToOn && !FlagManager.ListFlagContains("scenesMapped", "Global", roomName))
@@ -118,6 +117,7 @@ namespace CabbyCodes.Patches.Maps
                 else if (!setToOn && FlagManager.ListFlagContains("scenesMapped", "Global", roomName))
                 {
                     FlagManager.RemoveFromListFlag("scenesMapped", "Global", roomName);
+                    anyToggledOff = true;
                 }
             }
 
@@ -129,11 +129,17 @@ namespace CabbyCodes.Patches.Maps
                     togglePanel.Update();
                 }
             }
+
+            // If any room was toggled off, trigger the reload
+            if (!setToOn && anyToggledOff)
+            {
+                GameReloadManager.SaveAndReload();
+            }
         }
 
         public void UpdateVisibleArea()
         {
-            var areaNames = SceneManagement.GetAreaNames().ToList();
+            var areaNames = GetAreaNames().ToList();
             var selectedAreaIndex = areaSelector.Get();
             string selectedArea = (selectedAreaIndex >= 0 && selectedAreaIndex < areaNames.Count)
                 ? areaNames[selectedAreaIndex]

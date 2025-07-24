@@ -7,6 +7,7 @@ using UnityEngine;
 using System.Collections;
 using GlobalEnums;
 using CabbyMenu.Utilities;
+using CabbyCodes.SavedGames;
 
 namespace CabbyCodes.Patches.Settings
 {
@@ -210,7 +211,7 @@ namespace CabbyCodes.Patches.Settings
                     string fileToLoad = CustomFileToLoad;
                     CustomFileToLoad = null;
                     CabbyCodesPlugin.BLogger.LogDebug(string.Format("QuickStartPatch: Loading custom file '{0}' after main menu.", fileToLoad));
-                    CabbyCodes.Patches.Settings.CustomSaveLoadPatch.LoadCustomGame(fileToLoad, (success) => {
+                    SavedGameManager.LoadCustomGame(fileToLoad, (success) => {
                         if (!success)
                         {
                             CabbyCodesPlugin.BLogger.LogWarning(string.Format("QuickStartPatch: Failed to load custom file '{0}'.", fileToLoad));

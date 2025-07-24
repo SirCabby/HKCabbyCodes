@@ -1,4 +1,5 @@
 using UnityEngine;
+using CabbyCodes.SavedGames;
 
 namespace CabbyCodes.Patches.Settings
 {
@@ -25,7 +26,7 @@ namespace CabbyCodes.Patches.Settings
                     string fileToLoad = QuickStartPatch.CustomFileToLoad;
                     QuickStartPatch.CustomFileToLoad = null;
                     CabbyCodesPlugin.BLogger.LogInfo(string.Format("QuickStartLoader: Loading custom file '{0}' after main menu.", fileToLoad));
-                    CustomSaveLoadPatch.LoadCustomGame(fileToLoad, (success) => {
+                    SavedGameManager.LoadCustomGame(fileToLoad, (success) => {
                         if (!success)
                         {
                             CabbyCodesPlugin.BLogger.LogWarning(string.Format("QuickStartLoader: Failed to load custom file '{0}'.", fileToLoad));
