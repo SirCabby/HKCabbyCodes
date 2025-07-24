@@ -529,7 +529,6 @@ namespace CabbyCodes.Patches.Settings
                     jsonData = Encoding.UTF8.GetString(fileData);
                 }
 
-                // Parse the save data
                 SaveGameData saveGameData = JsonUtility.FromJson<SaveGameData>(jsonData);
                 
                 // Apply the loaded data like vanilla does
