@@ -16,6 +16,7 @@ using CabbyCodes.Patches.Teleport;
 using CabbyMenu.UI;
 using CabbyMenu.UI.Controls.InputField;
 using CabbyCodes.Patches.SpriteViewer;
+using UnityEngine;
 
 namespace CabbyCodes
 {
@@ -46,6 +47,11 @@ namespace CabbyCodes
         private static GameStateProvider gameStateProvider;
 
         /// <summary>
+        /// Loader for custom/quick start loads, persistent across scenes.
+        /// </summary>
+        private GameObject quickStartLoaderGo;
+
+        /// <summary>
         /// Called when the plugin is loaded. Initializes the configuration system and logging.
         /// </summary>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "Unity lifecycle method called by Unity engine")]
@@ -59,6 +65,14 @@ namespace CabbyCodes
             // Initialize flag monitor configuration early so it's available when panels are created
             FlagMonitorReference.InitializeConfig();
             FlagFileLoggingReference.InitializeConfig();
+
+            // Create persistent loader
+            if (quickStartLoaderGo == null)
+            {
+                quickStartLoaderGo = new GameObject("QuickStartLoader");
+                quickStartLoaderGo.AddComponent<QuickStartLoader>();
+                DontDestroyOnLoad(quickStartLoaderGo);
+            }
         }
 
         /// <summary>

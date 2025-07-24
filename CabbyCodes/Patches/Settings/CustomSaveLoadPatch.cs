@@ -80,6 +80,9 @@ namespace CabbyCodes.Patches.Settings
                 return;
             }
 
+            // Ensure UI is set up for continue (matches vanilla flow)
+            GameManager.instance.ui?.ContinueGame();
+
             string filePath = Path.Combine(GetCabbySavesDirectory(), fileName);
             
             if (!File.Exists(filePath))
@@ -301,20 +304,11 @@ namespace CabbyCodes.Patches.Settings
         /// <param name="saveFileName">The name of the save file to load.</param>
         private static void LoadCustomSave(string saveFileName)
         {
-            LoadCustomGame(saveFileName, (success) =>
-            {
-                if (success)
-                {
-                    CabbyCodesPlugin.BLogger.LogDebug(string.Format("Loaded save file successfully: {0}", saveFileName));
-                    
-                    // After loading, trigger the continue game function
-                    GameManager.instance?.ContinueGame();
-                }
-                else
-                {
-                    CabbyCodesPlugin.BLogger.LogWarning(string.Format("Failed to load save file: {0}", saveFileName));
-                }
-            });
+            // Instead of loading immediately, set up QuickStartPatch to load after menu
+            QuickStartPatch.CustomFileToLoad = saveFileName;
+            // Start coroutine to return to main menu
+            GameManager.instance?.StartCoroutine(GameManager.instance.ReturnToMainMenu(
+                    GameManager.ReturnToMainMenuSaveModes.DontSave, null));
         }
 
         /// <summary>
@@ -546,31 +540,26 @@ namespace CabbyCodes.Patches.Settings
                 
                 // Update input handler
                 gameManager.inputHandler.RefreshPlayerData();
-                
-                // If we have scene and position data, restore them
+
+                // Call ContinueGame to trigger the normal transition (matches vanilla flow)
+                // Note: This will fade out, load the correct scene, and handle all state
+                gameManager.ContinueGame();
+
+                // Restore the hero position after the scene loads (if available)
                 if (!string.IsNullOrEmpty(saveGameData.sceneName))
                 {
-                    // Store the target position for use after the scene loads
                     Vector2 targetPosition = saveGameData.GetPlayerPosition();
-                    
-                    // Subscribe to the event that fires after the hero is spawned in the new scene
-                    gameManager.OnFinishedEnteringScene += () => OnFinishedEnteringSceneLoad(targetPosition);
-                    
-                    // Start the scene transition to the saved scene
-                    gameManager.BeginSceneTransition(new GameManager.SceneLoadInfo
+                    // Use a local handler to ensure correct unsubscription
+                    void handler()
                     {
-                        AlwaysUnloadUnusedAssets = true,
-                        EntryGateName = "dreamGate", // Use dream gate for custom saves
-                        PreventCameraFadeOut = true,
-                        SceneName = saveGameData.sceneName,
-                        Visualization = GameManager.SceneLoadVisualizations.Dream
-                    });
+                        OnFinishedEnteringSceneLoad(targetPosition);
+                        gameManager.OnFinishedEnteringScene -= handler;
+                    }
+
+                    gameManager.OnFinishedEnteringScene += handler;
                 }
-                else
-                {
-                    // No scene data, just continue normally
-                    callback?.Invoke(true);
-                }
+
+                callback?.Invoke(true);
             }
             catch (Exception ex)
             {

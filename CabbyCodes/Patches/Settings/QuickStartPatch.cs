@@ -53,6 +53,11 @@ namespace CabbyCodes.Patches.Settings
         private static bool quickStartPerformed = false;
 
         /// <summary>
+        /// If set, triggers a custom file load after reaching the main menu.
+        /// </summary>
+        public static string CustomFileToLoad = null;
+
+        /// <summary>
         /// Gets the current quick start enabled state.
         /// </summary>
         /// <returns>True if quick start is enabled, false otherwise.</returns>
@@ -139,10 +144,8 @@ namespace CabbyCodes.Patches.Settings
                 ApplyIntroSkipPatches();
             }
 
-            if (quickLoadEnabled.Value)
-            {
-                ApplyQuickLoadPatches();
-            }
+            // Always apply the quick load patch so custom file loads work
+            ApplyQuickLoadPatches();
 
             patchesApplied = true;
         }
@@ -195,6 +198,27 @@ namespace CabbyCodes.Patches.Settings
         /// </summary>
         private static void GameManagerUpdatePostfix(GameManager __instance)
         {
+            // Custom file quick load support
+            if (!string.IsNullOrEmpty(CustomFileToLoad) && !quickStartPerformed)
+            {
+                if (__instance.gameState == GameState.MAIN_MENU && 
+                    __instance.ui != null &&
+                    __instance.ui.menuState == MainMenuState.MAIN_MENU &&
+                    !__instance.ui.IsAnimatingMenus && !__instance.ui.IsFadingMenu)
+                {
+                    quickStartPerformed = true;
+                    string fileToLoad = CustomFileToLoad;
+                    CustomFileToLoad = null;
+                    CabbyCodesPlugin.BLogger.LogDebug(string.Format("QuickStartPatch: Loading custom file '{0}' after main menu.", fileToLoad));
+                    CabbyCodes.Patches.Settings.CustomSaveLoadPatch.LoadCustomGame(fileToLoad, (success) => {
+                        if (!success)
+                        {
+                            CabbyCodesPlugin.BLogger.LogWarning(string.Format("QuickStartPatch: Failed to load custom file '{0}'.", fileToLoad));
+                        }
+                    });
+                }
+                return;
+            }
             if (!quickLoadEnabled.Value || quickStartPerformed) return;
 
             // Check if we're in the main menu state and ready for quick load
