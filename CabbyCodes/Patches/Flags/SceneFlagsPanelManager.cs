@@ -93,152 +93,63 @@ namespace CabbyCodes.Patches.Flags
             switch (flagDef.Type)
             {
                 case "PlayerData_Bool":
-                    var boolSync = new BoolFlagSync(flagDef);
-                    return new TogglePanel(boolSync, displayName);
+                    return new TogglePanel(
+                        new DelegateReference<bool>(
+                            () => FlagManager.GetBoolFlag(flagDef, flagDef.SemiPersistent),
+                            v => FlagManager.SetBoolFlag(flagDef, v, flagDef.SemiPersistent)),
+                        displayName);
 
                 case "PlayerData_Int":
-                    var intSync = new IntFlagSync(flagDef);
-                    return new RangeInputFieldPanel<int>(intSync, KeyCodeMap.ValidChars.Numeric, 0, 999, displayName);
+                    return new RangeInputFieldPanel<int>(
+                        new DelegateReference<int>(
+                            () => FlagManager.GetIntFlag(flagDef),
+                            v => FlagManager.SetIntFlag(flagDef, v)),
+                        KeyCodeMap.ValidChars.Numeric, 0, 999, displayName);
 
                 case "PlayerData_Float":
-                    var floatSync = new FloatFlagSync(flagDef);
-                    return new RangeInputFieldPanel<float>(floatSync, KeyCodeMap.ValidChars.Decimal, 0f, 999f, displayName);
+                    return new RangeInputFieldPanel<float>(
+                        new DelegateReference<float>(
+                            () => FlagManager.GetFloatFlag(flagDef),
+                            v => FlagManager.SetFloatFlag(flagDef, v)),
+                        KeyCodeMap.ValidChars.Decimal, 0f, 999f, displayName);
 
                 case "PersistentBoolData":
-                    var persistentBoolSync = new PersistentBoolFlagSync(flagDef);
-                    return new TogglePanel(persistentBoolSync, displayName);
+                    return new TogglePanel(
+                        new DelegateReference<bool>(
+                            () => FlagManager.GetBoolFlag(flagDef, flagDef.SemiPersistent),
+                            v => FlagManager.SetBoolFlag(flagDef, v, flagDef.SemiPersistent)),
+                        displayName);
 
                 case "PersistentIntData":
-                    var persistentIntSync = new PersistentIntFlagSync(flagDef);
-                    return new RangeInputFieldPanel<int>(persistentIntSync, KeyCodeMap.ValidChars.Numeric, 0, 999, displayName);
+                    return new RangeInputFieldPanel<int>(
+                        new DelegateReference<int>(
+                            () => FlagManager.GetIntFlag(flagDef),
+                            v => FlagManager.SetIntFlag(flagDef, v)),
+                        KeyCodeMap.ValidChars.Numeric, 0, 999, displayName);
 
                 case "GeoRockData":
-                    var geoRockSync = new GeoRockFlagSync(flagDef);
-                    return new TogglePanel(geoRockSync, displayName);
+                    return new RangeInputFieldPanel<int>(
+                        new DelegateReference<int>(
+                            () => {
+                                if (SceneData.instance?.geoRocks == null) return 0;
+                                foreach (var grd in SceneData.instance.geoRocks)
+                                    if (grd.id == flagDef.Id && grd.sceneName == flagDef.SceneName)
+                                        return grd.hitsLeft;
+                                return 0;
+                            },
+                            v => {
+                                if (SceneData.instance?.geoRocks == null) return;
+                                foreach (var grd in SceneData.instance.geoRocks)
+                                    if (grd.id == flagDef.Id && grd.sceneName == flagDef.SceneName)
+                                    {
+                                        grd.hitsLeft = v;
+                                        break;
+                                    }
+                            }),
+                        KeyCodeMap.ValidChars.Numeric, 0, 10, displayName + " (Hits Left)");
 
                 default:
                     return null;
-            }
-        }
-
-        private class BoolFlagSync : ISyncedReference<bool>
-        {
-            private readonly FlagDef flagDef;
-
-            public BoolFlagSync(FlagDef flagDef)
-            {
-                this.flagDef = flagDef;
-            }
-
-            public bool Get()
-            {
-                return FlagManager.GetBoolFlag(flagDef, flagDef.SemiPersistent);
-            }
-
-            public void Set(bool value)
-            {
-                FlagManager.SetBoolFlag(flagDef, value, flagDef.SemiPersistent);
-            }
-        }
-
-        private class IntFlagSync : ISyncedReference<int>
-        {
-            private readonly FlagDef flagDef;
-
-            public IntFlagSync(FlagDef flagDef)
-            {
-                this.flagDef = flagDef;
-            }
-
-            public int Get()
-            {
-                return FlagManager.GetIntFlag(flagDef);
-            }
-
-            public void Set(int value)
-            {
-                FlagManager.SetIntFlag(flagDef, value);
-            }
-        }
-
-        private class FloatFlagSync : ISyncedReference<float>
-        {
-            private readonly FlagDef flagDef;
-
-            public FloatFlagSync(FlagDef flagDef)
-            {
-                this.flagDef = flagDef;
-            }
-
-            public float Get()
-            {
-                return FlagManager.GetFloatFlag(flagDef);
-            }
-
-            public void Set(float value)
-            {
-                FlagManager.SetFloatFlag(flagDef, value);
-            }
-        }
-
-        private class PersistentBoolFlagSync : ISyncedReference<bool>
-        {
-            private readonly FlagDef flagDef;
-
-            public PersistentBoolFlagSync(FlagDef flagDef)
-            {
-                this.flagDef = flagDef;
-            }
-
-            public bool Get()
-            {
-                return FlagManager.GetBoolFlag(flagDef, flagDef.SemiPersistent);
-            }
-
-            public void Set(bool value)
-            {
-                FlagManager.SetBoolFlag(flagDef, value, flagDef.SemiPersistent);
-            }
-        }
-
-        private class PersistentIntFlagSync : ISyncedReference<int>
-        {
-            private readonly FlagDef flagDef;
-
-            public PersistentIntFlagSync(FlagDef flagDef)
-            {
-                this.flagDef = flagDef;
-            }
-
-            public int Get()
-            {
-                return FlagManager.GetIntFlag(flagDef);
-            }
-
-            public void Set(int value)
-            {
-                FlagManager.SetIntFlag(flagDef, value);
-            }
-        }
-
-        private class GeoRockFlagSync : ISyncedReference<bool>
-        {
-            private readonly FlagDef flagDef;
-
-            public GeoRockFlagSync(FlagDef flagDef)
-            {
-                this.flagDef = flagDef;
-            }
-
-            public bool Get()
-            {
-                // GeoRockData is considered "true" when broken (hitsLeft <= 0)
-                return FlagManager.GetBoolFlag(flagDef, flagDef.SemiPersistent);
-            }
-
-            public void Set(bool value)
-            {
-                FlagManager.SetBoolFlag(flagDef, value, flagDef.SemiPersistent);
             }
         }
     }

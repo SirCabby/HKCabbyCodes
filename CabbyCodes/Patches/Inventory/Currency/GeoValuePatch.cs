@@ -5,7 +5,7 @@ using CabbyMenu.Utilities;
 
 namespace CabbyCodes.Patches.Inventory.Currency
 {
-    public class GeoValuePatch : ISyncedReference<int>
+    public class GeoValuePatch
     {
         private static readonly FlagDef flag = FlagInstances.geo;
         
@@ -23,7 +23,11 @@ namespace CabbyCodes.Patches.Inventory.Currency
 
         public static void AddPanel()
         {
-            RangeInputFieldPanel<int> panel = new RangeInputFieldPanel<int>(new GeoValuePatch(), KeyCodeMap.ValidChars.Numeric, Constants.MIN_GEO, Constants.MAX_GEO, flag.ReadableName);
+            var reference = new DelegateReference<int>(
+                () => FlagManager.GetIntFlag(flag),
+                value => FlagManager.SetIntFlag(flag, ValidationUtils.ValidateRange(value, Constants.MIN_GEO, Constants.MAX_GEO, nameof(value)))
+            );
+            RangeInputFieldPanel<int> panel = new RangeInputFieldPanel<int>(reference, KeyCodeMap.ValidChars.Numeric, Constants.MIN_GEO, Constants.MAX_GEO, flag.ReadableName);
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(panel);
         }
     }
