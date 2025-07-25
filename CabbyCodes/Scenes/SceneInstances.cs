@@ -83,8 +83,8 @@ namespace CabbyCodes.Scenes
         public static readonly SceneMapData Fungus1_28_b = new SceneMapData("Fungus1_28_b", "Cliffs");
 
         // Crossroads
-        public static readonly SceneMapData Crossroads_01 = new SceneMapData("Crossroads_01", "Crossroads");
-        public static readonly SceneMapData Crossroads_02 = new SceneMapData("Crossroads_02", "Crossroads");
+        public static readonly SceneMapData Crossroads_01 = new SceneMapData("Crossroads_01", "Crossroads", "Entrance from Dirthmouth");
+        public static readonly SceneMapData Crossroads_02 = new SceneMapData("Crossroads_02", "Crossroads", "Outside Temple of the Black Egg");
         public static readonly SceneMapData Crossroads_03 = new SceneMapData("Crossroads_03", "Crossroads");
         public static readonly SceneMapData Crossroads_04 = new SceneMapData("Crossroads_04", "Crossroads");
         public static readonly SceneMapData Crossroads_05 = new SceneMapData("Crossroads_05", "Crossroads");
@@ -93,7 +93,7 @@ namespace CabbyCodes.Scenes
         public static readonly SceneMapData Crossroads_08 = new SceneMapData("Crossroads_08", "Crossroads");
         public static readonly SceneMapData Crossroads_09 = new SceneMapData("Crossroads_09", "Crossroads");
         public static readonly SceneMapData Crossroads_10 = new SceneMapData("Crossroads_10", "Crossroads");
-        public static readonly SceneMapData Crossroads_11_alt = new SceneMapData("Crossroads_11_alt", "Crossroads");
+        public static readonly SceneMapData Crossroads_11_alt = new SceneMapData("Crossroads_11_alt", "Crossroads", "The Pilgrim's Way entrance");
         public static readonly SceneMapData Crossroads_12 = new SceneMapData("Crossroads_12", "Crossroads");
         public static readonly SceneMapData Crossroads_13 = new SceneMapData("Crossroads_13", "Crossroads");
         public static readonly SceneMapData Crossroads_14 = new SceneMapData("Crossroads_14", "Crossroads");
@@ -122,6 +122,7 @@ namespace CabbyCodes.Scenes
         public static readonly SceneMapData Crossroads_48 = new SceneMapData("Crossroads_48", "Crossroads");
         public static readonly SceneMapData Crossroads_49 = new SceneMapData("Crossroads_49", "Crossroads");
         public static readonly SceneMapData Crossroads_52 = new SceneMapData("Crossroads_52", "Crossroads");
+        public static readonly SceneMapData Room_temple = new SceneMapData("Room_temple", "Crossroads", "Temple of the Black Egg");
 
         // Deepnest
         public static readonly SceneMapData Abyss_03_b = new SceneMapData("Abyss_03_b", "Deepnest");
@@ -157,8 +158,8 @@ namespace CabbyCodes.Scenes
         public static readonly SceneMapData Deepnest_Spider_Town = new SceneMapData("Deepnest_Spider_Town", "Deepnest");
 
         // Dirtmouth
-        public static readonly SceneMapData Town = new SceneMapData("Town", "Dirtmouth", "Dirtmouth");
-        public static readonly SceneMapData Tutorial_01 = new SceneMapData("Tutorial_01", "Dirtmouth");
+        public static readonly SceneMapData Town = new SceneMapData(        "Town",         "Dirtmouth",    "Dirtmouth");
+        public static readonly SceneMapData Tutorial_01 = new SceneMapData( "Tutorial_01",  "Dirtmouth",    "King's Pass");
 
         // FogCanyon
         public static readonly SceneMapData Fungus3_01 = new SceneMapData("Fungus3_01", "FogCanyon");

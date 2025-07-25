@@ -5,8 +5,6 @@ using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using UnityEngine;
-using GlobalEnums;
-using CabbyCodes;
 
 namespace CabbyCodes.SavedGames
 {
