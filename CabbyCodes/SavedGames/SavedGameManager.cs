@@ -5,6 +5,8 @@ using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using UnityEngine;
+using GlobalEnums;
+using CabbyCodes;
 
 namespace CabbyCodes.SavedGames
 {
@@ -201,7 +203,17 @@ namespace CabbyCodes.SavedGames
                     Vector2 targetPosition = saveGameData.GetPlayerPosition();
                     void handler()
                     {
-                        gameManager.OnFinishedEnteringScene -= handler;
+                        var gm = GameManager._instance;
+                        var hero = gm?.hero_ctrl;
+                        if (hero != null)
+                        {
+                            Vector3 newPos = new Vector3(targetPosition.x, targetPosition.y, hero.transform.position.z);
+                            hero.transform.position = newPos;
+                            gm.cameraCtrl?.SnapTo(newPos.x, newPos.y);
+                        }
+                        // Unsubscribe to avoid memory leaks
+                        if (gm != null)
+                            gm.OnFinishedEnteringScene -= handler;
                     }
                     gameManager.OnFinishedEnteringScene += handler;
                 }
