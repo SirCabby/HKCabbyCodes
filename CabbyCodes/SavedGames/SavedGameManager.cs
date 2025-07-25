@@ -5,6 +5,7 @@ using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using UnityEngine;
+using CabbyCodes.Patches.Teleport;
 
 namespace CabbyCodes.SavedGames
 {
@@ -196,31 +197,71 @@ namespace CabbyCodes.SavedGames
 
                 gameManager.inputHandler.RefreshPlayerData();
                 gameManager.ContinueGame();
+                
+                // If we have scene and position data, teleport to the correct location after the game loads
                 if (!string.IsNullOrEmpty(saveGameData.sceneName))
                 {
                     Vector2 targetPosition = saveGameData.GetPlayerPosition();
+                    
+                    // Create a teleport location for the saved scene and position
+                    var teleportLocation = new TeleportLocation(saveGameData.sceneName, "Custom Save Location", targetPosition);
+                    
+                    // Subscribe to the scene entry event to trigger teleport after the game loads
                     void handler()
                     {
-                        var gm = GameManager._instance;
-                        var hero = gm?.hero_ctrl;
-                        if (hero != null)
-                        {
-                            Vector3 newPos = new Vector3(targetPosition.x, targetPosition.y, hero.transform.position.z);
-                            hero.transform.position = newPos;
-                            gm.cameraCtrl?.SnapTo(newPos.x, newPos.y);
-                        }
-                        // Unsubscribe to avoid memory leaks
-                        if (gm != null)
-                            gm.OnFinishedEnteringScene -= handler;
+                        // Unsubscribe first to avoid memory leaks
+                        gameManager.OnFinishedEnteringScene -= handler;
+                        
+                        // Wait a short moment for the scene to fully load, then teleport
+                        gameManager.StartCoroutine(TeleportAfterSceneLoad(teleportLocation));
                     }
                     gameManager.OnFinishedEnteringScene += handler;
                 }
+                
                 callback?.Invoke(true);
             }
             catch (Exception ex)
             {
                 Debug.LogError($"Failed to load custom game from {filePath}: {ex.Message}");
                 callback?.Invoke(false);
+            }
+        }
+
+        /// <summary>
+        /// Coroutine to teleport to the correct scene and position after the game has loaded.
+        /// </summary>
+        /// <param name="teleportLocation">The location to teleport to.</param>
+        private static System.Collections.IEnumerator TeleportAfterSceneLoad(TeleportLocation teleportLocation)
+        {
+            // Wait a short moment for the scene to be fully ready
+            yield return new WaitForSeconds(0.5f);
+            
+            // Check if we're already in the correct scene
+            string currentScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
+            string baseSceneName = GameManager.GetBaseSceneName(currentScene);
+            
+            if (baseSceneName == teleportLocation.SceneName)
+            {
+                // We're already in the correct scene, just move to the position
+                var gm = GameManager._instance;
+                var hero = gm?.hero_ctrl;
+                if (hero != null)
+                {
+                    Vector3 newPos = new Vector3(teleportLocation.Location.x, teleportLocation.Location.y, hero.transform.position.z);
+                    hero.transform.position = newPos;
+                    gm.cameraCtrl?.SnapTo(newPos.x, newPos.y);
+                    
+                    CabbyCodesPlugin.BLogger.LogDebug(string.Format("Moved to position ({0}, {1}) in scene '{2}'", 
+                        teleportLocation.Location.x, teleportLocation.Location.y, teleportLocation.SceneName));
+                }
+            }
+            else
+            {
+                // We need to teleport to a different scene
+                CabbyCodesPlugin.BLogger.LogDebug(string.Format("Teleporting to scene '{0}' at position ({1}, {2})", 
+                    teleportLocation.SceneName, teleportLocation.Location.x, teleportLocation.Location.y));
+                
+                TeleportService.DoTeleport(teleportLocation);
             }
         }
     }
