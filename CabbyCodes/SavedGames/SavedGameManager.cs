@@ -198,6 +198,17 @@ namespace CabbyCodes.SavedGames
                 gameManager.inputHandler.RefreshPlayerData();
                 gameManager.ContinueGame();
                 
+                // Always trigger cheat state restoration after the game loads, regardless of scene data
+                void cheatRestoreHandler()
+                {
+                    // Unsubscribe first to avoid memory leaks
+                    gameManager.OnFinishedEnteringScene -= cheatRestoreHandler;
+                    
+                    // Restore all active cheat states after the scene has loaded
+                    CheatStateManager.RestoreAllCheatStates();
+                }
+                gameManager.OnFinishedEnteringScene += cheatRestoreHandler;
+                
                 // If we have scene and position data, teleport to the correct location after the game loads
                 if (!string.IsNullOrEmpty(saveGameData.sceneName))
                 {
