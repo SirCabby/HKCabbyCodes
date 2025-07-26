@@ -20,8 +20,8 @@ namespace CabbyCodes.Flags.FlagData
                 FlagInstances.Crossroads_01__Geo_Rock_2,
                 FlagInstances.Crossroads_01__Secret_Mask,
                 FlagInstances.Crossroads_01__Shiny_Item,
-                FlagInstances.Crossroads_01__Zombie_Runner,
-                FlagInstances.Crossroads_01__Zombie_Runner_1
+                // FlagInstances.Crossroads_01__Zombie_Runner,
+                // FlagInstances.Crossroads_01__Zombie_Runner_1
             },
             ["Crossroads_03"] = new List<FlagDef>
             {
@@ -31,7 +31,7 @@ namespace CabbyCodes.Flags.FlagData
             ["Crossroads_05"] = new List<FlagDef>
             {
                 FlagInstances.Crossroads_05__Geo_Rock_1,
-                FlagInstances.Crossroads_05__Zombie_Runner
+                // FlagInstances.Crossroads_05__Zombie_Runner
             },
             ["Crossroads_07"] = new List<FlagDef>
             {
@@ -103,12 +103,12 @@ namespace CabbyCodes.Flags.FlagData
                 FlagInstances.Crossroads_13__Geo_Rock_1,
                 FlagInstances.Crossroads_13__Geo_Rock_2,
                 FlagInstances.Crossroads_13__Heart_Piece,
-                FlagInstances.Crossroads_13__Zombie_Barger
+                // FlagInstances.Crossroads_13__Zombie_Barger
             },
             ["Crossroads_16"] = new List<FlagDef>
             {
                 FlagInstances.Crossroads_16__Geo_Rock_2,
-                FlagInstances.Crossroads_16__Zombie_Hornhead
+                // FlagInstances.Crossroads_16__Zombie_Hornhead
             },
             ["Crossroads_18"] = new List<FlagDef>
             {
@@ -124,7 +124,7 @@ namespace CabbyCodes.Flags.FlagData
                 FlagInstances.Crossroads_19__Geo_Rock_1,
                 FlagInstances.Crossroads_19__Hatcher,
                 FlagInstances.Crossroads_19__Soul_Totem_mini_two_horned,
-                FlagInstances.Crossroads_19__Zombie_Leaper
+                // FlagInstances.Crossroads_19__Zombie_Leaper
             },
             ["Crossroads_25"] = new List<FlagDef>
             {
@@ -157,19 +157,19 @@ namespace CabbyCodes.Flags.FlagData
                 FlagInstances.Crossroads_38__Reward_46,
                 FlagInstances.Crossroads_38__Reward_5
             },
-            ["Crossroads_39"] = new List<FlagDef>
-            {
-                FlagInstances.Crossroads_39__Zombie_Hornhead_1,
-                FlagInstances.Crossroads_39__Zombie_Runner,
-                FlagInstances.Crossroads_39__Zombie_Runner_1
-            },
-            ["Crossroads_40"] = new List<FlagDef>
-            {
-                FlagInstances.Crossroads_40__Zombie_Hornhead,
-                FlagInstances.Crossroads_40__Zombie_Leaper,
-                FlagInstances.Crossroads_40__Zombie_Leaper_1,
-                FlagInstances.Crossroads_40__Zombie_Runner_2
-            },
+            // ["Crossroads_39"] = new List<FlagDef>
+            // {
+            //     FlagInstances.Crossroads_39__Zombie_Hornhead_1,
+            //     FlagInstances.Crossroads_39__Zombie_Runner,
+            //     FlagInstances.Crossroads_39__Zombie_Runner_1
+            // },
+            // ["Crossroads_40"] = new List<FlagDef>
+            // {
+            //     FlagInstances.Crossroads_40__Zombie_Hornhead,
+            //     FlagInstances.Crossroads_40__Zombie_Leaper,
+            //     FlagInstances.Crossroads_40__Zombie_Leaper_1,
+            //     FlagInstances.Crossroads_40__Zombie_Runner_2
+            // },
             ["Crossroads_42"] = new List<FlagDef>
             {
                 FlagInstances.Crossroads_42__Geo_Rock_1,
@@ -180,10 +180,10 @@ namespace CabbyCodes.Flags.FlagData
                 FlagInstances.Crossroads_45__Soul_Totem_5,
                 FlagInstances.Crossroads_45__Zombie_Myla
             },
-            ["Crossroads_48"] = new List<FlagDef>
-            {
-                FlagInstances.Crossroads_48__Zombie_Guard
-            },
+            // ["Crossroads_48"] = new List<FlagDef>
+            // {
+            //     FlagInstances.Crossroads_48__Zombie_Guard
+            // },
 
             // Mines
             ["Mines_01"] = new List<FlagDef>
