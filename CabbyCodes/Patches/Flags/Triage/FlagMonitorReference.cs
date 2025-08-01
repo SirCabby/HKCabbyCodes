@@ -96,8 +96,6 @@ namespace CabbyCodes.Patches.Flags.Triage
             }
         }
 
-
-        
         /// <summary>
         /// Checks if the game is currently paused, using the same logic as GameStateProvider.
         /// </summary>
@@ -206,20 +204,24 @@ namespace CabbyCodes.Patches.Flags.Triage
             
             RectTransform backgroundRect = backgroundPanel.GetComponent<RectTransform>();
             backgroundRect.anchorMin = new Vector2(0, 0.7f);
-            backgroundRect.anchorMax = new Vector2(0.2f, 1f);
+            backgroundRect.anchorMax = new Vector2(0.455f, 1f);
             backgroundRect.offsetMin = Vector2.zero;
             backgroundRect.offsetMax = Vector2.zero;
             
             // Add hover detection to background panel
             EventTrigger eventTrigger = backgroundPanel.AddComponent<EventTrigger>();
-            
-            EventTrigger.Entry enterEntry = new EventTrigger.Entry();
-            enterEntry.eventID = EventTriggerType.PointerEnter;
+
+            EventTrigger.Entry enterEntry = new EventTrigger.Entry
+            {
+                eventID = EventTriggerType.PointerEnter
+            };
             enterEntry.callback.AddListener((data) => { OnPanelHoverEnter(); });
             eventTrigger.triggers.Add(enterEntry);
-            
-            EventTrigger.Entry exitEntry = new EventTrigger.Entry();
-            exitEntry.eventID = EventTriggerType.PointerExit;
+
+            EventTrigger.Entry exitEntry = new EventTrigger.Entry
+            {
+                eventID = EventTriggerType.PointerExit
+            };
             exitEntry.callback.AddListener((data) => { OnPanelHoverExit(); });
             eventTrigger.triggers.Add(exitEntry);
             
@@ -316,9 +318,9 @@ namespace CabbyCodes.Patches.Flags.Triage
             
             FlagMonitorPatch.notificationText = textObject.AddComponent<Text>();
             FlagMonitorPatch.notificationText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-            FlagMonitorPatch.notificationText.fontSize = 12;
-            FlagMonitorPatch.notificationText.fontStyle = FontStyle.Bold; // Make text bold
-            FlagMonitorPatch.notificationText.color = Color.white; // Ensure white color
+            FlagMonitorPatch.notificationText.fontSize = 16;
+            FlagMonitorPatch.notificationText.fontStyle = FontStyle.Bold;
+            FlagMonitorPatch.notificationText.color = Color.white;
             FlagMonitorPatch.notificationText.alignment = TextAnchor.UpperLeft;
             FlagMonitorPatch.notificationText.horizontalOverflow = HorizontalWrapMode.Wrap;
             FlagMonitorPatch.notificationText.verticalOverflow = VerticalWrapMode.Overflow;

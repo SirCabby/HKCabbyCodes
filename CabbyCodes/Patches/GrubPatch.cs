@@ -33,9 +33,9 @@ namespace CabbyCodes.Patches
             // Crossroads
             { SceneInstances.Crossroads_03.SceneName, null },
             { SceneInstances.Crossroads_05.SceneName, null },
-            { SceneInstances.Crossroads_31.SceneName, null },
-            { SceneInstances.Crossroads_35.SceneName, null },
-            { SceneInstances.Crossroads_48.SceneName, null },
+            { SceneInstances.Crossroads_31.SceneName, new TeleportLocation(SceneInstances.Crossroads_31.SceneName, SceneInstances.Crossroads_31.ReadableName, new Vector2(23, 14)) },
+            { SceneInstances.Crossroads_35.SceneName, new TeleportLocation(SceneInstances.Crossroads_35.SceneName, SceneInstances.Crossroads_35.ReadableName, new Vector2(7, 4)) },
+            { SceneInstances.Crossroads_48.SceneName, new TeleportLocation(SceneInstances.Crossroads_48.SceneName, SceneInstances.Crossroads_48.ReadableName, new Vector2(52, 4)) },
             
             // Deepnest
             { SceneInstances.Deepnest_03.SceneName, null },
@@ -47,8 +47,8 @@ namespace CabbyCodes.Patches
             { SceneInstances.Deepnest_Spider_Town.SceneName, null },
             
             // Fungal Wastes
-            { SceneInstances.Fungus1_06.SceneName, null },
-            { SceneInstances.Fungus1_07.SceneName, null },
+            { SceneInstances.Fungus1_06.SceneName, new TeleportLocation(SceneInstances.Fungus1_06.SceneName, SceneInstances.Fungus1_06.ReadableName, new Vector2(154, 22)) },
+            { SceneInstances.Fungus1_07.SceneName, new TeleportLocation(SceneInstances.Fungus1_07.SceneName, SceneInstances.Fungus1_07.ReadableName, new Vector2(51, 13)) },
             { SceneInstances.Fungus1_13.SceneName, null },
             { SceneInstances.Fungus1_21.SceneName, null },
             { SceneInstances.Fungus1_28.SceneName, null },
@@ -57,7 +57,8 @@ namespace CabbyCodes.Patches
             { SceneInstances.Fungus3_10.SceneName, null },
             { SceneInstances.Fungus3_22.SceneName, null },
             { SceneInstances.Fungus3_47.SceneName, null },
-            { SceneInstances.Fungus3_48.SceneName, new TeleportLocation(SceneInstances.Crossroads_48.SceneName, SceneInstances.Crossroads_48.ReadableName, new Vector2(52, 4)) },
+            { SceneInstances.Fungus3_48.SceneName, null },
+
             // Hive
             { SceneInstances.Hive_03.SceneName, null },
             { SceneInstances.Hive_04.SceneName, null },
