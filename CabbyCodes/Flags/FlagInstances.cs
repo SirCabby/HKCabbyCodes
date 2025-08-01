@@ -1782,7 +1782,6 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef dreamGateY = new FlagDef("dreamGateY", "Global", false, "PlayerData_Single");
             public static readonly FlagDef dreamReturnScene = new FlagDef("dreamReturnScene", "Global", false, "PlayerData_String");
             public static readonly FlagDef equippedCharms = new FlagDef("equippedCharms", "Global", false, "PlayerData_List`1");
-            public static readonly FlagDef hazardRespawnLocation = new FlagDef("hazardRespawnLocation", "Global", false, "PlayerData_Vector3");
             public static readonly FlagDef mapZone = new FlagDef("mapZone", "Global", false, "PlayerData_MapZone");
             public static readonly FlagDef nextScene = new FlagDef("nextScene", "Global", false, "PlayerData_String");
             public static readonly FlagDef placedMarkers_b = new FlagDef("placedMarkers_b", "Global", false, "PlayerData_List`1");
@@ -1877,6 +1876,7 @@ namespace CabbyCodes.Flags
                 new FlagDef("gMap_doorX", "Global", false, "PlayerData_Single"),
                 new FlagDef("gMap_doorY", "Global", false, "PlayerData_Single"),
                 new FlagDef("hazardRespawnFacingRight", "Global", false, "PlayerData_Bool"),
+                new FlagDef("hazardRespawnLocation", "Global", false, "PlayerData_Vector3"),
                 new FlagDef("lastJournalItem", "Global", false, "PlayerData_Int", "Last Journey Entry looked at"),
                 new FlagDef("previousDarkness", "Global", false, "PlayerData_Int"),
                 new FlagDef("prevHealth", "Global", false, "PlayerData_Int"),
