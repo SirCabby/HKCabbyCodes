@@ -33,6 +33,7 @@ namespace CabbyCodes.Patches.Flags.Triage
         {
             "atBench",
             "currentArea",
+            "currentInvPane",
             "damagedBlue",
             "disablePause",
             "environmentType",
