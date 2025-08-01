@@ -15,11 +15,6 @@ namespace CabbyCodes.Flags.FlagData
         private static readonly Dictionary<string, List<FlagDef>> FlagsByScene = new Dictionary<string, List<FlagDef>>
         {
             // Crossroads
-            ["Crossroads_01"] = new List<FlagDef>
-            {
-                FlagInstances.Crossroads_01__Secret_Mask,
-                FlagInstances.Crossroads_01__Shiny_Item
-            },
             ["Crossroads_03"] = new List<FlagDef>
             {
                 FlagInstances.Crossroads_03__Break_Wall_2,
@@ -88,18 +83,11 @@ namespace CabbyCodes.Flags.FlagData
                 FlagInstances.Crossroads_18__Breakable_Wall_Waterways,
                 FlagInstances.Crossroads_18__Inverse_Remasker
             },
-            ["Crossroads_35"] = new List<FlagDef>
-            {
-                FlagInstances.Crossroads_35__Remasker
-            },
+
             ["Crossroads_36"] = new List<FlagDef>
             {
                 FlagInstances.Crossroads_36__Collapser_Small,
-                FlagInstances.Crossroads_36__Collapser_Small_1,
-                FlagInstances.Crossroads_36__Force_Hard_Landing,
-                FlagInstances.Crossroads_36__Mask_Bottom,
-                FlagInstances.Crossroads_36__Reminder_Look_Down,
-                FlagInstances.Crossroads_36__Secret_Mask
+                FlagInstances.Crossroads_36__Collapser_Small_1
             },
             ["Crossroads_38"] = new List<FlagDef>
             {
@@ -136,19 +124,8 @@ namespace CabbyCodes.Flags.FlagData
             ["Tutorial_01"] = new List<FlagDef>
             {
                 FlagInstances.Tutorial_01__Break_Floor_1,
-                FlagInstances.Tutorial_01__Chest,
                 FlagInstances.Tutorial_01__Collapser_Tute_01,
                 FlagInstances.Tutorial_01__Door,
-                FlagInstances.Tutorial_01__fury_charm_remask,
-                FlagInstances.Tutorial_01__Health_Cocoon,
-                FlagInstances.Tutorial_01__Initial_Fall_Impact,
-                FlagInstances.Tutorial_01__Interact_Reminder,
-                FlagInstances.Tutorial_01__Inverse_Remasker,
-                FlagInstances.Tutorial_01__inverse_remask_right,
-                FlagInstances.Tutorial_01__Secret_Mask,
-                FlagInstances.Tutorial_01__Secret_Sound_Region,
-                FlagInstances.Tutorial_01__Secret_Sound_Region_1,
-                FlagInstances.Tutorial_01__Shiny_Item_1,
                 FlagInstances.Tutorial_01__Tute_Door_1,
                 FlagInstances.Tutorial_01__Tute_Door_2,
                 FlagInstances.Tutorial_01__Tute_Door_3,

@@ -236,6 +236,7 @@ namespace CabbyCodes.Patches.Flags.Triage
             var fields = playerDataType.GetFields(BindingFlags.Public | BindingFlags.Instance);
             
             var trackedFields = new HashSet<string>();
+            var ignoredFields = new HashSet<string>();
             var flagInstancesType = typeof(FlagInstances);
             var flagFields = flagInstancesType.GetFields(BindingFlags.Public | BindingFlags.Static);
             
@@ -252,12 +253,21 @@ namespace CabbyCodes.Patches.Flags.Triage
                 }
             }
             
+            // Build list of ignored fields from FlagInstances.UnusedFlags
+            foreach (var unusedFlag in FlagInstances.UnusedFlags)
+            {
+                if (unusedFlag != null && !string.IsNullOrEmpty(unusedFlag.Id))
+                {
+                    ignoredFields.Add(unusedFlag.Id);
+                }
+            }
+            
             // Check for potentially missing fields
             foreach (var field in fields)
             {
                 if (field.FieldType == typeof(bool) || field.FieldType == typeof(int))
                 {
-                    if (!trackedFields.Contains(field.Name))
+                    if (!trackedFields.Contains(field.Name) && !ignoredFields.Contains(field.Name))
                     {
                         Debug.LogWarning($"Potentially untracked PlayerData field: {field.Name} ({field.FieldType.Name})");
                     }

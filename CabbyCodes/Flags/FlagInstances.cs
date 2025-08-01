@@ -185,10 +185,6 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef stationsOpened = new FlagDef("stationsOpened", "Global", false, "PlayerData_Int", "Opened Stag Station Count");
 
             #region Categorized Scene Flags
-                // Crossroads_03
-                public static readonly FlagDef Crossroads_03__Break_Wall_2 = new FlagDef("Break Wall 2", SceneInstances.Crossroads_03.SceneName, false, "PersistentBoolData");
-                public static readonly FlagDef Crossroads_03__Toll_Gate_Switch = new FlagDef("Toll Gate Switch", SceneInstances.Crossroads_03.SceneName, false, "PersistentBoolData");
-
                 // Crossroads_04
                 public static readonly FlagDef Crossroads_04__Break_Floor_1 = new FlagDef("Break Floor 1", SceneInstances.Crossroads_03.SceneName, false, "PersistentBoolData", "Opened floor back to entrance");
 
@@ -1049,6 +1045,13 @@ namespace CabbyCodes.Flags
         #endregion
 
         #region UNCATEGORIZED SCENE FLAGS
+            // Crossroads_01
+            public static readonly FlagDef Crossroads_01__Shiny_Item = new FlagDef("Shiny Item", SceneInstances.Crossroads_01.SceneName, false, "PersistentBoolData");
+
+            // Crossroads_03
+            public static readonly FlagDef Crossroads_03__Break_Wall_2 = new FlagDef("Break Wall 2", SceneInstances.Crossroads_03.SceneName, false, "PersistentBoolData");
+            public static readonly FlagDef Crossroads_03__Toll_Gate_Switch = new FlagDef("Toll Gate Switch", SceneInstances.Crossroads_03.SceneName, false, "PersistentBoolData");
+
             // Crossroads_06
             public static readonly FlagDef Crossroads_06__Gate_Switch = new FlagDef("Gate Switch", SceneInstances.Crossroads_06.SceneName, false, "PersistentBoolData");
             public static readonly FlagDef Crossroads_06__Raising_Pillar = new FlagDef("Raising Pillar", SceneInstances.Crossroads_06.SceneName, false, "PersistentBoolData");
@@ -1086,7 +1089,7 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef Crossroads_07__Dream_Plant_Orb_8 = new FlagDef("Dream Plant Orb (8)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
             public static readonly FlagDef Crossroads_07__Dream_Plant_Orb_9 = new FlagDef("Dream Plant Orb (9)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
             public static readonly FlagDef Crossroads_07__Remasker = new FlagDef("Remasker", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_07__Tute_Door_1 = new FlagDef("Tute Door 1", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData", "Broke wall to ");
+            public static readonly FlagDef Crossroads_07__Tute_Door_1 = new FlagDef("Tute Door 1", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData", "Broke wall to Brooding Mawlek");
 
             // Crossroads_08
             public static readonly FlagDef Crossroads_08__Battle_Scene = new FlagDef("Battle Scene", SceneInstances.Crossroads_08.SceneName, false, "PersistentBoolData", "Completed Spitter Battle");
@@ -1119,6 +1122,9 @@ namespace CabbyCodes.Flags
 
             // Crossroads_21
             public static readonly FlagDef Crossroads_21__Breakable_Wall = new FlagDef("Breakable Wall", SceneInstances.Crossroads_21.SceneName, false, "PersistentBoolData");
+
+            // Crossroads_33
+            public static readonly FlagDef Crossroads_33__Shiny = new FlagDef("Shiny", SceneInstances.Crossroads_33.SceneName, false, "PersistentBoolData");
 
             // Crossroads_36
             public static readonly FlagDef Crossroads_36__Collapser_Small = new FlagDef("Collapser Small", SceneInstances.Crossroads_36.SceneName, false, "PersistentBoolData", "Broke collapsing floor to Brooding Mawlek");
@@ -1178,6 +1184,8 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef Town__Interact_Reminder = new FlagDef("Interact Reminder", SceneInstances.Town.SceneName, false, "PersistentBoolData");
             public static readonly FlagDef Town__Mines_Lever = new FlagDef("Mines Lever", SceneInstances.Town.SceneName, false, "PersistentBoolData");
 
+            // Tutorial_01
+            public static readonly FlagDef Tutorial_01__Shiny_Item_1 = new FlagDef("Shiny Item (1)", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
         #endregion
 
         #region UNCATEGORIZED GLOBAL FLAGS
@@ -1641,7 +1649,6 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef quirrelSpaReady = new FlagDef("quirrelSpaReady", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef ranAway = new FlagDef("ranAway", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef refusedLegEater = new FlagDef("refusedLegEater", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef respawnFacingRight = new FlagDef("respawnFacingRight", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef respawnType = new FlagDef("respawnType", "Global", false, "PlayerData_Int");
             public static readonly FlagDef restingGroundsCryptWall = new FlagDef("restingGroundsCryptWall", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef ruins1_5_tripleDoor = new FlagDef("ruins1_5_tripleDoor", "Global", false, "PlayerData_Bool");
@@ -1848,134 +1855,135 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef version = new FlagDef("version", "Global", false, "PlayerData_String");
         #endregion
 
-        #region Unused Flags
+        /// <summary>
+        /// Centralized list of unused flags that should be ignored during monitoring.
+        /// These flags are defined but not actively used by the mod, so they should not
+        /// trigger notifications when their values change.
+        /// </summary>
+        public static readonly FlagDef[] UnusedFlags = new FlagDef[]
+        {
             #region Player Flags
-                public static readonly FlagDef atBench = new FlagDef("atBench", "Global", false, "PlayerData_Bool", "Currently sitting at a bench");
-                public static readonly FlagDef currentInvPane = new FlagDef("currentInvPane", "Global", false, "PlayerData_Int", "Inventory Pane Selected");
-                public static readonly FlagDef damagedBlue = new FlagDef("damagedBlue", "Global", false, "PlayerData_Bool", "Last damage took a blue health orb");
-                public static readonly FlagDef disablePause = new FlagDef("disablePause", "Global", false, "PlayerData_Bool", "Pause is disabled");
-                public static readonly FlagDef environmentType = new FlagDef("environmentType", "Global", false, "PlayerData_Int", "Environment Type: 0 = ground, 4 = platform");
-                public static readonly FlagDef gMap_doorMapZone = new FlagDef("gMap_doorMapZone", "Global", false, "PlayerData_String");
-                public static readonly FlagDef gMap_doorOriginOffsetX = new FlagDef("gMap_doorOriginOffsetX", "Global", false, "PlayerData_Single");
-                public static readonly FlagDef gMap_doorOriginOffsetY = new FlagDef("gMap_doorOriginOffsetY", "Global", false, "PlayerData_Single");
-                public static readonly FlagDef gMap_doorScene = new FlagDef("gMap_doorScene", "Global", false, "PlayerData_String");
-                public static readonly FlagDef gMap_doorSceneHeight = new FlagDef("gMap_doorSceneHeight", "Global", false, "PlayerData_Single");
-                public static readonly FlagDef gMap_doorSceneWidth = new FlagDef("gMap_doorSceneWidth", "Global", false, "PlayerData_Single");
-                public static readonly FlagDef gMap_doorX = new FlagDef("gMap_doorX", "Global", false, "PlayerData_Single");
-                public static readonly FlagDef gMap_doorY = new FlagDef("gMap_doorY", "Global", false, "PlayerData_Single");
-                public static readonly FlagDef hazardRespawnFacingRight = new FlagDef("hazardRespawnFacingRight", "Global", false, "PlayerData_Bool");
-                public static readonly FlagDef lastJournalItem = new FlagDef("lastJournalItem", "Global", false, "PlayerData_Int", "Last Journey Entry looked at");
-                public static readonly FlagDef previousDarkness = new FlagDef("previousDarkness", "Global", false, "PlayerData_Int");
-                public static readonly FlagDef prevHealth = new FlagDef("prevHealth", "Global", false, "PlayerData_Int");
-                public static readonly FlagDef showHealthUI = new FlagDef("showHealthUI", "Global", false, "PlayerData_Bool", "Show Health UI");
+                new FlagDef("atBench", "Global", false, "PlayerData_Bool", "Currently sitting at a bench"),
+                new FlagDef("currentInvPane", "Global", false, "PlayerData_Int", "Inventory Pane Selected"),
+                new FlagDef("damagedBlue", "Global", false, "PlayerData_Bool", "Last damage took a blue health orb"),
+                new FlagDef("disablePause", "Global", false, "PlayerData_Bool", "Pause is disabled"),
+                new FlagDef("environmentType", "Global", false, "PlayerData_Int", "Environment Type: 0 = ground, 4 = platform"),
+                new FlagDef("gMap_doorMapZone", "Global", false, "PlayerData_String"),
+                new FlagDef("gMap_doorOriginOffsetX", "Global", false, "PlayerData_Single"),
+                new FlagDef("gMap_doorOriginOffsetY", "Global", false, "PlayerData_Single"),
+                new FlagDef("gMap_doorScene", "Global", false, "PlayerData_String"),
+                new FlagDef("gMap_doorSceneHeight", "Global", false, "PlayerData_Single"),
+                new FlagDef("gMap_doorSceneWidth", "Global", false, "PlayerData_Single"),
+                new FlagDef("gMap_doorX", "Global", false, "PlayerData_Single"),
+                new FlagDef("gMap_doorY", "Global", false, "PlayerData_Single"),
+                new FlagDef("hazardRespawnFacingRight", "Global", false, "PlayerData_Bool"),
+                new FlagDef("lastJournalItem", "Global", false, "PlayerData_Int", "Last Journey Entry looked at"),
+                new FlagDef("previousDarkness", "Global", false, "PlayerData_Int"),
+                new FlagDef("prevHealth", "Global", false, "PlayerData_Int"),
+                new FlagDef("respawnFacingRight", "Global", false, "PlayerData_Bool"),
+                new FlagDef("showHealthUI", "Global", false, "PlayerData_Bool", "Show Health UI"),
             #endregion
 
             #region Scene Flags
                 // Crossroads_01
-                public static readonly FlagDef Crossroads_01__Secret_Mask = new FlagDef("Secret Mask", SceneInstances.Crossroads_01.SceneName, false, "PersistentBoolData");
-                public static readonly FlagDef Crossroads_01__Shiny_Item = new FlagDef("Shiny Item", SceneInstances.Crossroads_01.SceneName, false, "PersistentBoolData");
-                public static readonly FlagDef Crossroads_01__Zombie_Runner = new FlagDef("Zombie Runner", SceneInstances.Crossroads_01.SceneName, false, "PersistentBoolData");
-                public static readonly FlagDef Crossroads_01__Zombie_Runner_1 = new FlagDef("Zombie Runner 1", SceneInstances.Crossroads_01.SceneName, false, "PersistentBoolData");
+                new FlagDef("Secret Mask", SceneInstances.Crossroads_01.SceneName, false, "PersistentBoolData"),
+                new FlagDef("Zombie Runner", SceneInstances.Crossroads_01.SceneName, false, "PersistentBoolData"),
+                new FlagDef("Zombie Runner 1", SceneInstances.Crossroads_01.SceneName, false, "PersistentBoolData"),
 
                 // Crossroads_04
-                public static readonly FlagDef Crossroads_04__CamLock_Destroyer = new FlagDef("CamLock Destroyer", SceneInstances.Crossroads_04.SceneName, false, "PersistentBoolData");
+                new FlagDef("CamLock Destroyer", SceneInstances.Crossroads_04.SceneName, false, "PersistentBoolData"),
 
                 // Crossroads_13
-                public static readonly FlagDef Crossroads_13__Zombie_Barger = new FlagDef("Zombie Barger", SceneInstances.Crossroads_13.SceneName, false, "PersistentBoolData");
+                new FlagDef("Zombie Barger", SceneInstances.Crossroads_13.SceneName, false, "PersistentBoolData"),
 
                 // Crossroads_15
-                public static readonly FlagDef Crossroads_15__Zombie_Shield = new FlagDef("Zombie Shield", SceneInstances.Crossroads_15.SceneName, false, "PersistentBoolData");
-                public static readonly FlagDef Crossroads_15__Zombie_Shield_1 = new FlagDef("Zombie Shield 1", SceneInstances.Crossroads_15.SceneName, false, "PersistentBoolData");
+                new FlagDef("Zombie Shield", SceneInstances.Crossroads_15.SceneName, false, "PersistentBoolData"),
+                new FlagDef("Zombie Shield 1", SceneInstances.Crossroads_15.SceneName, false, "PersistentBoolData"),
 
                 // Crossroads_16
-                public static readonly FlagDef Crossroads_16__Zombie_Hornhead = new FlagDef("Zombie Hornhead", SceneInstances.Crossroads_16.SceneName, false, "PersistentBoolData");
+                new FlagDef("Zombie Hornhead", SceneInstances.Crossroads_16.SceneName, false, "PersistentBoolData"),
 
                 // Crossroads_18
-                public static readonly FlagDef Crossroads_18__Soul_Totem_mini_horned = new FlagDef("Soul Totem mini_horned", SceneInstances.Crossroads_18.SceneName, true, "PersistentIntData");
+                new FlagDef("Soul Totem mini_horned", SceneInstances.Crossroads_18.SceneName, true, "PersistentIntData"),
 
                 // Crossroads_19
-                public static readonly FlagDef Crossroads_19__Hatcher = new FlagDef("Hatcher", SceneInstances.Crossroads_19.SceneName, true, "PersistentBoolData");
-                public static readonly FlagDef Crossroads_19__Zombie_Leaper = new FlagDef("Zombie Leaper", SceneInstances.Crossroads_19.SceneName, true, "PersistentBoolData", "Killed Zombie Leaper");
+                new FlagDef("Hatcher", SceneInstances.Crossroads_19.SceneName, true, "PersistentBoolData"),
+                new FlagDef("Zombie Leaper", SceneInstances.Crossroads_19.SceneName, true, "PersistentBoolData", "Killed Zombie Leaper"),
 
                 // Crossroads_21
-                public static readonly FlagDef Crossroads_21__Secret_Mask_1 = new FlagDef("Secret Mask (1)", SceneInstances.Crossroads_21.SceneName, false, "PersistentBoolData");
-                public static readonly FlagDef Crossroads_21__Zombie_Barger_1 = new FlagDef("Zombie Barger (1)", SceneInstances.Crossroads_21.SceneName, false, "PersistentBoolData");
+                new FlagDef("Secret Mask (1)", SceneInstances.Crossroads_21.SceneName, false, "PersistentBoolData"),
+                new FlagDef("Zombie Barger (1)", SceneInstances.Crossroads_21.SceneName, false, "PersistentBoolData"),
 
                 // Crossroads_25
-                public static readonly FlagDef Crossroads_25__Soul_Totem_mini_two_horned = new FlagDef("Soul Totem mini_two_horned", SceneInstances.Crossroads_25.SceneName, false, "PersistentIntData");
+                new FlagDef("Soul Totem mini_two_horned", SceneInstances.Crossroads_25.SceneName, false, "PersistentIntData"),
 
                 // Crossroads_27
-                public static readonly FlagDef Crossroads_27__Hatcher_1 = new FlagDef("Hatcher 1", SceneInstances.Crossroads_27.SceneName, false, "PersistentBoolData");
-                public static readonly FlagDef Crossroads_27__Hatcher_2 = new FlagDef("Hatcher 2", SceneInstances.Crossroads_27.SceneName, false, "PersistentBoolData");
-
-                // Crossroads_33
-                public static readonly FlagDef Crossroads_33__Shiny = new FlagDef("Shiny", SceneInstances.Crossroads_33.SceneName, false, "PersistentBoolData");
+                new FlagDef("Hatcher 1", SceneInstances.Crossroads_27.SceneName, false, "PersistentBoolData"),
+                new FlagDef("Hatcher 2", SceneInstances.Crossroads_27.SceneName, false, "PersistentBoolData"),
 
                 // Crossroads_35
-                public static readonly FlagDef Crossroads_35__Hatcher = new FlagDef("Hatcher", SceneInstances.Crossroads_35.SceneName, true, "PersistentBoolData", "Killed Hatcher");
-                public static readonly FlagDef Crossroads_35__Remasker = new FlagDef("Remasker", SceneInstances.Crossroads_35.SceneName, false, "PersistentBoolData");
-                public static readonly FlagDef Crossroads_35__Soul_Totem_mini_horned = new FlagDef("Soul Totem mini_horned", SceneInstances.Crossroads_35.SceneName, true, "PersistentIntData");
+                new FlagDef("Hatcher", SceneInstances.Crossroads_35.SceneName, true, "PersistentBoolData", "Killed Hatcher"),
+                new FlagDef("Remasker", SceneInstances.Crossroads_35.SceneName, false, "PersistentBoolData"),
+                new FlagDef("Soul Totem mini_horned", SceneInstances.Crossroads_35.SceneName, true, "PersistentIntData"),
 
                 // Crossroads_36
-                public static readonly FlagDef Crossroads_36__Force_Hard_Landing = new FlagDef("Force Hard Landing", SceneInstances.Crossroads_36.SceneName, false, "PersistentBoolData", "Took hard landing after collapse floor");
-                public static readonly FlagDef Crossroads_36__Mask_Bottom = new FlagDef("Mask Bottom", SceneInstances.Crossroads_36.SceneName, false, "PersistentBoolData", "Remove darkness from the lower area");
-                public static readonly FlagDef Crossroads_36__Reminder_Look_Down = new FlagDef("Reminder Look Down", SceneInstances.Crossroads_36.SceneName, false, "PersistentBoolData", "Reminded to Look Down");
-                public static readonly FlagDef Crossroads_36__Secret_Mask = new FlagDef("Secret Mask", SceneInstances.Crossroads_36.SceneName, false, "PersistentBoolData", "Remove darkness to backtrack to entrance");
-                public static readonly FlagDef Crossroads_36__Soul_Totem_4 = new FlagDef("Soul Totem 4", SceneInstances.Crossroads_36.SceneName, false, "PersistentIntData");
+                new FlagDef("Force Hard Landing", SceneInstances.Crossroads_36.SceneName, false, "PersistentBoolData", "Took hard landing after collapse floor"),
+                new FlagDef("Mask Bottom", SceneInstances.Crossroads_36.SceneName, false, "PersistentBoolData", "Remove darkness from the lower area"),
+                new FlagDef("Reminder Look Down", SceneInstances.Crossroads_36.SceneName, false, "PersistentBoolData", "Reminded to Look Down"),
+                new FlagDef("Secret Mask", SceneInstances.Crossroads_36.SceneName, false, "PersistentBoolData", "Remove darkness to backtrack to entrance"),
+                new FlagDef("Soul Totem 4", SceneInstances.Crossroads_36.SceneName, false, "PersistentIntData"),
 
                 // Crossroads_39
-                public static readonly FlagDef Crossroads_39__Zombie_Hornhead_1 = new FlagDef("Zombie Hornhead 1", SceneInstances.Crossroads_39.SceneName, false, "PersistentBoolData");
+                new FlagDef("Zombie Hornhead 1", SceneInstances.Crossroads_39.SceneName, false, "PersistentBoolData"),
 
                 // Crossroads_40
-                public static readonly FlagDef Crossroads_40__Zombie_Leaper_1 = new FlagDef("Zombie Leaper 1", SceneInstances.Crossroads_40.SceneName, false, "PersistentBoolData");
-                public static readonly FlagDef Crossroads_40__Zombie_Runner_2 = new FlagDef("Zombie Runner 2", SceneInstances.Crossroads_40.SceneName, false, "PersistentBoolData");
+                new FlagDef("Zombie Leaper 1", SceneInstances.Crossroads_40.SceneName, false, "PersistentBoolData"),
+                new FlagDef("Zombie Runner 2", SceneInstances.Crossroads_40.SceneName, false, "PersistentBoolData"),
 
                 // Crossroads_45
-                public static readonly FlagDef Crossroads_45__Soul_Totem_5 = new FlagDef("Soul Totem 5", SceneInstances.Crossroads_45.SceneName, false, "PersistentIntData");
+                new FlagDef("Soul Totem 5", SceneInstances.Crossroads_45.SceneName, false, "PersistentIntData"),
 
                 // Crossroads_48
-                public static readonly FlagDef Crossroads_48__Zombie_Guard = new FlagDef("Zombie Guard", SceneInstances.Crossroads_48.SceneName, false, "PersistentBoolData");
+                new FlagDef("Zombie Guard", SceneInstances.Crossroads_48.SceneName, false, "PersistentBoolData"),
 
                 // Crossroads_ShamanTemple
-                public static readonly FlagDef Crossroads_ShamanTemple__Soul_Totem_2 = new FlagDef("Soul Totem 2", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentIntData");
+                new FlagDef("Soul Totem 2", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentIntData"),
 
                 // Fungus1_01
-                public static readonly FlagDef Fungus1_01__Mossman_Runner = new FlagDef("Mossman_Runner", SceneInstances.Fungus1_01.SceneName, false, "PersistentBoolData");
-                public static readonly FlagDef Fungus1_01__Mossman_Shaker = new FlagDef("Mossman_Shaker", SceneInstances.Fungus1_01.SceneName, false, "PersistentBoolData");
-                public static readonly FlagDef Fungus1_01__Mossman_Shaker_1 = new FlagDef("Mossman_Shaker (1)", SceneInstances.Fungus1_01.SceneName, false, "PersistentBoolData");
-                public static readonly FlagDef Fungus1_01__Plant_Trap = new FlagDef("Plant Trap", SceneInstances.Fungus1_01.SceneName, false, "PersistentBoolData");
+                new FlagDef("Mossman_Runner", SceneInstances.Fungus1_01.SceneName, false, "PersistentBoolData"),
+                new FlagDef("Mossman_Shaker", SceneInstances.Fungus1_01.SceneName, false, "PersistentBoolData"),
+                new FlagDef("Mossman_Shaker (1)", SceneInstances.Fungus1_01.SceneName, false, "PersistentBoolData"),
+                new FlagDef("Plant Trap", SceneInstances.Fungus1_01.SceneName, false, "PersistentBoolData"),
 
                 // Fungus1_07
-                public static readonly FlagDef Fungus1_07__Mossman_Runner_1 = new FlagDef("Mossman_Runner (1)", SceneInstances.Fungus1_07.SceneName, false, "PersistentBoolData");
+                new FlagDef("Mossman_Runner (1)", SceneInstances.Fungus1_07.SceneName, false, "PersistentBoolData"),
                 
                 // Fungus1_10
-                public static readonly FlagDef Fungus1_10__Moss_Charger = new FlagDef("Moss Charger", SceneInstances.Fungus1_10.SceneName, false, "PersistentBoolData");
-                public static readonly FlagDef Fungus1_10__Moss_Charger_1 = new FlagDef("Moss Charger (1)", SceneInstances.Fungus1_10.SceneName, false, "PersistentBoolData");
-                public static readonly FlagDef Fungus1_10__Moss_Charger_1_1 = new FlagDef("Moss Charger 1 (1)", SceneInstances.Fungus1_10.SceneName, false, "PersistentBoolData");
-                public static readonly FlagDef Fungus1_10__Moss_Charger_1_2 = new FlagDef("Moss Charger 1 (2)", SceneInstances.Fungus1_10.SceneName, false, "PersistentBoolData");
+                new FlagDef("Moss Charger", SceneInstances.Fungus1_10.SceneName, false, "PersistentBoolData"),
+                new FlagDef("Moss Charger (1)", SceneInstances.Fungus1_10.SceneName, false, "PersistentBoolData"),
+                new FlagDef("Moss Charger 1 (1)", SceneInstances.Fungus1_10.SceneName, false, "PersistentBoolData"),
+                new FlagDef("Moss Charger 1 (2)", SceneInstances.Fungus1_10.SceneName, false, "PersistentBoolData"),
 
                 // Fungus1_11
-                public static readonly FlagDef Fungus1_11__Acid_Walker = new FlagDef("Acid Walker", SceneInstances.Fungus1_11.SceneName, false, "PersistentBoolData");
+                new FlagDef("Acid Walker", SceneInstances.Fungus1_11.SceneName, false, "PersistentBoolData"),
 
                 // Town
-                public static readonly FlagDef Town__Death_Respawn_Trigger = new FlagDef("Death Respawn Trigger", SceneInstances.Town.SceneName, false, "PersistentBoolData");
-                public static readonly FlagDef Town__Death_Respawn_Trigger_1 = new FlagDef("Death Respawn Trigger 1", SceneInstances.Town.SceneName, false, "PersistentBoolData");
+                new FlagDef("Death Respawn Trigger", SceneInstances.Town.SceneName, false, "PersistentBoolData"),
+                new FlagDef("Death Respawn Trigger 1", SceneInstances.Town.SceneName, false, "PersistentBoolData"),
 
                 // Tutorial_01
-                public static readonly FlagDef Tutorial_01__Health_Cocoon = new FlagDef("Health Cocoon", SceneInstances.Tutorial_01.SceneName, true, "PersistentBoolData", "Broke Lifeblood Cocoon");
-                public static readonly FlagDef Tutorial_01__Initial_Fall_Impact = new FlagDef("Initial Fall Impact", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData", "Player fell hard on game start");
-                public static readonly FlagDef Tutorial_01__Interact_Reminder = new FlagDef("Interact Reminder", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData", "Told how to Focus");
-                public static readonly FlagDef Tutorial_01__Chest = new FlagDef("Chest", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
-                public static readonly FlagDef Tutorial_01__Inverse_Remasker = new FlagDef("Inverse Remasker", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
-                public static readonly FlagDef Tutorial_01__Secret_Mask = new FlagDef("Secret Mask", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
-                public static readonly FlagDef Tutorial_01__Secret_Sound_Region = new FlagDef("Secret Sound Region", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
-                public static readonly FlagDef Tutorial_01__Secret_Sound_Region_1 = new FlagDef("Secret Sound Region (1)", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
-                public static readonly FlagDef Tutorial_01__Shiny_Item_1 = new FlagDef("Shiny Item (1)", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
-                public static readonly FlagDef Tutorial_01__fury_charm_remask = new FlagDef("fury charm_remask", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
-                public static readonly FlagDef Tutorial_01__inverse_remask_right = new FlagDef("inverse_remask_right", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
+                new FlagDef("Health Cocoon", SceneInstances.Tutorial_01.SceneName, true, "PersistentBoolData", "Broke Lifeblood Cocoon"),
+                new FlagDef("Initial Fall Impact", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData", "Player fell hard on game start"),
+                new FlagDef("Interact Reminder", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData", "Told how to Focus"),
+                new FlagDef("Chest", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData"),
+                new FlagDef("Inverse Remasker", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData"),
+                new FlagDef("Secret Mask", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData"),
+                new FlagDef("Secret Sound Region", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData"),
+                new FlagDef("Secret Sound Region (1)", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData"),
+                new FlagDef("fury charm_remask", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData"),
+                new FlagDef("inverse_remask_right", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData"),
             #endregion
-            
-        #endregion
+        };
 
     }
 }

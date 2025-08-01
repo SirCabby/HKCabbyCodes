@@ -31,19 +31,13 @@ namespace CabbyCodes.Patches.Flags.Triage
         // Fields to ignore during polling (noisy or not useful)
         private static readonly HashSet<string> ignoredFields = new HashSet<string>
         {
-            "atBench",
+            // Additional hardcoded fields that are not in FlagInstances
             "currentArea",
-            "currentInvPane",
-            "damagedBlue",
-            "disablePause",
-            "environmentType",
-            "hazardRespawnFacingRight",
             "health",
             "healthBlue",
             "isFirstGame",
             "isInvincible",
             "geo",
-            "lastJournalItem",
             #region Kills
                 "killedAbyssCrawler",
                 "killedAbyssTendril",
@@ -389,9 +383,7 @@ namespace CabbyCodes.Patches.Flags.Triage
                 "killsZotelingHopper",
             #endregion
             "MPCharge",
-            "profileID",
-            "respawnFacingRight",
-            "respawnType"
+            "profileID"
         };
 
         // --- Performance optimizations ---
@@ -729,12 +721,39 @@ namespace CabbyCodes.Patches.Flags.Triage
         }
 
         /// <summary>
+        /// Build the ignored fields set dynamically from FlagInstances.UnusedFlags
+        /// </summary>
+        private static void BuildIgnoredFieldsSet()
+        {
+            try
+            {
+                // Add all unused flags from FlagInstances
+                foreach (var unusedFlag in FlagInstances.UnusedFlags)
+                {
+                    if (unusedFlag != null && !string.IsNullOrEmpty(unusedFlag.Id))
+                    {
+                        ignoredFields.Add(unusedFlag.Id);
+                    }
+                }
+                
+                Debug.Log($"[Flag Monitor] Built ignored fields set with {ignoredFields.Count} entries");
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"[Flag Monitor] Failed to build ignored fields set: {ex.Message}");
+            }
+        }
+
+        /// <summary>
         /// Extract all field names from FlagInstances that need to be monitored
         /// </summary>
         private static void ExtractTrackedFields()
         {
             try
             {
+                // First build the ignored fields set from FlagInstances.UnusedFlags
+                BuildIgnoredFieldsSet();
+                
                 var flagInstancesType = typeof(FlagInstances);
                 var fields = flagInstancesType.GetFields(BindingFlags.Public | BindingFlags.Static);
                 
