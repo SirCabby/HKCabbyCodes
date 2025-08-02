@@ -65,6 +65,22 @@ namespace CabbyCodes.Scenes
         }
 
         /// <summary>
+        /// Gets area names that have at least one scene with flags defined.
+        /// </summary>
+        /// <returns>A collection of area names that have flags, sorted alphabetically.</returns>
+        public static IEnumerable<string> GetAreaNamesWithFlags()
+        {
+            var scenesWithFlags = CabbyCodes.Flags.FlagData.SceneFlagData.GetAllSceneNamesWithFlags();
+            var areasWithFlags = sceneMapData
+                .Where(s => scenesWithFlags.Contains(s.SceneName))
+                .Select(s => s.AreaName)
+                .Distinct()
+                .OrderBy(area => area);
+            
+            return areasWithFlags;
+        }
+
+        /// <summary>
         /// Gets a dictionary mapping area names to lists of scene names in that area.
         /// </summary>
         /// <returns>A dictionary where keys are area names and values are lists of scene names.</returns>

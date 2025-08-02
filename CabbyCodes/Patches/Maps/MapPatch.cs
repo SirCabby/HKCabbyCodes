@@ -1,8 +1,14 @@
 using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
+using UnityEngine;
 using static CabbyCodes.Scenes.SceneManagement;
+using CabbyCodes.Patches.Flags;
+using CabbyCodes.Flags;
+using CabbyCodes.SavedGames;
 
 namespace CabbyCodes.Patches.Maps
 {
@@ -45,22 +51,104 @@ namespace CabbyCodes.Patches.Maps
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Warning: Still requires Inventory Map and Quill items to view / fill maps out").SetColor(CheatPanel.warningColor));
             AddMapPanels();
             
-            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Rooms: Enable to have room mapped out").SetColor(CheatPanel.headerColor));
-            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Warning: Turning rooms OFF requires a save and reload").SetColor(CheatPanel.warningColor));
+            // Get current area for default selection
+            int currentAreaIndex = GetCurrentAreaIndex();
             
-            // Add area selector dropdown
-            MapAreaSelector areaSelector = new MapAreaSelector();
-            DropdownPanel areaDropdownPanel = new DropdownPanel(areaSelector, "Select Area", Constants.DEFAULT_PANEL_HEIGHT);
-            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(areaDropdownPanel);
+            // Add Rooms section
+            var roomsSection = new CategorizedPanelSection(
+                "Rooms: Enable to have room mapped out",
+                "Select Area",
+                Scenes.Areas.GetAllAreaNames().ToList(),
+                CreateRoomPanels,
+                1, // insertionIndex
+                currentAreaIndex // defaultSelection
+            );
+            roomsSection.AddToMenu();
+        }
+
+        private static int GetCurrentAreaIndex()
+        {
+            try
+            {
+                // Get current scene name
+                var (sceneName, _) = CabbyCodes.Patches.Teleport.TeleportService.GetCurrentPlayerPosition();
+                
+                // Get area name from scene
+                var sceneData = Scenes.SceneManagement.GetSceneData(sceneName);
+                if (sceneData != null)
+                {
+                    string areaName = sceneData.AreaName;
+                    
+                    // Find the index of this area in the list
+                    var areaNames = Scenes.Areas.GetAllAreaNames().ToList();
+                    return areaNames.IndexOf(areaName);
+                }
+            }
+            catch
+            {
+                // If anything goes wrong, default to 0
+            }
             
-            // Add dynamic room manager
-            MapRoomPanelManager roomManager = new MapRoomPanelManager(areaSelector);
-            roomManager.AddAllPanelsToMenu();
+            return 0; // Default to first area if we can't determine current area
+        }
+
+        private static List<CheatPanel> CreateRoomPanels(int areaIndex)
+        {
+            var panels = new List<CheatPanel>
+            {
+                new InfoPanel("Warning: Turning rooms OFF requires a save and reload").SetColor(CheatPanel.warningColor)
+            };
             
-            // Add update action to handle area changes (for menu update loop)
-            areaDropdownPanel.updateActions.Add(roomManager.UpdateVisibleArea);
-            // Hook dropdown value change event for immediate update
-            areaDropdownPanel.GetDropDownSync().GetCustomDropdown().onValueChanged.AddListener(_ => roomManager.UpdateVisibleArea());
+            // Get the selected area
+            var areaNames = Scenes.Areas.GetAllAreaNames().ToList();
+            if (areaIndex >= 0 && areaIndex < areaNames.Count)
+            {
+                string selectedArea = areaNames[areaIndex];
+                
+                // Create panels for the selected area using the existing MapRoomPanelManager logic
+                if (MapRoomPatch.roomsInMaps.ContainsKey(selectedArea))
+                {
+                    List<string> roomNames = MapRoomPatch.roomsInMaps[selectedArea];
+                    
+                    // Add toggle all panel for this area
+                    ButtonPanel toggleAllPanel = new ButtonPanel(() => ToggleAllRooms(selectedArea, true), "ON", "Toggle All Rooms");
+                    PanelAdder.AddButton(toggleAllPanel, 1, () => ToggleAllRooms(selectedArea, false), "OFF", new Vector2(120, 60));
+                    panels.Add(toggleAllPanel);
+
+                    // Add individual room panels for this area
+                    foreach (string roomName in roomNames)
+                    {
+                        var sceneData = GetSceneData(roomName);
+                        string displayName = sceneData?.ReadableName ?? roomName;
+                        panels.Add(new TogglePanel(new MapRoomPatch(roomName), displayName));
+                    }
+                }
+            }
+            
+            return panels;
+        }
+
+        private static void ToggleAllRooms(string mapName, bool setToOn)
+        {
+            bool anyToggledOff = false;
+            foreach (string roomName in MapRoomPatch.roomsInMaps[mapName])
+            {
+                if (setToOn && !FlagManager.ListFlagContains("scenesMapped", "Global", roomName))
+                {
+                    FlagManager.AddToListFlag("scenesMapped", "Global", roomName);
+                }
+                else if (!setToOn && FlagManager.ListFlagContains("scenesMapped", "Global", roomName))
+                {
+                    FlagManager.RemoveFromListFlag("scenesMapped", "Global", roomName);
+                    anyToggledOff = true;
+                }
+            }
+
+            // If any room was toggled off, trigger the reload
+            if (!setToOn && anyToggledOff)
+            {
+                GameReloadManager.SaveAndReload();
+            }
         }
     }
 }

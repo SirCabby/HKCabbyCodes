@@ -195,6 +195,208 @@ namespace CabbyMenu.UI
         }
 
         /// <summary>
+        /// Gets the index of a cheat panel in the menu.
+        /// </summary>
+        /// <param name="cheatPanel">The cheat panel to find.</param>
+        /// <returns>The index of the panel, or -1 if not found.</returns>
+        public int GetPanelIndex(CheatPanel cheatPanel)
+        {
+            return contentCheatPanels.IndexOf(cheatPanel);
+        }
+
+        /// <summary>
+        /// Gets all cheat panels in the menu.
+        /// </summary>
+        /// <returns>A read-only list of all cheat panels.</returns>
+        public IReadOnlyList<CheatPanel> GetAllPanels()
+        {
+            return contentCheatPanels.AsReadOnly();
+        }
+
+        /// <summary>
+        /// Inserts a cheat panel at a specific index in the menu.
+        /// </summary>
+        /// <param name="cheatPanel">The cheat panel to insert.</param>
+        /// <param name="index">The index where to insert the panel.</param>
+        /// <returns>The inserted cheat panel.</returns>
+        public CheatPanel InsertCheatPanel(CheatPanel cheatPanel, int index)
+        {
+            if (cheatContent == null)
+            {
+                // If cheatContent is null, the menu might be rebuilding or in an invalid state
+                // Return the panel without adding it to prevent errors
+                return cheatPanel;
+            }
+            
+            // Clamp index to valid range
+            index = Math.Max(0, Math.Min(index, contentCheatPanels.Count));
+            
+            new Fitter(cheatPanel.GetGameObject()).Attach(cheatContent).Size(cheatPanelSize);
+            contentCheatPanels.Insert(index, cheatPanel);
+            return cheatPanel;
+        }
+
+        /// <summary>
+        /// Removes panels from a specific index range and returns them.
+        /// </summary>
+        /// <param name="startIndex">The starting index (inclusive).</param>
+        /// <param name="count">The number of panels to remove.</param>
+        /// <returns>A list of removed panels.</returns>
+        public List<CheatPanel> RemovePanelsAtRange(int startIndex, int count)
+        {
+            List<CheatPanel> removedPanels = new List<CheatPanel>();
+            
+            if (startIndex < 0 || startIndex >= contentCheatPanels.Count || count <= 0)
+            {
+                return removedPanels;
+            }
+            
+            int endIndex = Math.Min(startIndex + count, contentCheatPanels.Count);
+            int actualCount = endIndex - startIndex;
+            
+            for (int i = 0; i < actualCount; i++)
+            {
+                CheatPanel panel = contentCheatPanels[startIndex];
+                removedPanels.Add(panel);
+                contentCheatPanels.RemoveAt(startIndex);
+                
+                // Destroy the GameObject but keep the panel reference
+                GameObject panelGo = panel.GetGameObject();
+                if (panelGo != null)
+                {
+                    UnityEngine.Object.Destroy(panelGo);
+                }
+            }
+            
+            // Force layout rebuild after removing
+            if (cheatContent != null)
+            {
+                LayoutRebuilder.ForceRebuildLayoutImmediate(cheatContent.GetComponent<RectTransform>());
+            }
+            
+            return removedPanels;
+        }
+
+        /// <summary>
+        /// Detaches panels from a specific index range without destroying them and returns them.
+        /// </summary>
+        /// <param name="startIndex">The starting index (inclusive).</param>
+        /// <param name="count">The number of panels to detach.</param>
+        /// <returns>A list of detached panels.</returns>
+        public List<CheatPanel> DetachPanelsAtRange(int startIndex, int count)
+        {
+            List<CheatPanel> detachedPanels = new List<CheatPanel>();
+            
+            if (startIndex < 0 || startIndex >= contentCheatPanels.Count || count <= 0)
+            {
+                return detachedPanels;
+            }
+            
+            int endIndex = Math.Min(startIndex + count, contentCheatPanels.Count);
+            int actualCount = endIndex - startIndex;
+            
+            for (int i = 0; i < actualCount; i++)
+            {
+                CheatPanel panel = contentCheatPanels[startIndex];
+                detachedPanels.Add(panel);
+                contentCheatPanels.RemoveAt(startIndex);
+                
+                // Detach the GameObject from parent without destroying it
+                GameObject panelGo = panel.GetGameObject();
+                if (panelGo != null)
+                {
+                    panelGo.transform.SetParent(null);
+                    panelGo.SetActive(false); // Hide it temporarily
+                }
+            }
+            
+            // Force layout rebuild after detaching
+            if (cheatContent != null)
+            {
+                LayoutRebuilder.ForceRebuildLayoutImmediate(cheatContent.GetComponent<RectTransform>());
+            }
+            
+            return detachedPanels;
+        }
+
+        /// <summary>
+        /// Re-adds panels at a specific index, recreating their GameObjects.
+        /// </summary>
+        /// <param name="panels">The panels to re-add.</param>
+        /// <param name="startIndex">The index where to start inserting.</param>
+        public void ReAddPanelsAtRange(List<CheatPanel> panels, int startIndex)
+        {
+            if (panels == null || panels.Count == 0)
+            {
+                return;
+            }
+            
+            // Clamp index to valid range
+            startIndex = Math.Max(0, Math.Min(startIndex, contentCheatPanels.Count));
+            
+            for (int i = 0; i < panels.Count; i++)
+            {
+                CheatPanel panel = panels[i];
+                new Fitter(panel.GetGameObject()).Attach(cheatContent).Size(cheatPanelSize);
+                contentCheatPanels.Insert(startIndex + i, panel);
+            }
+            
+            // Force layout rebuild after adding
+            if (cheatContent != null)
+            {
+                LayoutRebuilder.ForceRebuildLayoutImmediate(cheatContent.GetComponent<RectTransform>());
+            }
+        }
+
+        /// <summary>
+        /// Re-attaches detached panels at a specific index.
+        /// </summary>
+        /// <param name="panels">The panels to re-attach.</param>
+        /// <param name="startIndex">The index where to start inserting.</param>
+        public void ReattachPanelsAtRange(List<CheatPanel> panels, int startIndex)
+        {
+            if (panels == null || panels.Count == 0)
+            {
+                return;
+            }
+            
+            // Clamp index to valid range
+            startIndex = Math.Max(0, Math.Min(startIndex, contentCheatPanels.Count));
+            
+            for (int i = 0; i < panels.Count; i++)
+            {
+                CheatPanel panel = panels[i];
+                GameObject panelGo = panel.GetGameObject();
+                if (panelGo != null)
+                {
+                    // Completely reset the RectTransform to default state
+                    RectTransform rect = panelGo.GetComponent<RectTransform>();
+                    if (rect != null)
+                    {
+                        rect.anchorMin = Vector2.zero;
+                        rect.anchorMax = Vector2.zero;
+                        rect.pivot = new Vector2(0.5f, 0.5f);
+                        rect.sizeDelta = Vector2.zero;
+                        rect.anchoredPosition = Vector2.zero;
+                        rect.localScale = Vector3.one;
+                        rect.localRotation = Quaternion.identity;
+                    }
+                    
+                    // Now apply the Fitter as if it's a fresh panel
+                    new Fitter(panelGo).Attach(cheatContent).Size(cheatPanelSize);
+                    panelGo.SetActive(true); // Show it again
+                }
+                contentCheatPanels.Insert(startIndex + i, panel);
+            }
+            
+            // Force layout rebuild after re-attaching (same as RemoveCheatPanel)
+            if (cheatContent != null)
+            {
+                LayoutRebuilder.ForceRebuildLayoutImmediate(cheatContent.GetComponent<RectTransform>());
+            }
+        }
+
+        /// <summary>
         /// Main update method called every frame. Handles menu visibility and input processing.
         /// </summary>
         public void Update()

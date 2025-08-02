@@ -64,7 +64,6 @@ namespace CabbyCodes.Flags.FlagData
             },
             ["Crossroads_09"] = new List<FlagDef>
             {
-                FlagInstances.Crossroads_09__Battle_Scene,
                 FlagInstances.Crossroads_09__Break_Floor_1,
                 FlagInstances.Crossroads_09__Mawlek_Body
             },
