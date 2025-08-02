@@ -5,7 +5,7 @@ namespace CabbyCodes.Flags
     public static class FlagInstances
     {
         #region Bosses
-            public static readonly FlagDef falseKnightFirstPlop = new FlagDef("falseKnightFirstPlop", "Global", false, "PlayerData_Bool", "False Knight fell first time");
+            public static readonly FlagDef Crossroads_09__Mawlek_Body = new FlagDef("Mawlek Body", SceneInstances.Crossroads_09.SceneName, false, "PersistentBoolData", "Brooding Mawlek Defeated");
             public static readonly FlagDef falseKnightDefeated = new FlagDef("falseKnightDefeated", "Global", false, "PlayerData_Bool", "False Knight defeated");
         #endregion
 
@@ -174,7 +174,6 @@ namespace CabbyCodes.Flags
         #region Environment Updates
             public static readonly FlagDef crossroadsInfected = new FlagDef("crossroadsInfected", "Global", false, "PlayerData_Bool", "Crossroads Infected");
             public static readonly FlagDef crossroadsMawlekWall = new FlagDef("crossroadsMawlekWall", "Global", false, "PlayerData_Bool", "Opened Crossroads Mawlek Wall");
-            public static readonly FlagDef enteredTutorialFirstTime = new FlagDef("enteredTutorialFirstTime", "Global", false, "PlayerData_Bool", "Entered game start");
             public static readonly FlagDef hornetGreenpath = new FlagDef("hornetGreenpath", "Global", false, "PlayerData_Int", "Saw Hornet at Greenpath (0-1)");
             public static readonly FlagDef jijiDoorUnlocked = new FlagDef("jijiDoorUnlocked", "Global", false, "PlayerData_Bool", "Jiji's door unlocked");
             public static readonly FlagDef noEyesPinned = new FlagDef("noEyesPinned", "Global", false, "PlayerData_Bool", "No Eyes Statue found");
@@ -187,6 +186,19 @@ namespace CabbyCodes.Flags
             #region Categorized Scene Flags
                 // Crossroads_04
                 public static readonly FlagDef Crossroads_04__Break_Floor_1 = new FlagDef("Break Floor 1", SceneInstances.Crossroads_03.SceneName, false, "PersistentBoolData", "Opened floor back to entrance");
+
+                // Crossroads_07
+                public static readonly FlagDef Crossroads_07__Tute_Door_1 = new FlagDef("Tute Door 1", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData", "Broke wall to Brooding Mawlek");
+
+                // Crossroads_09
+                public static readonly FlagDef Crossroads_09__Break_Floor_1 = new FlagDef("Break Floor 1", SceneInstances.Crossroads_09.SceneName, false, "PersistentBoolData", "Broke one-way wall to exit");
+
+                // Crossroads_36
+                public static readonly FlagDef Crossroads_36__Collapser_Small = new FlagDef("Collapser Small", SceneInstances.Crossroads_36.SceneName, false, "PersistentBoolData", "Broke collapsing floor to Brooding Mawlek");
+                public static readonly FlagDef Crossroads_36__Collapser_Small_1 = new FlagDef("Collapser Small 1", SceneInstances.Crossroads_36.SceneName, false, "PersistentBoolData", "Broke backtrack collapsing floor");
+
+                // Town
+                public static readonly FlagDef Town__Door_Destroyer = new FlagDef("Door Destroyer", SceneInstances.Town.SceneName, false, "PersistentBoolData", "Door broken open from King's Pass");
 
                 // Tutorial_01
                 public static readonly FlagDef Tutorial_01__Break_Floor_1 = new FlagDef("Break Floor 1", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData", "Broke floor back up to top");
@@ -243,15 +255,11 @@ namespace CabbyCodes.Flags
         #endregion
 
         #region Game State
-            public static readonly FlagDef charmBenchMsg = new FlagDef("charmBenchMsg", "Global", false, "PlayerData_Bool", "Got Charm message from resting at bench after getting a charm");
             public static readonly FlagDef currentArea = new FlagDef("currentArea", "Global", false, "PlayerData_Int",  "Current Area");
             public static readonly FlagDef isFirstGame = new FlagDef("isFirstGame", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef openingCreditsPlayed = new FlagDef("openingCreditsPlayed", "Global", false, "PlayerData_Bool", "Opening Credits Played on Game Start");
             public static readonly FlagDef permadeathMode = new FlagDef("permadeathMode", "Global", false, "PlayerData_Int",  "Steel Soul Mode (Permadeath)");
+            public static readonly FlagDef playTime = new FlagDef("playTime", "Global", false, "PlayerData_Single");
             public static readonly FlagDef profileID = new FlagDef("profileID", "Global", false, "PlayerData_Int", "Save slot of current game");
-            public static readonly FlagDef promptFocus = new FlagDef("promptFocus", "Global", false, "PlayerData_Bool", "Took damage after seeing Focus Tablet");
-            public static readonly FlagDef seenFocusTablet = new FlagDef("seenFocusTablet", "Global", false, "PlayerData_Bool", "Passed by Focus Tablet");
-            public static readonly FlagDef seenJournalMsg = new FlagDef("seenJournalMsg", "Global", false, "PlayerData_Bool", "Seen Journal message for new enemy");
             public static readonly FlagDef unlockedCompletionRate = new FlagDef("unlockedCompletionRate", "Global", false, "PlayerData_Bool", "World Sense");
         #endregion
 
@@ -315,10 +323,6 @@ namespace CabbyCodes.Flags
         #endregion
 
         #region Hunter
-            public static readonly FlagDef journalEntriesCompleted = new FlagDef("journalEntriesCompleted", "Global", false, "PlayerData_Int");
-            public static readonly FlagDef journalEntriesTotal = new FlagDef("journalEntriesTotal", "Global", false, "PlayerData_Int");
-            public static readonly FlagDef journalNotesCompleted = new FlagDef("journalNotesCompleted", "Global", false, "PlayerData_Int");
-
             #region Killed Enemy
                 public static readonly FlagDef killedAbyssCrawler = new FlagDef("killedAbyssCrawler", "Global", false, "PlayerData_Bool");
                 public static readonly FlagDef killedAbyssTendril = new FlagDef("killedAbyssTendril", "Global", false, "PlayerData_Bool");
@@ -1004,7 +1008,6 @@ namespace CabbyCodes.Flags
         #endregion
 
         #region Player Status
-            public static readonly FlagDef firstGeo = new FlagDef("firstGeo", "Global", false, "PlayerData_Bool", "Found first Geo");
             public static readonly FlagDef geoPool = new FlagDef("geoPool", "Global", false, "PlayerData_Int", "Geo stored on Shade Corpse");
             public static readonly FlagDef health = new FlagDef("health", "Global", false, "PlayerData_Int");
             public static readonly FlagDef healthBlue = new FlagDef("healthBlue", "Global", false, "PlayerData_Int", "Blue extra hit points");
@@ -1089,17 +1092,11 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef Crossroads_07__Dream_Plant_Orb_8 = new FlagDef("Dream Plant Orb (8)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
             public static readonly FlagDef Crossroads_07__Dream_Plant_Orb_9 = new FlagDef("Dream Plant Orb (9)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
             public static readonly FlagDef Crossroads_07__Remasker = new FlagDef("Remasker", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_07__Tute_Door_1 = new FlagDef("Tute Door 1", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData", "Broke wall to Brooding Mawlek");
 
             // Crossroads_08
             public static readonly FlagDef Crossroads_08__Battle_Scene = new FlagDef("Battle Scene", SceneInstances.Crossroads_08.SceneName, false, "PersistentBoolData", "Completed Spitter Battle");
             public static readonly FlagDef Crossroads_08__Break_Wall_2 = new FlagDef("Break Wall 2", SceneInstances.Crossroads_08.SceneName, false, "PersistentBoolData");
             public static readonly FlagDef Crossroads_08__break_wall_masks = new FlagDef("break_wall_masks", SceneInstances.Crossroads_08.SceneName, false, "PersistentBoolData");
-
-            // Crossroads_09
-            public static readonly FlagDef Crossroads_09__Battle_Scene = new FlagDef("Battle Scene", SceneInstances.Crossroads_09.SceneName, false, "PersistentBoolData", "Defeated Brooding Mawlek");
-            public static readonly FlagDef Crossroads_09__Break_Floor_1 = new FlagDef("Break Floor 1", SceneInstances.Crossroads_09.SceneName, false, "PersistentBoolData", "Broke one-way wall to exit");
-            public static readonly FlagDef Crossroads_09__Mawlek_Body = new FlagDef("Mawlek Body", SceneInstances.Crossroads_09.SceneName, false, "PersistentBoolData", "Defeated Brooding Mawlek");
 
             // Crossroads_10
             public static readonly FlagDef Crossroads_10__Battle_Scene = new FlagDef("Battle Scene", SceneInstances.Crossroads_10.SceneName, false, "PersistentBoolData", "Defeated False Knight");
@@ -1125,10 +1122,6 @@ namespace CabbyCodes.Flags
 
             // Crossroads_33
             public static readonly FlagDef Crossroads_33__Shiny = new FlagDef("Shiny", SceneInstances.Crossroads_33.SceneName, false, "PersistentBoolData");
-
-            // Crossroads_36
-            public static readonly FlagDef Crossroads_36__Collapser_Small = new FlagDef("Collapser Small", SceneInstances.Crossroads_36.SceneName, false, "PersistentBoolData", "Broke collapsing floor to Brooding Mawlek");
-            public static readonly FlagDef Crossroads_36__Collapser_Small_1 = new FlagDef("Collapser Small 1", SceneInstances.Crossroads_36.SceneName, false, "PersistentBoolData", "Broke backtrack collapsing floor");
 
             // Crossroads_38
             public static readonly FlagDef Crossroads_38__Reward_10 = new FlagDef("Reward 10", SceneInstances.Crossroads_38.SceneName, false, "PersistentBoolData");
@@ -1179,13 +1172,9 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef Mines_01__mine_1_quake_floor = new FlagDef("mine_1_quake_floor", SceneInstances.Mines_01.SceneName, false, "PersistentBoolData");
 
             // Town
-            public static readonly FlagDef Town__Door_Destroyer = new FlagDef("Door Destroyer", SceneInstances.Town.SceneName, false, "PersistentBoolData", "Door broken open from King's Pass");
             public static readonly FlagDef Town__Gravedigger_NPC = new FlagDef("Gravedigger NPC", SceneInstances.Town.SceneName, false, "PersistentBoolData");
             public static readonly FlagDef Town__Interact_Reminder = new FlagDef("Interact Reminder", SceneInstances.Town.SceneName, false, "PersistentBoolData");
             public static readonly FlagDef Town__Mines_Lever = new FlagDef("Mines Lever", SceneInstances.Town.SceneName, false, "PersistentBoolData");
-
-            // Tutorial_01
-            public static readonly FlagDef Tutorial_01__Shiny_Item_1 = new FlagDef("Shiny Item (1)", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData");
         #endregion
 
         #region UNCATEGORIZED GLOBAL FLAGS
@@ -1649,7 +1638,6 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef quirrelSpaReady = new FlagDef("quirrelSpaReady", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef ranAway = new FlagDef("ranAway", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef refusedLegEater = new FlagDef("refusedLegEater", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef respawnType = new FlagDef("respawnType", "Global", false, "PlayerData_Int");
             public static readonly FlagDef restingGroundsCryptWall = new FlagDef("restingGroundsCryptWall", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef ruins1_5_tripleDoor = new FlagDef("ruins1_5_tripleDoor", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef salubraConvoCombo = new FlagDef("salubraConvoCombo", "Global", false, "PlayerData_Bool");
@@ -1782,7 +1770,6 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef dreamGateY = new FlagDef("dreamGateY", "Global", false, "PlayerData_Single");
             public static readonly FlagDef dreamReturnScene = new FlagDef("dreamReturnScene", "Global", false, "PlayerData_String");
             public static readonly FlagDef equippedCharms = new FlagDef("equippedCharms", "Global", false, "PlayerData_List`1");
-            public static readonly FlagDef mapZone = new FlagDef("mapZone", "Global", false, "PlayerData_MapZone");
             public static readonly FlagDef nextScene = new FlagDef("nextScene", "Global", false, "PlayerData_String");
             public static readonly FlagDef placedMarkers_b = new FlagDef("placedMarkers_b", "Global", false, "PlayerData_List`1");
             public static readonly FlagDef placedMarkers_r = new FlagDef("placedMarkers_r", "Global", false, "PlayerData_List`1");
@@ -1790,9 +1777,6 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef placedMarkers_y = new FlagDef("placedMarkers_y", "Global", false, "PlayerData_List`1");
             public static readonly FlagDef playerStory = new FlagDef("playerStory", "Global", false, "PlayerData_List`1");
             public static readonly FlagDef playerStoryOutput = new FlagDef("playerStoryOutput", "Global", false, "PlayerData_String");
-            public static readonly FlagDef playTime = new FlagDef("playTime", "Global", false, "PlayerData_Single");
-            public static readonly FlagDef respawnMarkerName = new FlagDef("respawnMarkerName", "Global", false, "PlayerData_String");
-            public static readonly FlagDef respawnScene = new FlagDef("respawnScene", "Global", false, "PlayerData_String");
             public static readonly FlagDef scenesEncounteredBench = new FlagDef("scenesEncounteredBench", "Global", false, "PlayerData_List`1");
             public static readonly FlagDef scenesEncounteredCocoon = new FlagDef("scenesEncounteredCocoon", "Global", false, "PlayerData_List`1");
             public static readonly FlagDef scenesEncounteredDreamPlant = new FlagDef("scenesEncounteredDreamPlant", "Global", false, "PlayerData_List`1");
@@ -1863,10 +1847,14 @@ namespace CabbyCodes.Flags
         {
             #region Player Flags
                 new FlagDef("atBench", "Global", false, "PlayerData_Bool", "Currently sitting at a bench"),
+                new FlagDef("charmBenchMsg", "Global", false, "PlayerData_Bool", "Got Charm message from resting at bench after getting a charm"),
                 new FlagDef("currentInvPane", "Global", false, "PlayerData_Int", "Inventory Pane Selected"),
                 new FlagDef("damagedBlue", "Global", false, "PlayerData_Bool", "Last damage took a blue health orb"),
                 new FlagDef("disablePause", "Global", false, "PlayerData_Bool", "Pause is disabled"),
+                new FlagDef("enteredTutorialFirstTime", "Global", false, "PlayerData_Bool", "Entered game start"),
                 new FlagDef("environmentType", "Global", false, "PlayerData_Int", "Environment Type: 0 = ground, 4 = platform"),
+                new FlagDef("falseKnightFirstPlop", "Global", false, "PlayerData_Bool", "False Knight fell first time"),
+                new FlagDef("firstGeo", "Global", false, "PlayerData_Bool", "Found first Geo"),
                 new FlagDef("gMap_doorMapZone", "Global", false, "PlayerData_String"),
                 new FlagDef("gMap_doorOriginOffsetX", "Global", false, "PlayerData_Single"),
                 new FlagDef("gMap_doorOriginOffsetY", "Global", false, "PlayerData_Single"),
@@ -1877,10 +1865,21 @@ namespace CabbyCodes.Flags
                 new FlagDef("gMap_doorY", "Global", false, "PlayerData_Single"),
                 new FlagDef("hazardRespawnFacingRight", "Global", false, "PlayerData_Bool"),
                 new FlagDef("hazardRespawnLocation", "Global", false, "PlayerData_Vector3"),
+                new FlagDef("journalEntriesCompleted", "Global", false, "PlayerData_Int"),
+                new FlagDef("journalEntriesTotal", "Global", false, "PlayerData_Int"),
+                new FlagDef("journalNotesCompleted", "Global", false, "PlayerData_Int"),
                 new FlagDef("lastJournalItem", "Global", false, "PlayerData_Int", "Last Journey Entry looked at"),
+                new FlagDef("mapZone", "Global", false, "PlayerData_MapZone"),
+                new FlagDef("openingCreditsPlayed", "Global", false, "PlayerData_Bool", "Opening Credits Played on Game Start"),
                 new FlagDef("previousDarkness", "Global", false, "PlayerData_Int"),
                 new FlagDef("prevHealth", "Global", false, "PlayerData_Int"),
+                new FlagDef("promptFocus", "Global", false, "PlayerData_Bool", "Took damage after seeing Focus Tablet"),
                 new FlagDef("respawnFacingRight", "Global", false, "PlayerData_Bool"),
+                new FlagDef("respawnMarkerName", "Global", false, "PlayerData_String"),
+                new FlagDef("respawnScene", "Global", false, "PlayerData_String"),
+                new FlagDef("respawnType", "Global", false, "PlayerData_Int"),
+                new FlagDef("seenFocusTablet", "Global", false, "PlayerData_Bool", "Passed by Focus Tablet"),
+                new FlagDef("seenJournalMsg", "Global", false, "PlayerData_Bool", "Seen Journal message for new enemy"),
                 new FlagDef("showHealthUI", "Global", false, "PlayerData_Bool", "Show Health UI"),
             #endregion
 
@@ -1892,6 +1891,12 @@ namespace CabbyCodes.Flags
 
                 // Crossroads_04
                 new FlagDef("CamLock Destroyer", SceneInstances.Crossroads_04.SceneName, false, "PersistentBoolData"),
+
+                // Crossroads_05
+                new FlagDef("Zombie Runner", SceneInstances.Crossroads_05.SceneName, false, "PersistentBoolData"),
+
+                // Crossroads_09
+                new FlagDef("Battle Scene", SceneInstances.Crossroads_09.SceneName, false, "PersistentBoolData", "Defeated Brooding Mawlek Scene"),
 
                 // Crossroads_13
                 new FlagDef("Zombie Barger", SceneInstances.Crossroads_13.SceneName, false, "PersistentBoolData"),
@@ -1935,8 +1940,12 @@ namespace CabbyCodes.Flags
 
                 // Crossroads_39
                 new FlagDef("Zombie Hornhead 1", SceneInstances.Crossroads_39.SceneName, false, "PersistentBoolData"),
+                new FlagDef("Zombie Runner", SceneInstances.Crossroads_39.SceneName, false, "PersistentBoolData"),
+                new FlagDef("Zombie Runner 1", SceneInstances.Crossroads_39.SceneName, false, "PersistentBoolData"),
 
                 // Crossroads_40
+                new FlagDef("Zombie Hornhead", SceneInstances.Crossroads_40.SceneName, false, "PersistentBoolData"),
+                new FlagDef("Zombie Leaper", SceneInstances.Crossroads_40.SceneName, false, "PersistentBoolData"),
                 new FlagDef("Zombie Leaper 1", SceneInstances.Crossroads_40.SceneName, false, "PersistentBoolData"),
                 new FlagDef("Zombie Runner 2", SceneInstances.Crossroads_40.SceneName, false, "PersistentBoolData"),
 
@@ -1970,6 +1979,7 @@ namespace CabbyCodes.Flags
                 // Town
                 new FlagDef("Death Respawn Trigger", SceneInstances.Town.SceneName, false, "PersistentBoolData"),
                 new FlagDef("Death Respawn Trigger 1", SceneInstances.Town.SceneName, false, "PersistentBoolData"),
+                new FlagDef("Interact Reminder", SceneInstances.Town.SceneName, false, "PersistentBoolData"),
 
                 // Tutorial_01
                 new FlagDef("Health Cocoon", SceneInstances.Tutorial_01.SceneName, true, "PersistentBoolData", "Broke Lifeblood Cocoon"),
@@ -1982,6 +1992,7 @@ namespace CabbyCodes.Flags
                 new FlagDef("Secret Sound Region (1)", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData"),
                 new FlagDef("fury charm_remask", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData"),
                 new FlagDef("inverse_remask_right", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData"),
+                new FlagDef("Shiny Item (1)", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData", "Got Charm 6"),
             #endregion
         };
 

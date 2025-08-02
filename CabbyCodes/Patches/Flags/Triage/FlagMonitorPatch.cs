@@ -26,7 +26,7 @@ namespace CabbyCodes.Patches.Flags.Triage
 
         // Tracked fields from FlagInstances
         private static readonly HashSet<string> trackedPlayerDataFields = new HashSet<string>();
-        private static readonly HashSet<string> trackedSceneDataFields = new HashSet<string>();
+        private static readonly HashSet<string> trackedSceneDataFields = new HashSet<string>(); // Stores "flagId|||sceneName" combinations
 
         // Fields to ignore during polling (noisy or not useful)
         private static readonly HashSet<string> ignoredFields = new HashSet<string>
@@ -383,6 +383,7 @@ namespace CabbyCodes.Patches.Flags.Triage
                 "killsZotelingHopper",
             #endregion
             "MPCharge",
+            "playTime",
             "profileID"
         };
 
@@ -696,9 +697,9 @@ namespace CabbyCodes.Patches.Flags.Triage
                                     discoveredSceneFlags.Add(uniqueKey);
                                     
                                     // Only add to current tracking if we want to monitor them
-                                    if (!trackedSceneDataFields.Contains(flagId))
+                                    if (!trackedSceneDataFields.Contains($"{flagId}|||{sceneName}"))
                                     {
-                                        trackedSceneDataFields.Add(flagId);
+                                        trackedSceneDataFields.Add($"{flagId}|||{sceneName}");
                                     }
                                     loadedCount++;
                                 }
@@ -797,8 +798,20 @@ namespace CabbyCodes.Patches.Flags.Triage
                             }
                             else if (flagDef.Type == "PersistentBoolData" || flagDef.Type == "PersistentIntData" || flagDef.Type == "GeoRockData")
                             {
-                                trackedSceneDataFields.Add(flagDef.Id);
+                                trackedSceneDataFields.Add($"{flagDef.Id}|||{flagDef.SceneName}");
                             }
+                        }
+                    }
+                }
+                
+                // Process UnusedFlags array to add scene flags to tracking
+                foreach (var unusedFlag in FlagInstances.UnusedFlags)
+                {
+                    if (unusedFlag != null && !string.IsNullOrEmpty(unusedFlag.Id))
+                    {
+                        if (unusedFlag.Type == "PersistentBoolData" || unusedFlag.Type == "PersistentIntData" || unusedFlag.Type == "GeoRockData")
+                        {
+                            trackedSceneDataFields.Add($"{unusedFlag.Id}|||{unusedFlag.SceneName}");
                         }
                     }
                 }
@@ -807,19 +820,6 @@ namespace CabbyCodes.Patches.Flags.Triage
                 foreach (var ignoredField in ignoredFields)
                 {
                     trackedPlayerDataFields.Remove(ignoredField);
-                }
-                
-                // Remove unused scene flags from tracking set
-                foreach (var unusedFlag in FlagInstances.UnusedFlags)
-                {
-                    if (unusedFlag != null && !string.IsNullOrEmpty(unusedFlag.Id))
-                    {
-                        // Remove from scene tracking if it's a scene flag
-                        if (unusedFlag.Type == "PersistentBoolData" || unusedFlag.Type == "PersistentIntData" || unusedFlag.Type == "GeoRockData")
-                        {
-                            trackedSceneDataFields.Remove(unusedFlag.Id);
-                        }
-                    }
                 }
                 
                 // Build FieldInfo cache for performance
@@ -1639,14 +1639,14 @@ namespace CabbyCodes.Patches.Flags.Triage
                     previousSceneDataValues.TryGetValue(key, out object previousValue);
 
                     // Check if this is a newly discovered flag (not in current tracking AND not previously discovered AND not in unused flags)
-                    bool isNewFlag = !trackedSceneDataFields.Contains(pbd.id) && 
+                    bool isNewFlag = !trackedSceneDataFields.Contains($"{pbd.id}|||{pbd.sceneName}") && 
                                    !discoveredSceneFlags.Contains($"{pbd.id}|||{pbd.sceneName}") &&
                                    !IsFlagInUnusedFlags(pbd.id, pbd.sceneName);
                     
                     if (isNewFlag)
                     {
                         discoveredSceneFlags.Add($"{pbd.id}|||{pbd.sceneName}");
-                        string notification = $"[NEW SCENE FLAG]: {pbd.id} ({pbd.sceneName}) = {currentValue}";
+                        string notification = $"[NEW SCENE FLAG: {pbd.sceneName}]: {pbd.id} = {currentValue}";
                         AddNotification(notification);
                         
                         // Log to console with copy-paste ready format
@@ -1663,7 +1663,7 @@ namespace CabbyCodes.Patches.Flags.Triage
                         historicalDiscoveries[uniqueKey] = (pbd.sceneName, "PersistentBoolData", currentValue);
                         
                         // Auto-add to tracking sets for immediate monitoring
-                        trackedSceneDataFields.Add(pbd.id);
+                        trackedSceneDataFields.Add($"{pbd.id}|||{pbd.sceneName}");
                         
                         // Auto-update discovery file on every discovery
                         SaveDiscoveredFlags(); // Save discovered flags immediately
@@ -1708,14 +1708,14 @@ namespace CabbyCodes.Patches.Flags.Triage
                     previousSceneDataValues.TryGetValue(key, out object previousValue);
 
                     // Check if this is a newly discovered flag (not in current tracking AND not previously discovered AND not in unused flags)
-                    bool isNewFlag = !trackedSceneDataFields.Contains(pid.id) && 
+                    bool isNewFlag = !trackedSceneDataFields.Contains($"{pid.id}|||{pid.sceneName}") && 
                                    !discoveredSceneFlags.Contains($"{pid.id}|||{pid.sceneName}") &&
                                    !IsFlagInUnusedFlags(pid.id, pid.sceneName);
                     
                     if (isNewFlag)
                     {
                         discoveredSceneFlags.Add($"{pid.id}|||{pid.sceneName}");
-                        string notification = $"[NEW SCENE FLAG]: {pid.id} ({pid.sceneName}) = {currentValue}";
+                        string notification = $"[NEW SCENE FLAG: {pid.sceneName}]: {pid.id} = {currentValue}";
                         AddNotification(notification);
                         
                         // Log to console with copy-paste ready format
@@ -1732,7 +1732,7 @@ namespace CabbyCodes.Patches.Flags.Triage
                         historicalDiscoveries[uniqueKey] = (pid.sceneName, "PersistentIntData", currentValue);
                         
                         // Auto-add to tracking sets for immediate monitoring
-                        trackedSceneDataFields.Add(pid.id);
+                        trackedSceneDataFields.Add($"{pid.id}|||{pid.sceneName}");
                         
                         // Auto-update discovery file on every discovery
                         SaveDiscoveredFlags(); // Save discovered flags immediately
@@ -1779,7 +1779,7 @@ namespace CabbyCodes.Patches.Flags.Triage
                     previousSceneDataValues.TryGetValue(key, out object previousValue);
 
                     // Check if this is a newly discovered flag (not in current tracking AND not previously discovered AND not in unused flags)
-                    bool isNewFlag = !trackedSceneDataFields.Contains(grd.id) && 
+                    bool isNewFlag = !trackedSceneDataFields.Contains($"{grd.id}|||{grd.sceneName}") && 
                                    !discoveredSceneFlags.Contains($"{grd.id}|||{grd.sceneName}") &&
                                    !IsFlagInUnusedFlags(grd.id, grd.sceneName);
                     
@@ -1787,7 +1787,7 @@ namespace CabbyCodes.Patches.Flags.Triage
                     {
                         discoveredSceneFlags.Add($"{grd.id}|||{grd.sceneName}");
                         string status = currentValue ? "Broken" : $"Intact ({currentHitsLeft} hits left)";
-                        string notification = $"[NEW SCENE FLAG]: GeoRock {grd.id} ({grd.sceneName}) = {status}";
+                        string notification = $"[NEW SCENE FLAG: {grd.sceneName}]: GeoRock {grd.id} = {status}";
                         AddNotification(notification);
                         
                         // Log to console with copy-paste ready format
@@ -1804,7 +1804,7 @@ namespace CabbyCodes.Patches.Flags.Triage
                         historicalDiscoveries[uniqueKey] = (grd.sceneName, "GeoRockData", currentValue);
                         
                         // Auto-add to tracking sets for immediate monitoring
-                        trackedSceneDataFields.Add(grd.id);
+                        trackedSceneDataFields.Add($"{grd.id}|||{grd.sceneName}");
                         
                         // Auto-update discovery file on every discovery
                         SaveDiscoveredFlags(); // Save discovered flags immediately
@@ -1847,7 +1847,7 @@ namespace CabbyCodes.Patches.Flags.Triage
 
             foreach (var pbd in SceneData.instance.persistentBoolItems)
             {
-                if (!trackedSceneDataFields.Contains(pbd.id)) continue;
+                if (!trackedSceneDataFields.Contains($"{pbd.id}|||{pbd.sceneName}")) continue;
                 
                 // Skip unused flags
                 if (IsFlagInUnusedFlags(pbd.id, pbd.sceneName)) 
@@ -1886,7 +1886,7 @@ namespace CabbyCodes.Patches.Flags.Triage
 
             foreach (var pid in SceneData.instance.persistentIntItems)
             {
-                if (!trackedSceneDataFields.Contains(pid.id)) continue;
+                if (!trackedSceneDataFields.Contains($"{pid.id}|||{pid.sceneName}")) continue;
                 
                 // Skip unused flags
                 if (IsFlagInUnusedFlags(pid.id, pid.sceneName)) continue;
@@ -1928,7 +1928,7 @@ namespace CabbyCodes.Patches.Flags.Triage
 
             foreach (var grd in SceneData.instance.geoRocks)
             {
-                if (!trackedSceneDataFields.Contains(grd.id)) continue;
+                if (!trackedSceneDataFields.Contains($"{grd.id}|||{grd.sceneName}")) continue;
                 
                 // Skip unused flags
                 if (IsFlagInUnusedFlags(grd.id, grd.sceneName)) continue;
