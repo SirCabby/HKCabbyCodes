@@ -6,7 +6,7 @@ using System.Linq;
 using System.Reflection;
 using UnityEngine;
 using static CabbyCodes.Scenes.SceneManagement;
-using CabbyCodes.Patches.Flags;
+using CabbyMenu.UI.DynamicPanels;
 using CabbyCodes.Flags;
 using CabbyCodes.SavedGames;
 
@@ -54,16 +54,18 @@ namespace CabbyCodes.Patches.Maps
             // Get current area for default selection
             int currentAreaIndex = GetCurrentAreaIndex();
             
+            // Add Rooms header
+            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Rooms: Enable to have room mapped out").SetColor(CheatPanel.headerColor));
+            
             // Add Rooms section
             var roomsSection = new CategorizedPanelSection(
-                "Rooms: Enable to have room mapped out",
                 "Select Area",
                 Scenes.Areas.GetAllAreaNames().ToList(),
                 CreateRoomPanels,
                 1, // insertionIndex
                 currentAreaIndex // defaultSelection
             );
-            roomsSection.AddToMenu();
+            roomsSection.AddToMenu(CabbyCodesPlugin.cabbyMenu);
         }
 
         private static int GetCurrentAreaIndex()
@@ -71,10 +73,10 @@ namespace CabbyCodes.Patches.Maps
             try
             {
                 // Get current scene name
-                var (sceneName, _) = CabbyCodes.Patches.Teleport.TeleportService.GetCurrentPlayerPosition();
+                var (sceneName, _) = Teleport.TeleportService.GetCurrentPlayerPosition();
                 
                 // Get area name from scene
-                var sceneData = Scenes.SceneManagement.GetSceneData(sceneName);
+                var sceneData = GetSceneData(sceneName);
                 if (sceneData != null)
                 {
                     string areaName = sceneData.AreaName;

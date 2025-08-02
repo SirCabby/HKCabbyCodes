@@ -52,6 +52,11 @@ namespace CabbyMenu.UI.CheatPanels
         protected readonly GameObject cheatTextObj;
 
         /// <summary>
+        /// The description text for this panel.
+        /// </summary>
+        protected readonly string description;
+
+        /// <summary>
         /// List of actions to execute during panel updates.
         /// </summary>
         public readonly List<Action> updateActions = new List<Action>();
@@ -62,6 +67,7 @@ namespace CabbyMenu.UI.CheatPanels
         /// <param name="description">The description text to display on the panel.</param>
         public CheatPanel(string description)
         {
+            this.description = description;
             cheatPanel = DefaultControls.CreatePanel(new DefaultControls.Resources());
             cheatPanel.name = "Cheat Panel";
 
@@ -133,6 +139,15 @@ namespace CabbyMenu.UI.CheatPanels
         public GameObject GetGameObject()
         {
             return cheatPanel;
+        }
+
+        /// <summary>
+        /// Gets the description text for this panel.
+        /// </summary>
+        /// <returns>The description text</returns>
+        public string GetDescription()
+        {
+            return description;
         }
 
         /// <summary>

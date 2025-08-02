@@ -70,7 +70,7 @@ namespace CabbyCodes.Scenes
         /// <returns>A collection of area names that have flags, sorted alphabetically.</returns>
         public static IEnumerable<string> GetAreaNamesWithFlags()
         {
-            var scenesWithFlags = CabbyCodes.Flags.FlagData.SceneFlagData.GetAllSceneNamesWithFlags();
+            var scenesWithFlags = Flags.FlagData.SceneFlagData.GetAllSceneNamesWithFlags();
             var areasWithFlags = sceneMapData
                 .Where(s => scenesWithFlags.Contains(s.SceneName))
                 .Select(s => s.AreaName)
