@@ -7,6 +7,7 @@ using static CabbyCodes.Scenes.SceneManagement;
 using static CabbyCodes.Scenes.Areas;
 using CabbyCodes.Flags;
 using CabbyCodes.Patches.Teleport;
+using CabbyCodes.Patches.BasePatches;
 using UnityEngine;
 
 namespace CabbyCodes.Patches
@@ -14,7 +15,7 @@ namespace CabbyCodes.Patches
     /// <summary>
     /// Handles grub rescue functionality and tracking for specific scenes.
     /// </summary>
-    public class GrubPatch : ISyncedReference<bool>
+    public class GrubPatch : BoolPatch
     {
         /// <summary>
         /// The identifier for grub bottle persistent data.
@@ -98,16 +99,37 @@ namespace CabbyCodes.Patches
         /// Initializes a new instance of the GrubPatch class.
         /// </summary>
         /// <param name="sceneName">The scene name where the grub is located.</param>
-        public GrubPatch(string sceneName)
+        public GrubPatch(string sceneName) : base(CreateGrubFlagDef(sceneName), GetGrubDisplayName(sceneName))
         {
             this.sceneName = sceneName;
+        }
+
+        /// <summary>
+        /// Creates a FlagDef for a grub in the specified scene.
+        /// </summary>
+        /// <param name="sceneName">The scene name where the grub is located.</param>
+        /// <returns>A FlagDef for the grub.</returns>
+        private static FlagDef CreateGrubFlagDef(string sceneName)
+        {
+            return new FlagDef(grubId, sceneName, false, "PersistentBoolData", GetGrubDisplayName(sceneName));
+        }
+
+        /// <summary>
+        /// Gets the display name for a grub in the specified scene.
+        /// </summary>
+        /// <param name="sceneName">The scene name where the grub is located.</param>
+        /// <returns>The display name for the grub.</returns>
+        private static string GetGrubDisplayName(string sceneName)
+        {
+            var sceneData = GetSceneData(sceneName);
+            return sceneData?.ReadableName ?? sceneName;
         }
 
         /// <summary>
         /// Gets whether the grub in this scene has been rescued.
         /// </summary>
         /// <returns>True if the grub has been rescued, false otherwise.</returns>
-        public bool Get()
+        public override bool Get()
         {
             // true = got it
             return FlagManager.GetBoolFlag(grubId, sceneName);
@@ -117,7 +139,7 @@ namespace CabbyCodes.Patches
         /// Sets whether the grub in this scene has been rescued.
         /// </summary>
         /// <param name="value">True to mark the grub as rescued, false to mark it as not rescued.</param>
-        public void Set(bool value)
+        public override void Set(bool value)
         {
             bool hasGrub = Get();
 
@@ -206,15 +228,17 @@ namespace CabbyCodes.Patches
                     if (grubLocations.TryGetValue(grubScene, out var grubTeleportLocation) && grubTeleportLocation != null)
                     {
                         // Create panel with toggle and teleport button
+                        var grubPatch = new GrubPatch(grubScene);
                         CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new ToggleWithTeleportPanel(
-                            new GrubPatch(grubScene), 
+                            grubPatch, 
                             () => TeleportService.DoTeleport(grubTeleportLocation), 
-                            displayName));
+                            GetGrubDisplayName(grubScene)));
                     }
                     else
                     {
                         // Create panel with just toggle (no teleport button)
-                        CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new TogglePanel(new GrubPatch(grubScene), displayName));
+                        var grubPatch = new GrubPatch(grubScene);
+                        CabbyCodesPlugin.cabbyMenu.AddCheatPanel(grubPatch.CreatePanel());
                     }
                 }
             }
