@@ -5,7 +5,7 @@ namespace CabbyCodes.Flags
     public static class FlagInstances
     {
         #region Bosses
-            public static readonly FlagDef Crossroads_09__Mawlek_Body = new FlagDef("Mawlek Body", SceneInstances.Crossroads_09.SceneName, false, "PersistentBoolData", "Brooding Mawlek Defeated");
+            public static readonly FlagDef Crossroads_09__Mawlek_Body = new FlagDef("Mawlek Body", SceneInstances.Crossroads_09.SceneName, false, "PersistentBoolData", "Brooding Mawlek defeated");
             public static readonly FlagDef falseKnightDefeated = new FlagDef("falseKnightDefeated", "Global", false, "PlayerData_Bool", "False Knight defeated");
         #endregion
 
@@ -181,7 +181,7 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef menderState = new FlagDef("menderState", "Global", false, "PlayerData_Int", "Changed to 1 after breaking Mender sign");
             public static readonly FlagDef openedMapperShop = new FlagDef("openedMapperShop", "Global", false, "PlayerData_Bool", "Opened Map Shop");
             public static readonly FlagDef shamanPillar = new FlagDef("shamanPillar", "Global", false, "PlayerData_Bool", "Opened door from Snail Shaman to Crossroads west");
-            public static readonly FlagDef stationsOpened = new FlagDef("stationsOpened", "Global", false, "PlayerData_Int", "Opened Stag Station Count");
+            public static readonly FlagDef stationsOpened = new FlagDef("stationsOpened", "Global", false, "PlayerData_Int", "Stag Stations Opened (0-?)");
 
             #region Categorized Scene Flags
                 // Crossroads_04

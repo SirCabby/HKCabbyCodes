@@ -6,38 +6,146 @@ using UnityEngine;
 using CabbyCodes.Flags.FlagInfo;
 using CabbyCodes.Flags.FlagData;
 using CabbyCodes.Flags;
+using CabbyCodes.Patches.BasePatches;
+using CabbyMenu;
 
 namespace CabbyCodes.Patches.Charms
 {
-    public class CharmPatch : ISyncedReference<bool>
+    public class CharmPatch
     {
         private static readonly Color unearnedColor = CabbyMenu.Constants.UNEARNED_COLOR;
         public static readonly List<CharmInfo> charms = CharmData.GetAllCharms();
 
-        private readonly int charmIndex;
-        private TogglePanel parent;
+        // Charm cost removal functionality
+        public const string key = "CharmCost_Patch";
+        private static readonly BoxedReference<bool> charmCostValue = CodeState.Get(key, false);
 
-        public CharmPatch(int charmIndex)
+        public List<CheatPanel> CreatePanels()
         {
-            this.charmIndex = charmIndex;
+            var panels = new List<CheatPanel>
+            {
+                // Notch count panel
+                new IntPatch(FlagInstances.charmSlots).CreatePanel(),
+
+                // Charm cost removal panel
+                new TogglePanel(new DelegateReference<bool>(
+                () => charmCostValue.Get(),
+                (value) =>
+                {
+                    if (value)
+                    {
+                        foreach (var charm in charms)
+                        {
+                            FlagManager.SetIntFlag(charm.CostFlag, 0);
+                        }
+                    }
+                    else
+                    {
+                        foreach (var charm in charms)
+                        {
+                            // Get the default cost from the game data
+                            int defaultCost = FlagManager.GetIntFlag(charm.CostFlag);
+                            FlagManager.SetIntFlag(charm.CostFlag, defaultCost);
+                        }
+                    }
+                    charmCostValue.Set(value);
+                }
+            ), "Remove Charm Notch Cost"),
+
+                // Grimm Child level dropdown
+                new DropdownPatch(FlagInstances.grimmChildLevel, new List<string> { "1", "2", "3", "4", "CM" }, "Grimm Child Level (1-4) or Carefree Melody").CreatePanel(),
+
+                // Royal Charm state dropdown
+                new DropdownPatch(FlagInstances.royalCharmState, new List<string> { "NONE", "Kingsoul", "Void Heart" }, "Kingsoul / Void Heart").CreatePanel()
+            };
+            
+            // Broken charm panels
+            var breakableCharms = CharmData.GetBreakableCharms();
+            foreach (var charm in breakableCharms)
+            {
+                panels.Add(CreateBrokenCharmPanel(charm));
+            }
+            
+            // Upgrade charm panels
+            var upgradeableCharms = CharmData.GetUpgradeableCharms();
+            foreach (var charm in upgradeableCharms)
+            {
+                panels.Add(CreateUpgradeCharmPanel(charm));
+            }
+            
+            return panels;
         }
 
-        public bool Get()
+        public List<CheatPanel> CreateCharmTogglePanels()
         {
-            var charm = CharmData.GetCharm(charmIndex);
-            return FlagManager.GetBoolFlag(charm.GotFlag);
+            var panels = new List<CheatPanel>();
+            
+            // Individual charm panels
+            foreach (var charm in charms)
+            {
+                panels.Add(CreateCharmTogglePanel(charm));
+            }
+            
+            return panels;
         }
 
-        public void Set(bool value)
+        private CheatPanel CreateBrokenCharmPanel(CharmInfo charm)
         {
-            var charm = CharmData.GetCharm(charmIndex);
-            FlagManager.SetBoolFlag(charm.GotFlag, value);
-            parent?.Update();
+            int index = charms.IndexOf(charm) + 1;
+            TogglePanel togglePanel = new TogglePanel(new BoolPatch(charm.BrokenFlag), index + ": " + charm.Name + " is Broken");
+            (_, ImageMod spriteImageMod) = PanelAdder.AddSprite(togglePanel, CharmIconList.Instance.GetSprite(charm.Id), 1);
+
+            togglePanel.updateActions.Add(() =>
+            {
+                spriteImageMod.SetSprite(GetCharmIcon(charm.Id));
+            });
+            
+            return togglePanel;
         }
 
-        public void SetCheatPanel(TogglePanel parent)
+        private CheatPanel CreateUpgradeCharmPanel(CharmInfo charm)
         {
-            this.parent = parent;
+            int index = charms.IndexOf(charm) + 1;
+            TogglePanel togglePanel = new TogglePanel(new BoolPatch(charm.UpgradeFlag), index + ": " + charm.Name + " is Unbreakable");
+            (_, ImageMod spriteImageMod) = PanelAdder.AddSprite(togglePanel, CharmIconList.Instance.GetSprite(charm.Id), 1);
+
+            togglePanel.updateActions.Add(() =>
+            {
+                spriteImageMod.SetSprite(GetCharmIcon(charm.Id));
+            });
+            
+            return togglePanel;
+        }
+
+        private CheatPanel CreateCharmTogglePanel(CharmInfo charm)
+        {
+            int index = charms.IndexOf(charm) + 1;
+            TogglePanel togglePanel = new TogglePanel(new BoolPatch(charm.GotFlag), index + ": " + charm.Name);
+            
+            (_, ImageMod spriteImageMod) = PanelAdder.AddSprite(togglePanel, CharmIconList.Instance.GetSprite(charm.Id), 1);
+
+            togglePanel.updateActions.Add(() =>
+            {
+                spriteImageMod.SetSprite(GetCharmIcon(charm.Id));
+                if (FlagManager.GetBoolFlag(charm.GotFlag))
+                {
+                    if (charm.Id == 40 && PlayerData.instance.royalCharmState < 3)
+                    {
+                        PlayerData.instance.royalCharmState = 3;
+                    }
+                    spriteImageMod.SetColor(Color.white);
+                }
+                else
+                {
+                    if (charm.Id == 40 && PlayerData.instance.royalCharmState > 0)
+                    {
+                        PlayerData.instance.royalCharmState = 0;
+                    }
+                    spriteImageMod.SetColor(unearnedColor);
+                }
+            });
+            
+            return togglePanel;
         }
 
         public static Sprite GetCharmIcon(int id)
@@ -90,55 +198,28 @@ namespace CabbyCodes.Patches.Charms
             return CharmIconList.Instance.spriteList[id];
         }
 
-        private static void AddCharmPanels()
-        {
-            for (int i = 0; i < charms.Count; i++)
-            {
-                var charm = charms[i];
-                CharmPatch patch = new CharmPatch(charm.Id);
-
-                int index = i + 1;
-                TogglePanel togglePanel = new TogglePanel(patch, index + ": " + charm.Name);
-                (_, ImageMod spriteImageMod) = PanelAdder.AddSprite(togglePanel, CharmIconList.Instance.GetSprite(charm.Id), 1);
-                patch.SetCheatPanel(togglePanel);
-
-                togglePanel.updateActions.Add(() =>
-                {
-                    spriteImageMod.SetSprite(GetCharmIcon(charm.Id));
-                    if (FlagManager.GetBoolFlag(charm.GotFlag))
-                    {
-                        if (charm.Id == 40 && PlayerData.instance.royalCharmState < 3)
-                        {
-                            PlayerData.instance.royalCharmState = 3;
-                        }
-                        spriteImageMod.SetColor(Color.white);
-                    }
-                    else
-                    {
-                        if (charm.Id == 40 && PlayerData.instance.royalCharmState > 0)
-                        {
-                            PlayerData.instance.royalCharmState = 0;
-                        }
-                        spriteImageMod.SetColor(unearnedColor);
-                    }
-                });
-                togglePanel.Update();
-
-                CabbyCodesPlugin.cabbyMenu.AddCheatPanel(togglePanel);
-            }
-        }
-
         public static void AddPanels()
         {
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Charms:").SetColor(CheatPanel.headerColor));
-            NotchPatch.AddPanel();
-            CharmCostPatch.AddPanel();
-            GrimmChildLevelPatch.AddPanel();
-            RoyalCharmPatch.AddPanel();
-            BrokenCharmPatch.AddPanels();
-            UpgradeCharmPatch.AddPanels();
+            
+            // Create the charm patch instance
+            var charmPatch = new CharmPatch();
+            var panels = charmPatch.CreatePanels();
+            
+            // Add all panels to the menu
+            foreach (var panel in panels)
+            {
+                CabbyCodesPlugin.cabbyMenu.AddCheatPanel(panel);
+            }
+            
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Toggle ON to Have Charm").SetColor(CheatPanel.headerColor));
-            AddCharmPanels();
+            
+            // Add individual charm toggle panels after the header
+            var charmTogglePanels = charmPatch.CreateCharmTogglePanels();
+            foreach (var panel in charmTogglePanels)
+            {
+                CabbyCodesPlugin.cabbyMenu.AddCheatPanel(panel);
+            }
         }
     }
 }
