@@ -11,6 +11,7 @@ namespace CabbyCodes.Patches.Flags
         public static void AddPanels()
         {
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Game Flags").SetColor(CheatPanel.headerColor));
+            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Warning: Cannot toggle flag while in the same room").SetColor(CheatPanel.warningColor));
 
             var flagTypeSection = new CategorizedPanelSection(
                 "Flag Type", 
