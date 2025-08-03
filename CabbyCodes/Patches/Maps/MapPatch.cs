@@ -50,7 +50,7 @@ namespace CabbyCodes.Patches.Maps
                 1, // insertionIndex
                 currentAreaIndex // defaultSelection
             );
-            roomsSection.AddToMenu(CabbyCodesPlugin.cabbyMenu);
+            panels.AddRange(roomsSection.CreatePanels());
             
             return panels;
         }

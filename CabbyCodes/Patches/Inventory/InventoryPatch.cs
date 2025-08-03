@@ -171,12 +171,9 @@ namespace CabbyCodes.Patches.Inventory
                 new BoolPatch(FlagInstances.hasQuill).CreatePanel(),
                 new BoolPatch(FlagInstances.hasLantern).CreatePanel(),
                 new BoolPatch(FlagInstances.hasTramPass).CreatePanel(),
-
-                // Collector's Map
                 new BoolPatch(FlagInstances.hasPinGrub).CreatePanel(),
                 new BoolPatch(FlagInstances.hasJournal).CreatePanel(),
                 new BoolPatch(FlagInstances.hasHuntersMark).CreatePanel(),
-                // Delicate Flower (multi-flag)
                 new DropdownPanel(new DelicateFlowerReference(), FlagInstances.hasXunFlower.ReadableName, Constants.DEFAULT_PANEL_HEIGHT),
                 new BoolPatch(FlagInstances.hasGodfinder).CreatePanel()
             };
@@ -188,7 +185,6 @@ namespace CabbyCodes.Patches.Inventory
         {
             var panels = new List<CheatPanel>
             {
-                // Simple Keys
                 new IntPatch(FlagInstances.simpleKeys).CreatePanel(),
                 new BoolPatch(FlagInstances.hasWhiteKey).CreatePanel(),
                 new BoolPatch(FlagInstances.hasLoveKey).CreatePanel(),
