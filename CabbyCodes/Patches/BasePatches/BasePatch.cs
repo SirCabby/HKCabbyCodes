@@ -53,7 +53,7 @@ namespace CabbyCodes.Patches.BasePatches
                 case "PersistentIntData":
                     return new IntPatch(flag, GetDescription(flag));
                 case "GeoRockData":
-                    return new BoolPatch(flag, GetDescription(flag));
+                    return new GeoRockPatch(flag, GetDescription(flag));
                 default:
                     return new BoolPatch(flag, GetDescription(flag)); // Default to bool
             }

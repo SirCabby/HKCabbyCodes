@@ -78,19 +78,19 @@ namespace CabbyCodes.Scenes
         /// Gets a dictionary mapping area names to lists of flags for that area.
         /// </summary>
         /// <returns>A dictionary where keys are area names and values are lists of flags.</returns>
-        public static Dictionary<string, List<CabbyCodes.Flags.FlagDef>> GetAreaFlags()
+        public static Dictionary<string, List<Flags.FlagDef>> GetAreaFlags()
         {
-            var areaFlags = new Dictionary<string, List<CabbyCodes.Flags.FlagDef>>();
+            var areaFlags = new Dictionary<string, List<Flags.FlagDef>>();
             
             // Get all FlagDef instances from FlagInstances class using reflection
-            var flagInstancesType = typeof(CabbyCodes.Flags.FlagInstances);
+            var flagInstancesType = typeof(Flags.FlagInstances);
             var fields = flagInstancesType.GetFields(BindingFlags.Public | BindingFlags.Static);
             
             foreach (var field in fields)
             {
-                if (field.FieldType == typeof(CabbyCodes.Flags.FlagDef))
+                if (field.FieldType == typeof(Flags.FlagDef))
                 {
-                    var flagDef = (CabbyCodes.Flags.FlagDef)field.GetValue(null);
+                    var flagDef = (Flags.FlagDef)field.GetValue(null);
                     
                     // Skip global flags (scene name is "Global")
                     if (flagDef.SceneName == "Global")
@@ -104,7 +104,7 @@ namespace CabbyCodes.Scenes
                         
                         if (!areaFlags.ContainsKey(areaName))
                         {
-                            areaFlags[areaName] = new List<CabbyCodes.Flags.FlagDef>();
+                            areaFlags[areaName] = new List<Flags.FlagDef>();
                         }
                         
                         areaFlags[areaName].Add(flagDef);
@@ -153,7 +153,7 @@ namespace CabbyCodes.Scenes
         {
             var sceneDataList = new List<SceneMapData>();
             var scenesType = typeof(SceneInstances);
-            var fields = scenesType.GetFields(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
+            var fields = scenesType.GetFields(BindingFlags.Public | BindingFlags.Static);
 
             foreach (var field in fields)
             {
