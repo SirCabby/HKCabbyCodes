@@ -67,12 +67,10 @@ namespace CabbyCodes.Patches.Maps
             return new FlagDef[]
             {
                 FlagInstances.mapAbyss,
-                FlagInstances.mapAllRooms,
                 FlagInstances.mapCity,
                 FlagInstances.mapCliffs,
                 FlagInstances.mapCrossroads,
                 FlagInstances.mapDeepnest,
-                FlagInstances.mapDirtmouth,
                 FlagInstances.mapFogCanyon,
                 FlagInstances.mapFungalWastes,
                 FlagInstances.mapGreenpath,
@@ -82,6 +80,18 @@ namespace CabbyCodes.Patches.Maps
                 FlagInstances.mapRoyalGardens,
                 FlagInstances.mapWaterways
             };
+        }
+
+        protected override IPatch CreatePatch(FlagDef flag)
+        {
+            // Use MapBoolPatch for map flags to manage hasMap flag
+            if (flag.Type == "PlayerData_Bool")
+            {
+                return new MapBoolPatch(flag, GetDescription(flag));
+            }
+            
+            // Fall back to base implementation for other types
+            return base.CreatePatch(flag);
         }
 
         protected override string GetDescription(FlagDef flag)
