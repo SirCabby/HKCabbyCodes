@@ -7,12 +7,13 @@ namespace CabbyCodes.Patches.BasePatches
 {
     /// <summary>
     /// Dropdown patch implementation for custom value lists
+    /// Supports both simple single-flag cases and complex multi-flag cases
     /// </summary>
     public class DropdownPatch : ISyncedValueList, IPatch
     {
-        private readonly FlagDef flag;
-        private readonly List<string> valueList;
-        private readonly string description;
+        protected readonly FlagDef flag;
+        protected readonly List<string> valueList;
+        protected readonly string description;
         
         public DropdownPatch(FlagDef flagDef, List<string> values, string desc)
         {
@@ -21,8 +22,8 @@ namespace CabbyCodes.Patches.BasePatches
             description = desc;
         }
         
-        public int Get() => FlagManager.GetIntFlag(flag);
-        public void Set(int value) => FlagManager.SetIntFlag(flag, value);
+        public virtual int Get() => FlagManager.GetIntFlag(flag);
+        public virtual void Set(int value) => FlagManager.SetIntFlag(flag, value);
         
         public List<string> GetValueList() => valueList;
         

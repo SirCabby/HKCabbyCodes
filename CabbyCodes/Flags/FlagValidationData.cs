@@ -60,6 +60,30 @@ namespace CabbyCodes.Flags
                 case "simpleKeys":
                     return new IntFlagValidationMetadata(0, 4, KeyCodeMap.ValidChars.Numeric);
                 
+                case "geo":
+                    return new IntFlagValidationMetadata(0, 999999, KeyCodeMap.ValidChars.Numeric);
+                
+                case "dreamOrbs":
+                    return new IntFlagValidationMetadata(0, 9999, KeyCodeMap.ValidChars.Numeric);
+                
+                case "trinket1":
+                    return new IntFlagValidationMetadata(0, 14, KeyCodeMap.ValidChars.Numeric);
+                
+                case "trinket2":
+                    return new IntFlagValidationMetadata(0, 17, KeyCodeMap.ValidChars.Numeric);
+                
+                case "trinket3":
+                    return new IntFlagValidationMetadata(0, 8, KeyCodeMap.ValidChars.Numeric);
+                
+                case "trinket4":
+                    return new IntFlagValidationMetadata(0, 4, KeyCodeMap.ValidChars.Numeric);
+                
+                case "nailSmithUpgrades":
+                    return new IntFlagValidationMetadata(0, 4, KeyCodeMap.ValidChars.Numeric);
+                
+                case "vesselFragments":
+                    return new IntFlagValidationMetadata(0, 2, KeyCodeMap.ValidChars.Numeric);
+                
                 case "grubsCollected":
                     return new IntFlagValidationMetadata(0, 46, KeyCodeMap.ValidChars.Numeric);
                 

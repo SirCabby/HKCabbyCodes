@@ -10,9 +10,9 @@ namespace CabbyCodes.Patches.BasePatches
     /// </summary>
     public class FloatPatch : ISyncedReference<float>, IPatch
     {
-        private readonly FlagDef flag;
-        private readonly FloatFlagValidationMetadata validationData;
-        private readonly string description;
+        protected readonly FlagDef flag;
+        protected readonly FloatFlagValidationMetadata validationData;
+        protected readonly string description;
         
         public FloatPatch(FlagDef flagDef, string description = null)
         {
@@ -21,10 +21,10 @@ namespace CabbyCodes.Patches.BasePatches
             validationData = FlagValidationData.GetFloatValidationData(flag);
         }
         
-        public float Get() => FlagManager.GetFloatFlag(flag);
-        public void Set(float value) => FlagManager.SetFloatFlag(flag, value);
+        public virtual float Get() => FlagManager.GetFloatFlag(flag);
+        public virtual void Set(float value) => FlagManager.SetFloatFlag(flag, value);
         
-        public CheatPanel CreatePanel()
+        public virtual CheatPanel CreatePanel()
         {
             // Use validation data if available, otherwise fall back to defaults
             if (validationData != null)

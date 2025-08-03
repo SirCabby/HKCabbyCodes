@@ -10,9 +10,9 @@ namespace CabbyCodes.Patches.BasePatches
     /// </summary>
     public class IntPatch : ISyncedReference<int>, IPatch
     {
-        private readonly FlagDef flag;
-        private readonly IntFlagValidationMetadata validationData;
-        private readonly string description;
+        protected readonly FlagDef flag;
+        protected readonly IntFlagValidationMetadata validationData;
+        protected readonly string description;
         
         public IntPatch(FlagDef flagDef, string description = null)
         {
@@ -21,10 +21,10 @@ namespace CabbyCodes.Patches.BasePatches
             validationData = FlagValidationData.GetIntValidationData(flag);
         }
         
-        public int Get() => FlagManager.GetIntFlag(flag);
-        public void Set(int value) => FlagManager.SetIntFlag(flag, value);
+        public virtual int Get() => FlagManager.GetIntFlag(flag);
+        public virtual void Set(int value) => FlagManager.SetIntFlag(flag, value);
         
-        public CheatPanel CreatePanel()
+        public virtual CheatPanel CreatePanel()
         {
             // Use validation data if available, otherwise fall back to defaults
             if (validationData != null)

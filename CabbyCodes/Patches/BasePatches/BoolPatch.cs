@@ -9,8 +9,8 @@ namespace CabbyCodes.Patches.BasePatches
     /// </summary>
     public class BoolPatch : ISyncedReference<bool>, IPatch
     {
-        private readonly FlagDef flag;
-        private readonly string description;
+        protected readonly FlagDef flag;
+        protected readonly string description;
         
         public BoolPatch(FlagDef flagDef, string description = null)
         {
@@ -18,10 +18,10 @@ namespace CabbyCodes.Patches.BasePatches
             this.description = description ?? flagDef.ReadableName;
         }
         
-        public bool Get() => FlagManager.GetBoolFlag(flag);
-        public void Set(bool value) => FlagManager.SetBoolFlag(flag, value);
+        public virtual bool Get() => FlagManager.GetBoolFlag(flag);
+        public virtual void Set(bool value) => FlagManager.SetBoolFlag(flag, value);
         
-        public CheatPanel CreatePanel()
+        public virtual CheatPanel CreatePanel()
         {
             return new TogglePanel(this, description);
         }

@@ -10,8 +10,8 @@ namespace CabbyCodes.Patches.BasePatches
     /// </summary>
     public class GeoRockPatch : ISyncedReference<int>, IPatch
     {
-        private readonly FlagDef flag;
-        private readonly string description;
+        protected readonly FlagDef flag;
+        protected readonly string description;
         
         public GeoRockPatch(FlagDef flagDef, string description = null)
         {
@@ -19,7 +19,7 @@ namespace CabbyCodes.Patches.BasePatches
             this.description = description ?? flagDef.ReadableName;
         }
         
-        public int Get()
+        public virtual int Get()
         {
             if (SceneData.instance?.geoRocks == null) return 0;
             foreach (var grd in SceneData.instance.geoRocks)
@@ -28,7 +28,7 @@ namespace CabbyCodes.Patches.BasePatches
             return 0;
         }
         
-        public void Set(int value)
+        public virtual void Set(int value)
         {
             if (SceneData.instance?.geoRocks == null) return;
             foreach (var grd in SceneData.instance.geoRocks)
@@ -39,7 +39,7 @@ namespace CabbyCodes.Patches.BasePatches
                 }
         }
         
-        public CheatPanel CreatePanel()
+        public virtual CheatPanel CreatePanel()
         {
             return new RangeInputFieldPanel<int>(
                 this, 

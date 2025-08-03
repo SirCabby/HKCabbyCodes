@@ -1,4 +1,3 @@
-using CabbyCodes.Flags;
 using CabbyCodes.Patches.BasePatches;
 using CabbyMenu.UI.CheatPanels;
 using System.Collections.Generic;
