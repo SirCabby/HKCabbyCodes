@@ -25,70 +25,82 @@ namespace CabbyCodes.Patches
         /// <summary>
         /// Dictionary of all grub locations with their teleport coordinates
         /// </summary>
-        private static readonly Dictionary<string, TeleportLocation> grubLocations = new Dictionary<string, TeleportLocation>()
+        private static readonly Dictionary<SceneMapData, TeleportLocation> grubLocations = CreateGrubLocations();
+
+        /// <summary>
+        /// Creates the grub locations dictionary with teleport coordinates
+        /// </summary>
+        private static Dictionary<SceneMapData, TeleportLocation> CreateGrubLocations()
         {
+            var locations = new Dictionary<SceneMapData, TeleportLocation>();
+            
+            // Helper method to add a scene with optional teleport coordinates
+            void Add(SceneMapData scene, Vector2? teleportCoords = null) => locations[scene] = teleportCoords.HasValue ? new TeleportLocation(scene, teleportCoords.Value) : null;
+            
             // Abyss
-            { SceneInstances.Abyss_17.SceneName, null },
-            { SceneInstances.Abyss_19.SceneName, null },
+            Add(SceneInstances.Abyss_17);
+            Add(SceneInstances.Abyss_19);
             
             // Crossroads
-            { SceneInstances.Crossroads_03.SceneName, null },
-            { SceneInstances.Crossroads_05.SceneName, null },
-            { SceneInstances.Crossroads_31.SceneName, new TeleportLocation(SceneInstances.Crossroads_31.SceneName, SceneInstances.Crossroads_31.ReadableName, new Vector2(23, 14)) },
-            { SceneInstances.Crossroads_35.SceneName, new TeleportLocation(SceneInstances.Crossroads_35.SceneName, SceneInstances.Crossroads_35.ReadableName, new Vector2(7, 4)) },
-            { SceneInstances.Crossroads_48.SceneName, new TeleportLocation(SceneInstances.Crossroads_48.SceneName, SceneInstances.Crossroads_48.ReadableName, new Vector2(52, 4)) },
+            Add(SceneInstances.Crossroads_03);
+            Add(SceneInstances.Crossroads_05);
+            Add(SceneInstances.Crossroads_31, new Vector2(23, 14));
+            Add(SceneInstances.Crossroads_35, new Vector2(7, 4));
+            Add(SceneInstances.Crossroads_48, new Vector2(52, 4));
             
             // Deepnest
-            { SceneInstances.Deepnest_03.SceneName, null },
-            { SceneInstances.Deepnest_31.SceneName, null },
-            { SceneInstances.Deepnest_36.SceneName, null },
-            { SceneInstances.Deepnest_39.SceneName, null },
-            { SceneInstances.Deepnest_East_11.SceneName, null },
-            { SceneInstances.Deepnest_East_14.SceneName, null },
-            { SceneInstances.Deepnest_Spider_Town.SceneName, null },
+            Add(SceneInstances.Deepnest_03);
+            Add(SceneInstances.Deepnest_31);
+            Add(SceneInstances.Deepnest_36);
+            Add(SceneInstances.Deepnest_39);
+            Add(SceneInstances.Deepnest_East_11);
+            Add(SceneInstances.Deepnest_East_14);
+            Add(SceneInstances.Deepnest_Spider_Town);
             
             // Fungal Wastes
-            { SceneInstances.Fungus1_06.SceneName, new TeleportLocation(SceneInstances.Fungus1_06.SceneName, SceneInstances.Fungus1_06.ReadableName, new Vector2(154, 22)) },
-            { SceneInstances.Fungus1_07.SceneName, new TeleportLocation(SceneInstances.Fungus1_07.SceneName, SceneInstances.Fungus1_07.ReadableName, new Vector2(51, 13)) },
-            { SceneInstances.Fungus1_13.SceneName, null },
-            { SceneInstances.Fungus1_21.SceneName, null },
-            { SceneInstances.Fungus1_28.SceneName, null },
-            { SceneInstances.Fungus2_18.SceneName, null },
-            { SceneInstances.Fungus2_20.SceneName, null },
-            { SceneInstances.Fungus3_10.SceneName, null },
-            { SceneInstances.Fungus3_22.SceneName, null },
-            { SceneInstances.Fungus3_47.SceneName, null },
-            { SceneInstances.Fungus3_48.SceneName, null },
+            Add(SceneInstances.Fungus1_06, new Vector2(154, 22));
+            Add(SceneInstances.Fungus1_07, new Vector2(51, 13));
+            Add(SceneInstances.Fungus1_13);
+            Add(SceneInstances.Fungus1_21);
+            Add(SceneInstances.Fungus1_28);
+            Add(SceneInstances.Fungus2_18);
+            Add(SceneInstances.Fungus2_20);
+            Add(SceneInstances.Fungus3_10);
+            Add(SceneInstances.Fungus3_22);
+            Add(SceneInstances.Fungus3_47);
+            Add(SceneInstances.Fungus3_48);
 
             // Hive
-            { SceneInstances.Hive_03.SceneName, null },
-            { SceneInstances.Hive_04.SceneName, null },
+            Add(SceneInstances.Hive_03);
+            Add(SceneInstances.Hive_04);
             
             // Mines
-            { SceneInstances.Mines_03.SceneName, null },
-            { SceneInstances.Mines_04.SceneName, null },
-            { SceneInstances.Mines_16.SceneName, null },
-            { SceneInstances.Mines_19.SceneName, null },
-            { SceneInstances.Mines_24.SceneName, null },
-            { SceneInstances.Mines_31.SceneName, null },
-            { SceneInstances.Mines_35.SceneName, null },
+            Add(SceneInstances.Mines_03);
+            Add(SceneInstances.Mines_04);
+            Add(SceneInstances.Mines_16);
+            Add(SceneInstances.Mines_19);
+            Add(SceneInstances.Mines_24);
+            Add(SceneInstances.Mines_31);
+            Add(SceneInstances.Mines_35);
             
             // Resting Grounds
-            { SceneInstances.RestingGrounds_10.SceneName, null },
+            Add(SceneInstances.RestingGrounds_10);
             
             // City of Tears
-            { SceneInstances.Ruins_House_01.SceneName, null },
-            { SceneInstances.Ruins1_05.SceneName, null },
-            { SceneInstances.Ruins1_32.SceneName, null },
-            { SceneInstances.Ruins2_03.SceneName, null },
-            { SceneInstances.Ruins2_07.SceneName, null },
-            { SceneInstances.Ruins2_11.SceneName, null },
+            Add(SceneInstances.Ruins_House_01);
+            Add(SceneInstances.Ruins1_05);
+            Add(SceneInstances.Ruins1_32);
+            Add(SceneInstances.Ruins2_03);
+            Add(SceneInstances.Ruins2_07);
+            Add(SceneInstances.Ruins2_11);
             
             // Waterways
-            { SceneInstances.Waterways_04.SceneName, null },
-            { SceneInstances.Waterways_13.SceneName, null },
-            { SceneInstances.Waterways_14.SceneName, null }
-        };
+            Add(SceneInstances.Waterways_04);
+            Add(SceneInstances.Waterways_13);
+            Add(SceneInstances.Waterways_14);
+            
+            return locations;
+        }
 
         /// <summary>
         /// The scene name this grub patch is associated with.
@@ -180,18 +192,18 @@ namespace CabbyCodes.Patches
         /// Groups grub scenes by area.
         /// </summary>
         /// <returns>Dictionary mapping area names to lists of grub scenes in that area.</returns>
-        private static Dictionary<string, List<string>> GroupGrubsByArea()
+        private static Dictionary<string, List<SceneMapData>> GroupGrubsByArea()
         {
-            var groupedGrubs = new Dictionary<string, List<string>>();
+            var groupedGrubs = new Dictionary<string, List<SceneMapData>>();
 
-            foreach (string scene in grubLocations.Keys)
+            foreach (var sceneData in grubLocations.Keys)
             {
-                string area = GetAreaForScene(scene);
+                string area = sceneData.AreaName;
                 if (!groupedGrubs.ContainsKey(area))
                 {
-                    groupedGrubs[area] = new List<string>();
+                    groupedGrubs[area] = new List<SceneMapData>();
                 }
-                groupedGrubs[area].Add(scene);
+                groupedGrubs[area].Add(sceneData);
             }
 
             return groupedGrubs;
@@ -219,25 +231,24 @@ namespace CabbyCodes.Patches
                 CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Area: " + readableAreaName).SetColor(CheatPanel.subHeaderColor));
                 
                 // Add grub panels for this area
-                foreach (string grubScene in groupedGrubs[area])
+                foreach (var sceneData in groupedGrubs[area])
                 {
-                    var sceneData = GetSceneData(grubScene);
-                    string displayName = sceneData?.ReadableName ?? grubScene;
+                    string displayName = sceneData.ReadableName;
                     
                     // Check if this grub has teleport coordinates defined
-                    if (grubLocations.TryGetValue(grubScene, out var grubTeleportLocation) && grubTeleportLocation != null)
+                    if (grubLocations.TryGetValue(sceneData, out var grubTeleportLocation) && grubTeleportLocation != null)
                     {
                         // Create panel with toggle and teleport button
-                        var grubPatch = new GrubPatch(grubScene);
+                        var grubPatch = new GrubPatch(sceneData.SceneName);
                         CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new ToggleWithTeleportPanel(
                             grubPatch, 
                             () => TeleportService.DoTeleport(grubTeleportLocation), 
-                            GetGrubDisplayName(grubScene)));
+                            GetGrubDisplayName(sceneData.SceneName)));
                     }
                     else
                     {
                         // Create panel with just toggle (no teleport button)
-                        var grubPatch = new GrubPatch(grubScene);
+                        var grubPatch = new GrubPatch(sceneData.SceneName);
                         CabbyCodesPlugin.cabbyMenu.AddCheatPanel(grubPatch.CreatePanel());
                     }
                 }

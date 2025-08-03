@@ -1,4 +1,5 @@
 using UnityEngine;
+using CabbyCodes.Scenes;
 
 namespace CabbyCodes.Patches.Teleport
 {
@@ -37,6 +38,18 @@ namespace CabbyCodes.Patches.Teleport
         {
             SceneName = sceneName;
             DisplayName = displayName;
+            Location = location;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the TeleportLocation class using a SceneMapData instance.
+        /// </summary>
+        /// <param name="sceneData">The scene data containing scene name and readable name.</param>
+        /// <param name="location">The 2D position coordinates of this teleport location.</param>
+        public TeleportLocation(SceneMapData sceneData, Vector2 location)
+        {
+            SceneName = sceneData.SceneName;
+            DisplayName = sceneData.ReadableName;
             Location = location;
         }
     }
