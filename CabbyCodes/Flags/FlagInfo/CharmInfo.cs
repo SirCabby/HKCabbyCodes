@@ -6,7 +6,7 @@ namespace CabbyCodes.Flags.FlagInfo
     public readonly struct CharmInfo
     {
         public int Id { get; }
-        public string Name { get; }
+        public string Name => GotFlag.ReadableName;
         public FlagDef GotFlag { get; }
         public FlagDef CostFlag { get; }
         public FlagDef BrokenFlag { get; }
@@ -14,11 +14,10 @@ namespace CabbyCodes.Flags.FlagInfo
         public bool CanBeBroken { get; }
         public bool CanBeUpgraded { get; }
 
-        public CharmInfo(int id, string name, FlagDef gotFlag, FlagDef costFlag, 
+        public CharmInfo(int id, FlagDef gotFlag, FlagDef costFlag, 
                        FlagDef brokenFlag = null, FlagDef upgradeFlag = null)
         {
             Id = id;
-            Name = name;
             GotFlag = gotFlag;
             CostFlag = costFlag;
             BrokenFlag = brokenFlag;
