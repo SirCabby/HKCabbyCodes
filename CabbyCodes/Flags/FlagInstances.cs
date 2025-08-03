@@ -1532,46 +1532,6 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef nailsmithKilled = new FlagDef("nailsmithKilled", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef nailsmithSheo = new FlagDef("nailsmithSheo", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef nailsmithSpared = new FlagDef("nailsmithSpared", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef newCharm_1 = new FlagDef("newCharm_1", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef newCharm_10 = new FlagDef("newCharm_10", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef newCharm_11 = new FlagDef("newCharm_11", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef newCharm_12 = new FlagDef("newCharm_12", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef newCharm_13 = new FlagDef("newCharm_13", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef newCharm_14 = new FlagDef("newCharm_14", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef newCharm_15 = new FlagDef("newCharm_15", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef newCharm_16 = new FlagDef("newCharm_16", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef newCharm_17 = new FlagDef("newCharm_17", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef newCharm_18 = new FlagDef("newCharm_18", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef newCharm_19 = new FlagDef("newCharm_19", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef newCharm_2 = new FlagDef("newCharm_2", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef newCharm_20 = new FlagDef("newCharm_20", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef newCharm_21 = new FlagDef("newCharm_21", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef newCharm_22 = new FlagDef("newCharm_22", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef newCharm_23 = new FlagDef("newCharm_23", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef newCharm_24 = new FlagDef("newCharm_24", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef newCharm_25 = new FlagDef("newCharm_25", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef newCharm_26 = new FlagDef("newCharm_26", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef newCharm_27 = new FlagDef("newCharm_27", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef newCharm_28 = new FlagDef("newCharm_28", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef newCharm_29 = new FlagDef("newCharm_29", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef newCharm_3 = new FlagDef("newCharm_3", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef newCharm_30 = new FlagDef("newCharm_30", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef newCharm_31 = new FlagDef("newCharm_31", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef newCharm_32 = new FlagDef("newCharm_32", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef newCharm_33 = new FlagDef("newCharm_33", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef newCharm_34 = new FlagDef("newCharm_34", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef newCharm_35 = new FlagDef("newCharm_35", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef newCharm_36 = new FlagDef("newCharm_36", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef newCharm_37 = new FlagDef("newCharm_37", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef newCharm_38 = new FlagDef("newCharm_38", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef newCharm_39 = new FlagDef("newCharm_39", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef newCharm_4 = new FlagDef("newCharm_4", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef newCharm_40 = new FlagDef("newCharm_40", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef newCharm_5 = new FlagDef("newCharm_5", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef newCharm_6 = new FlagDef("newCharm_6", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef newCharm_7 = new FlagDef("newCharm_7", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef newCharm_8 = new FlagDef("newCharm_8", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef newCharm_9 = new FlagDef("newCharm_9", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef newDatTraitorLord = new FlagDef("newDatTraitorLord", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef nightmareLanternAppeared = new FlagDef("nightmareLanternAppeared", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef nightmareLanternLit = new FlagDef("nightmareLanternLit", "Global", false, "PlayerData_Bool");
@@ -1873,6 +1833,46 @@ namespace CabbyCodes.Flags
                 new FlagDef("hazardRespawnLocation", "Global", false, "PlayerData_Vector3"),
                 new FlagDef("lastJournalItem", "Global", false, "PlayerData_Int", "Last Journey Entry looked at"),
                 new FlagDef("mapZone", "Global", false, "PlayerData_MapZone"),
+                new FlagDef("newCharm_1", "Global", false, "PlayerData_Bool"),
+                new FlagDef("newCharm_10", "Global", false, "PlayerData_Bool"),
+                new FlagDef("newCharm_11", "Global", false, "PlayerData_Bool"),
+                new FlagDef("newCharm_12", "Global", false, "PlayerData_Bool"),
+                new FlagDef("newCharm_13", "Global", false, "PlayerData_Bool"),
+                new FlagDef("newCharm_14", "Global", false, "PlayerData_Bool"),
+                new FlagDef("newCharm_15", "Global", false, "PlayerData_Bool"),
+                new FlagDef("newCharm_16", "Global", false, "PlayerData_Bool"),
+                new FlagDef("newCharm_17", "Global", false, "PlayerData_Bool"),
+                new FlagDef("newCharm_18", "Global", false, "PlayerData_Bool"),
+                new FlagDef("newCharm_19", "Global", false, "PlayerData_Bool"),
+                new FlagDef("newCharm_2", "Global", false, "PlayerData_Bool"),
+                new FlagDef("newCharm_20", "Global", false, "PlayerData_Bool"),
+                new FlagDef("newCharm_21", "Global", false, "PlayerData_Bool"),
+                new FlagDef("newCharm_22", "Global", false, "PlayerData_Bool"),
+                new FlagDef("newCharm_23", "Global", false, "PlayerData_Bool"),
+                new FlagDef("newCharm_24", "Global", false, "PlayerData_Bool"),
+                new FlagDef("newCharm_25", "Global", false, "PlayerData_Bool"),
+                new FlagDef("newCharm_26", "Global", false, "PlayerData_Bool"),
+                new FlagDef("newCharm_27", "Global", false, "PlayerData_Bool"),
+                new FlagDef("newCharm_28", "Global", false, "PlayerData_Bool"),
+                new FlagDef("newCharm_29", "Global", false, "PlayerData_Bool"),
+                new FlagDef("newCharm_3", "Global", false, "PlayerData_Bool"),
+                new FlagDef("newCharm_30", "Global", false, "PlayerData_Bool"),
+                new FlagDef("newCharm_31", "Global", false, "PlayerData_Bool"),
+                new FlagDef("newCharm_32", "Global", false, "PlayerData_Bool"),
+                new FlagDef("newCharm_33", "Global", false, "PlayerData_Bool"),
+                new FlagDef("newCharm_34", "Global", false, "PlayerData_Bool"),
+                new FlagDef("newCharm_35", "Global", false, "PlayerData_Bool"),
+                new FlagDef("newCharm_36", "Global", false, "PlayerData_Bool"),
+                new FlagDef("newCharm_37", "Global", false, "PlayerData_Bool"),
+                new FlagDef("newCharm_38", "Global", false, "PlayerData_Bool"),
+                new FlagDef("newCharm_39", "Global", false, "PlayerData_Bool"),
+                new FlagDef("newCharm_4", "Global", false, "PlayerData_Bool"),
+                new FlagDef("newCharm_40", "Global", false, "PlayerData_Bool"),
+                new FlagDef("newCharm_5", "Global", false, "PlayerData_Bool"),
+                new FlagDef("newCharm_6", "Global", false, "PlayerData_Bool"),
+                new FlagDef("newCharm_7", "Global", false, "PlayerData_Bool"),
+                new FlagDef("newCharm_8", "Global", false, "PlayerData_Bool"),
+                new FlagDef("newCharm_9", "Global", false, "PlayerData_Bool"),
                 new FlagDef("openingCreditsPlayed", "Global", false, "PlayerData_Bool", "Opening Credits Played on Game Start"),
                 new FlagDef("previousDarkness", "Global", false, "PlayerData_Int"),
                 new FlagDef("prevHealth", "Global", false, "PlayerData_Int"),

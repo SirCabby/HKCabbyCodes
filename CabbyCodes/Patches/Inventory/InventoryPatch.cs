@@ -173,8 +173,7 @@ namespace CabbyCodes.Patches.Inventory
                     value =>
                     {
                         FlagManager.SetBoolFlag(FlagInstances.hasMarker_b, value);
-                        if (value)
-                            FlagManager.SetBoolFlag(FlagInstances.hasMarker, true);
+                        UpdateHasMarkerFlag();
                     }
                 ), FlagInstances.hasMarker_b.ReadableName),
 
@@ -184,8 +183,7 @@ namespace CabbyCodes.Patches.Inventory
                     value =>
                     {
                         FlagManager.SetBoolFlag(FlagInstances.hasMarker_r, value);
-                        if (value)
-                            FlagManager.SetBoolFlag(FlagInstances.hasMarker, true);
+                        UpdateHasMarkerFlag();
                     }
                 ), FlagInstances.hasMarker_r.ReadableName),
 
@@ -195,8 +193,7 @@ namespace CabbyCodes.Patches.Inventory
                     value =>
                     {
                         FlagManager.SetBoolFlag(FlagInstances.hasMarker_w, value);
-                        if (value)
-                            FlagManager.SetBoolFlag(FlagInstances.hasMarker, true);
+                        UpdateHasMarkerFlag();
                     }
                 ), FlagInstances.hasMarker_w.ReadableName),
 
@@ -206,8 +203,7 @@ namespace CabbyCodes.Patches.Inventory
                     value =>
                     {
                         FlagManager.SetBoolFlag(FlagInstances.hasMarker_y, value);
-                        if (value)
-                            FlagManager.SetBoolFlag(FlagInstances.hasMarker, true);
+                        UpdateHasMarkerFlag();
                     }
                 ), FlagInstances.hasMarker_y.ReadableName),
 
@@ -217,8 +213,7 @@ namespace CabbyCodes.Patches.Inventory
                     value =>
                     {
                         FlagManager.SetBoolFlag(FlagInstances.hasPinDreamPlant, value);
-                        if (value)
-                            FlagManager.SetBoolFlag(FlagInstances.hasPin, true);
+                        UpdateHasPinFlag();
                     }
                 ), FlagInstances.hasPinDreamPlant.ReadableName),
 
@@ -228,8 +223,7 @@ namespace CabbyCodes.Patches.Inventory
                     value =>
                     {
                         FlagManager.SetBoolFlag(FlagInstances.hasPinGhost, value);
-                        if (value)
-                            FlagManager.SetBoolFlag(FlagInstances.hasPin, true);
+                        UpdateHasPinFlag();
                     }
                 ), FlagInstances.hasPinGhost.ReadableName),
 
@@ -239,8 +233,7 @@ namespace CabbyCodes.Patches.Inventory
                     value =>
                     {
                         FlagManager.SetBoolFlag(FlagInstances.hasPinStag, value);
-                        if (value)
-                            FlagManager.SetBoolFlag(FlagInstances.hasPin, true);
+                        UpdateHasPinFlag();
                     }
                 ), FlagInstances.hasPinStag.ReadableName),
 
@@ -250,8 +243,7 @@ namespace CabbyCodes.Patches.Inventory
                     value =>
                     {
                         FlagManager.SetBoolFlag(FlagInstances.hasPinTram, value);
-                        if (value)
-                            FlagManager.SetBoolFlag(FlagInstances.hasPin, true);
+                        UpdateHasPinFlag();
                     }
                 ), FlagInstances.hasPinTram.ReadableName),
 
@@ -261,8 +253,7 @@ namespace CabbyCodes.Patches.Inventory
                     value =>
                     {
                         FlagManager.SetBoolFlag(FlagInstances.hasPinShop, value);
-                        if (value)
-                            FlagManager.SetBoolFlag(FlagInstances.hasPin, true);
+                        UpdateHasPinFlag();
                     }
                 ), FlagInstances.hasPinShop.ReadableName),
 
@@ -272,8 +263,7 @@ namespace CabbyCodes.Patches.Inventory
                     value =>
                     {
                         FlagManager.SetBoolFlag(FlagInstances.hasPinSpa, value);
-                        if (value)
-                            FlagManager.SetBoolFlag(FlagInstances.hasPin, true);
+                        UpdateHasPinFlag();
                     }
                 ), FlagInstances.hasPinSpa.ReadableName),
 
@@ -283,8 +273,7 @@ namespace CabbyCodes.Patches.Inventory
                     value =>
                     {
                         FlagManager.SetBoolFlag(FlagInstances.hasPinCocoon, value);
-                        if (value)
-                            FlagManager.SetBoolFlag(FlagInstances.hasPin, true);
+                        UpdateHasPinFlag();
                     }
                 ), FlagInstances.hasPinCocoon.ReadableName),
 
@@ -294,13 +283,40 @@ namespace CabbyCodes.Patches.Inventory
                     value =>
                     {
                         FlagManager.SetBoolFlag(FlagInstances.hasPinBench, value);
-                        if (value)
-                            FlagManager.SetBoolFlag(FlagInstances.hasPin, true);
+                        UpdateHasPinFlag();
                     }
                 ), FlagInstances.hasPinBench.ReadableName)
             };
 
             return panels;
+        }
+
+        private void UpdateHasPinFlag()
+        {
+            // Check if any pin is enabled
+            bool anyPinEnabled = FlagManager.GetBoolFlag(FlagInstances.hasPinDreamPlant) ||
+                                FlagManager.GetBoolFlag(FlagInstances.hasPinGhost) ||
+                                FlagManager.GetBoolFlag(FlagInstances.hasPinStag) ||
+                                FlagManager.GetBoolFlag(FlagInstances.hasPinTram) ||
+                                FlagManager.GetBoolFlag(FlagInstances.hasPinShop) ||
+                                FlagManager.GetBoolFlag(FlagInstances.hasPinSpa) ||
+                                FlagManager.GetBoolFlag(FlagInstances.hasPinCocoon) ||
+                                FlagManager.GetBoolFlag(FlagInstances.hasPinBench);
+
+            // Set hasPin flag based on whether any pin is enabled
+            FlagManager.SetBoolFlag(FlagInstances.hasPin, anyPinEnabled);
+        }
+
+        private void UpdateHasMarkerFlag()
+        {
+            // Check if any marker is enabled
+            bool anyMarkerEnabled = FlagManager.GetBoolFlag(FlagInstances.hasMarker_b) ||
+                                    FlagManager.GetBoolFlag(FlagInstances.hasMarker_r) ||
+                                    FlagManager.GetBoolFlag(FlagInstances.hasMarker_w) ||
+                                    FlagManager.GetBoolFlag(FlagInstances.hasMarker_y);
+
+            // Set hasMarker flag based on whether any marker is enabled
+            FlagManager.SetBoolFlag(FlagInstances.hasMarker, anyMarkerEnabled);
         }
 
         private List<CheatPanel> CreateMaskShardPanels()
