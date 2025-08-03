@@ -1,4 +1,3 @@
-using CabbyCodes.Patches.Teleport;
 using CabbyMenu.UI.CheatPanels;
 using CabbyMenu.UI.DynamicPanels;
 using System.Collections.Generic;
@@ -47,8 +46,8 @@ namespace CabbyCodes.Patches.Flags.RoomFlags
         {
             try
             {
-                // Get current scene name
-                var (sceneName, _) = TeleportService.GetCurrentPlayerPosition();
+                // Get current scene name from shared provider
+                string sceneName = GameStateProvider.GetCurrentSceneName();
                 
                 // Get area name from scene
                 var sceneData = Scenes.SceneManagement.GetSceneData(sceneName);

@@ -31,9 +31,13 @@ namespace CabbyCodes
             return GameManager._instance != null && GameManager.instance.IsGamePaused();
         }
 
-        public static CheatStateManager GetCheatStateManager()
+        /// <summary>
+        /// Gets the current scene name.
+        /// </summary>
+        /// <returns>The current scene name.</returns>
+        public static string GetCurrentSceneName()
         {
-            return cheatStateManager;
+            return GameManager.GetBaseSceneName(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
         }
     }
 }

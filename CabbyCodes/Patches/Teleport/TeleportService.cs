@@ -193,7 +193,7 @@ namespace CabbyCodes.Patches.Teleport
         {
             GameMap gm = GameManager._instance.gameMap.GetComponent<GameMap>();
             Vector3 heroPos = ((GameObject)heroFieldInfo.GetValue(gm)).transform.position;
-            string sceneName = GameManager.GetBaseSceneName(UnityEngine.SceneManagement.SceneManager.GetActiveScene().name);
+            string sceneName = GameStateProvider.GetCurrentSceneName();
             Vector2 teleportLocation = new Vector2((int)Math.Round(heroPos.x), (int)Math.Ceiling(heroPos.y));
             
             return (sceneName, teleportLocation);
