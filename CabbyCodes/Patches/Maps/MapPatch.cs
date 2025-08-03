@@ -10,6 +10,7 @@ using CabbyMenu.UI.DynamicPanels;
 using CabbyCodes.Flags;
 using CabbyCodes.SavedGames;
 using CabbyCodes.Patches.BasePatches;
+using CabbyMenu.Utilities;
 
 namespace CabbyCodes.Patches.Maps
 {
@@ -42,15 +43,25 @@ namespace CabbyCodes.Patches.Maps
             // Add Rooms header
             panels.Add(new InfoPanel("Rooms: Enable to have room mapped out").SetColor(CheatPanel.headerColor));
             
-            // Add Rooms section
-            var roomsSection = new CategorizedPanelSection(
-                "Select Area",
-                Scenes.Areas.GetAllAreaNames().ToList(),
+            // Create area selector and dropdown panel (following RoomFlagsPatch pattern)
+            var areaSelector = new MapAreaSelector(currentAreaIndex);
+            var dropdownPanel = new DropdownPanel(areaSelector, "Select Area", Constants.DEFAULT_PANEL_HEIGHT);
+            panels.Add(dropdownPanel);
+            
+            // Set up dynamic panel management (following RoomFlagsPatch pattern)
+            var container = new MainMenuPanelContainer(CabbyCodesPlugin.cabbyMenu);
+            var panelManager = new DynamicPanelManager(
+                dropdownPanel,
                 CreateRoomPanels,
-                1, // insertionIndex
-                currentAreaIndex // defaultSelection
+                container,
+                insertionIndex: 1  // insert directly after the dropdown
             );
-            panels.AddRange(roomsSection.CreatePanels());
+            
+            // Selection change listener will rebuild panels
+            dropdownPanel.GetDropDownSync().GetCustomDropdown().onValueChanged.AddListener(_ => panelManager.RecreateDynamicPanels());
+            
+            // Defer initial panel creation to next frame, after the dropdown has been inserted
+            CabbyMenu.Utilities.CoroutineRunner.RunNextFrame(() => panelManager.CreateInitialPanels(currentAreaIndex));
             
             return panels;
         }
