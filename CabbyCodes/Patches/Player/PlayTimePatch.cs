@@ -16,11 +16,5 @@ namespace CabbyCodes.Patches.Player
         {
             FlagManager.SetFloatFlag("playTime", "Global", value);
         }
-
-        public static void AddPanel()
-        {
-            RangeInputFieldPanel<float> panel = new RangeInputFieldPanel<float>(new PlayTimePatch(), KeyCodeMap.ValidChars.Decimal, 0f, 999999f, "Playtime (seconds)");
-            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(panel);
-        }
     }
 }

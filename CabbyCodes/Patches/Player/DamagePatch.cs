@@ -47,10 +47,5 @@ namespace CabbyCodes.Patches.Player
 
             return false;
         }
-
-        public static void AddPanel()
-        {
-            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new TogglePanel(new DamagePatch(), "One Hit Kills (Enemies can't block)"));
-        }
     }
 }

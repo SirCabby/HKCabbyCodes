@@ -24,11 +24,5 @@ namespace CabbyCodes.Patches.Player
 
             CabbyCodesPlugin.BLogger.LogDebug(string.Format("Health updated to {0}", value));
         }
-
-        public static void AddPanel()
-        {
-            RangeInputFieldPanel<int> panel = new RangeInputFieldPanel<int>(new HealthPatch(), KeyCodeMap.ValidChars.Numeric, Constants.MIN_HEALTH, Constants.MAX_HEALTH, flag1.ReadableName);
-            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(panel);
-        }
     }
 }

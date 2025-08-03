@@ -15,11 +15,5 @@ namespace CabbyCodes.Patches.Player
         {
             FlagManager.SetIntFlag(FlagInstances.permadeathMode, value ? 1 : 0);
         }
-
-        public static void AddPanel()
-        {
-            TogglePanel buttonPanel = new TogglePanel(new PermadeathPatch(), FlagInstances.permadeathMode.ReadableName);
-            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(buttonPanel);
-        }
     }
 }

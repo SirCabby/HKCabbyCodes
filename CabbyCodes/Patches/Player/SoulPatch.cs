@@ -36,10 +36,5 @@ namespace CabbyCodes.Patches.Player
                 harmony.UnpatchSelf();
             }
         }
-
-        public static void AddPanel()
-        {
-            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new TogglePanel(new SoulPatch(), "Infinite Soul"));
-        }
     }
 }

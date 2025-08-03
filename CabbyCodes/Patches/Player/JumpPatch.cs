@@ -17,11 +17,5 @@ namespace CabbyCodes.Patches.Player
         {
             FlagManager.SetBoolFlag(flag, value);
         }
-
-        public static void AddPanel()
-        {
-            TogglePanel buttonPanel = new TogglePanel(new JumpPatch(), flag.ReadableName);
-            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(buttonPanel);
-        }
     }
 }

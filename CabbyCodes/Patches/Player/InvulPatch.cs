@@ -63,10 +63,5 @@ namespace CabbyCodes.Patches.Player
             
             PlayerData.instance?.MaxHealth();
         }
-
-        public static void AddPanel()
-        {
-            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new TogglePanel(new InvulPatch(), flag.ReadableName));
-        }
     }
 }

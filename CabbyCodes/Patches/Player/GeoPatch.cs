@@ -31,10 +31,5 @@ namespace CabbyCodes.Patches.Player
                 harmony.UnpatchSelf();
             }
         }
-
-        public static void AddPanel()
-        {
-            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new TogglePanel(new GeoPatch(), "Infinite Geo"));
-        }
     }
 }
