@@ -83,7 +83,7 @@ namespace CabbyCodes.Scenes
         public static readonly SceneMapData Fungus1_28_b = new SceneMapData("Fungus1_28_b", "Cliffs");
 
         // Crossroads
-        public static readonly SceneMapData Crossroads_01 = new SceneMapData("Crossroads_01", "Crossroads", "Entrance from Dirthmouth");
+        public static readonly SceneMapData Crossroads_01 = new SceneMapData("Crossroads_01", "Crossroads", "Crossroads Entrance");
         public static readonly SceneMapData Crossroads_02 = new SceneMapData("Crossroads_02", "Crossroads", "Outside Temple of the Black Egg");
         public static readonly SceneMapData Crossroads_03 = new SceneMapData("Crossroads_03", "Crossroads");
         public static readonly SceneMapData Crossroads_04 = new SceneMapData("Crossroads_04", "Crossroads");

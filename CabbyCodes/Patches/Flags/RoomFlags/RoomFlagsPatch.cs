@@ -56,7 +56,7 @@ namespace CabbyCodes.Patches.Flags.RoomFlags
                     string areaName = sceneData.AreaName;
                     
                     // Find the index of this area in the filtered list (only areas with flags)
-                    var areaNames = Scenes.SceneManagement.GetAreaNamesWithFlags().ToList();
+                    var areaNames = Scenes.SceneManagement.GetAreaFlags().Keys.ToList();
                     int index = areaNames.IndexOf(areaName);
                     
                     // If current area has flags, return its index; otherwise default to 0
@@ -75,37 +75,40 @@ namespace CabbyCodes.Patches.Flags.RoomFlags
         {
             var panels = new List<CheatPanel>();
             
-            // Get the selected area
-            var areaNames = Scenes.SceneManagement.GetAreaNamesWithFlags().ToList();
+            // Get the area flags dictionary
+            var areaFlags = Scenes.SceneManagement.GetAreaFlags();
+            var areaNames = areaFlags.Keys.ToList();
+            
             if (areaIndex >= 0 && areaIndex < areaNames.Count)
             {
                 string selectedArea = areaNames[areaIndex];
+                var flagsForArea = areaFlags[selectedArea];
                 
-                // Create panels for the selected area
-                var areaToScenes = Scenes.SceneManagement.GetAreaToScenesMapping();
-                if (areaToScenes.ContainsKey(selectedArea))
+                // Group flags by scene for better organization
+                var flagsByScene = flagsForArea
+                    .GroupBy(f => f.SceneName)
+                    .OrderBy(g => g.Key)
+                    .ToList();
+                
+                foreach (var sceneGroup in flagsByScene)
                 {
-                    var scenesInArea = areaToScenes[selectedArea];
+                    string sceneName = sceneGroup.Key;
+                    var sceneFlags = sceneGroup.ToList();
                     
-                    foreach (var sceneName in scenesInArea)
+                    if (sceneFlags.Count > 0)
                     {
-                        var sceneFlags = CabbyCodes.Flags.FlagData.SceneFlagData.GetFlagsForScene(sceneName);
-                        
-                        if (sceneFlags.Count > 0)
-                        {
-                            // Add scene subheader
-                            var sceneData = Scenes.SceneManagement.GetSceneData(sceneName);
-                            var sceneDisplayName = sceneData?.ReadableName ?? sceneName;
-                            panels.Add(new InfoPanel(sceneDisplayName).SetColor(CheatPanel.subHeaderColor));
+                        // Add scene subheader
+                        var sceneData = Scenes.SceneManagement.GetSceneData(sceneName);
+                        var sceneDisplayName = sceneData?.ReadableName ?? sceneName;
+                        panels.Add(new InfoPanel(sceneDisplayName).SetColor(CheatPanel.subHeaderColor));
 
-                            // Add flag panels for this scene
-                            foreach (var flag in sceneFlags)
+                        // Add flag panels for this scene
+                        foreach (var flag in sceneFlags)
+                        {
+                            var flagPanel = CreateFlagPanel(flag);
+                            if (flagPanel != null)
                             {
-                                var flagPanel = CreateFlagPanel(flag);
-                                if (flagPanel != null)
-                                {
-                                    panels.Add(flagPanel);
-                                }
+                                panels.Add(flagPanel);
                             }
                         }
                     }

@@ -11,7 +11,7 @@ namespace CabbyCodes.Patches.Flags.RoomFlags
 
         public AreaSelector(int defaultIndex = 0)
         {
-            areaNames = Scenes.SceneManagement.GetAreaNamesWithFlags().ToList();
+            areaNames = Scenes.SceneManagement.GetAreaFlags().Keys.ToList();
             currentIndex = defaultIndex >= 0 && defaultIndex < areaNames.Count ? defaultIndex : 0;
         }
 

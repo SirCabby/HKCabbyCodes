@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 
 namespace CabbyCodes.Scenes
 {
@@ -70,14 +71,54 @@ namespace CabbyCodes.Scenes
         /// <returns>A collection of area names that have flags, sorted alphabetically.</returns>
         public static IEnumerable<string> GetAreaNamesWithFlags()
         {
-            var scenesWithFlags = Flags.FlagData.SceneFlagData.GetAllSceneNamesWithFlags();
-            var areasWithFlags = sceneMapData
-                .Where(s => scenesWithFlags.Contains(s.SceneName))
-                .Select(s => s.AreaName)
-                .Distinct()
-                .OrderBy(area => area);
+            return GetAreaFlags().Keys.OrderBy(area => area);
+        }
+
+        /// <summary>
+        /// Gets a dictionary mapping area names to lists of flags for that area.
+        /// </summary>
+        /// <returns>A dictionary where keys are area names and values are lists of flags.</returns>
+        public static Dictionary<string, List<CabbyCodes.Flags.FlagDef>> GetAreaFlags()
+        {
+            var areaFlags = new Dictionary<string, List<CabbyCodes.Flags.FlagDef>>();
             
-            return areasWithFlags;
+            // Get all FlagDef instances from FlagInstances class using reflection
+            var flagInstancesType = typeof(CabbyCodes.Flags.FlagInstances);
+            var fields = flagInstancesType.GetFields(BindingFlags.Public | BindingFlags.Static);
+            
+            foreach (var field in fields)
+            {
+                if (field.FieldType == typeof(CabbyCodes.Flags.FlagDef))
+                {
+                    var flagDef = (CabbyCodes.Flags.FlagDef)field.GetValue(null);
+                    
+                    // Skip global flags (scene name is "Global")
+                    if (flagDef.SceneName == "Global")
+                        continue;
+                    
+                    // Get the area name for this scene
+                    var sceneData = GetSceneData(flagDef.SceneName);
+                    if (sceneData != null)
+                    {
+                        string areaName = sceneData.AreaName;
+                        
+                        if (!areaFlags.ContainsKey(areaName))
+                        {
+                            areaFlags[areaName] = new List<CabbyCodes.Flags.FlagDef>();
+                        }
+                        
+                        areaFlags[areaName].Add(flagDef);
+                    }
+                }
+            }
+            
+            // Sort flags within each area by readable name
+            foreach (var area in areaFlags.Keys.ToList())
+            {
+                areaFlags[area] = areaFlags[area].OrderBy(f => f.ReadableName).ToList();
+            }
+            
+            return areaFlags;
         }
 
         /// <summary>
