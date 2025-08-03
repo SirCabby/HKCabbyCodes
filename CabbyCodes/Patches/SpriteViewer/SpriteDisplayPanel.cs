@@ -2,7 +2,6 @@ using CabbyMenu.UI.CheatPanels;
 using CabbyMenu.UI.Modders;
 using UnityEngine;
 using UnityEngine.UI;
-using CabbyCodes.Patches.Hunter;
 using CabbyMenu.UI;
 using System.Linq;
 
@@ -70,8 +69,8 @@ namespace CabbyCodes.Patches.SpriteViewer
 
             try
             {
-                // Get sprite from EnemySpriteManager (which handles the conversion)
-                var sprite = EnemySpriteManager.Instance.GetSprite(collectionName, spriteName);
+                // Get sprite from SpriteManager (which handles the conversion)
+                var sprite = SpriteManager.Instance.GetSprite(collectionName, spriteName);
                 if (sprite != null)
                 {
                     // --- Dynamic panel resizing logic (do this first to set up the panel and image correctly) ---

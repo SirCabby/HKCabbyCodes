@@ -2,30 +2,30 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace CabbyCodes.Patches.Hunter
+namespace CabbyCodes.Patches.SpriteViewer
 {
     /// <summary>
-    /// Manages enemy sprites for use in HunterPatch panels
+    /// Manages sprites for use in SpriteViewer panels
     /// </summary>
-    public class EnemySpriteManager
+    public class SpriteManager
     {
-        private static EnemySpriteManager instance;
-        public static EnemySpriteManager Instance
+        private static SpriteManager instance;
+        public static SpriteManager Instance
         {
             get
             {
                 if (instance == null)
                 {
-                    instance = new EnemySpriteManager();
+                    instance = new SpriteManager();
                 }
                 return instance;
             }
         }
 
-        private readonly Dictionary<string, Sprite> enemySpriteCache = new Dictionary<string, Sprite>();
+        private readonly Dictionary<string, Sprite> spriteCache = new Dictionary<string, Sprite>();
         private readonly Dictionary<string, object> spriteCollections = new Dictionary<string, object>();
 
-        private EnemySpriteManager()
+        private SpriteManager()
         {
             InitializeSpriteCollections();
         }
@@ -56,20 +56,16 @@ namespace CabbyCodes.Patches.Hunter
                         if (collectionName != "<unknown>" && !spriteCollections.ContainsKey(collectionName))
                         {
                             spriteCollections[collectionName] = collection;
-                            Debug.Log($"[EnemySpriteManager] Cached collection: {collectionName}");
                         }
                     }
-                    catch (System.Exception ex)
+                    catch (System.Exception)
                     {
-                        Debug.LogWarning($"[EnemySpriteManager] Error processing sprite {sprite.name}: {ex.Message}");
                     }
                 }
 
-                Debug.Log($"[EnemySpriteManager] Initialized with {spriteCollections.Count} sprite collections");
             }
-            catch (System.Exception ex)
+            catch (System.Exception)
             {
-                Debug.LogError($"[EnemySpriteManager] Failed to initialize: {ex.Message}");
             }
         }
 
@@ -98,16 +94,15 @@ namespace CabbyCodes.Patches.Hunter
         {
             string cacheKey = $"{collectionName}:{spriteName}";
             
-            if (enemySpriteCache.ContainsKey(cacheKey))
+            if (spriteCache.ContainsKey(cacheKey))
             {
-                return enemySpriteCache[cacheKey];
+                return spriteCache[cacheKey];
             }
 
             try
             {
                 if (!spriteCollections.ContainsKey(collectionName))
                 {
-                    Debug.LogWarning($"[EnemySpriteManager] Collection '{collectionName}' not found");
                     return null;
                 }
 
@@ -141,7 +136,7 @@ namespace CabbyCodes.Patches.Hunter
                         var sprite = ConvertToUnitySprite(def);
                         if (sprite != null)
                         {
-                            enemySpriteCache[cacheKey] = sprite;
+                            spriteCache[cacheKey] = sprite;
                             return sprite;
                         }
                     }
@@ -249,8 +244,7 @@ namespace CabbyCodes.Patches.Hunter
         /// </summary>
         public void ClearCache()
         {
-            enemySpriteCache.Clear();
-            Debug.Log("[EnemySpriteManager] Sprite cache cleared");
+            spriteCache.Clear();
         }
     }
 } 
