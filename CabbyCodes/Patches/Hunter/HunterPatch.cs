@@ -1,50 +1,36 @@
-using CabbyMenu.SyncedReferences;
+using CabbyCodes.Flags;
+using CabbyCodes.Patches.BasePatches;
 using CabbyMenu.UI.CheatPanels;
 using System.Collections.Generic;
 using UnityEngine;
-using CabbyMenu.Utilities;
 using CabbyCodes.Flags.FlagInfo;
 using CabbyCodes.Flags.FlagData;
 
 namespace CabbyCodes.Patches.Hunter
 {
-    public class HunterPatch : ISyncedReference<int>
+    public class HunterPatch : BasePatch
     {
-        public static List<HunterInfo> hunterTargets = HunterData.GetAllHunterTargets();
-
-        private readonly HunterInfo hunterInfo;
-
-        public HunterPatch(string targetName)
-        {
-            hunterInfo = HunterData.GetHunterTarget(targetName);
-        }
-
-        public int Get()
-        {
-            return PlayerData.instance.GetInt(hunterInfo.KillsFlag.Id);
-        }
-
-        public void Set(int value)
-        {
-            value = ValidationUtils.ValidateRange(value, Constants.MIN_HUNTER_KILLS, Constants.MAX_HUNTER_KILLS, nameof(value));
-            PlayerData.instance.SetInt(hunterInfo.KillsFlag.Id, value);
-        }
-
-        private static RangeInputFieldPanel<int> BuildCheatPanel(HunterInfo hunterInfo)
-        {
-            RangeInputFieldPanel<int> panel = new RangeInputFieldPanel<int>(new HunterPatch(hunterInfo.EnemyName), KeyCodeMap.ValidChars.Numeric, Constants.MIN_HUNTER_KILLS, Constants.MAX_HUNTER_KILLS, hunterInfo.ReadableName);
-            PanelAdder.AddToggleButton(panel, 0, new HunterKilledPatch(hunterInfo.EnemyName));
-            return panel;
-        }
-
         public static void AddPanels()
         {
-            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Hunter's Journal Entries").SetColor(CheatPanel.headerColor));
+            var hunterPatch = new HunterPatch();
+            var panels = hunterPatch.CreatePanels();
+            foreach (var panel in panels)
+            {
+                CabbyCodesPlugin.cabbyMenu.AddCheatPanel(panel);
+            }
+        }
+
+        public override List<CheatPanel> CreatePanels()
+        {
+            var panels = new List<CheatPanel>
+            {
+                new InfoPanel("Hunter's Journal Entries").SetColor(CheatPanel.headerColor)
+            };
 
             // Unlock All toggle
             ButtonPanel buttonPanel = new ButtonPanel(() =>
             {
-                foreach (HunterInfo hunterInfo in hunterTargets)
+                foreach (HunterInfo hunterInfo in HunterData.GetAllHunterTargets())
                 {
                     PlayerData.instance.SetBool(hunterInfo.KilledFlag.Id, true);
                 }
@@ -55,19 +41,19 @@ namespace CabbyCodes.Patches.Hunter
             // Lock all toggle
             PanelAdder.AddButton(buttonPanel, 1, () =>
             {
-                foreach (HunterInfo hunterInfo in hunterTargets)
+                foreach (HunterInfo hunterInfo in HunterData.GetAllHunterTargets())
                 {
                     PlayerData.instance.SetBool(hunterInfo.KilledFlag.Id, false);
                 }
 
                 CabbyCodesPlugin.cabbyMenu.UpdateCheatPanels();
             }, "Lock All", new Vector2(Constants.HUNTER_LOCK_BUTTON_WIDTH, Constants.DEFAULT_PANEL_HEIGHT));
-            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(buttonPanel);
+            panels.Add(buttonPanel);
 
             // Set kills remaining 0
             ButtonPanel setPanel = new ButtonPanel(() =>
             {
-                foreach (HunterInfo hunterInfo in hunterTargets)
+                foreach (HunterInfo hunterInfo in HunterData.GetAllHunterTargets())
                 {
                     PlayerData.instance.SetInt(hunterInfo.KillsFlag.Id, 0);
                 }
@@ -78,20 +64,40 @@ namespace CabbyCodes.Patches.Hunter
             // Set kills remaining 1
             PanelAdder.AddButton(setPanel, 1, () =>
             {
-                foreach (HunterInfo hunterInfo in hunterTargets)
+                foreach (HunterInfo hunterInfo in HunterData.GetAllHunterTargets())
                 {
                     PlayerData.instance.SetInt(hunterInfo.KillsFlag.Id, 1);
                 }
 
                 CabbyCodesPlugin.cabbyMenu.UpdateCheatPanels();
             }, "1", new Vector2(Constants.HUNTER_ONE_BUTTON_WIDTH, Constants.DEFAULT_PANEL_HEIGHT));
-            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(setPanel);
+            panels.Add(setPanel);
 
-            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("<ON> to unlock entry, kills left to unlock notes (0 = unlocked)").SetColor(CheatPanel.subHeaderColor));
-            foreach (HunterInfo hunterInfo in hunterTargets)
+            panels.Add(new InfoPanel("<ON> to unlock entry, kills left to unlock notes (0 = unlocked)").SetColor(CheatPanel.subHeaderColor));
+
+            // Add individual hunter panels
+            foreach (HunterInfo hunterInfo in HunterData.GetAllHunterTargets())
             {
-                CabbyCodesPlugin.cabbyMenu.AddCheatPanel(BuildCheatPanel(hunterInfo));
+                panels.AddRange(CreateHunterPanels(hunterInfo));
             }
+
+            return panels;
+        }
+
+        private List<CheatPanel> CreateHunterPanels(HunterInfo hunterInfo)
+        {
+            var panels = new List<CheatPanel>();
+
+            // Create kills panel (IntPatch)
+            var killsPatch = new IntPatch(hunterInfo.KillsFlag, hunterInfo.ReadableName);
+            var killsPanel = killsPatch.CreatePanel();
+            
+            // Add toggle button for killed flag
+            PanelAdder.AddToggleButton(killsPanel, 0, new BoolPatch(hunterInfo.KilledFlag, "Unlock Entry"));
+            
+            panels.Add(killsPanel);
+
+            return panels;
         }
     }
 }
