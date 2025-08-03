@@ -102,6 +102,20 @@ namespace CabbyCodes.Flags
                 case "stationsOpened":
                     return new IntFlagValidationMetadata(0, 999, KeyCodeMap.ValidChars.Numeric);
                 
+                // NPC-related integer flags
+                case "elderbugHistory":
+                    return new IntFlagValidationMetadata(0, 1, KeyCodeMap.ValidChars.Numeric);
+                
+                case "quirrelEggTemple":
+                    return new IntFlagValidationMetadata(0, 4, KeyCodeMap.ValidChars.Numeric);
+                
+                case "shaman":
+                    return new IntFlagValidationMetadata(0, 6, KeyCodeMap.ValidChars.Numeric);
+                
+                // Environment-related integer flags
+                case "menderState":
+                    return new IntFlagValidationMetadata(0, 1, KeyCodeMap.ValidChars.Numeric);
+                
                 default:
                     // For unknown integer flags, provide reasonable defaults
                     if (flag.Type == "PlayerData_Int")

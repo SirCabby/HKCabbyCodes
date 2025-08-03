@@ -46,7 +46,7 @@ namespace CabbyCodes.Patches.BasePatches
             return new FlagDef[0];
         }
         
-        protected IPatch CreatePatch(FlagDef flag)
+        protected virtual IPatch CreatePatch(FlagDef flag)
         {
             // Determine type from FlagDef's type
             switch (flag.Type)

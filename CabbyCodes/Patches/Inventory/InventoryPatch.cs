@@ -2,6 +2,7 @@ using CabbyCodes.Patches.BasePatches;
 using CabbyCodes.Flags;
 using CabbyMenu.UI.CheatPanels;
 using CabbyMenu.SyncedReferences;
+using System;
 using System.Collections.Generic;
 
 namespace CabbyCodes.Patches.Inventory
@@ -51,6 +52,11 @@ namespace CabbyCodes.Patches.Inventory
             // Map Accessories section
             panels.Add(new InfoPanel("Map Accessories").SetColor(CheatPanel.subHeaderColor));
             panels.AddRange(CreateMapAccessoryPanels());
+
+            // Mask Shards section
+            panels.Add(new InfoPanel("Mask Shards").SetColor(CheatPanel.subHeaderColor));
+            panels.Add(new InfoPanel("May require restart to take effect").SetColor(CheatPanel.warningColor));
+            panels.AddRange(CreateMaskShardPanels());
 
             return panels;
         }
@@ -130,7 +136,6 @@ namespace CabbyCodes.Patches.Inventory
         {
             var panels = new List<CheatPanel>
             {
-                new BoolPatch(FlagInstances.hasMap).CreatePanel(),
                 new BoolPatch(FlagInstances.hasQuill).CreatePanel(),
                 new BoolPatch(FlagInstances.hasLantern).CreatePanel(),
                 new BoolPatch(FlagInstances.hasTramPass).CreatePanel(),
@@ -296,6 +301,44 @@ namespace CabbyCodes.Patches.Inventory
             };
 
             return panels;
+        }
+
+        private List<CheatPanel> CreateMaskShardPanels()
+        {
+            var panels = new List<CheatPanel>
+            {
+                CreateHeartPiecePanel(FlagInstances.Crossroads_09__Heart_Piece),
+                CreateHeartPiecePanel(FlagInstances.Fungus1_36__Heart_Piece)
+            };
+            
+            return panels;
+        }
+
+        private TogglePanel CreateHeartPiecePanel(FlagDef heartPieceFlag)
+        {
+            return new TogglePanel(new DelegateReference<bool>(
+                () => FlagManager.GetBoolFlag(heartPieceFlag),
+                value =>
+                {
+                    FlagManager.SetBoolFlag(heartPieceFlag, value);
+                    
+                    var currentHeartPieces = FlagManager.GetIntFlag(FlagInstances.heartPieces);
+                    if (value)
+                    {
+                        // Increment heart pieces when enabling
+                        FlagManager.SetIntFlag(FlagInstances.heartPieces, currentHeartPieces + 1);
+                    }
+                    else
+                    {
+                        // Decrement heart pieces when disabling
+                        FlagManager.SetIntFlag(FlagInstances.heartPieces, Math.Max(0, currentHeartPieces - 1));
+                    }
+                    
+                    // Update heartPieceCollected flag based on count
+                    var newHeartPieces = FlagManager.GetIntFlag(FlagInstances.heartPieces);
+                    FlagManager.SetBoolFlag(FlagInstances.heartPieceCollected, newHeartPieces > 0);
+                }
+            ), heartPieceFlag.ReadableName);
         }
     }
 }

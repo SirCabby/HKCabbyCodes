@@ -15,10 +15,10 @@ namespace CabbyCodes.Patches.Flags
                 new InfoPanel("Cornifer").SetColor(CheatPanel.subHeaderColor)
             };
             panels.AddRange(CreateNpcPanels(new[] { 
-                FlagInstances.metCornifer, 
+                FlagInstances.metCornifer,
+                FlagInstances.corniferIntroduced,
                 FlagInstances.corn_crossroadsLeft,
                 FlagInstances.corn_greenpathEncountered,
-                FlagInstances.corniferIntroduced
             }));
             
             // Myla section
