@@ -5,7 +5,7 @@ using UnityEngine;
 using CabbyCodes.Flags.FlagInfo;
 using CabbyCodes.Flags.FlagData;
 
-namespace CabbyCodes.Patches.Hunter
+namespace CabbyCodes.Patches
 {
     public class HunterPatch : BasePatch
     {

@@ -120,7 +120,7 @@ namespace CabbyCodes.Scenes
         public static readonly SceneMapData Crossroads_35 = new SceneMapData("Crossroads_35", "Crossroads");
         public static readonly SceneMapData Crossroads_36 = new SceneMapData("Crossroads_36", "Crossroads", "Path to Brooding Mawlek 2");
         public static readonly SceneMapData Crossroads_37 = new SceneMapData("Crossroads_37", "Crossroads");
-        public static readonly SceneMapData Crossroads_38 = new SceneMapData("Crossroads_38", "Crossroads");
+        public static readonly SceneMapData Crossroads_38 = new SceneMapData("Crossroads_38", "Crossroads", "The Grubfather's room");
         public static readonly SceneMapData Crossroads_39 = new SceneMapData("Crossroads_39", "Crossroads");
         public static readonly SceneMapData Crossroads_40 = new SceneMapData("Crossroads_40", "Crossroads");
         public static readonly SceneMapData Crossroads_42 = new SceneMapData("Crossroads_42", "Crossroads");

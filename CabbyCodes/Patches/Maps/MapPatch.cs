@@ -1,16 +1,12 @@
-using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
 using UnityEngine;
 using static CabbyCodes.Scenes.SceneManagement;
 using CabbyMenu.UI.DynamicPanels;
 using CabbyCodes.Flags;
 using CabbyCodes.SavedGames;
 using CabbyCodes.Patches.BasePatches;
-using CabbyMenu.Utilities;
 
 namespace CabbyCodes.Patches.Maps
 {

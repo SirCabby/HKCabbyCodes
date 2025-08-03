@@ -29,28 +29,28 @@ namespace CabbyCodes.Patches.Charms
 
                 // Charm cost removal panel
                 new TogglePanel(new DelegateReference<bool>(
-                () => charmCostValue.Get(),
-                (value) =>
-                {
-                    if (value)
+                    () => charmCostValue.Get(),
+                    (value) =>
                     {
-                        foreach (var charm in charms)
+                        if (value)
                         {
-                            FlagManager.SetIntFlag(charm.CostFlag, 0);
+                            foreach (var charm in charms)
+                            {
+                                FlagManager.SetIntFlag(charm.CostFlag, 0);
+                            }
                         }
-                    }
-                    else
-                    {
-                        foreach (var charm in charms)
+                        else
                         {
-                            // Get the default cost from the game data
-                            int defaultCost = FlagManager.GetIntFlag(charm.CostFlag);
-                            FlagManager.SetIntFlag(charm.CostFlag, defaultCost);
+                            foreach (var charm in charms)
+                            {
+                                // Get the default cost from the game data
+                                int defaultCost = FlagManager.GetIntFlag(charm.CostFlag);
+                                FlagManager.SetIntFlag(charm.CostFlag, defaultCost);
+                            }
                         }
+                        charmCostValue.Set(value);
                     }
-                    charmCostValue.Set(value);
-                }
-            ), "Remove Charm Notch Cost"),
+                ), "Remove Charm Notch Cost"),
 
                 // Grimm Child level dropdown
                 new DropdownPatch(FlagInstances.grimmChildLevel, new List<string> { "1", "2", "3", "4", "CM" }, "Grimm Child Level (1-4) or Carefree Melody").CreatePanel(),
@@ -120,7 +120,7 @@ namespace CabbyCodes.Patches.Charms
         private CheatPanel CreateCharmTogglePanel(CharmInfo charm)
         {
             int index = charms.IndexOf(charm) + 1;
-            TogglePanel togglePanel = new TogglePanel(new BoolPatch(charm.GotFlag), index + ": " + charm.Name);
+            TogglePanel togglePanel = new TogglePanel(new CharmTogglePatch(charm.GotFlag), index + ": " + charm.Name);
             
             (_, ImageMod spriteImageMod) = PanelAdder.AddSprite(togglePanel, CharmIconList.Instance.GetSprite(charm.Id), 1);
 
@@ -222,4 +222,4 @@ namespace CabbyCodes.Patches.Charms
             }
         }
     }
-}
+} 

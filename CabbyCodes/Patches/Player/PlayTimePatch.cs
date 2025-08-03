@@ -1,6 +1,4 @@
 using CabbyMenu.SyncedReferences;
-using CabbyMenu.UI.CheatPanels;
-using CabbyMenu.Utilities;
 using CabbyCodes.Flags;
 
 namespace CabbyCodes.Patches.Player

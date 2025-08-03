@@ -54,7 +54,7 @@ namespace CabbyCodes.Flags
                 public static readonly FlagDef gotCharm_37 = new FlagDef("gotCharm_37", "Global", false, "PlayerData_Bool", "Sprintmaster");
                 public static readonly FlagDef gotCharm_38 = new FlagDef("gotCharm_38", "Global", false, "PlayerData_Bool", "Dreamshield");
                 public static readonly FlagDef gotCharm_39 = new FlagDef("gotCharm_39", "Global", false, "PlayerData_Bool", "Weaversong");
-                public static readonly FlagDef gotCharm_40 = new FlagDef("gotCharm_40", "Global", false, "PlayerData_Bool", "Grimmchild");
+                public static readonly FlagDef gotCharm_40 = new FlagDef("gotCharm_40", "Global", false, "PlayerData_Bool", "Grimmchild / Carefree Melody");
             #endregion
 
             #region Charm Cost
