@@ -9,8 +9,6 @@ namespace CabbyCodes.Patches.BasePatches
     /// </summary>
     public abstract class BasePatch
     {
-        protected abstract FlagDef[] GetFlags();
-        
         /// <summary>
         /// Virtual method to get the description for a flag. Can be overridden by child classes.
         /// </summary>
@@ -21,12 +19,14 @@ namespace CabbyCodes.Patches.BasePatches
             return flag.ReadableName;
         }
         
+        /// <summary>
+        /// Creates panels for this patch. Override this for custom panel organization.
+        /// </summary>
+        /// <returns>List of panels to display</returns>
         public virtual List<CheatPanel> CreatePanels()
         {
-            var panels = new List<CheatPanel>();
-            
-            // Get the flags from the derived class
             var flags = GetFlags();
+            var panels = new List<CheatPanel>();
             
             foreach (var flag in flags)
             {
@@ -35,6 +35,15 @@ namespace CabbyCodes.Patches.BasePatches
             }
             
             return panels;
+        }
+        
+        /// <summary>
+        /// Gets the flags for this patch. Override this for simple flag-based patches.
+        /// </summary>
+        /// <returns>Array of flags to create panels for</returns>
+        protected virtual FlagDef[] GetFlags()
+        {
+            return new FlagDef[0];
         }
         
         protected IPatch CreatePatch(FlagDef flag)
