@@ -9,53 +9,38 @@ using static CabbyCodes.Scenes.SceneManagement;
 using CabbyMenu.UI.DynamicPanels;
 using CabbyCodes.Flags;
 using CabbyCodes.SavedGames;
+using CabbyCodes.Patches.BasePatches;
 
 namespace CabbyCodes.Patches.Maps
 {
-    public class MapPatch : ISyncedReference<bool>
+    public class MapPatch : BasePatch
     {
-        private readonly string mapName;
-
-        public MapPatch(string mapName)
+        public static void AddPanels()
         {
-            this.mapName = mapName;
-        }
-
-        public bool Get()
-        {
-            return (bool)typeof(PlayerData).GetField(mapName, BindingFlags.Public | BindingFlags.Instance).GetValue(PlayerData.instance);
-        }
-
-        public void Set(bool value)
-        {
-            typeof(PlayerData).GetField(mapName, BindingFlags.Public | BindingFlags.Instance).SetValue(PlayerData.instance, value);
-        }
-
-        private static void AddMapPanels()
-        {
-            Type type = typeof(PlayerData).Assembly.GetType("PlayerData+MapBools");
-            foreach (string name in Enum.GetNames(type))
+            var mapPatch = new MapPatch();
+            var panels = mapPatch.CreatePanels();
+            foreach (var panel in panels)
             {
-                string fixedName = char.ToLower(name[0]).ToString() + name.Substring(1);
-                string sceneName = fixedName.Substring(3);
-                var sceneData = GetSceneData(sceneName);
-                string displayName = sceneData?.ReadableName ?? sceneName;
-                TogglePanel buttonPanel = new TogglePanel(new MapPatch(fixedName), displayName);
-                CabbyCodesPlugin.cabbyMenu.AddCheatPanel(buttonPanel);
+                CabbyCodesPlugin.cabbyMenu.AddCheatPanel(panel);
             }
         }
 
-        public static void AddPanels()
+        public override List<CheatPanel> CreatePanels()
         {
-            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Maps: Enable to have map for area").SetColor(CheatPanel.headerColor));
-            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Warning: Still requires Inventory Map and Quill items to view / fill maps out").SetColor(CheatPanel.warningColor));
-            AddMapPanels();
+            var panels = new List<CheatPanel>
+            {
+                new InfoPanel("Maps: Enable to have map for area").SetColor(CheatPanel.headerColor),
+                new InfoPanel("Warning: Still requires Inventory Map and Quill items to view / fill maps out").SetColor(CheatPanel.warningColor)
+            };
+
+            // Add area map panels using BasePatch functionality
+            panels.AddRange(base.CreatePanels());
             
             // Get current area for default selection
             int currentAreaIndex = GetCurrentAreaIndex();
             
             // Add Rooms header
-            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Rooms: Enable to have room mapped out").SetColor(CheatPanel.headerColor));
+            panels.Add(new InfoPanel("Rooms: Enable to have room mapped out").SetColor(CheatPanel.headerColor));
             
             // Add Rooms section
             var roomsSection = new CategorizedPanelSection(
@@ -66,6 +51,42 @@ namespace CabbyCodes.Patches.Maps
                 currentAreaIndex // defaultSelection
             );
             roomsSection.AddToMenu(CabbyCodesPlugin.cabbyMenu);
+            
+            return panels;
+        }
+
+        protected override FlagDef[] GetFlags()
+        {
+            return new FlagDef[]
+            {
+                FlagInstances.mapAbyss,
+                FlagInstances.mapAllRooms,
+                FlagInstances.mapCity,
+                FlagInstances.mapCliffs,
+                FlagInstances.mapCrossroads,
+                FlagInstances.mapDeepnest,
+                FlagInstances.mapDirtmouth,
+                FlagInstances.mapFogCanyon,
+                FlagInstances.mapFungalWastes,
+                FlagInstances.mapGreenpath,
+                FlagInstances.mapMines,
+                FlagInstances.mapOutskirts,
+                FlagInstances.mapRestingGrounds,
+                FlagInstances.mapRoyalGardens,
+                FlagInstances.mapWaterways
+            };
+        }
+
+        protected override string GetDescription(FlagDef flag)
+        {
+            // Convert flag name to readable area name
+            string flagName = flag.Id;
+            if (flagName.StartsWith("map"))
+            {
+                string areaName = flagName.Substring(3); // Remove "map" prefix
+                return areaName;
+            }
+            return flag.ReadableName;
         }
 
         private static int GetCurrentAreaIndex()
@@ -135,13 +156,13 @@ namespace CabbyCodes.Patches.Maps
             bool anyToggledOff = false;
             foreach (string roomName in MapRoomPatch.roomsInMaps[mapName])
             {
-                if (setToOn && !FlagManager.ListFlagContains("scenesMapped", "Global", roomName))
+                if (setToOn && !FlagManager.ListFlagContains(FlagInstances.scenesMapped, roomName))
                 {
-                    FlagManager.AddToListFlag("scenesMapped", "Global", roomName);
+                    FlagManager.AddToListFlag(FlagInstances.scenesMapped, roomName);
                 }
-                else if (!setToOn && FlagManager.ListFlagContains("scenesMapped", "Global", roomName))
+                else if (!setToOn && FlagManager.ListFlagContains(FlagInstances.scenesMapped, roomName))
                 {
-                    FlagManager.RemoveFromListFlag("scenesMapped", "Global", roomName);
+                    FlagManager.RemoveFromListFlag(FlagInstances.scenesMapped, roomName);
                     anyToggledOff = true;
                 }
             }

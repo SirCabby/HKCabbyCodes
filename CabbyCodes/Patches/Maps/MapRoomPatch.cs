@@ -28,19 +28,19 @@ namespace CabbyCodes.Patches.Maps
 
         public bool Get()
         {
-            return FlagManager.ListFlagContains("scenesMapped", "Global", roomName);
+            return FlagManager.ListFlagContains(FlagInstances.scenesMapped, roomName);
         }
 
         public void Set(bool value)
         {
             if (value && !Get())
             {
-                FlagManager.AddToListFlag("scenesMapped", "Global", roomName);
+                FlagManager.AddToListFlag(FlagInstances.scenesMapped, roomName);
             }
             else if (!value && Get())
             {
                 // Remove the flag first
-                FlagManager.RemoveFromListFlag("scenesMapped", "Global", roomName);
+                FlagManager.RemoveFromListFlag(FlagInstances.scenesMapped, roomName);
                 // Reload to refresh map ui
                 GameReloadManager.SaveAndReload();
             }
