@@ -9,15 +9,15 @@ namespace CabbyCodes.Patches.Flags
         {
             return new FlagDef[]
             {
-                FlagInstances.crossroadsInfected,
-                FlagInstances.crossroadsMawlekWall,
-                FlagInstances.hornetGreenpath,
+                FlagInstances.openedMapperShop,
                 FlagInstances.jijiDoorUnlocked,
                 FlagInstances.menderSignBroken,
-                FlagInstances.noEyesPinned,
-                FlagInstances.menderState,
-                FlagInstances.openedMapperShop,
+                FlagInstances.menderState, // Might need to merge with prior flag
+                FlagInstances.crossroadsInfected,
+                FlagInstances.crossroadsMawlekWall,
                 FlagInstances.shamanPillar,
+
+                FlagInstances.noEyesPinned, // keep?
             };
         }
     }

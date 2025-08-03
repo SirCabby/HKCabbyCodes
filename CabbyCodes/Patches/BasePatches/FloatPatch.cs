@@ -12,10 +12,12 @@ namespace CabbyCodes.Patches.BasePatches
     {
         private readonly FlagDef flag;
         private readonly FloatFlagValidationMetadata validationData;
+        private readonly string description;
         
-        public FloatPatch(FlagDef flagDef)
+        public FloatPatch(FlagDef flagDef, string description = null)
         {
             flag = flagDef;
+            this.description = description ?? flagDef.ReadableName;
             validationData = FlagValidationData.GetFloatValidationData(flag);
         }
         
@@ -32,12 +34,12 @@ namespace CabbyCodes.Patches.BasePatches
                     validationData.ValidChars, 
                     validationData.MinValue, 
                     validationData.MaxValue, 
-                    flag.ReadableName
+                    description
                 );
             }
             
             // Fallback to default behavior for backward compatibility
-            return new RangeInputFieldPanel<float>(this, KeyCodeMap.ValidChars.Decimal, 0f, 9999f, flag.ReadableName);
+            return new RangeInputFieldPanel<float>(this, KeyCodeMap.ValidChars.Decimal, 0f, 9999f, description);
         }
     }
 } 

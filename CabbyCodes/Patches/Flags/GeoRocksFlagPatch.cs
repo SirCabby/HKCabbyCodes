@@ -1,5 +1,6 @@
 using CabbyCodes.Flags;
 using CabbyCodes.Patches.BasePatches;
+using CabbyCodes.Scenes;
 
 namespace CabbyCodes.Patches.Flags
 {
@@ -38,6 +39,13 @@ namespace CabbyCodes.Patches.Flags
                 FlagInstances.Tutorial_01__Geo_Rock_4,
                 FlagInstances.Tutorial_01__Geo_Rock_5,
             };
+        }
+        
+        protected override string GetDescription(FlagDef flag)
+        {
+            var sceneData = SceneManagement.GetSceneData(flag.SceneName);
+            var sceneDisplayName = sceneData?.ReadableName ?? flag.SceneName;
+            return $"{sceneDisplayName}: {flag.ReadableName}";
         }
     }
 } 

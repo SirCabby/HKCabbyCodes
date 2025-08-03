@@ -10,10 +10,12 @@ namespace CabbyCodes.Patches.BasePatches
     public class BoolPatch : ISyncedReference<bool>, IPatch
     {
         private readonly FlagDef flag;
+        private readonly string description;
         
-        public BoolPatch(FlagDef flagDef)
+        public BoolPatch(FlagDef flagDef, string description = null)
         {
             flag = flagDef;
+            this.description = description ?? flagDef.ReadableName;
         }
         
         public bool Get() => FlagManager.GetBoolFlag(flag);
@@ -21,7 +23,7 @@ namespace CabbyCodes.Patches.BasePatches
         
         public CheatPanel CreatePanel()
         {
-            return new TogglePanel(this, flag.ReadableName);
+            return new TogglePanel(this, description);
         }
     }
 } 

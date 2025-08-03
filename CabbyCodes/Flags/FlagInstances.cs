@@ -173,15 +173,14 @@ namespace CabbyCodes.Flags
 
         #region Environment Updates
             public static readonly FlagDef crossroadsInfected = new FlagDef("crossroadsInfected", "Global", false, "PlayerData_Bool", "Crossroads Infected");
-            public static readonly FlagDef crossroadsMawlekWall = new FlagDef("crossroadsMawlekWall", "Global", false, "PlayerData_Bool", "Opened Crossroads Mawlek Wall");
+            public static readonly FlagDef crossroadsMawlekWall = new FlagDef("crossroadsMawlekWall", "Global", false, "PlayerData_Bool", "Brooding Mawlek Wall opened");
             public static readonly FlagDef hornetGreenpath = new FlagDef("hornetGreenpath", "Global", false, "PlayerData_Int", "Saw Hornet at Greenpath (0-1)");
             public static readonly FlagDef jijiDoorUnlocked = new FlagDef("jijiDoorUnlocked", "Global", false, "PlayerData_Bool", "Jiji's door unlocked");
             public static readonly FlagDef noEyesPinned = new FlagDef("noEyesPinned", "Global", false, "PlayerData_Bool", "No Eyes Statue found");
-            public static readonly FlagDef menderSignBroken = new FlagDef("menderSignBroken", "Global", false, "PlayerData_Bool", "Broke Mender sign in Crossroads near Dirtmouth");
-            public static readonly FlagDef menderState = new FlagDef("menderState", "Global", false, "PlayerData_Int", "Changed to 1 after breaking Mender sign");
-            public static readonly FlagDef openedMapperShop = new FlagDef("openedMapperShop", "Global", false, "PlayerData_Bool", "Opened Map Shop");
-            public static readonly FlagDef shamanPillar = new FlagDef("shamanPillar", "Global", false, "PlayerData_Bool", "Opened door from Snail Shaman to Crossroads west");
-            public static readonly FlagDef stationsOpened = new FlagDef("stationsOpened", "Global", false, "PlayerData_Int", "Stag Stations Opened (0-?)");
+            public static readonly FlagDef menderSignBroken = new FlagDef("menderSignBroken", "Global", false, "PlayerData_Bool", "Broke Mender sign");
+            public static readonly FlagDef menderState = new FlagDef("menderState", "Global", false, "PlayerData_Int", "Mender is aware of broken sign (0-1)");
+            public static readonly FlagDef openedMapperShop = new FlagDef("openedMapperShop", "Global", false, "PlayerData_Bool", "Map Shop opened");
+            public static readonly FlagDef shamanPillar = new FlagDef("shamanPillar", "Global", false, "PlayerData_Bool", "Snail Shaman door to Crossroads west opened");
 
             #region Categorized Scene Flags
                 // Crossroads_04
@@ -249,6 +248,9 @@ namespace CabbyCodes.Flags
             #endregion
 
             #region Stag Stations
+                public static readonly FlagDef stationsOpened = new FlagDef("stationsOpened", "Global", false, "PlayerData_Int", "Stag Stations Opened (0-?)");
+
+                // Individual Stations
                 public static readonly FlagDef openedCrossroads = new FlagDef("openedCrossroads", "Global", false, "PlayerData_Bool", "Crossroads Stag Station");
             #endregion
 
