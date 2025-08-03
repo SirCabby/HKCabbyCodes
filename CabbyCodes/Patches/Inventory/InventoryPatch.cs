@@ -32,10 +32,6 @@ namespace CabbyCodes.Patches.Inventory
             panels.Add(new InfoPanel("Ability Items").SetColor(CheatPanel.subHeaderColor));
             panels.AddRange(CreateAbilityPanels());
 
-            // Upgrades section
-            panels.Add(new InfoPanel("Upgrades").SetColor(CheatPanel.subHeaderColor));
-            panels.AddRange(CreateUpgradePanels());
-
             // Nail Arts section
             panels.Add(new InfoPanel("Nail Arts").SetColor(CheatPanel.subHeaderColor));
             panels.AddRange(CreateNailArtPanels());
@@ -71,25 +67,9 @@ namespace CabbyCodes.Patches.Inventory
             var dreamEssencePatch = new IntPatch(FlagInstances.dreamOrbs);
             panels.Add(dreamEssencePatch.CreatePanel());
 
-            // Pale Ore
-            var paleOrePatch = new IntPatch(FlagInstances.ore);
-            panels.Add(paleOrePatch.CreatePanel());
-
             // Rancid Eggs
             var rancidEggPatch = new IntPatch(FlagInstances.rancidEggs);
             panels.Add(rancidEggPatch.CreatePanel());
-
-            // Wanderer's Journals
-            panels.Add(new IntPatch(FlagInstances.trinket1).CreatePanel());
-
-            // Hallownest Seals
-            panels.Add(new IntPatch(FlagInstances.trinket2).CreatePanel());
-
-            // King's Idols
-            panels.Add(new IntPatch(FlagInstances.trinket3).CreatePanel());
-
-            // Arcane Eggs
-            panels.Add(new IntPatch(FlagInstances.trinket4).CreatePanel());
 
             return panels;
         }
@@ -98,31 +78,14 @@ namespace CabbyCodes.Patches.Inventory
         {
             var panels = new List<CheatPanel>
             {
-                // Mothwing Cloak (multi-flag)
                 new DropdownPanel(new MothwingCloakReference(), FlagInstances.hasDash.ReadableName + " / " + FlagInstances.hasShadowDash.ReadableName, Constants.DEFAULT_PANEL_HEIGHT),
-
-                // Simple abilities
                 new BoolPatch(FlagInstances.hasDoubleJump).CreatePanel(),
                 new BoolPatch(FlagInstances.hasWalljump).CreatePanel(),
                 new BoolPatch(FlagInstances.hasSuperDash).CreatePanel(),
                 new BoolPatch(FlagInstances.hasAcidArmour).CreatePanel(),
-
-                // Dream Nail (multi-flag)
                 new DropdownPanel(new DreamNailReference(), FlagInstances.hasDreamNail.ReadableName + " / " + FlagInstances.dreamNailUpgraded.ReadableName, Constants.DEFAULT_PANEL_HEIGHT),
                 new BoolPatch(FlagInstances.hasDreamGate).CreatePanel(),
-                                        new BoolPatch(FlagInstances.unlockedCompletionRate).CreatePanel()
-            };
-
-            return panels;
-        }
-
-        private List<CheatPanel> CreateUpgradePanels()
-        {
-            var panels = new List<CheatPanel>
-            {
-                new IntPatch(FlagInstances.nailSmithUpgrades).CreatePanel(),
-                new IntPatch(FlagInstances.heartPieces).CreatePanel(),
-                new IntPatch(FlagInstances.vesselFragments).CreatePanel(),
+                                        new BoolPatch(FlagInstances.unlockedCompletionRate).CreatePanel(),
                 new BoolPatch(FlagInstances.salubraBlessing).CreatePanel()
             };
 
@@ -185,7 +148,6 @@ namespace CabbyCodes.Patches.Inventory
         {
             var panels = new List<CheatPanel>
             {
-                new IntPatch(FlagInstances.simpleKeys).CreatePanel(),
                 new BoolPatch(FlagInstances.hasWhiteKey).CreatePanel(),
                 new BoolPatch(FlagInstances.hasLoveKey).CreatePanel(),
                 new BoolPatch(FlagInstances.hasSlykey).CreatePanel(),
