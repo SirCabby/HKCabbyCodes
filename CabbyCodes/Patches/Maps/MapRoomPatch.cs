@@ -9,14 +9,6 @@ namespace CabbyCodes.Patches.Maps
 {
     public class MapRoomPatch : ISyncedReference<bool>
     {
-        /// <summary>
-        /// Scene names that should be excluded from map room patch functionality.
-        /// These scenes will not appear in the map room toggle panels.
-        /// </summary>
-        private static readonly string[] ExcludedMapScenes = {
-            "Room_temple"  // Temple of the Black Egg - should not be mappable
-        };
-
         public static readonly Dictionary<string, List<string>> roomsInMaps = GetFilteredAreaToScenesMapping();
 
         private readonly string roomName;
@@ -48,7 +40,7 @@ namespace CabbyCodes.Patches.Maps
 
         /// <summary>
         /// Gets a filtered dictionary mapping area names to lists of scene names in that area.
-        /// Excludes scenes that are in the ExcludedMapScenes array.
+        /// Only includes scenes that have Mappable = true.
         /// </summary>
         /// <returns>A dictionary where keys are area names and values are lists of scene names.</returns>
         private static Dictionary<string, List<string>> GetFilteredAreaToScenesMapping()
@@ -59,7 +51,11 @@ namespace CabbyCodes.Patches.Maps
             foreach (var kvp in unfilteredMapping)
             {
                 string areaName = kvp.Key;
-                var filteredScenes = kvp.Value.Where(sceneName => !ExcludedMapScenes.Contains(sceneName)).ToList();
+                var filteredScenes = kvp.Value.Where(sceneName => 
+                {
+                    var sceneData = GetSceneData(sceneName);
+                    return sceneData != null && sceneData.Mappable;
+                }).ToList();
                 
                 if (filteredScenes.Count > 0)
                 {

@@ -2,6 +2,15 @@ namespace CabbyCodes.Scenes
 {
     /// <summary>
     /// Static references to all Hollow Knight scenes for easy access throughout the mod.
+    /// 
+    /// To mark a scene as non-mappable (won't appear in map room toggle panels), 
+    /// set the mappable parameter to false in the SceneMapData constructor.
+    /// Examples of non-mappable scenes:
+    /// - Tutorial areas (Tutorial_01)
+    /// - Special rooms (Room_temple, Room_Mask_maker)
+    /// - Boss rooms
+    /// - Dream areas
+    /// - Transition rooms
     /// </summary>
     public static class SceneInstances
     {
@@ -122,7 +131,7 @@ namespace CabbyCodes.Scenes
         public static readonly SceneMapData Crossroads_48 = new SceneMapData("Crossroads_48", "Crossroads");
         public static readonly SceneMapData Crossroads_49 = new SceneMapData("Crossroads_49", "Crossroads");
         public static readonly SceneMapData Crossroads_52 = new SceneMapData("Crossroads_52", "Crossroads");
-        public static readonly SceneMapData Room_temple = new SceneMapData("Room_temple", "Crossroads", "Temple of the Black Egg");
+        public static readonly SceneMapData Room_temple = new SceneMapData("Room_temple", "Crossroads", "Temple of the Black Egg", false);
         public static readonly SceneMapData Crossroads_ShamanTemple = new SceneMapData("Crossroads_ShamanTemple", "Crossroads", "Shaman Temple");
 
         // Deepnest
@@ -155,12 +164,12 @@ namespace CabbyCodes.Scenes
         public static readonly SceneMapData Deepnest_44 = new SceneMapData("Deepnest_44", "Deepnest");
         public static readonly SceneMapData Deepnest_44_b = new SceneMapData("Deepnest_44_b", "Deepnest");
         public static readonly SceneMapData Fungus2_25 = new SceneMapData("Fungus2_25", "Deepnest");
-        public static readonly SceneMapData Room_Mask_maker = new SceneMapData("Room_Mask_maker", "Deepnest");
+        public static readonly SceneMapData Room_Mask_maker = new SceneMapData("Room_Mask_maker", "Deepnest", null, false);
         public static readonly SceneMapData Deepnest_Spider_Town = new SceneMapData("Deepnest_Spider_Town", "Deepnest");
 
         // Dirtmouth
         public static readonly SceneMapData Town = new SceneMapData(        "Town",         "Dirtmouth",    "Dirtmouth");
-        public static readonly SceneMapData Tutorial_01 = new SceneMapData( "Tutorial_01",  "Dirtmouth",    "King's Pass");
+        public static readonly SceneMapData Tutorial_01 = new SceneMapData( "Tutorial_01",  "Dirtmouth",    "King's Pass", false);
 
         // FogCanyon
         public static readonly SceneMapData Fungus3_01 = new SceneMapData("Fungus3_01", "FogCanyon");
@@ -233,7 +242,7 @@ namespace CabbyCodes.Scenes
         public static readonly SceneMapData Fungus1_15 = new SceneMapData("Fungus1_15", "Greenpath");
         public static readonly SceneMapData Fungus1_16_alt = new SceneMapData("Fungus1_16_alt", "Greenpath");
         public static readonly SceneMapData Fungus1_17 = new SceneMapData("Fungus1_17", "Greenpath");
-        public static readonly SceneMapData Fungus1_19 = new SceneMapData("Fungus1_19", "Greenpath");
+        public static readonly SceneMapData Fungus1_19 = new SceneMapData("Fungus1_19", "Greenpath", null, false);
         public static readonly SceneMapData Fungus1_20_v02 = new SceneMapData("Fungus1_20_v02", "Greenpath");
         public static readonly SceneMapData Fungus1_21 = new SceneMapData("Fungus1_21", "Greenpath");
         public static readonly SceneMapData Fungus1_22 = new SceneMapData("Fungus1_22", "Greenpath");
@@ -299,8 +308,8 @@ namespace CabbyCodes.Scenes
         public static readonly SceneMapData Deepnest_East_15 = new SceneMapData("Deepnest_East_15", "Outskirts");
         public static readonly SceneMapData Deepnest_East_16 = new SceneMapData("Deepnest_East_16", "Outskirts");
         public static readonly SceneMapData Deepnest_East_18 = new SceneMapData("Deepnest_East_18", "Outskirts");
-        public static readonly SceneMapData Deepnest_East_Hornet = new SceneMapData("Deepnest_East_Hornet", "Outskirts");
-        public static readonly SceneMapData Deepnest_East_Hornet_b = new SceneMapData("Deepnest_East_Hornet_b", "Outskirts");
+        public static readonly SceneMapData Deepnest_East_Hornet = new SceneMapData("Deepnest_East_Hornet", "Outskirts", null, false);
+        public static readonly SceneMapData Deepnest_East_Hornet_b = new SceneMapData("Deepnest_East_Hornet_b", "Outskirts", null, false);
         public static readonly SceneMapData Hive_01 = new SceneMapData("Hive_01", "Outskirts");
         public static readonly SceneMapData Hive_02 = new SceneMapData("Hive_02", "Outskirts");
         public static readonly SceneMapData Hive_03 = new SceneMapData("Hive_03", "Outskirts");
