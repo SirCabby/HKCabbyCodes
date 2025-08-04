@@ -8,13 +8,14 @@ using System.Collections;
 using CabbyCodes.Flags;
 using System;
 using System.IO;
+using TMPro;
 
 namespace CabbyCodes.Patches.Flags.Triage
 {
     public class FlagMonitorPatch
     {
         public static GameObject notificationPanel;
-        public static Text notificationText;
+        public static TextMeshProUGUI notificationText;
         private static readonly Queue<string> notificationQueue = new Queue<string>();
         private static readonly FlagMonitorReference monitorReference = FlagMonitorReference.Instance;
         private static readonly FlagFileLoggingReference fileLoggingReference = FlagFileLoggingReference.Instance;
@@ -919,16 +920,52 @@ namespace CabbyCodes.Patches.Flags.Triage
             }
         }
 
+        /// <summary>
+        /// Formats a notification message with appropriate color based on its content
+        /// </summary>
+        private static string FormatNotificationWithColor(string notification)
+        {
+            // Color coding for different types of notifications
+            if (notification.StartsWith("[SceneChange]"))
+            {
+                return $"<color=#FFFFFF><b>{notification}</b></color>"; // White for scene changes
+            }
+            else if (notification.StartsWith("[PlayerData]"))
+            {
+                return $"<color=#00FFFF><b>{notification}</b></color>"; // Cyan for PlayerData changes
+            }
+            else if (notification.StartsWith("[Scene:"))
+            {
+                return $"<color=#00FFFF><b>{notification}</b></color>"; // Cyan for scene flags
+            }
+            else if (notification.StartsWith("[NEW PLAYERDATA FLAG]"))
+            {
+                return $"<color=#FF8000><b>{notification}</b></color>"; // Orange for new PlayerData flags
+            }
+            else if (notification.StartsWith("[NEW SCENE FLAG"))
+            {
+                return $"<color=#FF8000><b>{notification}</b></color>"; // Orange for new scene flags
+            }
+            else if (notification.StartsWith("[DISCOVERY]"))
+            {
+                return $"<color=#FF8000><b>{notification}</b></color>"; // Orange for discoveries
+            }
+            else
+            {
+                return $"<color=#FFFFFF><b>{notification}</b></color>"; // White for other notifications
+            }
+        }
+
         public static void UpdateNotificationDisplay()
         {
             if (notificationPanel == null) return;
             
             int count = notificationQueue.Count;
-            string displayText = $"Flag Monitor Active - Total Notifications: {count}\n\n";
+            string displayText = $"<color=#FFFFFF><b>Flag Monitor Active - Total Notifications: {count}</b></color>\n\n";
             
             foreach (string notification in notificationQueue)
             {
-                displayText += notification + "\n";
+                displayText += FormatNotificationWithColor(notification) + "\n";
             }
             
             notificationText.text = displayText;
@@ -975,7 +1012,7 @@ namespace CabbyCodes.Patches.Flags.Triage
             notificationQueue.Clear();
             if (notificationText != null)
             {
-                notificationText.text = "Flag Monitor Active - Total Notifications: 0\n\nNotifications cleared.";
+                notificationText.text = "<color=#FFFFFF><b>Flag Monitor Active - Total Notifications: 0</b></color>\n\n<color=#CCCCCC>Notifications cleared.</color>";
                 
                 LayoutRebuilder.ForceRebuildLayoutImmediate(notificationText.GetComponent<RectTransform>());
                 LayoutRebuilder.ForceRebuildLayoutImmediate(notificationText.transform.parent.GetComponent<RectTransform>());
@@ -1119,11 +1156,15 @@ namespace CabbyCodes.Patches.Flags.Triage
             
             testCounter++;
             
-            // Test messages in the same format as the actual monitoring
+            // Test messages in the same format as the actual monitoring with color coding
             AddNotification($"[SceneChange]: TestScene1 -> TestScene2");
             AddNotification($"[PlayerData]: test_field_{testCounter} = true");
             AddNotification($"[PlayerData]: test_int_{testCounter} = {testCounter * 100}");
             AddNotification($"[Scene: TestScene] test_scene_flag_{testCounter} = true");
+            AddNotification($"[Scene: TestScene] GeoRock: test_rock_{testCounter} = Broken");
+            AddNotification($"[Scene: TestScene] GeoRock: test_rock_{testCounter + 1} = Intact (3 hits left)");
+            AddNotification($"[NEW PLAYERDATA FLAG]: test_new_flag_{testCounter} (Boolean) = true");
+            AddNotification($"[NEW SCENE FLAG: TestScene]: test_new_scene_flag_{testCounter} = false");
             
             // Test actual PlayerData field changes
             if (PlayerData.instance != null)

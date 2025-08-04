@@ -4,6 +4,7 @@ using UnityEngine.UI;
 using CabbyMenu.UI.Modders;
 using UnityEngine.EventSystems;
 using BepInEx.Configuration;
+using TMPro;
 
 namespace CabbyCodes.Patches.Flags.Triage
 {
@@ -316,14 +317,13 @@ namespace CabbyCodes.Patches.Flags.Triage
             GameObject textObject = new GameObject("NotificationText");
             textObject.transform.SetParent(contentObject.transform, false);
             
-            FlagMonitorPatch.notificationText = textObject.AddComponent<Text>();
-            FlagMonitorPatch.notificationText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
+            FlagMonitorPatch.notificationText = textObject.AddComponent<TextMeshProUGUI>();
             FlagMonitorPatch.notificationText.fontSize = 16;
-            FlagMonitorPatch.notificationText.fontStyle = FontStyle.Bold;
+            FlagMonitorPatch.notificationText.fontStyle = FontStyles.Bold;
             FlagMonitorPatch.notificationText.color = Color.white;
-            FlagMonitorPatch.notificationText.alignment = TextAnchor.UpperLeft;
-            FlagMonitorPatch.notificationText.horizontalOverflow = HorizontalWrapMode.Wrap;
-            FlagMonitorPatch.notificationText.verticalOverflow = VerticalWrapMode.Overflow;
+            FlagMonitorPatch.notificationText.alignment = TextAlignmentOptions.TopLeft;
+            FlagMonitorPatch.notificationText.enableWordWrapping = true;
+            FlagMonitorPatch.notificationText.richText = true;
             
             // Configure text RectTransform to ensure visibility
             RectTransform textRect = FlagMonitorPatch.notificationText.GetComponent<RectTransform>();
@@ -339,7 +339,7 @@ namespace CabbyCodes.Patches.Flags.Triage
             textFitter.horizontalFit = ContentSizeFitter.FitMode.Unconstrained;
             
             // Set initial text to ensure the component is properly initialized
-            FlagMonitorPatch.notificationText.text = "Flag Monitor Active - Total Notifications: 0\n\nWaiting for flag changes...";
+            FlagMonitorPatch.notificationText.text = "<color=#FFFFFF><b>Flag Monitor Active - Total Notifications: 0</b></color>\n\n<color=#CCCCCC>Waiting for flag changes...</color>";
             
             // Force layout rebuild to ensure proper sizing
             LayoutRebuilder.ForceRebuildLayoutImmediate(textRect);

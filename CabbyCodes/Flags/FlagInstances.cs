@@ -1917,6 +1917,7 @@ namespace CabbyCodes.Flags
                 // Crossroads_19
                 new FlagDef("Hatcher", SceneInstances.Crossroads_19.SceneName, true, "PersistentBoolData"),
                 new FlagDef("Zombie Leaper", SceneInstances.Crossroads_19.SceneName, true, "PersistentBoolData", "Killed Zombie Leaper"),
+                new FlagDef("Soul Totem mini_two_horned", SceneInstances.Crossroads_19.SceneName, false, "PersistentIntData"),
 
                 // Crossroads_21
                 new FlagDef("Secret Mask (1)", SceneInstances.Crossroads_21.SceneName, false, "PersistentBoolData"),
