@@ -15,7 +15,7 @@ namespace CabbyCodes.Patches.Flags
 
             var flagTypeSection = new CategorizedPanelSection(
                 "Flag Type", 
-                new List<string> { "Environment", "NPC", "Boss", "Shop", "Stag", "Room", "Geo Rocks" },
+                new List<string> { "Environment", "NPC", "Boss", "Shop", "Stag", "Room", "Geo Rocks", "Whispering Roots" },
                 CreateFlagTypePanels
             );
             flagTypeSection.AddToMenu(CabbyCodesPlugin.cabbyMenu);
@@ -65,6 +65,11 @@ namespace CabbyCodes.Patches.Flags
                 case 6: // Geo Rocks
                     var geoPatch = new GeoRocksFlagPatch();
                     panels.AddRange(geoPatch.CreatePanels());
+                    break;
+                    
+                case 7: // Whispering Roots
+                    var whisperingPatch = new WhisperingRootsPatch();
+                    panels.AddRange(whisperingPatch.CreatePanels());
                     break;
             }
             

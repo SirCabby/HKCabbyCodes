@@ -73,6 +73,12 @@ namespace CabbyCodes.Patches.Flags
                 FlagInstances.shaman 
             }));
 
+            // Seer section
+            panels.Add(new InfoPanel("Seer").SetColor(CheatPanel.subHeaderColor));
+            panels.AddRange(CreateNpcPanels(new[] { 
+                FlagInstances.metMoth
+            }));
+
             // Sly section
             panels.Add(new InfoPanel("Sly").SetColor(CheatPanel.subHeaderColor));
             panels.AddRange(CreateNpcPanels(new[] { 

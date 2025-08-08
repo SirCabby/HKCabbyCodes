@@ -327,6 +327,7 @@ namespace CabbyCodes.Scenes
         public static readonly SceneMapData RestingGrounds_04 = new SceneMapData("RestingGrounds_04", "RestingGrounds");
         public static readonly SceneMapData RestingGrounds_05 = new SceneMapData("RestingGrounds_05", "RestingGrounds");
         public static readonly SceneMapData RestingGrounds_06 = new SceneMapData("RestingGrounds_06", "RestingGrounds");
+        public static readonly SceneMapData RestingGrounds_07 = new SceneMapData("RestingGrounds_07", "RestingGrounds");
         public static readonly SceneMapData RestingGrounds_08 = new SceneMapData("RestingGrounds_08", "RestingGrounds");
         public static readonly SceneMapData RestingGrounds_09 = new SceneMapData("RestingGrounds_09", "RestingGrounds");
         public static readonly SceneMapData RestingGrounds_10_b = new SceneMapData("RestingGrounds_10_b", "RestingGrounds");

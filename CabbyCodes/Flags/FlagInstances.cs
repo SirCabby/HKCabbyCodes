@@ -225,6 +225,13 @@ namespace CabbyCodes.Flags
                 public static readonly FlagDef Crossroads_ShamanTemple__Blocker = new FlagDef("Blocker", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData", "Killed Blocker");
                 public static readonly FlagDef Crossroads_ShamanTemple__Bone_Gate = new FlagDef("Bone Gate", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData", "Opened gate to return to entrance");
 
+                // Mines_04
+                public static readonly FlagDef Mines_04__Mines_Lever = new FlagDef("Mines Lever", SceneInstances.Mines_04.SceneName, false, "PersistentBoolData", "???");
+
+                // Mines_33
+                public static readonly FlagDef Mines_33__One_Way_Wall = new FlagDef("One Way Wall", SceneInstances.Mines_33.SceneName, false, "PersistentBoolData", "Opened wall to exit pit");
+                public static readonly FlagDef Mines_33__Toll_Gate_Machine = new FlagDef("Toll Gate Machine", SceneInstances.Mines_33.SceneName, false, "PersistentBoolData", "Paid toll to open gate");
+
                 // Town
                 public static readonly FlagDef Town__Door_Destroyer = new FlagDef("Door Destroyer", SceneInstances.Town.SceneName, false, "PersistentBoolData", "Door broken open from King's Pass");
 
@@ -239,6 +246,109 @@ namespace CabbyCodes.Flags
                 public static readonly FlagDef Tutorial_01__Tute_Door_5 = new FlagDef("Tute Door 5", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData", "Intro Door 5");
                 public static readonly FlagDef Tutorial_01__Tute_Door_6 = new FlagDef("Tute Door 6", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData", "Intro Door 6");
                 public static readonly FlagDef Tutorial_01__Tute_Door_7 = new FlagDef("Tute Door 7", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData", "Intro Door 7");
+            #endregion
+
+            #region Dream Plants
+                // Crossroads_07
+                public static readonly FlagDef Crossroads_07__Dream_Plant = new FlagDef("Dream Plant", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_07__Dream_Plant_Orb = new FlagDef("Dream Plant Orb", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_07__Dream_Plant_Orb_1 = new FlagDef("Dream Plant Orb (1)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_07__Dream_Plant_Orb_10 = new FlagDef("Dream Plant Orb (10)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_07__Dream_Plant_Orb_11 = new FlagDef("Dream Plant Orb (11)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_07__Dream_Plant_Orb_12 = new FlagDef("Dream Plant Orb (12)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_07__Dream_Plant_Orb_13 = new FlagDef("Dream Plant Orb (13)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_07__Dream_Plant_Orb_14 = new FlagDef("Dream Plant Orb (14)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_07__Dream_Plant_Orb_15 = new FlagDef("Dream Plant Orb (15)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_07__Dream_Plant_Orb_16 = new FlagDef("Dream Plant Orb (16)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_07__Dream_Plant_Orb_17 = new FlagDef("Dream Plant Orb (17)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_07__Dream_Plant_Orb_18 = new FlagDef("Dream Plant Orb (18)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_07__Dream_Plant_Orb_19 = new FlagDef("Dream Plant Orb (19)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_07__Dream_Plant_Orb_2 = new FlagDef("Dream Plant Orb (2)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_07__Dream_Plant_Orb_20 = new FlagDef("Dream Plant Orb (20)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_07__Dream_Plant_Orb_21 = new FlagDef("Dream Plant Orb (21)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_07__Dream_Plant_Orb_22 = new FlagDef("Dream Plant Orb (22)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_07__Dream_Plant_Orb_23 = new FlagDef("Dream Plant Orb (23)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_07__Dream_Plant_Orb_24 = new FlagDef("Dream Plant Orb (24)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_07__Dream_Plant_Orb_25 = new FlagDef("Dream Plant Orb (25)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_07__Dream_Plant_Orb_26 = new FlagDef("Dream Plant Orb (26)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_07__Dream_Plant_Orb_27 = new FlagDef("Dream Plant Orb (27)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_07__Dream_Plant_Orb_28 = new FlagDef("Dream Plant Orb (28)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_07__Dream_Plant_Orb_3 = new FlagDef("Dream Plant Orb (3)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_07__Dream_Plant_Orb_4 = new FlagDef("Dream Plant Orb (4)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_07__Dream_Plant_Orb_5 = new FlagDef("Dream Plant Orb (5)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_07__Dream_Plant_Orb_6 = new FlagDef("Dream Plant Orb (6)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_07__Dream_Plant_Orb_7 = new FlagDef("Dream Plant Orb (7)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_07__Dream_Plant_Orb_8 = new FlagDef("Dream Plant Orb (8)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_07__Dream_Plant_Orb_9 = new FlagDef("Dream Plant Orb (9)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
+
+                // RestingGrounds_05
+                public static readonly FlagDef RestingGrounds_05__Dream_Plant = new FlagDef("Dream Plant", SceneInstances.RestingGrounds_05.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef RestingGrounds_05__Dream_Plant_Orb = new FlagDef("Dream Plant Orb", SceneInstances.RestingGrounds_05.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef RestingGrounds_05__Dream_Plant_Orb_1 = new FlagDef("Dream Plant Orb (1)", SceneInstances.RestingGrounds_05.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef RestingGrounds_05__Dream_Plant_Orb_10 = new FlagDef("Dream Plant Orb (10)", SceneInstances.RestingGrounds_05.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef RestingGrounds_05__Dream_Plant_Orb_11 = new FlagDef("Dream Plant Orb (11)", SceneInstances.RestingGrounds_05.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef RestingGrounds_05__Dream_Plant_Orb_12 = new FlagDef("Dream Plant Orb (12)", SceneInstances.RestingGrounds_05.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef RestingGrounds_05__Dream_Plant_Orb_13 = new FlagDef("Dream Plant Orb (13)", SceneInstances.RestingGrounds_05.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef RestingGrounds_05__Dream_Plant_Orb_14 = new FlagDef("Dream Plant Orb (14)", SceneInstances.RestingGrounds_05.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef RestingGrounds_05__Dream_Plant_Orb_15 = new FlagDef("Dream Plant Orb (15)", SceneInstances.RestingGrounds_05.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef RestingGrounds_05__Dream_Plant_Orb_16 = new FlagDef("Dream Plant Orb (16)", SceneInstances.RestingGrounds_05.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef RestingGrounds_05__Dream_Plant_Orb_17 = new FlagDef("Dream Plant Orb (17)", SceneInstances.RestingGrounds_05.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef RestingGrounds_05__Dream_Plant_Orb_18 = new FlagDef("Dream Plant Orb (18)", SceneInstances.RestingGrounds_05.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef RestingGrounds_05__Dream_Plant_Orb_19 = new FlagDef("Dream Plant Orb (19)", SceneInstances.RestingGrounds_05.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef RestingGrounds_05__Dream_Plant_Orb_2 = new FlagDef("Dream Plant Orb (2)", SceneInstances.RestingGrounds_05.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef RestingGrounds_05__Dream_Plant_Orb_3 = new FlagDef("Dream Plant Orb (3)", SceneInstances.RestingGrounds_05.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef RestingGrounds_05__Dream_Plant_Orb_4 = new FlagDef("Dream Plant Orb (4)", SceneInstances.RestingGrounds_05.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef RestingGrounds_05__Dream_Plant_Orb_5 = new FlagDef("Dream Plant Orb (5)", SceneInstances.RestingGrounds_05.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef RestingGrounds_05__Dream_Plant_Orb_6 = new FlagDef("Dream Plant Orb (6)", SceneInstances.RestingGrounds_05.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef RestingGrounds_05__Dream_Plant_Orb_7 = new FlagDef("Dream Plant Orb (7)", SceneInstances.RestingGrounds_05.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef RestingGrounds_05__Dream_Plant_Orb_8 = new FlagDef("Dream Plant Orb (8)", SceneInstances.RestingGrounds_05.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef RestingGrounds_05__Dream_Plant_Orb_9 = new FlagDef("Dream Plant Orb (9)", SceneInstances.RestingGrounds_05.SceneName, false, "PersistentBoolData");
+
+                // Crossroads_ShamanTemple
+                public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant = new FlagDef("Dream Plant", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_29 = new FlagDef("Dream Plant Orb (29)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_30 = new FlagDef("Dream Plant Orb (30)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_31 = new FlagDef("Dream Plant Orb (31)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_32 = new FlagDef("Dream Plant Orb (32)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_33 = new FlagDef("Dream Plant Orb (33)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_34 = new FlagDef("Dream Plant Orb (34)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_35 = new FlagDef("Dream Plant Orb (35)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_36 = new FlagDef("Dream Plant Orb (36)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_37 = new FlagDef("Dream Plant Orb (37)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_38 = new FlagDef("Dream Plant Orb (38)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_39 = new FlagDef("Dream Plant Orb (39)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_40 = new FlagDef("Dream Plant Orb (40)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_41 = new FlagDef("Dream Plant Orb (41)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb = new FlagDef("Dream Plant Orb", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_1 = new FlagDef("Dream Plant Orb (1)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_10 = new FlagDef("Dream Plant Orb (10)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_11 = new FlagDef("Dream Plant Orb (11)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_12 = new FlagDef("Dream Plant Orb (12)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_13 = new FlagDef("Dream Plant Orb (13)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_14 = new FlagDef("Dream Plant Orb (14)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_15 = new FlagDef("Dream Plant Orb (15)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_16 = new FlagDef("Dream Plant Orb (16)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_17 = new FlagDef("Dream Plant Orb (17)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_18 = new FlagDef("Dream Plant Orb (18)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_19 = new FlagDef("Dream Plant Orb (19)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_2 = new FlagDef("Dream Plant Orb (2)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_20 = new FlagDef("Dream Plant Orb (20)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_21 = new FlagDef("Dream Plant Orb (21)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_22 = new FlagDef("Dream Plant Orb (22)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_23 = new FlagDef("Dream Plant Orb (23)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_24 = new FlagDef("Dream Plant Orb (24)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_25 = new FlagDef("Dream Plant Orb (25)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_26 = new FlagDef("Dream Plant Orb (26)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_27 = new FlagDef("Dream Plant Orb (27)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_28 = new FlagDef("Dream Plant Orb (28)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_3 = new FlagDef("Dream Plant Orb (3)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_4 = new FlagDef("Dream Plant Orb (4)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_5 = new FlagDef("Dream Plant Orb (5)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_6 = new FlagDef("Dream Plant Orb (6)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_7 = new FlagDef("Dream Plant Orb (7)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_8 = new FlagDef("Dream Plant Orb (8)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_9 = new FlagDef("Dream Plant Orb (9)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
+
             #endregion
 
             #region Geo Rocks
@@ -271,6 +381,11 @@ namespace CabbyCodes.Flags
                 public static readonly FlagDef Crossroads_ShamanTemple__Geo_Rock_2_1 = new FlagDef("Geo Rock 2 (1)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "GeoRockData");
                 public static readonly FlagDef Fungus1_01__Geo_Rock_Green_Path_01 = new FlagDef("Geo Rock Green Path 01", SceneInstances.Fungus1_01.SceneName, false, "GeoRockData");
                 public static readonly FlagDef Fungus1_02__Geo_Rock_Green_Path_01_1 = new FlagDef("Geo Rock Green Path 01 (1)", SceneInstances.Fungus1_02.SceneName, false, "GeoRockData");
+                public static readonly FlagDef Mines_02__Geo_Rock_1 = new FlagDef("Geo Rock 1", SceneInstances.Mines_02.SceneName, false, "GeoRockData");
+                public static readonly FlagDef Mines_02__Geo_Rock_Mine = new FlagDef("Geo Rock Mine", SceneInstances.Mines_02.SceneName, false, "GeoRockData");
+                public static readonly FlagDef Mines_02__Geo_Rock_Mine_1 = new FlagDef("Geo Rock Mine (1)", SceneInstances.Mines_02.SceneName, false, "GeoRockData");
+                public static readonly FlagDef Mines_04__Geo_Rock_Mine = new FlagDef("Geo Rock Mine", SceneInstances.Mines_04.SceneName, false, "GeoRockData");
+                public static readonly FlagDef Mines_04__Geo_Rock_Mine_1 = new FlagDef("Geo Rock Mine (1)", SceneInstances.Mines_04.SceneName, false, "GeoRockData");
                 public static readonly FlagDef Mines_33__Geo_Rock_2 = new FlagDef("Geo Rock 2", SceneInstances.Mines_33.SceneName, false, "GeoRockData");
                 public static readonly FlagDef Mines_33__Geo_Rock_2_1 = new FlagDef("Geo Rock 2 (1)", SceneInstances.Mines_33.SceneName, false, "GeoRockData");
                 public static readonly FlagDef Mines_33__Geo_Rock_2_2 = new FlagDef("Geo Rock 2 (2)", SceneInstances.Mines_33.SceneName, false, "GeoRockData");
@@ -934,7 +1049,7 @@ namespace CabbyCodes.Flags
                 public static readonly FlagDef hasPinDreamPlant =   new FlagDef("hasPinDreamPlant", "Global", false, "PlayerData_Bool", "Whispering Root Pin");
                 public static readonly FlagDef hasPinGhost =        new FlagDef("hasPinGhost",      "Global", false, "PlayerData_Bool", "Warrior's Grave Pin");
                 public static readonly FlagDef hasPinGrub =         new FlagDef("hasPinGrub",       "Global", false, "PlayerData_Bool", "Collector's Map");
-                public static readonly FlagDef hasPinGuardian =     new FlagDef("hasPinGuardian",   "Global", false, "PlayerData_Bool");
+                public static readonly FlagDef hasPinGuardian =     new FlagDef("hasPinGuardian",   "Global", false, "PlayerData_Bool", "Dreamers Pin");
                 public static readonly FlagDef hasPinShop =         new FlagDef("hasPinShop",       "Global", false, "PlayerData_Bool", "Vendor Pin");
                 public static readonly FlagDef hasPinSpa =          new FlagDef("hasPinSpa",        "Global", false, "PlayerData_Bool", "Hot Spring Pin");
                 public static readonly FlagDef hasPinStag =         new FlagDef("hasPinStag",       "Global", false, "PlayerData_Bool", "Stag Station Pin");
@@ -1050,6 +1165,7 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef metIselda = new FlagDef("metIselda", "Global", false, "PlayerData_Bool", "Met Iselda");
             public static readonly FlagDef jijiMet = new FlagDef("jijiMet", "Global", false, "PlayerData_Bool", "Met Jiji");
             public static readonly FlagDef metMiner = new FlagDef("metMiner", "Global", false, "PlayerData_Bool", "Met Myla the Miner");
+            public static readonly FlagDef metMoth = new FlagDef("metMoth", "Global", false, "PlayerData_Bool", "Met the Seer");
             public static readonly FlagDef metQuirrel = new FlagDef("metQuirrel", "Global", false, "PlayerData_Bool", "Met Quirrel");
             public static readonly FlagDef metSlyShop = new FlagDef("metSlyShop", "Global", false, "PlayerData_Bool", "Met Sly at Shop");
             public static readonly FlagDef metStag = new FlagDef("metStag", "Global", false, "PlayerData_Bool", "Met Stag");
@@ -1076,6 +1192,7 @@ namespace CabbyCodes.Flags
 
         #region Visited Locations
             public static readonly FlagDef eggTempleVisited = new FlagDef("eggTempleVisited", "Global", false, "PlayerData_Bool");
+            public static readonly FlagDef enteredDreamWorld = new FlagDef("enteredDreamWorld", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef visitedAbyss = new FlagDef("visitedAbyss", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef visitedAbyssLower = new FlagDef("visitedAbyssLower", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef visitedCliffs = new FlagDef("visitedCliffs", "Global", false, "PlayerData_Bool");
@@ -1108,36 +1225,6 @@ namespace CabbyCodes.Flags
 
             // Crossroads_07
             public static readonly FlagDef Crossroads_07__Breakable_Wall_Silhouette = new FlagDef("Breakable Wall_Silhouette", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_07__Dream_Plant = new FlagDef("Dream Plant", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_07__Dream_Plant_Orb = new FlagDef("Dream Plant Orb", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_07__Dream_Plant_Orb_1 = new FlagDef("Dream Plant Orb (1)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_07__Dream_Plant_Orb_10 = new FlagDef("Dream Plant Orb (10)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_07__Dream_Plant_Orb_11 = new FlagDef("Dream Plant Orb (11)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_07__Dream_Plant_Orb_12 = new FlagDef("Dream Plant Orb (12)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_07__Dream_Plant_Orb_13 = new FlagDef("Dream Plant Orb (13)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_07__Dream_Plant_Orb_14 = new FlagDef("Dream Plant Orb (14)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_07__Dream_Plant_Orb_15 = new FlagDef("Dream Plant Orb (15)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_07__Dream_Plant_Orb_16 = new FlagDef("Dream Plant Orb (16)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_07__Dream_Plant_Orb_17 = new FlagDef("Dream Plant Orb (17)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_07__Dream_Plant_Orb_18 = new FlagDef("Dream Plant Orb (18)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_07__Dream_Plant_Orb_19 = new FlagDef("Dream Plant Orb (19)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_07__Dream_Plant_Orb_2 = new FlagDef("Dream Plant Orb (2)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_07__Dream_Plant_Orb_20 = new FlagDef("Dream Plant Orb (20)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_07__Dream_Plant_Orb_21 = new FlagDef("Dream Plant Orb (21)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_07__Dream_Plant_Orb_22 = new FlagDef("Dream Plant Orb (22)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_07__Dream_Plant_Orb_23 = new FlagDef("Dream Plant Orb (23)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_07__Dream_Plant_Orb_24 = new FlagDef("Dream Plant Orb (24)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_07__Dream_Plant_Orb_25 = new FlagDef("Dream Plant Orb (25)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_07__Dream_Plant_Orb_26 = new FlagDef("Dream Plant Orb (26)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_07__Dream_Plant_Orb_27 = new FlagDef("Dream Plant Orb (27)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_07__Dream_Plant_Orb_28 = new FlagDef("Dream Plant Orb (28)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_07__Dream_Plant_Orb_3 = new FlagDef("Dream Plant Orb (3)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_07__Dream_Plant_Orb_4 = new FlagDef("Dream Plant Orb (4)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_07__Dream_Plant_Orb_5 = new FlagDef("Dream Plant Orb (5)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_07__Dream_Plant_Orb_6 = new FlagDef("Dream Plant Orb (6)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_07__Dream_Plant_Orb_7 = new FlagDef("Dream Plant Orb (7)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_07__Dream_Plant_Orb_8 = new FlagDef("Dream Plant Orb (8)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_07__Dream_Plant_Orb_9 = new FlagDef("Dream Plant Orb (9)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
             public static readonly FlagDef Crossroads_07__Remasker = new FlagDef("Remasker", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
 
             // Crossroads_10
@@ -1167,51 +1254,6 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef Crossroads_38__Reward_46 = new FlagDef("Reward 46", SceneInstances.Crossroads_38.SceneName, false, "PersistentBoolData");
             public static readonly FlagDef Crossroads_38__Reward_5 = new FlagDef("Reward 5", SceneInstances.Crossroads_38.SceneName, false, "PersistentBoolData");
 
-            // Crossroads_ShamanTemple
-            public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_29 = new FlagDef("Dream Plant Orb (29)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_30 = new FlagDef("Dream Plant Orb (30)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_31 = new FlagDef("Dream Plant Orb (31)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_32 = new FlagDef("Dream Plant Orb (32)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_33 = new FlagDef("Dream Plant Orb (33)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_34 = new FlagDef("Dream Plant Orb (34)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_35 = new FlagDef("Dream Plant Orb (35)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_36 = new FlagDef("Dream Plant Orb (36)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_37 = new FlagDef("Dream Plant Orb (37)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_38 = new FlagDef("Dream Plant Orb (38)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_39 = new FlagDef("Dream Plant Orb (39)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_40 = new FlagDef("Dream Plant Orb (40)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_41 = new FlagDef("Dream Plant Orb (41)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant = new FlagDef("Dream Plant", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb = new FlagDef("Dream Plant Orb", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_1 = new FlagDef("Dream Plant Orb (1)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_10 = new FlagDef("Dream Plant Orb (10)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_11 = new FlagDef("Dream Plant Orb (11)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_12 = new FlagDef("Dream Plant Orb (12)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_13 = new FlagDef("Dream Plant Orb (13)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_14 = new FlagDef("Dream Plant Orb (14)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_15 = new FlagDef("Dream Plant Orb (15)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_16 = new FlagDef("Dream Plant Orb (16)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_17 = new FlagDef("Dream Plant Orb (17)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_18 = new FlagDef("Dream Plant Orb (18)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_19 = new FlagDef("Dream Plant Orb (19)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_2 = new FlagDef("Dream Plant Orb (2)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_20 = new FlagDef("Dream Plant Orb (20)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_21 = new FlagDef("Dream Plant Orb (21)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_22 = new FlagDef("Dream Plant Orb (22)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_23 = new FlagDef("Dream Plant Orb (23)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_24 = new FlagDef("Dream Plant Orb (24)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_25 = new FlagDef("Dream Plant Orb (25)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_26 = new FlagDef("Dream Plant Orb (26)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_27 = new FlagDef("Dream Plant Orb (27)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_28 = new FlagDef("Dream Plant Orb (28)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_3 = new FlagDef("Dream Plant Orb (3)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_4 = new FlagDef("Dream Plant Orb (4)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_5 = new FlagDef("Dream Plant Orb (5)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_6 = new FlagDef("Dream Plant Orb (6)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_7 = new FlagDef("Dream Plant Orb (7)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_8 = new FlagDef("Dream Plant Orb (8)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_ShamanTemple__Dream_Plant_Orb_9 = new FlagDef("Dream Plant Orb (9)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "PersistentBoolData");
-
             // Fungus1_06
             public static readonly FlagDef Fungus1_06__Secret_sounder = new FlagDef("Secret sounder", SceneInstances.Fungus1_06.SceneName, false, "PersistentBoolData");
             public static readonly FlagDef Fungus1_06__Vine_Platform = new FlagDef("Vine Platform", SceneInstances.Fungus1_06.SceneName, false, "PersistentBoolData");
@@ -1233,8 +1275,6 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef Mines_01__mine_1_quake_floor = new FlagDef("mine_1_quake_floor", SceneInstances.Mines_01.SceneName, false, "PersistentBoolData");
 
             // Mines_33
-            public static readonly FlagDef Mines_33__One_Way_Wall = new FlagDef("One Way Wall", SceneInstances.Mines_33.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Mines_33__Toll_Gate_Machine = new FlagDef("Toll Gate Machine", SceneInstances.Mines_33.SceneName, false, "PersistentBoolData");
             public static readonly FlagDef Mines_33__Toll_Gate_Machine_1 = new FlagDef("Toll Gate Machine (1)", SceneInstances.Mines_33.SceneName, false, "PersistentBoolData");
 
             // Town
@@ -1371,7 +1411,6 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef divineFinalConvo = new FlagDef("divineFinalConvo", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef divineInTown = new FlagDef("divineInTown", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef dreamMothConvo1 = new FlagDef("dreamMothConvo1", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef dreamNailConvo = new FlagDef("dreamNailConvo", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef dreamOrbsSpent = new FlagDef("dreamOrbsSpent", "Global", false, "PlayerData_Int");
             public static readonly FlagDef dreamReward1 = new FlagDef("dreamReward1", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef dreamReward2 = new FlagDef("dreamReward2", "Global", false, "PlayerData_Bool");
@@ -1417,7 +1456,6 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef encounteredHornet = new FlagDef("encounteredHornet", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef encounteredMegaJelly = new FlagDef("encounteredMegaJelly", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef encounteredMimicSpider = new FlagDef("encounteredMimicSpider", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef enteredDreamWorld = new FlagDef("enteredDreamWorld", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef enteredGGAtrium = new FlagDef("enteredGGAtrium", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef enteredMantisLordArea = new FlagDef("enteredMantisLordArea", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef environmentTypeDefault = new FlagDef("environmentTypeDefault", "Global", false, "PlayerData_Int");
@@ -1561,7 +1599,6 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef metGrimm = new FlagDef("metGrimm", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef metJinn = new FlagDef("metJinn", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef metLegEater = new FlagDef("metLegEater", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef metMoth = new FlagDef("metMoth", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef metNailmasterMato = new FlagDef("metNailmasterMato", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef metNailmasterOro = new FlagDef("metNailmasterOro", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef metNailmasterSheo = new FlagDef("metNailmasterSheo", "Global", false, "PlayerData_Bool");
@@ -1679,7 +1716,6 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef scaredFlukeHermitReturned = new FlagDef("scaredFlukeHermitReturned", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef seenColosseumTitle = new FlagDef("seenColosseumTitle", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef seenDoor4Finale = new FlagDef("seenDoor4Finale", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef seenDreamNailPrompt = new FlagDef("seenDreamNailPrompt", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef seenGGWastes = new FlagDef("seenGGWastes", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef seenHunterMsg = new FlagDef("seenHunterMsg", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef shadeFireballLevel = new FlagDef("shadeFireballLevel", "Global", false, "PlayerData_Int");
@@ -1871,6 +1907,7 @@ namespace CabbyCodes.Flags
                 new FlagDef("currentInvPane", "Global", false, "PlayerData_Int", "Inventory Pane Selected"),
                 new FlagDef("damagedBlue", "Global", false, "PlayerData_Bool", "Last damage took a blue health orb"),
                 new FlagDef("disablePause", "Global", false, "PlayerData_Bool", "Pause is disabled"),
+                new FlagDef("dreamNailConvo", "Global", false, "PlayerData_Bool"),
                 new FlagDef("elderbugFirstCall", "Global", false, "PlayerData_Bool", "Elderbug noticed Knight"),
                 new FlagDef("enteredTutorialFirstTime", "Global", false, "PlayerData_Bool", "Entered game start"),
                 new FlagDef("environmentType", "Global", false, "PlayerData_Int", "Environment Type: 0 = ground, 4 = platform"),
@@ -1936,6 +1973,7 @@ namespace CabbyCodes.Flags
                 new FlagDef("respawnMarkerName", "Global", false, "PlayerData_String"),
                 new FlagDef("respawnScene", "Global", false, "PlayerData_String"),
                 new FlagDef("respawnType", "Global", false, "PlayerData_Int"),
+                new FlagDef("seenDreamNailPrompt", "Global", false, "PlayerData_Bool"),
                 new FlagDef("seenFocusTablet", "Global", false, "PlayerData_Bool", "Passed by Focus Tablet"),
                 new FlagDef("seenJournalMsg", "Global", false, "PlayerData_Bool", "Seen Journal message for new enemy"),
                 new FlagDef("showHealthUI", "Global", false, "PlayerData_Bool", "Show Health UI"),
@@ -2072,8 +2110,36 @@ namespace CabbyCodes.Flags
                 // Fungus1_11
                 new FlagDef("Acid Walker", SceneInstances.Fungus1_11.SceneName, false, "PersistentBoolData"),
 
+                // Mines_02
+                new FlagDef("Zombie Miner 1", SceneInstances.Mines_02.SceneName, false, "PersistentBoolData"),
+                new FlagDef("Zombie Miner 1 (1)", SceneInstances.Mines_02.SceneName, false, "PersistentBoolData"),
+
+                // Mines_04
+                new FlagDef("Crystal Flyer", SceneInstances.Mines_04.SceneName, false, "PersistentBoolData"),
+                new FlagDef("Crystal Flyer (1)", SceneInstances.Mines_04.SceneName, false, "PersistentBoolData"),
+                new FlagDef("Crystal Flyer (2)", SceneInstances.Mines_04.SceneName, false, "PersistentBoolData"),
+                new FlagDef("Crystal Flyer (3)", SceneInstances.Mines_04.SceneName, false, "PersistentBoolData"),
+                new FlagDef("Zombie Miner 1", SceneInstances.Mines_04.SceneName, false, "PersistentBoolData"),
+                new FlagDef("Zombie Miner 1 (1)", SceneInstances.Mines_04.SceneName, false, "PersistentBoolData"),
+
+                // Mines_07
+                new FlagDef("Crystal Flyer", SceneInstances.Mines_07.SceneName, false, "PersistentBoolData"),
+                new FlagDef("Crystal Flyer (2)", SceneInstances.Mines_07.SceneName, false, "PersistentBoolData"),
+
+                // Mines_28
+                new FlagDef("Soul Totem 5", SceneInstances.Mines_28.SceneName, false, "PersistentIntData"),
+
+                // Mines_29
+                new FlagDef("Shiny Item", SceneInstances.Mines_29.SceneName, false, "PersistentBoolData"),
+
                 // Mines_33
                 new FlagDef("Secret Mask", SceneInstances.Mines_33.SceneName, false, "PersistentBoolData"),
+
+                // RestingGrounds_05
+                new FlagDef("Soul Totem 4", SceneInstances.RestingGrounds_05.SceneName, false, "PersistentIntData"),
+
+                // RestingGrounds_07
+                new FlagDef("Remasker", SceneInstances.RestingGrounds_07.SceneName, false, "PersistentBoolData"),
 
                 // Town
                 new FlagDef("Death Respawn Trigger", SceneInstances.Town.SceneName, false, "PersistentBoolData"),
