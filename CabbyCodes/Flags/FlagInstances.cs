@@ -1277,6 +1277,9 @@ namespace CabbyCodes.Flags
             // Mines_33
             public static readonly FlagDef Mines_33__Toll_Gate_Machine_1 = new FlagDef("Toll Gate Machine (1)", SceneInstances.Mines_33.SceneName, false, "PersistentBoolData");
 
+            // RestingGrounds_05
+            public static readonly FlagDef RestingGrounds_05__Quake_Floor = new FlagDef("Quake Floor", SceneInstances.RestingGrounds_05.SceneName, false, "PersistentBoolData");
+
             // Town
             public static readonly FlagDef Town__Gravedigger_NPC = new FlagDef("Gravedigger NPC", SceneInstances.Town.SceneName, false, "PersistentBoolData");
             public static readonly FlagDef Town__Interact_Reminder = new FlagDef("Interact Reminder", SceneInstances.Town.SceneName, false, "PersistentBoolData");

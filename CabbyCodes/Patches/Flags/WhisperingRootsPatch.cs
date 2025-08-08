@@ -1,6 +1,8 @@
 using CabbyCodes.Flags;
 using CabbyCodes.Patches.BasePatches;
 using CabbyMenu.UI.CheatPanels;
+using CabbyMenu.SyncedReferences;
+using CabbyCodes.Scenes;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -135,14 +137,11 @@ namespace CabbyCodes.Patches.Flags
         }
 
         /// <summary>
-        /// Override CreatePanels to provide custom panel creation logic
-        /// that monitors base flags and provides buttons to sync associated flags
+        /// Override CreatePanels to provide custom panel creation with syncing
         /// </summary>
-        /// <returns>List of panels to display</returns>
         public override List<CheatPanel> CreatePanels()
         {
             var panels = new List<CheatPanel>();
-
             var flagMappings = GetFlagMappings();
             
             foreach (var kvp in flagMappings)
@@ -150,52 +149,23 @@ namespace CabbyCodes.Patches.Flags
                 var baseFlag = kvp.Key;
                 var associatedFlags = kvp.Value;
                 
-                // Create panel for the base flag
-                var basePatch = CreatePatch(baseFlag);
-                panels.Add(basePatch.CreatePanel());
+                // Create a custom synced reference using a delegate
+                var syncedReference = new DelegateReference<bool>(
+                    () => FlagManager.GetBoolFlag(baseFlag),
+                    (value) => 
+                    {
+                        FlagManager.SetBoolFlag(baseFlag, value);
+                        foreach (var associatedFlag in associatedFlags)
+                        {
+                            FlagManager.SetBoolFlag(associatedFlag, value);
+                        }
+                    }
+                );
                 
-                // Create sync button for this flag mapping
-                if (associatedFlags.Count > 0)
-                {
-                    panels.Add(CreateSyncButtonPanel(baseFlag, associatedFlags));
-                }
+                panels.Add(new TogglePanel(syncedReference, SceneManagement.GetSceneData(baseFlag.SceneName)?.ReadableName));
             }
-
+            
             return panels;
-        }
-
-        /// <summary>
-        /// Creates a button panel to sync associated flags with a specific base flag
-        /// </summary>
-        /// <param name="baseFlag">The base flag</param>
-        /// <param name="associatedFlags">The associated flags to sync</param>
-        /// <returns>Button panel for syncing associated flags</returns>
-        private CheatPanel CreateSyncButtonPanel(FlagDef baseFlag, List<FlagDef> associatedFlags)
-        {
-            var buttonPanel = new ButtonPanel(
-                () => SyncAssociatedFlags(baseFlag, associatedFlags),
-                "Sync " + baseFlag.ReadableName + " Associated Flags",
-                "Click to sync " + associatedFlags.Count + " associated flags with " + baseFlag.ReadableName
-            );
-            
-            return buttonPanel;
-        }
-
-        /// <summary>
-        /// Syncs associated flags with a specific base flag
-        /// </summary>
-        /// <param name="baseFlag">The base flag to sync from</param>
-        /// <param name="associatedFlags">The associated flags to sync</param>
-        private void SyncAssociatedFlags(FlagDef baseFlag, List<FlagDef> associatedFlags)
-        {
-            // Get the current state of the base flag
-            bool baseFlagState = FlagManager.GetBoolFlag(baseFlag);
-            
-            // Update all associated flags to match the base flag state
-            foreach (var associatedFlag in associatedFlags)
-            {
-                FlagManager.SetBoolFlag(associatedFlag, baseFlagState);
-            }
         }
     }
 } 
