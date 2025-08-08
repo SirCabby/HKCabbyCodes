@@ -75,6 +75,11 @@ namespace CabbyCodes.Patches.Inventory
             panels.Add(new InfoPanel("May require restart to take effect").SetColor(CheatPanel.warningColor));
             panels.AddRange(CreateMaskShardPanels());
 
+            // Vessel Fragments section
+            panels.Add(new InfoPanel("Vessel Fragments").SetColor(CheatPanel.subHeaderColor));
+            panels.Add(new InfoPanel("May require restart to take effect").SetColor(CheatPanel.warningColor));
+            panels.AddRange(CreateVesselFragmentPanels());
+
             return panels;
         }
 
@@ -175,7 +180,7 @@ namespace CabbyCodes.Patches.Inventory
                 new BoolPatch(FlagInstances.hasSlykey).CreatePanel(),
                 new BoolPatch(FlagInstances.hasCityKey).CreatePanel(),
                 new BoolPatch(FlagInstances.hasKingsBrand).CreatePanel(),
-                new BoolPatch(FlagInstances.slySimpleKey).CreatePanel()
+                CreateSimpleKeyPanel(FlagInstances.slySimpleKey)
             };
 
             return panels;
@@ -351,6 +356,19 @@ namespace CabbyCodes.Patches.Inventory
             return panels;
         }
 
+        private List<CheatPanel> CreateVesselFragmentPanels()
+        {
+            var panels = new List<CheatPanel>
+            {
+                CreateVesselFragmentPanel(FlagInstances.slyVesselFrag1),
+                CreateVesselFragmentPanel(FlagInstances.slyVesselFrag2),
+                CreateVesselFragmentPanel(FlagInstances.slyVesselFrag3),
+                CreateVesselFragmentPanel(FlagInstances.slyVesselFrag4),
+            };
+            
+            return panels;
+        }
+
         private TogglePanel CreateHeartPiecePanel(FlagDef heartPieceFlag)
         {
             return new TogglePanel(new DelegateReference<bool>(
@@ -424,6 +442,69 @@ namespace CabbyCodes.Patches.Inventory
                     }
                 }
             ), heartPieceFlag.ReadableName);
+        }
+
+        private TogglePanel CreateVesselFragmentPanel(FlagDef vesselFragmentFlag)
+        {
+            return new TogglePanel(new DelegateReference<bool>(
+                () => FlagManager.GetBoolFlag(vesselFragmentFlag),
+                value =>
+                {
+                    FlagManager.SetBoolFlag(vesselFragmentFlag, value);
+                    
+                    var currentVesselFragments = FlagManager.GetIntFlag(FlagInstances.vesselFragments);
+                    var newVesselFragments = currentVesselFragments;
+                    
+                    if (value)
+                    {
+                        // Increment vessel fragments when enabling
+                        newVesselFragments = currentVesselFragments + 1;
+                        
+                        // If we hit 3 vessel fragments, reset to 0
+                        if (newVesselFragments >= 3)
+                        {
+                            newVesselFragments = 0;
+                        }
+                    }
+                    else
+                    {
+                        // Decrement vessel fragments when disabling
+                        newVesselFragments = currentVesselFragments - 1;
+                        
+                        // If we go below 0, reset to 2
+                        if (newVesselFragments < 0)
+                        {
+                            newVesselFragments = 2;
+                        }
+                    }
+                    
+                    FlagManager.SetIntFlag(FlagInstances.vesselFragments, newVesselFragments);
+                }
+            ), vesselFragmentFlag.ReadableName);
+        }
+
+        private TogglePanel CreateSimpleKeyPanel(FlagDef simpleKeyFlag)
+        {
+            return new TogglePanel(new DelegateReference<bool>(
+                () => FlagManager.GetBoolFlag(simpleKeyFlag),
+                value =>
+                {
+                    var currentSimpleKeys = FlagManager.GetIntFlag(FlagInstances.simpleKeys);
+                    
+                    if (value)
+                    {
+                        // Increment simple keys when enabling
+                        FlagManager.SetIntFlag(FlagInstances.simpleKeys, currentSimpleKeys + 1);
+                    }
+                    else
+                    {
+                        // Decrement simple keys when disabling
+                        FlagManager.SetIntFlag(FlagInstances.simpleKeys, Math.Max(0, currentSimpleKeys - 1));
+                    }
+                    
+                    FlagManager.SetBoolFlag(simpleKeyFlag, value);
+                }
+            ), simpleKeyFlag.ReadableName);
         }
     }
 }

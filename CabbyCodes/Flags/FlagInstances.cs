@@ -999,6 +999,13 @@ namespace CabbyCodes.Flags
                 public static readonly FlagDef slyShellFrag4 = new FlagDef("slyShellFrag4", "Global", false, "PlayerData_Bool", "Bought Mask Shard 4 from Sly");
             #endregion
 
+            #region Vessel Fragments
+                public static readonly FlagDef slyVesselFrag1 = new FlagDef("slyVesselFrag1", "Global", false, "PlayerData_Bool", "Bought Vessel Fragment 1 from Sly");
+                public static readonly FlagDef slyVesselFrag2 = new FlagDef("slyVesselFrag2", "Global", false, "PlayerData_Bool", "Bought Vessel Fragment 2 from Sly");
+                public static readonly FlagDef slyVesselFrag3 = new FlagDef("slyVesselFrag3", "Global", false, "PlayerData_Bool", "Bought Vessel Fragment 3 from Sly");
+                public static readonly FlagDef slyVesselFrag4 = new FlagDef("slyVesselFrag4", "Global", false, "PlayerData_Bool", "Bought Vessel Fragment 4 from Sly");
+            #endregion
+
             #region Simple Keys
                 public static readonly FlagDef slySimpleKey = new FlagDef("slySimpleKey", "Global", false, "PlayerData_Bool", "Got Sly's Simple Key");
             #endregion
@@ -1700,10 +1707,6 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef slyNotch1 = new FlagDef("slyNotch1", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef slyNotch2 = new FlagDef("slyNotch2", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef slyNymmConvo = new FlagDef("slyNymmConvo", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef slyVesselFrag1 = new FlagDef("slyVesselFrag1", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef slyVesselFrag2 = new FlagDef("slyVesselFrag2", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef slyVesselFrag3 = new FlagDef("slyVesselFrag3", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef slyVesselFrag4 = new FlagDef("slyVesselFrag4", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef spaBugsEncountered = new FlagDef("spaBugsEncountered", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef spiderCapture = new FlagDef("spiderCapture", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef stagConvoTiso = new FlagDef("stagConvoTiso", "Global", false, "PlayerData_Bool");
