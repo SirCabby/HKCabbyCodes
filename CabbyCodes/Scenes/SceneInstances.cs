@@ -97,11 +97,11 @@ namespace CabbyCodes.Scenes
         public static readonly SceneMapData Crossroads_03 = new SceneMapData("Crossroads_03", "Crossroads");
         public static readonly SceneMapData Crossroads_04 = new SceneMapData("Crossroads_04", "Crossroads");
         public static readonly SceneMapData Crossroads_05 = new SceneMapData("Crossroads_05", "Crossroads");
-        public static readonly SceneMapData Crossroads_06 = new SceneMapData("Crossroads_06", "Crossroads");
+        public static readonly SceneMapData Crossroads_06 = new SceneMapData("Crossroads_06", "Crossroads", "Outside Ancestral Mound");
         public static readonly SceneMapData Crossroads_07 = new SceneMapData("Crossroads_07", "Crossroads");
         public static readonly SceneMapData Crossroads_08 = new SceneMapData("Crossroads_08", "Crossroads");
         public static readonly SceneMapData Crossroads_09 = new SceneMapData("Crossroads_09", "Crossroads", "Brooding Mawlek room");
-        public static readonly SceneMapData Crossroads_10 = new SceneMapData("Crossroads_10", "Crossroads");
+        public static readonly SceneMapData Crossroads_10 = new SceneMapData("Crossroads_10", "Crossroads", "False Knight room");
         public static readonly SceneMapData Crossroads_11_alt = new SceneMapData("Crossroads_11_alt", "Crossroads", "The Pilgrim's Way entrance");
         public static readonly SceneMapData Crossroads_12 = new SceneMapData("Crossroads_12", "Crossroads");
         public static readonly SceneMapData Crossroads_13 = new SceneMapData("Crossroads_13", "Crossroads");
@@ -132,7 +132,7 @@ namespace CabbyCodes.Scenes
         public static readonly SceneMapData Crossroads_49 = new SceneMapData("Crossroads_49", "Crossroads");
         public static readonly SceneMapData Crossroads_52 = new SceneMapData("Crossroads_52", "Crossroads");
         public static readonly SceneMapData Room_temple = new SceneMapData("Room_temple", "Crossroads", "Temple of the Black Egg", false);
-        public static readonly SceneMapData Crossroads_ShamanTemple = new SceneMapData("Crossroads_ShamanTemple", "Crossroads", "Shaman Temple", false);
+        public static readonly SceneMapData Crossroads_ShamanTemple = new SceneMapData("Crossroads_ShamanTemple", "Crossroads", "Ancestral Mound", false);
 
         // Deepnest
         public static readonly SceneMapData Abyss_03_b = new SceneMapData("Abyss_03_b", "Deepnest");
@@ -283,6 +283,7 @@ namespace CabbyCodes.Scenes
         public static readonly SceneMapData Mines_30 = new SceneMapData("Mines_30", "Mines");
         public static readonly SceneMapData Mines_31 = new SceneMapData("Mines_31", "Mines");
         public static readonly SceneMapData Mines_32 = new SceneMapData("Mines_32", "Mines");
+        public static readonly SceneMapData Mines_33 = new SceneMapData("Mines_33", "Mines");
         public static readonly SceneMapData Mines_34 = new SceneMapData("Mines_34", "Mines");
         public static readonly SceneMapData Mines_35 = new SceneMapData("Mines_35", "Mines");
         public static readonly SceneMapData Mines_36 = new SceneMapData("Mines_36", "Mines");

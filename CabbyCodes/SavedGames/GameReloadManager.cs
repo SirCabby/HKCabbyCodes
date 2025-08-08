@@ -1,11 +1,13 @@
 using System;
+using System.Collections.Generic;
 using UnityEngine;
 using CabbyCodes.Patches.Settings;
 
 namespace CabbyCodes.SavedGames
 {
     /// <summary>
-    /// Provides a reusable way to save, quit to main menu, and reload a save file.
+    /// Provides a reusable way to queue save/reload operations for when the menu closes.
+    /// Supports multiple sources requesting reloads independently.
     /// </summary>
     public class GameReloadManager : MonoBehaviour
     {
@@ -19,9 +21,12 @@ namespace CabbyCodes.SavedGames
         private static bool pendingDeleteAfterLoad;
         private static string pendingSaveName;
         private static Action<bool> pendingOnComplete;
+        
+        // Track reload requests from different sources
+        private static readonly HashSet<string> reloadSources = new HashSet<string>();
 
         /// <summary>
-        /// Call this to save, quit to main menu, and reload the save. Optionally delete the save after loading.
+        /// Queues a save/reload operation for when the menu closes. Optionally delete the save after loading.
         /// </summary>
         public static void SaveAndReload(bool deleteAfterLoad = true, string saveName = null, Action<bool> onComplete = null)
         {
@@ -31,6 +36,48 @@ namespace CabbyCodes.SavedGames
             pendingDeleteAfterLoad = deleteAfterLoad;
             pendingSaveName = saveName;
             pendingOnComplete = onComplete;
+        }
+
+        /// <summary>
+        /// Requests a reload from a specific source. The reload will be queued until the menu closes.
+        /// </summary>
+        /// <param name="sourceName">Unique identifier for the source requesting the reload.</param>
+        public static void RequestReload(string sourceName)
+        {
+            EnsureInstance();
+            reloadSources.Add(sourceName);
+            
+            // If this is the first request, queue the reload operation
+            if (reloadSources.Count == 1 && !reloadRequested && !pendingReload)
+            {
+                pendingReload = true;
+                pendingDeleteAfterLoad = true;
+                pendingSaveName = null;
+                pendingOnComplete = null;
+            }
+        }
+
+        /// <summary>
+        /// Cancels a reload request from a specific source. If no sources remain, the reload is cancelled.
+        /// </summary>
+        /// <param name="sourceName">Unique identifier for the source cancelling the reload.</param>
+        public static void CancelReload(string sourceName)
+        {
+            reloadSources.Remove(sourceName);
+            
+            // If no sources remain, cancel the pending reload
+            if (reloadSources.Count == 0 && pendingReload && !reloadRequested)
+            {
+                pendingReload = false;
+            }
+        }
+
+        /// <summary>
+        /// Clears all reload requests. Call this after a reload completes to reset the system.
+        /// </summary>
+        public static void ClearAllReloadRequests()
+        {
+            reloadSources.Clear();
         }
 
         private static void EnsureInstance()
@@ -93,6 +140,9 @@ namespace CabbyCodes.SavedGames
             }
             reloadRequested = false;
             onComplete?.Invoke(true);
+            
+            // Clear all reload requests after the reload completes
+            ClearAllReloadRequests();
         }
 
         private System.Collections.IEnumerator DeleteTempSaveAfterDelay(string fileName)

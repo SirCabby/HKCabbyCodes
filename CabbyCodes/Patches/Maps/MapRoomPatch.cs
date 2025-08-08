@@ -28,13 +28,15 @@ namespace CabbyCodes.Patches.Maps
             if (value && !Get())
             {
                 FlagManager.AddToListFlag(FlagInstances.scenesMapped, roomName);
+                // Cancel reload request since we're adding the room back
+                GameReloadManager.CancelReload($"MapRoom_{roomName}");
             }
             else if (!value && Get())
             {
                 // Remove the flag first
                 FlagManager.RemoveFromListFlag(FlagInstances.scenesMapped, roomName);
-                // Reload to refresh map ui
-                GameReloadManager.SaveAndReload();
+                // Request reload to refresh map ui
+                GameReloadManager.RequestReload($"MapRoom_{roomName}");
             }
         }
 

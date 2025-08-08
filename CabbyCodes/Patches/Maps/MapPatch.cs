@@ -204,25 +204,24 @@ namespace CabbyCodes.Patches.Maps
 
         private static void ToggleAllRooms(string mapName, bool setToOn)
         {
-            bool anyToggledOff = false;
             foreach (string roomName in MapRoomPatch.roomsInMaps[mapName])
             {
                 if (setToOn && !FlagManager.ListFlagContains(FlagInstances.scenesMapped, roomName))
                 {
                     FlagManager.AddToListFlag(FlagInstances.scenesMapped, roomName);
+                    // Cancel reload request since we're adding the room back
+                    GameReloadManager.CancelReload($"MapRoom_{roomName}");
                 }
                 else if (!setToOn && FlagManager.ListFlagContains(FlagInstances.scenesMapped, roomName))
                 {
                     FlagManager.RemoveFromListFlag(FlagInstances.scenesMapped, roomName);
-                    anyToggledOff = true;
+                    // Request reload for this room
+                    GameReloadManager.RequestReload($"MapRoom_{roomName}");
                 }
             }
 
-            // If any room was toggled off, trigger the reload
-            if (!setToOn && anyToggledOff)
-            {
-                GameReloadManager.SaveAndReload();
-            }
+            // Note: Individual room reloads are now handled by the room-specific requests above
+            // No need to call SaveAndReload here since each room manages its own reload state
         }
     }
 }

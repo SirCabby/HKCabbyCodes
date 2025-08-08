@@ -4,11 +4,17 @@ using CabbyMenu.UI.CheatPanels;
 using CabbyMenu.SyncedReferences;
 using System;
 using System.Collections.Generic;
+using CabbyCodes.SavedGames;
 
 namespace CabbyCodes.Patches.Inventory
 {
     public class InventoryPatch : BasePatch
     {
+        // Static state tracking for heart piece changes that require save/reload
+        private static int startingMaxHealth = -1;
+        private static int startingMaxHealthBase = -1;
+        private static bool hasInitializedStartingState = false;
+
         public static void AddPanels()
         {
             var inventoryPatch = new InventoryPatch();
@@ -17,6 +23,17 @@ namespace CabbyCodes.Patches.Inventory
             {
                 CabbyCodesPlugin.cabbyMenu.AddCheatPanel(panel);
             }
+        }
+
+        /// <summary>
+        /// Resets the heart piece state tracking. Call this when loading a new save or when
+        /// the game state is reset to prevent unnecessary reloads.
+        /// </summary>
+        public static void ResetHeartPieceStateTracking()
+        {
+            startingMaxHealth = -1;
+            startingMaxHealthBase = -1;
+            hasInitializedStartingState = false;
         }
 
         public override List<CheatPanel> CreatePanels()
@@ -327,6 +344,8 @@ namespace CabbyCodes.Patches.Inventory
                 CreateHeartPiecePanel(FlagInstances.Crossroads_09__Heart_Piece),
                 CreateHeartPiecePanel(FlagInstances.Crossroads_13__Heart_Piece),
                 CreateHeartPiecePanel(FlagInstances.Fungus1_36__Heart_Piece),
+                CreateHeartPiecePanel(FlagInstances.slyShellFrag1),
+                CreateHeartPiecePanel(FlagInstances.slyShellFrag2),
             };
             
             return panels;
@@ -338,23 +357,71 @@ namespace CabbyCodes.Patches.Inventory
                 () => FlagManager.GetBoolFlag(heartPieceFlag),
                 value =>
                 {
+                    // Initialize starting state if not done yet
+                    if (!hasInitializedStartingState)
+                    {
+                        startingMaxHealth = FlagManager.GetIntFlag(FlagInstances.maxHealth);
+                        startingMaxHealthBase = FlagManager.GetIntFlag(FlagInstances.maxHealthBase);
+                        hasInitializedStartingState = true;
+                    }
+
                     FlagManager.SetBoolFlag(heartPieceFlag, value);
                     
                     var currentHeartPieces = FlagManager.GetIntFlag(FlagInstances.heartPieces);
+                    var newHeartPieces = currentHeartPieces;
+                    
                     if (value)
                     {
                         // Increment heart pieces when enabling
-                        FlagManager.SetIntFlag(FlagInstances.heartPieces, currentHeartPieces + 1);
+                        newHeartPieces = currentHeartPieces + 1;
+                        
+                        // If we hit 4 heart pieces, reset to 0 and increase max health
+                        if (newHeartPieces >= 4)
+                        {
+                            newHeartPieces = 0;
+                            var currentMaxHealth = FlagManager.GetIntFlag(FlagInstances.maxHealth);
+                            var currentMaxHealthBase = FlagManager.GetIntFlag(FlagInstances.maxHealthBase);
+                            FlagManager.SetIntFlag(FlagInstances.maxHealth, currentMaxHealth + 1);
+                            FlagManager.SetIntFlag(FlagInstances.maxHealthBase, currentMaxHealthBase + 1);
+                        }
                     }
                     else
                     {
                         // Decrement heart pieces when disabling
-                        FlagManager.SetIntFlag(FlagInstances.heartPieces, Math.Max(0, currentHeartPieces - 1));
+                        newHeartPieces = currentHeartPieces - 1;
+                        
+                        // If we go below 0, reset to 3 and decrease max health
+                        if (newHeartPieces < 0)
+                        {
+                            newHeartPieces = 3;
+                            var currentMaxHealth = FlagManager.GetIntFlag(FlagInstances.maxHealth);
+                            var currentMaxHealthBase = FlagManager.GetIntFlag(FlagInstances.maxHealthBase);
+                            FlagManager.SetIntFlag(FlagInstances.maxHealth, Math.Max(0, currentMaxHealth - 1));
+                            FlagManager.SetIntFlag(FlagInstances.maxHealthBase, Math.Max(0, currentMaxHealthBase - 1));
+                        }
                     }
                     
+                    FlagManager.SetIntFlag(FlagInstances.heartPieces, newHeartPieces);
+                    
                     // Update heartPieceCollected flag based on count
-                    var newHeartPieces = FlagManager.GetIntFlag(FlagInstances.heartPieces);
                     FlagManager.SetBoolFlag(FlagInstances.heartPieceCollected, newHeartPieces > 0);
+                    
+                    // Check if current health differs from starting health
+                    var finalMaxHealth = FlagManager.GetIntFlag(FlagInstances.maxHealth);
+                    var finalMaxHealthBase = FlagManager.GetIntFlag(FlagInstances.maxHealthBase);
+                    
+                    bool healthDiffersFromStart = finalMaxHealth != startingMaxHealth || finalMaxHealthBase != startingMaxHealthBase;
+                    
+                    if (healthDiffersFromStart)
+                    {
+                        // Health has changed from starting state, request reload
+                        GameReloadManager.RequestReload($"HeartPiece");
+                    }
+                    else
+                    {
+                        // Health matches starting state, cancel reload request
+                        GameReloadManager.CancelReload($"HeartPiece");
+                    }
                 }
             ), heartPieceFlag.ReadableName);
         }
