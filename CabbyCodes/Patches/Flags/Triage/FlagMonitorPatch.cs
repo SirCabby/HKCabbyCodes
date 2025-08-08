@@ -9,6 +9,7 @@ using CabbyCodes.Flags;
 using System;
 using System.IO;
 using TMPro;
+using CabbyCodes.Scenes;
 
 namespace CabbyCodes.Patches.Flags.Triage
 {
@@ -28,6 +29,12 @@ namespace CabbyCodes.Patches.Flags.Triage
         // Tracked fields from FlagInstances
         private static readonly HashSet<string> trackedPlayerDataFields = new HashSet<string>();
         private static readonly HashSet<string> trackedSceneDataFields = new HashSet<string>(); // Stores "flagId|||sceneName" combinations
+
+        // Scene instance tracking
+        private static readonly HashSet<string> knownSceneNames = new HashSet<string>();
+        private static readonly HashSet<string> discoveredSceneNames = new HashSet<string>();
+        private static readonly Dictionary<string, string> discoveredSceneAreas = new Dictionary<string, string>();
+        private static string lastKnownSceneArea = "Unknown";
 
         // Fields to ignore during polling (noisy or not useful)
         private static readonly HashSet<string> ignoredFields = new HashSet<string>
@@ -570,6 +577,7 @@ namespace CabbyCodes.Patches.Flags.Triage
                 
                 var playerDataFlags = new List<string>();
                 var sceneFlags = new List<string>();
+                var newScenes = new List<string>();
 
                 foreach (var kvp in allDiscoveries)
                 {
@@ -590,6 +598,14 @@ namespace CabbyCodes.Patches.Flags.Triage
                     }
                 }
                 
+                // Add discovered scenes
+                foreach (var sceneName in discoveredSceneNames)
+                {
+                    string areaName = discoveredSceneAreas.ContainsKey(sceneName) ? discoveredSceneAreas[sceneName] : "Unknown";
+                    string sceneCodeLine = $"public static readonly SceneMapData {sceneName} = new SceneMapData(\"{sceneName}\", \"{areaName}\");";
+                    newScenes.Add(sceneCodeLine);
+                }
+                
                 if (playerDataFlags.Count > 0)
                 {
                     lines.Add("// PlayerData Flags:");
@@ -606,7 +622,18 @@ namespace CabbyCodes.Patches.Flags.Triage
                     lines.Add("");
                 }
 
+                if (newScenes.Count > 0)
+                {
+                    lines.Add("// New Scene Instances - Copy the following code into SceneInstances.cs:");
+                    lines.Add("// Add these to the appropriate area section in SceneInstances.cs");
+                    lines.Add("");
+                    newScenes.Sort(); // Sort alphabetically
+                    lines.AddRange(newScenes);
+                    lines.Add("");
+                }
+
                 lines.Add($"// Total flags discovered: {allDiscoveries.Count}");
+                lines.Add($"// Total new scenes discovered: {discoveredSceneNames.Count}");
                 
                 File.WriteAllLines(filePath, lines);
             }
@@ -632,6 +659,7 @@ namespace CabbyCodes.Patches.Flags.Triage
                 int loadedCount = 0;
                 bool inPlayerDataSection = false;
                 bool inSceneSection = false;
+                bool inNewScenesSection = false;
                 
                 foreach (string line in lines)
                 {
@@ -641,12 +669,21 @@ namespace CabbyCodes.Patches.Flags.Triage
                     {
                         inPlayerDataSection = true;
                         inSceneSection = false;
+                        inNewScenesSection = false;
                         continue;
                     }
                     else if (trimmedLine.StartsWith("// Scene Flags:"))
                     {
                         inPlayerDataSection = false;
                         inSceneSection = true;
+                        inNewScenesSection = false;
+                        continue;
+                    }
+                    else if (trimmedLine.StartsWith("// New Scene Instances"))
+                    {
+                        inPlayerDataSection = false;
+                        inSceneSection = false;
+                        inNewScenesSection = true;
                         continue;
                     }
                     else if (trimmedLine.StartsWith("// Total flags discovered:"))
@@ -707,6 +744,27 @@ namespace CabbyCodes.Patches.Flags.Triage
                             }
                         }
                     }
+                    else if (inNewScenesSection && trimmedLine.StartsWith("public static readonly SceneMapData"))
+                    {
+                        // Parse scene instance lines like: public static readonly SceneMapData SceneName = new SceneMapData("SceneName", "AreaName");
+                        string sceneName = ExtractSceneNameFromCodeLine(trimmedLine);
+                        string areaName = ExtractAreaNameFromCodeLine(trimmedLine);
+                        
+                        if (!string.IsNullOrEmpty(sceneName))
+                        {
+                            discoveredSceneNames.Add(sceneName);
+                            if (!string.IsNullOrEmpty(areaName))
+                            {
+                                discoveredSceneAreas[sceneName] = areaName;
+                                // Update last known scene area if we don't have one yet
+                                if (lastKnownSceneArea == "Unknown")
+                                {
+                                    lastKnownSceneArea = areaName;
+                                }
+                            }
+                            loadedCount++;
+                        }
+                    }
                 }
             }
             catch (Exception ex)
@@ -727,6 +785,34 @@ namespace CabbyCodes.Patches.Flags.Triage
         }
 
         /// <summary>
+        /// Extract all known scene names from SceneInstances
+        /// </summary>
+        private static void ExtractKnownSceneNames()
+        {
+            try
+            {
+                var sceneInstancesType = typeof(SceneInstances);
+                var fields = sceneInstancesType.GetFields(BindingFlags.Public | BindingFlags.Static);
+                
+                foreach (var field in fields)
+                {
+                    if (field.FieldType == typeof(SceneMapData))
+                    {
+                        var sceneMapData = (SceneMapData)field.GetValue(null);
+                        if (sceneMapData != null && !string.IsNullOrEmpty(sceneMapData.SceneName))
+                        {
+                            knownSceneNames.Add(sceneMapData.SceneName);
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"[Flag Monitor] Failed to extract known scene names: {ex.Message}");
+            }
+        }
+
+        /// <summary>
         /// Initialize flag monitoring. Should be called from the mod's Start method.
         /// </summary>
         public static void ApplyPatches()
@@ -735,6 +821,7 @@ namespace CabbyCodes.Patches.Flags.Triage
             
             try
             {
+                ExtractKnownSceneNames(); // Extract known scene names first
                 ExtractTrackedFields();
                 LoadDiscoveredFlags(); // Load previously discovered flags
                 InitializeSceneMonitoring();
@@ -764,8 +851,6 @@ namespace CabbyCodes.Patches.Flags.Triage
                         ignoredFields.Add(unusedFlag.Id);
                     }
                 }
-                
-                Debug.Log($"[Flag Monitor] Built ignored fields set with {ignoredFields.Count} entries");
             }
             catch (Exception ex)
             {
@@ -898,13 +983,86 @@ namespace CabbyCodes.Patches.Flags.Triage
             if (oldScene.name == "Menu_Title" && newScene.name != "Menu_Title")
             {
                 hasLeftTitleScreen = true;
-                Debug.Log("[Flag Monitor] Left title screen, flag monitoring will now be active");
             }
             
             if (!monitorReference.IsEnabled) return;
             
+            // Update the last known scene area before checking for new scenes
+            UpdateLastKnownSceneArea(oldScene.name);
+            
             string notification = $"[SceneChange]: {oldScene.name} -> {newScene.name}";
             AddNotification(notification);
+            
+            // Check for new scene discovery
+            CheckForNewScene(newScene.name);
+        }
+
+        /// <summary>
+        /// Update the last known scene area based on the scene name
+        /// </summary>
+        private static void UpdateLastKnownSceneArea(string sceneName)
+        {
+            if (string.IsNullOrEmpty(sceneName)) return;
+            
+            // Skip system scenes and menu scenes
+            if (sceneName.StartsWith("Menu_") || sceneName.StartsWith("UI_") || sceneName == "Init" || sceneName == "Preload") return;
+            
+            // Check if this scene is in our known scenes
+            if (knownSceneNames.Contains(sceneName))
+            {
+                // Find the area for this known scene
+                var sceneInstancesType = typeof(SceneInstances);
+                var fields = sceneInstancesType.GetFields(BindingFlags.Public | BindingFlags.Static);
+                
+                foreach (var field in fields)
+                {
+                    if (field.FieldType == typeof(SceneMapData))
+                    {
+                        var sceneMapData = (SceneMapData)field.GetValue(null);
+                        if (sceneMapData != null && sceneMapData.SceneName == sceneName)
+                        {
+                            lastKnownSceneArea = sceneMapData.AreaName;
+                            return;
+                        }
+                    }
+                }
+            }
+            else if (discoveredSceneNames.Contains(sceneName))
+            {
+                // Use the area from our discovered scenes
+                if (discoveredSceneAreas.ContainsKey(sceneName))
+                {
+                    lastKnownSceneArea = discoveredSceneAreas[sceneName];
+                }
+            }
+        }
+
+        /// <summary>
+        /// Check if a scene is new (not in SceneInstances) and add it to discoveries
+        /// </summary>
+        private static void CheckForNewScene(string sceneName)
+        {
+            if (string.IsNullOrEmpty(sceneName)) return;
+            
+            // Skip if we already know about this scene
+            if (knownSceneNames.Contains(sceneName) || discoveredSceneNames.Contains(sceneName)) return;
+            
+            // Skip system scenes and menu scenes
+            if (sceneName.StartsWith("Menu_") || sceneName.StartsWith("UI_") || sceneName == "Init" || sceneName == "Preload") return;
+            
+            // This is a new scene!
+            discoveredSceneNames.Add(sceneName);
+            
+            // Use the last known scene area for new scenes
+            string areaName = lastKnownSceneArea != "Unknown" ? lastKnownSceneArea : "Unknown";
+            
+            discoveredSceneAreas[sceneName] = areaName;
+            
+            string notification = $"[NEW SCENE DISCOVERED]: {sceneName} (Area: {areaName})";
+            AddNotification(notification);
+            
+            // Save discoveries immediately
+            SaveDiscoveredFlags();
         }
 
         private static void AddNotification(string message)
@@ -945,6 +1103,10 @@ namespace CabbyCodes.Patches.Flags.Triage
             else if (notification.StartsWith("[NEW SCENE FLAG"))
             {
                 return $"<color=#FF8000><b>{notification}</b></color>"; // Orange for new scene flags
+            }
+            else if (notification.StartsWith("[NEW SCENE DISCOVERED]"))
+            {
+                return $"<color=#FF00FF><b>{notification}</b></color>"; // Magenta for new scene discoveries
             }
             else if (notification.StartsWith("[DISCOVERY]"))
             {
@@ -1115,6 +1277,55 @@ namespace CabbyCodes.Patches.Flags.Triage
             return "";
         }
 
+        private static string ExtractSceneNameFromCodeLine(string codeLine)
+        {
+            try
+            {
+                // Extract the scene name from a code line like: public static readonly SceneMapData SceneName = new SceneMapData("SceneName", "AreaName");
+                int startIndex = codeLine.IndexOf("SceneMapData ") + "SceneMapData ".Length;
+                if (startIndex == -1) return null;
+                
+                int endIndex = codeLine.IndexOf(" =", startIndex);
+                if (endIndex == -1) return null;
+                
+                return codeLine.Substring(startIndex, endIndex - startIndex).Trim();
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"[Flag Discovery] Failed to extract scene name from code line: {ex.Message}");
+                return null;
+            }
+        }
+
+        private static string ExtractAreaNameFromCodeLine(string codeLine)
+        {
+            try
+            {
+                // Extract the area name from a code line like: public static readonly SceneMapData SceneName = new SceneMapData("SceneName", "AreaName");
+                int startIndex = codeLine.IndexOf("SceneMapData(\"");
+                if (startIndex == -1) return null;
+                
+                // Find the first closing quote after the scene name
+                startIndex = codeLine.IndexOf("\"", startIndex + "SceneMapData(\"".Length);
+                if (startIndex == -1) return null;
+                
+                // Find the second opening quote (area name)
+                startIndex = codeLine.IndexOf("\"", startIndex + 1);
+                if (startIndex == -1) return null;
+                
+                // Find the second closing quote
+                int endIndex = codeLine.IndexOf("\"", startIndex + 1);
+                if (endIndex == -1) return null;
+                
+                return codeLine.Substring(startIndex + 1, endIndex - startIndex - 1);
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"[Flag Discovery] Failed to extract area name from code line: {ex.Message}");
+                return null;
+            }
+        }
+
         public static bool IsEnabled()
         {
             return monitorReference.IsEnabled;
@@ -1150,7 +1361,6 @@ namespace CabbyCodes.Patches.Flags.Triage
         {
             if (!monitorReference.IsEnabled)
             {
-                Debug.Log("[Flag Monitor] Test notifications skipped - monitor is not enabled");
                 return;
             }
             
@@ -1169,7 +1379,6 @@ namespace CabbyCodes.Patches.Flags.Triage
             // Test actual PlayerData field changes
             if (PlayerData.instance != null)
             {
-                Debug.Log("[Flag Monitor] Testing actual PlayerData field changes...");
                 PlayerData.instance.geo = PlayerData.instance.geo + 1;
                 PlayerData.instance.hasDash = !PlayerData.instance.hasDash;
             }
