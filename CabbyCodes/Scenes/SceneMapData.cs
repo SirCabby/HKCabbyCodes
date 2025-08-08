@@ -32,7 +32,7 @@ namespace CabbyCodes.Scenes
         /// Initializes a new instance of the SceneMapData class.
         /// </summary>
         /// <param name="sceneName">The internal scene name.</param>
-        /// <param name="areaName">The area name.</param>
+        /// <param name="areaName">The area name. Can be null for system scenes.</param>
         /// <param name="readableName">The human-readable display name.</param>
         /// <param name="mappable">Whether this scene can be mapped. Defaults to true.</param>
         public SceneMapData(string sceneName, string areaName, string readableName = "", bool mappable = true)

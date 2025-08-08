@@ -34,7 +34,7 @@ namespace CabbyCodes.Patches.Flags.Triage
         private static readonly HashSet<string> knownSceneNames = new HashSet<string>();
         private static readonly HashSet<string> discoveredSceneNames = new HashSet<string>();
         private static readonly Dictionary<string, string> discoveredSceneAreas = new Dictionary<string, string>();
-        private static string lastKnownSceneArea = "Unknown";
+        private static string lastKnownSceneArea = null;
 
         // Fields to ignore during polling (noisy or not useful)
         private static readonly HashSet<string> ignoredFields = new HashSet<string>
@@ -421,7 +421,8 @@ namespace CabbyCodes.Patches.Flags.Triage
         /// </summary>
         private static string GenerateCodeLine(string flagKey, string sceneName, string flagType)
         {
-            if (flagType.StartsWith("PlayerData_"))
+            string category = GetFlagCategory(flagType);
+            if (category == "PlayerData")
             {
                 string fieldName = flagKey;
                 return $"public static readonly FlagDef {fieldName} = new FlagDef(\"{fieldName}\", \"Global\", false, \"{flagType}\");";
@@ -465,7 +466,7 @@ namespace CabbyCodes.Patches.Flags.Triage
                         }
                     }
                     // For PlayerData flags, just check the ID
-                    else if (unusedFlag.Type.StartsWith("PlayerData_"))
+                    else if (GetFlagCategory(unusedFlag.Type) == "PlayerData")
                     {
                         return true;
                     }
@@ -588,7 +589,8 @@ namespace CabbyCodes.Patches.Flags.Triage
                     // Skip invalid entries
                     if (codeLine.Contains("Error parsing flag key:")) continue;
                     
-                    if (flagType.StartsWith("PlayerData_"))
+                    string category = GetFlagCategory(flagType);
+                    if (category == "PlayerData")
                     {
                         playerDataFlags.Add(codeLine);
                     }
@@ -598,11 +600,25 @@ namespace CabbyCodes.Patches.Flags.Triage
                     }
                 }
                 
-                // Add discovered scenes
+                // Add discovered scenes (only those not already defined in SceneInstances)
                 foreach (var sceneName in discoveredSceneNames)
                 {
-                    string areaName = discoveredSceneAreas.ContainsKey(sceneName) ? discoveredSceneAreas[sceneName] : "Unknown";
-                    string sceneCodeLine = $"public static readonly SceneMapData {sceneName} = new SceneMapData(\"{sceneName}\", \"{areaName}\");";
+                    // Skip scenes that are now defined in SceneInstances
+                    if (knownSceneNames.Contains(sceneName)) continue;
+                    
+                    string areaName = discoveredSceneAreas.ContainsKey(sceneName) ? discoveredSceneAreas[sceneName] : null;
+                    string sceneCodeLine;
+                    
+                    // If area is null, use null to indicate it's a system scene
+                    if (areaName == null)
+                    {
+                        sceneCodeLine = $"public static readonly SceneMapData {sceneName} = new SceneMapData(\"{sceneName}\", null);";
+                    }
+                    else
+                    {
+                        sceneCodeLine = $"public static readonly SceneMapData {sceneName} = new SceneMapData(\"{sceneName}\", \"{areaName}\");";
+                    }
+                    
                     newScenes.Add(sceneCodeLine);
                 }
                 
@@ -753,15 +769,14 @@ namespace CabbyCodes.Patches.Flags.Triage
                         if (!string.IsNullOrEmpty(sceneName))
                         {
                             discoveredSceneNames.Add(sceneName);
-                            if (!string.IsNullOrEmpty(areaName))
+                            discoveredSceneAreas[sceneName] = areaName;
+                            
+                            // Update last known scene area if we don't have one yet
+                            if (lastKnownSceneArea == null)
                             {
-                                discoveredSceneAreas[sceneName] = areaName;
-                                // Update last known scene area if we don't have one yet
-                                if (lastKnownSceneArea == "Unknown")
-                                {
-                                    lastKnownSceneArea = areaName;
-                                }
+                                lastKnownSceneArea = areaName;
                             }
+                            
                             loadedCount++;
                         }
                     }
@@ -802,6 +817,13 @@ namespace CabbyCodes.Patches.Flags.Triage
                         if (sceneMapData != null && !string.IsNullOrEmpty(sceneMapData.SceneName))
                         {
                             knownSceneNames.Add(sceneMapData.SceneName);
+                            
+                            // If this scene was previously discovered, remove it from discovered collections
+                            if (discoveredSceneNames.Contains(sceneMapData.SceneName))
+                            {
+                                discoveredSceneNames.Remove(sceneMapData.SceneName);
+                                discoveredSceneAreas.Remove(sceneMapData.SceneName);
+                            }
                         }
                     }
                 }
@@ -1021,7 +1043,11 @@ namespace CabbyCodes.Patches.Flags.Triage
                         var sceneMapData = (SceneMapData)field.GetValue(null);
                         if (sceneMapData != null && sceneMapData.SceneName == sceneName)
                         {
-                            lastKnownSceneArea = sceneMapData.AreaName;
+                            // Only update area if it's not null (system scenes have null areas)
+                            if (sceneMapData.AreaName != null)
+                            {
+                                lastKnownSceneArea = sceneMapData.AreaName;
+                            }
                             return;
                         }
                     }
@@ -1053,8 +1079,8 @@ namespace CabbyCodes.Patches.Flags.Triage
             // This is a new scene!
             discoveredSceneNames.Add(sceneName);
             
-            // Use the last known scene area for new scenes
-            string areaName = lastKnownSceneArea != "Unknown" ? lastKnownSceneArea : "Unknown";
+            // Use the last known scene area for new scenes, or null if we don't have one
+            string areaName = lastKnownSceneArea;
             
             discoveredSceneAreas[sceneName] = areaName;
             
