@@ -4,7 +4,6 @@ using BepInEx.Logging;
 using BepInEx.Unity.Mono;
 using CabbyCodes.Patches;
 using CabbyCodes.Patches.Achievements;
-using CabbyCodes.Patches.Charms;
 using CabbyCodes.Patches.Flags;
 using CabbyCodes.Patches.Flags.Triage;
 using CabbyCodes.Patches.Inventory;

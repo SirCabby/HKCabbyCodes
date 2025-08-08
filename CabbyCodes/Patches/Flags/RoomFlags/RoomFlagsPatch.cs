@@ -9,10 +9,7 @@ namespace CabbyCodes.Patches.Flags.RoomFlags
     {
         public static List<CheatPanel> CreatePanels()
         {
-            var panels = new List<CheatPanel>
-            {
-                new InfoPanel("Toggling room flags will not update until entering the room").SetColor(CheatPanel.warningColor)
-            };
+            var panels = new List<CheatPanel>();
 
             // Determine the default area selection based on the player's current position
             int currentAreaIndex = GetCurrentAreaIndex();

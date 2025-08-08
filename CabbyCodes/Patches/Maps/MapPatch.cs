@@ -1,4 +1,5 @@
 using CabbyMenu.UI.CheatPanels;
+using CabbyMenu.SyncedReferences;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
@@ -30,8 +31,8 @@ namespace CabbyCodes.Patches.Maps
                 new InfoPanel("Warning: Still requires Inventory Map and Quill items to view / fill maps out").SetColor(CheatPanel.warningColor)
             };
 
-            // Add area map panels using BasePatch functionality
-            panels.AddRange(base.CreatePanels());
+            // Add area map panels using delegate pattern
+            panels.AddRange(CreateMapPanels());
             
             // Get current area for default selection
             int currentAreaIndex = GetCurrentAreaIndex();
@@ -82,16 +83,49 @@ namespace CabbyCodes.Patches.Maps
             };
         }
 
-        protected override IPatch CreatePatch(FlagDef flag)
+        private List<CheatPanel> CreateMapPanels()
         {
-            // Use MapBoolPatch for map flags to manage hasMap flag
-            if (flag.Type == "PlayerData_Bool")
+            var panels = new List<CheatPanel>();
+            var flags = GetFlags();
+            
+            foreach (var flag in flags)
             {
-                return new MapBoolPatch(flag, GetDescription(flag));
+                panels.Add(new TogglePanel(
+                    new DelegateReference<bool>(
+                        () => FlagManager.GetBoolFlag(flag),
+                        value =>
+                        {
+                            // Set the individual map flag
+                            FlagManager.SetBoolFlag(flag, value);
+                            
+                            // Update the hasMap flag based on whether any map flags are true
+                            UpdateHasMapFlag();
+                        }
+                    ), GetDescription(flag)));
             }
             
-            // Fall back to base implementation for other types
-            return base.CreatePatch(flag);
+            return panels;
+        }
+
+        private void UpdateHasMapFlag()
+        {
+            // Check if any map flags are true
+            bool anyMapTrue = FlagManager.GetBoolFlag(FlagInstances.mapAbyss) ||
+                             FlagManager.GetBoolFlag(FlagInstances.mapCity) ||
+                             FlagManager.GetBoolFlag(FlagInstances.mapCliffs) ||
+                             FlagManager.GetBoolFlag(FlagInstances.mapCrossroads) ||
+                             FlagManager.GetBoolFlag(FlagInstances.mapDeepnest) ||
+                             FlagManager.GetBoolFlag(FlagInstances.mapFogCanyon) ||
+                             FlagManager.GetBoolFlag(FlagInstances.mapFungalWastes) ||
+                             FlagManager.GetBoolFlag(FlagInstances.mapGreenpath) ||
+                             FlagManager.GetBoolFlag(FlagInstances.mapMines) ||
+                             FlagManager.GetBoolFlag(FlagInstances.mapOutskirts) ||
+                             FlagManager.GetBoolFlag(FlagInstances.mapRestingGrounds) ||
+                             FlagManager.GetBoolFlag(FlagInstances.mapRoyalGardens) ||
+                             FlagManager.GetBoolFlag(FlagInstances.mapWaterways);
+
+            // Set hasMap flag accordingly
+            FlagManager.SetBoolFlag(FlagInstances.hasMap, anyMapTrue);
         }
 
         protected override string GetDescription(FlagDef flag)

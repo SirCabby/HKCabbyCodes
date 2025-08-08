@@ -15,7 +15,7 @@ namespace CabbyCodes.Patches.Flags
 
             var flagTypeSection = new CategorizedPanelSection(
                 "Flag Type", 
-                new List<string> { "Environment", "NPC", "Boss", "Room", "Geo Rocks" },
+                new List<string> { "Environment", "NPC", "Boss", "Shop", "Stag", "Room", "Geo Rocks" },
                 CreateFlagTypePanels
             );
             flagTypeSection.AddToMenu(CabbyCodesPlugin.cabbyMenu);
@@ -47,12 +47,22 @@ namespace CabbyCodes.Patches.Flags
                     var bossPatch = new BossFlagPatch();
                     panels.AddRange(bossPatch.CreatePanels());
                     break;
+                
+                case 3: // Shop
+                    var shopPatch = new ShopFlagPatch();
+                    panels.AddRange(shopPatch.CreatePanels());
+                    break;
                     
-                case 3: // Room
+                case 4: // Stag
+                    var stagPatch = new StagFlagPatch();
+                    panels.AddRange(stagPatch.CreatePanels());
+                    break;
+                    
+                case 5: // Room
                     panels.AddRange(RoomFlagsPatch.CreatePanels());
                     break;
                     
-                case 4: // Geo Rocks
+                case 6: // Geo Rocks
                     var geoPatch = new GeoRocksFlagPatch();
                     panels.AddRange(geoPatch.CreatePanels());
                     break;

@@ -184,13 +184,21 @@ namespace CabbyCodes.Flags
 
             #region Categorized Scene Flags
                 // Crossroads_04
-                public static readonly FlagDef Crossroads_04__Break_Floor_1 = new FlagDef("Break Floor 1", SceneInstances.Crossroads_03.SceneName, false, "PersistentBoolData", "Opened floor back to entrance");
+                public static readonly FlagDef Crossroads_04__Battle_Scene = new FlagDef("Battle Scene", SceneInstances.Crossroads_04.SceneName, false, "PersistentBoolData", "Gruz Mother Defeated");
+                public static readonly FlagDef Crossroads_04__Break_Floor_1 = new FlagDef("Break Floor 1", SceneInstances.Crossroads_04.SceneName, false, "PersistentBoolData", "Opened floor back to entrance");
 
                 // Crossroads_07
                 public static readonly FlagDef Crossroads_07__Tute_Door_1 = new FlagDef("Tute Door 1", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData", "Broke wall to Brooding Mawlek");
 
+                // Crossroads_08
+                public static readonly FlagDef Crossroads_08__Battle_Scene = new FlagDef("Battle Scene", SceneInstances.Crossroads_08.SceneName, false, "PersistentBoolData", "Completed Spitter Battle");
+                public static readonly FlagDef Crossroads_08__Break_Wall_2 = new FlagDef("Break Wall 2", SceneInstances.Crossroads_08.SceneName, false, "PersistentBoolData", "Broke wall to Geo Rock");
+
                 // Crossroads_09
                 public static readonly FlagDef Crossroads_09__Break_Floor_1 = new FlagDef("Break Floor 1", SceneInstances.Crossroads_09.SceneName, false, "PersistentBoolData", "Broke one-way wall to exit");
+
+                // Crossroads_13
+                public static readonly FlagDef Crossroads_13__Break_Floor_1 = new FlagDef("Break Floor 1", SceneInstances.Crossroads_13.SceneName, false, "PersistentBoolData", "Break wall back from Mask Shard secret");
 
                 // Crossroads_36
                 public static readonly FlagDef Crossroads_36__Collapser_Small = new FlagDef("Collapser Small", SceneInstances.Crossroads_36.SceneName, false, "PersistentBoolData", "Broke collapsing floor to Brooding Mawlek");
@@ -230,9 +238,11 @@ namespace CabbyCodes.Flags
                 public static readonly FlagDef Crossroads_18__Geo_Rock_2 = new FlagDef("Geo Rock 2", SceneInstances.Crossroads_18.SceneName, false, "GeoRockData");
                 public static readonly FlagDef Crossroads_18__Geo_Rock_3 = new FlagDef("Geo Rock 3", SceneInstances.Crossroads_18.SceneName, false, "GeoRockData");
                 public static readonly FlagDef Crossroads_19__Geo_Rock_1 = new FlagDef("Geo Rock 1", SceneInstances.Crossroads_19.SceneName, false, "GeoRockData");
+                public static readonly FlagDef Crossroads_27__Geo_Rock_1 = new FlagDef("Geo Rock 1", SceneInstances.Crossroads_27.SceneName, false, "GeoRockData");
                 public static readonly FlagDef Crossroads_36__Geo_Rock_1 = new FlagDef("Geo Rock 1", SceneInstances.Crossroads_36.SceneName, false, "GeoRockData");
                 public static readonly FlagDef Crossroads_42__Geo_Rock_1 = new FlagDef("Geo Rock 1", SceneInstances.Crossroads_42.SceneName, false, "GeoRockData");
                 public static readonly FlagDef Crossroads_42__Geo_Rock_2 = new FlagDef("Geo Rock 2", SceneInstances.Crossroads_42.SceneName, false, "GeoRockData");
+                public static readonly FlagDef Crossroads_46__Geo_Rock_1 = new FlagDef("Geo Rock 1", SceneInstances.Crossroads_46.SceneName, false, "GeoRockData");
                 public static readonly FlagDef Crossroads_ShamanTemple__Geo_Rock_2_1 = new FlagDef("Geo Rock 2 (1)", SceneInstances.Crossroads_ShamanTemple.SceneName, false, "GeoRockData");
                 public static readonly FlagDef Fungus1_01__Geo_Rock_Green_Path_01 = new FlagDef("Geo Rock Green Path 01", SceneInstances.Fungus1_01.SceneName, false, "GeoRockData");
                 public static readonly FlagDef Fungus1_02__Geo_Rock_Green_Path_01_1 = new FlagDef("Geo Rock Green Path 01 (1)", SceneInstances.Fungus1_02.SceneName, false, "GeoRockData");
@@ -953,7 +963,8 @@ namespace CabbyCodes.Flags
 
             #region Mask Shards (heart pieces)
                 public static readonly FlagDef Crossroads_09__Heart_Piece = new FlagDef("Heart Piece", SceneInstances.Crossroads_09.SceneName, false, "PersistentBoolData", "Brooding Mawlek");
-                public static readonly FlagDef Fungus1_36__Heart_Piece = new FlagDef("Heart Piece", SceneInstances.Fungus1_36.SceneName, false, "PersistentBoolData", "Fungus1_36");
+                public static readonly FlagDef Crossroads_13__Heart_Piece = new FlagDef("Heart Piece", SceneInstances.Crossroads_13.SceneName, false, "PersistentBoolData", SceneInstances.Crossroads_13.ReadableName);
+                public static readonly FlagDef Fungus1_36__Heart_Piece = new FlagDef("Heart Piece", SceneInstances.Fungus1_36.SceneName, false, "PersistentBoolData", SceneInstances.Fungus1_36.ReadableName);
                 public static readonly FlagDef slyShellFrag1 = new FlagDef("slyShellFrag1", "Global", false, "PlayerData_Bool", "Bought Mask Shard 1 from Sly");
                 public static readonly FlagDef slyShellFrag2 = new FlagDef("slyShellFrag2", "Global", false, "PlayerData_Bool", "Bought Mask Shard 2 from Sly");
                 public static readonly FlagDef slyShellFrag3 = new FlagDef("slyShellFrag3", "Global", false, "PlayerData_Bool", "Bought Mask Shard 3 from Sly");
@@ -1006,6 +1017,7 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef metMiner = new FlagDef("metMiner", "Global", false, "PlayerData_Bool", "Met Myla the Miner");
             public static readonly FlagDef metQuirrel = new FlagDef("metQuirrel", "Global", false, "PlayerData_Bool", "Met Quirrel");
             public static readonly FlagDef metSlyShop = new FlagDef("metSlyShop", "Global", false, "PlayerData_Bool", "Met Sly at Shop");
+            public static readonly FlagDef metStag = new FlagDef("metStag", "Global", false, "PlayerData_Bool", "Met Stag");
             public static readonly FlagDef quirrelEggTemple = new FlagDef("quirrelEggTemple", "Global", false, "PlayerData_Int", "Talked with Quirrel about Egg Temple (0-4)");
             public static readonly FlagDef quirrelLeftEggTemple = new FlagDef("quirrelLeftEggTemple", "Global", false, "PlayerData_Bool", "Quirrel left Egg Temple, triggers after False Knight defeated");
             public static readonly FlagDef shaman = new FlagDef("shaman", "Global", false, "PlayerData_Int", "Talked with Snail Shaman (0-6)");
@@ -1057,9 +1069,10 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef Crossroads_01__Shiny_Item = new FlagDef("Shiny Item", SceneInstances.Crossroads_01.SceneName, false, "PersistentBoolData");
 
             // Crossroads_03
+            public static readonly FlagDef Crossroads_03__Break_Floor_1 = new FlagDef("Break Floor 1", SceneInstances.Crossroads_03.SceneName, false, "PersistentBoolData");
             public static readonly FlagDef Crossroads_03__Break_Wall_2 = new FlagDef("Break Wall 2", SceneInstances.Crossroads_03.SceneName, false, "PersistentBoolData");
             public static readonly FlagDef Crossroads_03__Toll_Gate_Switch = new FlagDef("Toll Gate Switch", SceneInstances.Crossroads_03.SceneName, false, "PersistentBoolData");
-
+            
             // Crossroads_06
             public static readonly FlagDef Crossroads_06__Gate_Switch = new FlagDef("Gate Switch", SceneInstances.Crossroads_06.SceneName, false, "PersistentBoolData");
             public static readonly FlagDef Crossroads_06__Raising_Pillar = new FlagDef("Raising Pillar", SceneInstances.Crossroads_06.SceneName, false, "PersistentBoolData");
@@ -1098,11 +1111,6 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef Crossroads_07__Dream_Plant_Orb_9 = new FlagDef("Dream Plant Orb (9)", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
             public static readonly FlagDef Crossroads_07__Remasker = new FlagDef("Remasker", SceneInstances.Crossroads_07.SceneName, false, "PersistentBoolData");
 
-            // Crossroads_08
-            public static readonly FlagDef Crossroads_08__Battle_Scene = new FlagDef("Battle Scene", SceneInstances.Crossroads_08.SceneName, false, "PersistentBoolData", "Completed Spitter Battle");
-            public static readonly FlagDef Crossroads_08__Break_Wall_2 = new FlagDef("Break Wall 2", SceneInstances.Crossroads_08.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_08__break_wall_masks = new FlagDef("break_wall_masks", SceneInstances.Crossroads_08.SceneName, false, "PersistentBoolData");
-
             // Crossroads_10
             public static readonly FlagDef Crossroads_10__Battle_Scene = new FlagDef("Battle Scene", SceneInstances.Crossroads_10.SceneName, false, "PersistentBoolData", "Defeated False Knight");
             public static readonly FlagDef Crossroads_10__Chest = new FlagDef("Chest", SceneInstances.Crossroads_10.SceneName, false, "PersistentBoolData", "Opened Geo Chest");
@@ -1113,10 +1121,6 @@ namespace CabbyCodes.Flags
             // Crossroads_11_alt
             public static readonly FlagDef Crossroads_11_alt__Battle_Scene = new FlagDef("Battle Scene", SceneInstances.Crossroads_11_alt.SceneName, false, "PersistentBoolData");
             public static readonly FlagDef Crossroads_11_alt__Blocker = new FlagDef("Blocker", SceneInstances.Crossroads_11_alt.SceneName, false, "PersistentBoolData");
-
-            // Crossroads_13
-            public static readonly FlagDef Crossroads_13__Break_Floor_1 = new FlagDef("Break Floor 1", SceneInstances.Crossroads_13.SceneName, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_13__Heart_Piece = new FlagDef("Heart Piece", SceneInstances.Crossroads_13.SceneName, false, "PersistentBoolData");
 
             // Crossroads_18
             public static readonly FlagDef Crossroads_18__Breakable_Wall_Waterways = new FlagDef("Breakable Wall Waterways", SceneInstances.Crossroads_18.SceneName, false, "PersistentBoolData");
@@ -1508,7 +1512,6 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef metQueen = new FlagDef("metQueen", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef metRelicDealer = new FlagDef("metRelicDealer", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef metRelicDealerShop = new FlagDef("metRelicDealerShop", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef metStag = new FlagDef("metStag", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef metXun = new FlagDef("metXun", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef midwifeConvo1 = new FlagDef("midwifeConvo1", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef midwifeConvo2 = new FlagDef("midwifeConvo2", "Global", false, "PlayerData_Bool");
@@ -1657,7 +1660,6 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef stagConvoTram = new FlagDef("stagConvoTram", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef stagEggInspected = new FlagDef("stagEggInspected", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef stagHopeConvo = new FlagDef("stagHopeConvo", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef stagPosition = new FlagDef("stagPosition", "Global", false, "PlayerData_Int");
             public static readonly FlagDef stagRemember1 = new FlagDef("stagRemember1", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef stagRemember2 = new FlagDef("stagRemember2", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef stagRemember3 = new FlagDef("stagRemember3", "Global", false, "PlayerData_Bool");
@@ -1884,6 +1886,7 @@ namespace CabbyCodes.Flags
                 new FlagDef("seenFocusTablet", "Global", false, "PlayerData_Bool", "Passed by Focus Tablet"),
                 new FlagDef("seenJournalMsg", "Global", false, "PlayerData_Bool", "Seen Journal message for new enemy"),
                 new FlagDef("showHealthUI", "Global", false, "PlayerData_Bool", "Show Health UI"),
+                new FlagDef("stagPosition", "Global", false, "PlayerData_Int", "Location of Stag"),
             #endregion
 
             #region Scene Flags
@@ -1894,9 +1897,17 @@ namespace CabbyCodes.Flags
 
                 // Crossroads_04
                 new FlagDef("CamLock Destroyer", SceneInstances.Crossroads_04.SceneName, false, "PersistentBoolData"),
+                new FlagDef("Secret Mask", SceneInstances.Crossroads_04.SceneName, false, "PersistentBoolData"),
+                new FlagDef("Secret Mask (1)", SceneInstances.Crossroads_04.SceneName, false, "PersistentBoolData"),
+                new FlagDef("Zombie Barger", SceneInstances.Crossroads_04.SceneName, false, "PersistentBoolData"),
+                new FlagDef("Zombie Hornhead", SceneInstances.Crossroads_04.SceneName, false, "PersistentBoolData"),
+                new FlagDef("Zombie Runner", SceneInstances.Crossroads_04.SceneName, false, "PersistentBoolData"),
 
                 // Crossroads_05
                 new FlagDef("Zombie Runner", SceneInstances.Crossroads_05.SceneName, false, "PersistentBoolData"),
+
+                // Crossroads_08
+                new FlagDef("break_wall_masks", SceneInstances.Crossroads_08.SceneName, false, "PersistentBoolData"),
 
                 // Crossroads_09
                 new FlagDef("Battle Scene", SceneInstances.Crossroads_09.SceneName, false, "PersistentBoolData", "Defeated Brooding Mawlek Scene"),
@@ -1927,6 +1938,7 @@ namespace CabbyCodes.Flags
                 new FlagDef("Soul Totem mini_two_horned", SceneInstances.Crossroads_25.SceneName, false, "PersistentIntData"),
 
                 // Crossroads_27
+                new FlagDef("Hatcher", SceneInstances.Crossroads_27.SceneName, false, "PersistentBoolData"),
                 new FlagDef("Hatcher 1", SceneInstances.Crossroads_27.SceneName, false, "PersistentBoolData"),
                 new FlagDef("Hatcher 2", SceneInstances.Crossroads_27.SceneName, false, "PersistentBoolData"),
 

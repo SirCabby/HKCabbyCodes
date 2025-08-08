@@ -157,7 +157,8 @@ namespace CabbyCodes.Patches.Inventory
                 new BoolPatch(FlagInstances.hasLoveKey).CreatePanel(),
                 new BoolPatch(FlagInstances.hasSlykey).CreatePanel(),
                 new BoolPatch(FlagInstances.hasCityKey).CreatePanel(),
-                new BoolPatch(FlagInstances.hasKingsBrand).CreatePanel()
+                new BoolPatch(FlagInstances.hasKingsBrand).CreatePanel(),
+                new BoolPatch(FlagInstances.slySimpleKey).CreatePanel()
             };
 
             return panels;
@@ -324,7 +325,8 @@ namespace CabbyCodes.Patches.Inventory
             var panels = new List<CheatPanel>
             {
                 CreateHeartPiecePanel(FlagInstances.Crossroads_09__Heart_Piece),
-                CreateHeartPiecePanel(FlagInstances.Fungus1_36__Heart_Piece)
+                CreateHeartPiecePanel(FlagInstances.Crossroads_13__Heart_Piece),
+                CreateHeartPiecePanel(FlagInstances.Fungus1_36__Heart_Piece),
             };
             
             return panels;

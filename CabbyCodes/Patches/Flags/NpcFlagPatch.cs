@@ -21,13 +21,6 @@ namespace CabbyCodes.Patches.Flags
                 FlagInstances.corn_greenpathEncountered,
             }));
             
-            // Myla section
-            panels.Add(new InfoPanel("Myla").SetColor(CheatPanel.subHeaderColor));
-            panels.AddRange(CreateNpcPanels(new[] { 
-                FlagInstances.metMiner, 
-                FlagInstances.Crossroads_45__Zombie_Myla 
-            }));
-            
             // Elderbug section
             panels.Add(new InfoPanel("Elderbug").SetColor(CheatPanel.subHeaderColor));
             panels.AddRange(CreateNpcPanels(new[] { 
@@ -58,6 +51,13 @@ namespace CabbyCodes.Patches.Flags
             panels.AddRange(CreateNpcPanels(new[] { 
                 FlagInstances.jijiMet 
             }));
+
+            // Myla section
+            panels.Add(new InfoPanel("Myla").SetColor(CheatPanel.subHeaderColor));
+            panels.AddRange(CreateNpcPanels(new[] { 
+                FlagInstances.metMiner, 
+                FlagInstances.Crossroads_45__Zombie_Myla 
+            }));
             
             // Quirrel section
             panels.Add(new InfoPanel("Quirrel").SetColor(CheatPanel.subHeaderColor));
@@ -67,17 +67,23 @@ namespace CabbyCodes.Patches.Flags
                 FlagInstances.quirrelLeftEggTemple
             }));
             
+            // Shaman section
+            panels.Add(new InfoPanel("Shaman").SetColor(CheatPanel.subHeaderColor));
+            panels.AddRange(CreateNpcPanels(new[] { 
+                FlagInstances.shaman 
+            }));
+
             // Sly section
             panels.Add(new InfoPanel("Sly").SetColor(CheatPanel.subHeaderColor));
             panels.AddRange(CreateNpcPanels(new[] { 
                 FlagInstances.slyRescued,
                 FlagInstances.metSlyShop
             }));
-            
-            // Shaman section
-            panels.Add(new InfoPanel("Shaman").SetColor(CheatPanel.subHeaderColor));
+
+            // Stag section
+            panels.Add(new InfoPanel("Stag").SetColor(CheatPanel.subHeaderColor));
             panels.AddRange(CreateNpcPanels(new[] { 
-                FlagInstances.shaman 
+                FlagInstances.metStag
             }));
             
             return panels;

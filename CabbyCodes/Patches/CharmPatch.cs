@@ -9,7 +9,7 @@ using CabbyCodes.Flags;
 using CabbyCodes.Patches.BasePatches;
 using CabbyMenu;
 
-namespace CabbyCodes.Patches.Charms
+namespace CabbyCodes.Patches
 {
     public class CharmPatch
     {
@@ -98,6 +98,14 @@ namespace CabbyCodes.Patches.Charms
             togglePanel.updateActions.Add(() =>
             {
                 spriteImageMod.SetSprite(GetCharmIcon(charm.Id));
+                if (FlagManager.GetBoolFlag(charm.BrokenFlag))
+                {
+                    spriteImageMod.SetColor(Color.white);
+                }
+                else
+                {
+                    spriteImageMod.SetColor(unearnedColor);
+                }
             });
             
             return togglePanel;
@@ -106,12 +114,20 @@ namespace CabbyCodes.Patches.Charms
         private CheatPanel CreateUpgradeCharmPanel(CharmInfo charm)
         {
             int index = charms.IndexOf(charm) + 1;
-            TogglePanel togglePanel = new TogglePanel(new BoolPatch(charm.UpgradeFlag), index + ": " + charm.Name + " is Unbreakable");
+            TogglePanel togglePanel = new TogglePanel(new BoolPatch(charm.UpgradeFlag), index + ": " + charm.Name + " is Upgraded");
             (_, ImageMod spriteImageMod) = PanelAdder.AddSprite(togglePanel, CharmIconList.Instance.GetSprite(charm.Id), 1);
 
             togglePanel.updateActions.Add(() =>
             {
                 spriteImageMod.SetSprite(GetCharmIcon(charm.Id));
+                if (FlagManager.GetBoolFlag(charm.UpgradeFlag))
+                {
+                    spriteImageMod.SetColor(Color.white);
+                }
+                else
+                {
+                    spriteImageMod.SetColor(unearnedColor);
+                }
             });
             
             return togglePanel;
@@ -120,7 +136,43 @@ namespace CabbyCodes.Patches.Charms
         private CheatPanel CreateCharmTogglePanel(CharmInfo charm)
         {
             int index = charms.IndexOf(charm) + 1;
-            TogglePanel togglePanel = new TogglePanel(new CharmTogglePatch(charm.GotFlag), index + ": " + charm.Name);
+            TogglePanel togglePanel = new TogglePanel(
+                new DelegateReference<bool>(
+                    () => FlagManager.GetBoolFlag(charm.GotFlag),
+                    value =>
+                    {
+                        // Get current charm count before changing the flag
+                        int currentCharmsOwned = FlagManager.GetIntFlag(FlagInstances.charmsOwned);
+                        bool wasCharmOwned = FlagManager.GetBoolFlag(charm.GotFlag);
+                        
+                        // Set the charm flag
+                        FlagManager.SetBoolFlag(charm.GotFlag, value);
+                        
+                        // Update charmsOwned count
+                        if (value && !wasCharmOwned)
+                        {
+                            // Charm is being turned on - increment count
+                            FlagManager.SetIntFlag(FlagInstances.charmsOwned, currentCharmsOwned + 1);
+                            
+                            // If this is the first charm, set hasCharm to true
+                            if (currentCharmsOwned == 0)
+                            {
+                                FlagManager.SetBoolFlag(FlagInstances.hasCharm, true);
+                            }
+                        }
+                        else if (!value && wasCharmOwned)
+                        {
+                            // Charm is being turned off - decrement count
+                            FlagManager.SetIntFlag(FlagInstances.charmsOwned, currentCharmsOwned - 1);
+                            
+                            // If this was the last charm, set hasCharm to false
+                            if (currentCharmsOwned == 1)
+                            {
+                                FlagManager.SetBoolFlag(FlagInstances.hasCharm, false);
+                            }
+                        }
+                    }
+                ), index + ": " + charm.Name);
             
             (_, ImageMod spriteImageMod) = PanelAdder.AddSprite(togglePanel, CharmIconList.Instance.GetSprite(charm.Id), 1);
 
@@ -212,11 +264,9 @@ namespace CabbyCodes.Patches.Charms
                 CabbyCodesPlugin.cabbyMenu.AddCheatPanel(panel);
             }
             
-            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Toggle ON to Have Charm").SetColor(CheatPanel.headerColor));
-            
-            // Add individual charm toggle panels after the header
-            var charmTogglePanels = charmPatch.CreateCharmTogglePanels();
-            foreach (var panel in charmTogglePanels)
+            // Add individual charm toggle panels
+            var togglePanels = charmPatch.CreateCharmTogglePanels();
+            foreach (var panel in togglePanels)
             {
                 CabbyCodesPlugin.cabbyMenu.AddCheatPanel(panel);
             }
