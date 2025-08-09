@@ -209,22 +209,24 @@ namespace CabbyCodes.SavedGames
                 }
                 gameManager.OnFinishedEnteringScene += cheatRestoreHandler;
                 
-                // If we have scene and position data, teleport to the correct location after the game loads
+                // After the scene has finished loading, wait until the hero is sitting at a bench
+                // (PlayerData.atBench == true). Once that is true, wait an additional 2 seconds
+                // before teleporting to the saved scene and position.
                 if (!string.IsNullOrEmpty(saveGameData.sceneName))
                 {
                     Vector2 targetPosition = saveGameData.GetPlayerPosition();
-                    
+
                     // Create a teleport location for the saved scene and position
                     var teleportLocation = new TeleportLocation(saveGameData.sceneName, "Custom Save Location", targetPosition);
-                    
+
                     // Subscribe to the scene entry event to trigger teleport after the game loads
                     void handler()
                     {
                         // Unsubscribe first to avoid memory leaks
                         gameManager.OnFinishedEnteringScene -= handler;
-                        
-                        // Wait a short moment for the scene to fully load, then teleport
-                        gameManager.StartCoroutine(TeleportAfterSceneLoad(teleportLocation));
+
+                        // Start coroutine that waits for atBench flag and the extra delay
+                        gameManager.StartCoroutine(TeleportAfterBench(teleportLocation));
                     }
                     gameManager.OnFinishedEnteringScene += handler;
                 }
@@ -272,6 +274,57 @@ namespace CabbyCodes.SavedGames
                 CabbyCodesPlugin.BLogger.LogDebug(string.Format("Teleporting to scene '{0}' at position ({1}, {2})", 
                     teleportLocation.SceneName, teleportLocation.Location.x, teleportLocation.Location.y));
                 
+                TeleportService.DoTeleport(teleportLocation);
+            }
+        }
+
+        /// <summary>
+        /// Waits until the player is sitting at a bench (PlayerData.atBench == true) and then waits
+        /// an additional 2 seconds before carrying out the teleport to the desired scene/position.
+        /// </summary>
+        /// <param name="teleportLocation">The target location to teleport to.</param>
+        private static System.Collections.IEnumerator TeleportAfterBench(TeleportLocation teleportLocation)
+        {
+            // Wait until the player sits down at a bench (atBench becomes true)
+            while (PlayerData.instance == null || !PlayerData.instance.atBench)
+            {
+                yield return null; // wait one frame
+            }
+
+            // Wait until the player STANDS UP again (atBench becomes false)
+            while (PlayerData.instance != null && PlayerData.instance.atBench)
+            {
+                yield return null; // still sitting
+            }
+
+            // Extra delay to ensure everything is fully settled after standing up
+            yield return new WaitForSeconds(0.5f);
+            
+            // Use the same logic as TeleportAfterSceneLoad for the actual teleport
+            string currentScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
+            string baseSceneName = GameManager.GetBaseSceneName(currentScene);
+
+            if (baseSceneName == teleportLocation.SceneName)
+            {
+                // We're already in the correct scene, just move to the position
+                var gm = GameManager._instance;
+                var hero = gm?.hero_ctrl;
+                if (hero != null)
+                {
+                    Vector3 newPos = new Vector3(teleportLocation.Location.x, teleportLocation.Location.y, hero.transform.position.z);
+                    hero.transform.position = newPos;
+                    gm.cameraCtrl?.SnapTo(newPos.x, newPos.y);
+
+                    CabbyCodesPlugin.BLogger.LogDebug(string.Format("Moved to position ({0}, {1}) in scene '{2}'",
+                        teleportLocation.Location.x, teleportLocation.Location.y, teleportLocation.SceneName));
+                }
+            }
+            else
+            {
+                // We need to teleport to a different scene
+                CabbyCodesPlugin.BLogger.LogDebug(string.Format("Teleporting to scene '{0}' at position ({1}, {2})",
+                    teleportLocation.SceneName, teleportLocation.Location.x, teleportLocation.Location.y));
+
                 TeleportService.DoTeleport(teleportLocation);
             }
         }
