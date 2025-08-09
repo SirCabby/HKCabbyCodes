@@ -15,7 +15,8 @@ namespace CabbyCodes.Patches.Flags
             
             panels.AddRange(CreateStagPanels(new[] { 
                 FlagInstances.openedCrossroads,
-                FlagInstances.openedRestingGrounds
+                FlagInstances.openedRestingGrounds,
+                FlagInstances.openedGreenpath
             }));
             
             return panels;

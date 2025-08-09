@@ -268,8 +268,8 @@ namespace CabbyCodes.Flags
                 public static readonly FlagDef Fungus1_21__Vine_Platform_2 = new FlagDef("Vine Platform (2)", SceneInstances.Fungus1_21.SceneName, false, "PersistentBoolData");
 
                 // Fungus1_22
-                public static readonly FlagDef Fungus1_22__Breakable_Wall = new FlagDef("Breakable Wall", SceneInstances.Fungus1_22.SceneName, false, "PersistentBoolData", "???");
-                public static readonly FlagDef Fungus1_22__Gate_Switch = new FlagDef("Gate Switch", SceneInstances.Fungus1_22.SceneName, false, "PersistentBoolData", "???");
+                public static readonly FlagDef Fungus1_22__Breakable_Wall = new FlagDef("Breakable Wall", SceneInstances.Fungus1_22.SceneName, false, "PersistentBoolData", "Break wall to Trinket");
+                public static readonly FlagDef Fungus1_22__Gate_Switch = new FlagDef("Gate Switch", SceneInstances.Fungus1_22.SceneName, false, "PersistentBoolData", "Open gate to lower exit");
                 public static readonly FlagDef Fungus1_22__Vine_Platform = new FlagDef("Vine Platform", SceneInstances.Fungus1_22.SceneName, false, "PersistentBoolData");
                 public static readonly FlagDef Fungus1_22__Vine_Platform_1 = new FlagDef("Vine Platform (1)", SceneInstances.Fungus1_22.SceneName, false, "PersistentBoolData");
 
@@ -467,6 +467,8 @@ namespace CabbyCodes.Flags
                 public static readonly FlagDef Fungus1_21__Geo_Rock_Green_Path_02 = new FlagDef("Geo Rock Green Path 02", SceneInstances.Fungus1_21.SceneName, false, "GeoRockData");
                 public static readonly FlagDef Fungus1_21__Geo_Rock_Green_Path_02_1 = new FlagDef("Geo Rock Green Path 02 (1)", SceneInstances.Fungus1_21.SceneName, false, "GeoRockData");
                 public static readonly FlagDef Fungus1_21__Geo_Rock_Green_Path_02_2 = new FlagDef("Geo Rock Green Path 02 (2)", SceneInstances.Fungus1_21.SceneName, false, "GeoRockData");
+                public static readonly FlagDef Fungus1_22__Geo_Rock_Green_Path_01 = new FlagDef("Geo Rock Green Path 01", SceneInstances.Fungus1_22.SceneName, false, "GeoRockData");
+                public static readonly FlagDef Fungus1_22__Geo_Rock_Green_Path_01_1 = new FlagDef("Geo Rock Green Path 01 (1)", SceneInstances.Fungus1_22.SceneName, false, "GeoRockData");
                 public static readonly FlagDef Fungus1_28__Geo_Rock_1_2 = new FlagDef("Geo Rock 1 (2)", SceneInstances.Fungus1_28.SceneName, false, "GeoRockData");
                 public static readonly FlagDef Fungus1_28__Geo_Rock_2 = new FlagDef("Geo Rock 2", SceneInstances.Fungus1_28.SceneName, false, "GeoRockData");
                 public static readonly FlagDef Fungus1_31__Geo_Rock_1_1 = new FlagDef("Geo Rock 1 (1)", SceneInstances.Fungus1_31.SceneName, false, "GeoRockData");
@@ -498,6 +500,7 @@ namespace CabbyCodes.Flags
                 // Individual Stations
                 public static readonly FlagDef openedCrossroads = new FlagDef("openedCrossroads", "Global", false, "PlayerData_Bool", "Crossroads Stag Station");
                 public static readonly FlagDef openedRestingGrounds = new FlagDef("openedRestingGrounds", "Global", false, "PlayerData_Bool", "Resting Grounds Stag Station");
+                public static readonly FlagDef openedGreenpath = new FlagDef("openedGreenpath", "Global", false, "PlayerData_Bool", "Greenpath Stag Station");
             #endregion
 
         #endregion
@@ -1201,7 +1204,7 @@ namespace CabbyCodes.Flags
                 public static readonly FlagDef Crossroads_09__Heart_Piece = new FlagDef("Heart Piece", SceneInstances.Crossroads_09.SceneName, false, "PersistentBoolData", "Brooding Mawlek");
                 public static readonly FlagDef Crossroads_13__Heart_Piece = new FlagDef("Heart Piece", SceneInstances.Crossroads_13.SceneName, false, "PersistentBoolData", SceneInstances.Crossroads_13.ReadableName);
                 public static readonly FlagDef Fungus1_36__Heart_Piece = new FlagDef("Heart Piece", SceneInstances.Fungus1_36.SceneName, false, "PersistentBoolData", SceneInstances.Fungus1_36.ReadableName);
-                public static readonly FlagDef Fungus2_01__Heart_Piece = new FlagDef("Heart Piece", SceneInstances.Fungus2_01.SceneName, false, "PersistentBoolData");
+                public static readonly FlagDef Fungus2_01__Heart_Piece = new FlagDef("Heart Piece", SceneInstances.Fungus2_01.SceneName, false, "PersistentBoolData", SceneInstances.Fungus2_01.ReadableName);
                 public static readonly FlagDef slyShellFrag1 = new FlagDef("slyShellFrag1", "Global", false, "PlayerData_Bool", "Bought Mask Shard 1 from Sly");
                 public static readonly FlagDef slyShellFrag2 = new FlagDef("slyShellFrag2", "Global", false, "PlayerData_Bool", "Bought Mask Shard 2 from Sly");
                 public static readonly FlagDef slyShellFrag3 = new FlagDef("slyShellFrag3", "Global", false, "PlayerData_Bool", "Bought Mask Shard 3 from Sly");
@@ -1236,6 +1239,11 @@ namespace CabbyCodes.Flags
                 public static readonly FlagDef trinket2 =           new FlagDef("trinket2",         "Global", false, "PlayerData_Int",  "Hallownest Seals (0-17)");
                 public static readonly FlagDef trinket3 =           new FlagDef("trinket3",         "Global", false, "PlayerData_Int",  "King's Idols (0-8)");
                 public static readonly FlagDef trinket4 =           new FlagDef("trinket4",         "Global", false, "PlayerData_Int",  "Arcane Eggs (0-4)");
+
+                #region Trinket 1
+                    public static readonly FlagDef Fungus1_22__Shiny_Item = new FlagDef("Shiny Item", SceneInstances.Fungus1_22.SceneName, false, "PersistentBoolData");
+                #endregion
+
             #endregion
 
         #endregion
@@ -1729,7 +1737,6 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef openedDeepnest = new FlagDef("openedDeepnest", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef openedFungalWastes = new FlagDef("openedFungalWastes", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef openedGardensStagStation = new FlagDef("openedGardensStagStation", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef openedGreenpath = new FlagDef("openedGreenpath", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef openedHiddenStation = new FlagDef("openedHiddenStation", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef openedLoveDoor = new FlagDef("openedLoveDoor", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef openedMageDoor = new FlagDef("openedMageDoor", "Global", false, "PlayerData_Bool");
@@ -2258,7 +2265,6 @@ namespace CabbyCodes.Flags
                 new FlagDef("Plant Trap (3)", SceneInstances.Fungus1_22.SceneName, false, "PersistentBoolData"),
                 new FlagDef("Plant Trap (4)", SceneInstances.Fungus1_22.SceneName, false, "PersistentBoolData"),
                 new FlagDef("Plant Trap (5)", SceneInstances.Fungus1_22.SceneName, false, "PersistentBoolData"),
-                new FlagDef("Shiny Item", SceneInstances.Fungus1_22.SceneName, false, "PersistentBoolData"),
 
                 // Fungus1_26
                 new FlagDef("Inverse Remasker", SceneInstances.Fungus1_26.SceneName, false, "PersistentBoolData"),

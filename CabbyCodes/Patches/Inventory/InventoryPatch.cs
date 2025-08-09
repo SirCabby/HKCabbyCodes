@@ -2,6 +2,7 @@ using CabbyCodes.Patches.BasePatches;
 using CabbyCodes.Flags;
 using CabbyMenu.UI.CheatPanels;
 using CabbyMenu.SyncedReferences;
+using CabbyCodes.Scenes;
 using System;
 using System.Collections.Generic;
 using CabbyCodes.SavedGames;
@@ -65,6 +66,10 @@ namespace CabbyCodes.Patches.Inventory
             // Keys section
             panels.Add(new InfoPanel("Keys").SetColor(CheatPanel.subHeaderColor));
             panels.AddRange(CreateKeyPanels());
+
+            // Wanderer's Journals section
+            panels.Add(new InfoPanel("Wanderer's Journals").SetColor(CheatPanel.subHeaderColor));
+            panels.AddRange(CreateWanderersJournalPanels());
 
             // Map Accessories section
             panels.Add(new InfoPanel("Map Accessories").SetColor(CheatPanel.subHeaderColor));
@@ -508,6 +513,41 @@ namespace CabbyCodes.Patches.Inventory
                     FlagManager.SetBoolFlag(simpleKeyFlag, value);
                 }
             ), simpleKeyFlag.ReadableName);
+        }
+
+        // Wanderer's Journals panels
+        private List<CheatPanel> CreateWanderersJournalPanels()
+        {
+            var panels = new List<CheatPanel>
+            {
+                CreateWanderersJournalPanel(FlagInstances.Fungus1_22__Shiny_Item),
+            };
+
+            return panels;
+        }
+
+        private TogglePanel CreateWanderersJournalPanel(FlagDef journalFlag)
+        {
+            // Determine human-readable label automatically from scene metadata
+            string label = journalFlag.SceneName == "Global"
+                ? journalFlag.ReadableName
+                : SceneManagement.GetSceneData(journalFlag.SceneName)?.ReadableName ?? journalFlag.SceneName;
+
+            return new TogglePanel(new DelegateReference<bool>(
+                () => FlagManager.GetBoolFlag(journalFlag),
+                value =>
+                {
+                    FlagManager.SetBoolFlag(journalFlag, value);
+
+                    int currentJournals = FlagManager.GetIntFlag(FlagInstances.trinket1);
+                    int newJournals = value ? currentJournals + 1 : Math.Max(0, currentJournals - 1);
+
+                    FlagManager.SetIntFlag(FlagInstances.trinket1, newJournals);
+
+                    // foundTrinket1 should be true if any journals are collected
+                    FlagManager.SetBoolFlag(FlagInstances.foundTrinket1, newJournals > 0);
+                }
+            ), label);
         }
     }
 }
