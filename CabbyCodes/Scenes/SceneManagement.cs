@@ -132,6 +132,12 @@ namespace CabbyCodes.Scenes
             foreach (var sceneData in sceneMapData)
             {
                 string areaName = sceneData.AreaName;
+                // Skip non-mappable scenes (areaName may be null for system rooms, boss arenas, etc.)
+                if (string.IsNullOrEmpty(areaName))
+                {
+                    continue;
+                }
+
                 string sceneName = sceneData.SceneName;
 
                 if (!areaToScenes.ContainsKey(areaName))
