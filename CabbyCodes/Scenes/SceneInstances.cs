@@ -383,5 +383,8 @@ namespace CabbyCodes.Scenes
         public static readonly SceneMapData Waterways_13 = new SceneMapData("Waterways_13", "Waterways");
         public static readonly SceneMapData Waterways_14 = new SceneMapData("Waterways_14", "Waterways");
         public static readonly SceneMapData Waterways_15 = new SceneMapData("Waterways_15", "Waterways");
+
+        // Internal
+        public static readonly SceneMapData Quit_To_Menu = new SceneMapData("Quit_To_Menu", null);
     }
 } 

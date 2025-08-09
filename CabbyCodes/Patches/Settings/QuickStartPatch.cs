@@ -11,8 +11,6 @@ using CabbyCodes.SavedGames;
 
 namespace CabbyCodes.Patches.Settings
 {
-
-
     /// <summary>
     /// Handles quick start settings including intro skip and automatic save loading.
     /// </summary>

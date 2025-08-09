@@ -19,43 +19,55 @@ namespace CabbyCodes.Patches.Settings
         private static bool patchesApplied = false;
 
         /// <summary>
-        /// Adds all custom save/load panels to the mod menu.
+        /// Creates and returns the custom save name input field panel (for external use).
         /// </summary>
-        public static void AddPanels()
-        {
-            // Header panel
-            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Save / Load").SetColor(CheatPanel.headerColor));
-            
-            // Save panel
-            AddSavePanel();
-            
-            // Custom save name input field
-            AddCustomSaveNamePanel();
-            
-            // Sub-header for saved games
-            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Saved Games").SetColor(CheatPanel.subHeaderColor));
-            
-            // Load existing save files
-            LoadExistingSaveFiles();
-        }
-
-        /// <summary>
-        /// Adds the save game button panel to the menu.
-        /// </summary>
-        private static void AddSavePanel()
-        {
-            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new ButtonPanel(SaveCustomGame, "Save", "Save game at current location"));
-        }
-
-        /// <summary>
-        /// Adds the custom save name input field panel to the menu.
-        /// </summary>
-        private static void AddCustomSaveNamePanel()
+        /// <returns>The created InputFieldPanel for custom save names.</returns>
+        public static InputFieldPanel<string> CreateCustomSaveNamePanel()
         {
             // Calculate width for 35 characters but allow 50 characters
             int widthFor35Chars = CalculatePanelWidth(35);
-            customSaveNameInputPanel = new InputFieldPanel<string>(customSaveNameRef, KeyCodeMap.ValidChars.AlphaNumericWithSpaces, 60, widthFor35Chars, "(Optional) Save game name");
-            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(customSaveNameInputPanel);
+            var panel = new InputFieldPanel<string>(customSaveNameRef, KeyCodeMap.ValidChars.AlphaNumericWithSpaces, 60, widthFor35Chars, "(Optional) Save game name");
+            customSaveNameInputPanel = panel;
+            return panel;
+        }
+
+        /// <summary>
+        /// Creates the Save button panel wired to the internal SaveCustomGame logic.
+        /// </summary>
+        public static ButtonPanel CreateSaveButtonPanel()
+        {
+            return new ButtonPanel(SaveCustomGame, "Save", "Save game at current location");
+        }
+
+        /// <summary>
+        /// Builds panels for each existing custom save file without attaching them.
+        /// SettingsPatch injects them into the menu at the correct spot.
+        /// </summary>
+        /// <param name="onListChanged">Callback invoked when a save is deleted so the caller can rebuild the UI.</param>
+        public static List<CheatPanel> BuildSavePanels(System.Action onListChanged)
+        {
+            var panels = new List<CheatPanel>();
+
+            foreach (string saveFileName in SavedGameManager.GetCustomSaveFiles())
+            {
+                string displayName = SavedGameManager.GetDisplayNameFromFileName(saveFileName);
+
+                var buttonPanel = new ButtonPanel(() => { LoadCustomSave(saveFileName); }, "Load", displayName);
+
+                // add X destroy button
+                PanelAdder.AddDestroyButtonToPanel(buttonPanel, () =>
+                {
+                    if (SavedGameManager.DeleteCustomSave(saveFileName))
+                    {
+                        SaveGameAnalysisPatch.RefreshFileList();
+                        onListChanged?.Invoke();
+                    }
+                });
+
+                panels.Add(buttonPanel);
+            }
+
+            return panels;
         }
 
         /// <summary>
@@ -83,71 +95,6 @@ namespace CabbyCodes.Patches.Settings
         }
 
         /// <summary>
-        /// Loads existing save files and creates panels for them.
-        /// </summary>
-        private static void LoadExistingSaveFiles()
-        {
-            List<string> saveFiles = SavedGameManager.GetCustomSaveFiles();
-            
-            foreach (string saveFileName in saveFiles)
-            {
-                AddCustomSavePanel(saveFileName);
-            }
-        }
-
-        /// <summary>
-        /// Refreshes the save file list by removing old panels and creating new ones.
-        /// </summary>
-        private static void RefreshSaveFileList()
-        {
-            // Remove all existing save file panels
-            foreach (CheatPanel panel in saveFilePanels)
-            {
-                CabbyCodesPlugin.cabbyMenu.RemoveCheatPanel(panel);
-            }
-            saveFilePanels.Clear();
-            
-            // Reload and create new panels for current save files
-            LoadExistingSaveFiles();
-        }
-
-        /// <summary>
-        /// Adds a custom save game panel with load functionality and destroy button.
-        /// </summary>
-        /// <param name="saveFileName">The name of the save file to create a panel for.</param>
-        private static void AddCustomSavePanel(string saveFileName)
-        {
-            // Convert file name to display name for the UI
-            string displayName = SavedGameManager.GetDisplayNameFromFileName(saveFileName);
-            
-            ButtonPanel buttonPanel = new ButtonPanel(() => { LoadCustomSave(saveFileName); }, "Load", displayName);
-
-            // Add the panel to the menu first so it has a parent
-            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(buttonPanel);
-            
-            // Track this panel for refresh purposes
-            saveFilePanels.Add(buttonPanel);
-
-            // Create the X button after the panel has been added to the menu
-            GameObject destroyButton = PanelAdder.AddDestroyButtonToPanel(buttonPanel, () =>
-            {
-                // Remove the save file
-                bool deleted = SavedGameManager.DeleteCustomSave(saveFileName);
-                if (deleted)
-                {
-                    // Remove the panel from tracking and menu
-                    saveFilePanels.Remove(buttonPanel);
-                    CabbyCodesPlugin.cabbyMenu.RemoveCheatPanel(buttonPanel);
-                    CabbyCodesPlugin.BLogger.LogDebug(string.Format("Removed save file: {0}", saveFileName));
-                }
-                else
-                {
-                    CabbyCodesPlugin.BLogger.LogWarning(string.Format("Failed to remove save file: {0}", saveFileName));
-                }
-            });
-        }
-
-        /// <summary>
         /// Saves the current game state as a custom save.
         /// </summary>
         private static void SaveCustomGame()
@@ -167,8 +114,8 @@ namespace CabbyCodes.Patches.Settings
                     // Force an update to ensure the UI reflects the cleared value
                     customSaveNameInputPanel?.ForceUpdate();
                     
-                    // Refresh the save file list to show the new save
-                    RefreshSaveFileList();
+                    SaveGameAnalysisPatch.RefreshFileList();
+                    SettingsPatch.RefreshCustomSavePanels();
                 }
                 else
                 {
@@ -188,8 +135,10 @@ namespace CabbyCodes.Patches.Settings
             {
                 LastLoadedSlot = GameManager.instance.profileID;
             }
+
             // Instead of loading immediately, set up QuickStartPatch to load after menu
             QuickStartPatch.CustomFileToLoad = saveFileName;
+
             // Start coroutine to return to main menu
             GameManager.instance?.StartCoroutine(GameManager.instance.ReturnToMainMenu(
                     GameManager.ReturnToMainMenuSaveModes.DontSave, null));
@@ -215,7 +164,7 @@ namespace CabbyCodes.Patches.Settings
                 gm.inputHandler.StartAcceptingInput();
                 gm.inputHandler.AllowPause();
                 
-                // Actually unpause the game
+                // Unpause the game
                 gm.isPaused = false;
                 Time.timeScale = 1f;
                 TimeController.GenericTimeScale = 1f;
@@ -244,11 +193,6 @@ namespace CabbyCodes.Patches.Settings
         private static readonly BoxedReference<string> customSaveNameRef = new BoxedReference<string>("");
 
         /// <summary>
-        /// List of save file panels that need to be refreshed.
-        /// </summary>
-        private static readonly List<CheatPanel> saveFilePanels = new List<CheatPanel>();
-
-        /// <summary>
         /// Tracks the last loaded vanilla slot (profileID) for restoring after custom save load.
         /// </summary>
         public static int LastLoadedSlot = -1;
@@ -263,16 +207,7 @@ namespace CabbyCodes.Patches.Settings
                 return;
             }
 
-            InitializeConfig();
             patchesApplied = true;
-        }
-
-        /// <summary>
-        /// Initializes the configuration entries.
-        /// </summary>
-        private static void InitializeConfig()
-        {
-            // No configuration entries needed for custom save/load
         }
     }
 } 
