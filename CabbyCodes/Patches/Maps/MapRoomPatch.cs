@@ -42,7 +42,7 @@ namespace CabbyCodes.Patches.Maps
 
         /// <summary>
         /// Gets a filtered dictionary mapping area names to lists of scene names in that area.
-        /// Only includes scenes that have Mappable = true.
+        /// Only includes scenes whose AreaName is not null (i.e., mappable scenes).
         /// </summary>
         /// <returns>A dictionary where keys are area names and values are lists of scene names.</returns>
         private static Dictionary<string, List<string>> GetFilteredAreaToScenesMapping()
@@ -56,7 +56,7 @@ namespace CabbyCodes.Patches.Maps
                 var filteredScenes = kvp.Value.Where(sceneName => 
                 {
                     var sceneData = GetSceneData(sceneName);
-                    return sceneData != null && sceneData.Mappable;
+                    return sceneData != null && sceneData.AreaName != null;
                 }).ToList();
                 
                 if (filteredScenes.Count > 0)

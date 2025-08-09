@@ -31,7 +31,8 @@ namespace CabbyCodes.Patches.Flags
                 FlagInstances.elderbugHistory3,
                 FlagInstances.elderbugSpeechEggTemple,
                 FlagInstances.elderbugSpeechMapShop,
-                FlagInstances.elderbugSpeechSly
+                FlagInstances.elderbugSpeechSly,
+                FlagInstances.elderbugSpeechStation
             }));
             
             // Hunter section

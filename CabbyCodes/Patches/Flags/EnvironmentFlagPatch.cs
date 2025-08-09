@@ -10,6 +10,7 @@ namespace CabbyCodes.Patches.Flags
             return new FlagDef[]
             {
                 FlagInstances.openedMapperShop,
+                FlagInstances.openedTownBuilding,
                 FlagInstances.jijiDoorUnlocked,
                 FlagInstances.menderSignBroken,
                 FlagInstances.menderState, // Might need to merge with prior flag

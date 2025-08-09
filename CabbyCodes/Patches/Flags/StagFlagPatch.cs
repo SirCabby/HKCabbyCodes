@@ -14,7 +14,8 @@ namespace CabbyCodes.Patches.Flags
             var panels = new List<CheatPanel>();
             
             panels.AddRange(CreateStagPanels(new[] { 
-                FlagInstances.openedCrossroads
+                FlagInstances.openedCrossroads,
+                FlagInstances.openedRestingGrounds
             }));
             
             return panels;

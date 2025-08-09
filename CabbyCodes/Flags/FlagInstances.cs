@@ -175,11 +175,12 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef crossroadsInfected = new FlagDef("crossroadsInfected", "Global", false, "PlayerData_Bool", "Crossroads Infected");
             public static readonly FlagDef crossroadsMawlekWall = new FlagDef("crossroadsMawlekWall", "Global", false, "PlayerData_Bool", "Brooding Mawlek Wall opened");
             public static readonly FlagDef hornetGreenpath = new FlagDef("hornetGreenpath", "Global", false, "PlayerData_Int", "Saw Hornet at Greenpath (0-1)");
-            public static readonly FlagDef jijiDoorUnlocked = new FlagDef("jijiDoorUnlocked", "Global", false, "PlayerData_Bool", "Jiji's door unlocked");
+            public static readonly FlagDef jijiDoorUnlocked = new FlagDef("jijiDoorUnlocked", "Global", false, "PlayerData_Bool", "Jiji's door opened");
             public static readonly FlagDef noEyesPinned = new FlagDef("noEyesPinned", "Global", false, "PlayerData_Bool", "No Eyes Statue found");
             public static readonly FlagDef menderSignBroken = new FlagDef("menderSignBroken", "Global", false, "PlayerData_Bool", "Broke Mender sign");
             public static readonly FlagDef menderState = new FlagDef("menderState", "Global", false, "PlayerData_Int", "Mender is aware of broken sign (0-1?)");
             public static readonly FlagDef openedMapperShop = new FlagDef("openedMapperShop", "Global", false, "PlayerData_Bool", "Map Shop opened");
+            public static readonly FlagDef openedTownBuilding = new FlagDef("openedTownBuilding", "Global", false, "PlayerData_Bool", "Town Stag Station building opened");
             public static readonly FlagDef shamanPillar = new FlagDef("shamanPillar", "Global", false, "PlayerData_Bool", "Snail Shaman door to Crossroads west opened");
 
             #region Categorized Scene Flags
@@ -232,8 +233,14 @@ namespace CabbyCodes.Flags
                 public static readonly FlagDef Mines_33__One_Way_Wall = new FlagDef("One Way Wall", SceneInstances.Mines_33.SceneName, false, "PersistentBoolData", "Opened wall to exit pit");
                 public static readonly FlagDef Mines_33__Toll_Gate_Machine = new FlagDef("Toll Gate Machine", SceneInstances.Mines_33.SceneName, false, "PersistentBoolData", "Paid toll to open gate");
 
+                // RestingGrounds_09
+                public static readonly FlagDef RestingGrounds_09__Ruins_Lever = new FlagDef("Ruins Lever", SceneInstances.RestingGrounds_09.SceneName, false, "PersistentBoolData", "Opened Resting Grounds Stag Station");
+
                 // Town
                 public static readonly FlagDef Town__Door_Destroyer = new FlagDef("Door Destroyer", SceneInstances.Town.SceneName, false, "PersistentBoolData", "Door broken open from King's Pass");
+
+                // Room_Town_Stag_Station
+                public static readonly FlagDef Room_Town_Stag_Station__Gate_Switch = new FlagDef("Gate Switch", SceneInstances.Room_Town_Stag_Station.SceneName, false, "PersistentBoolData", "Opened Town Stag Station door");
 
                 // Tutorial_01
                 public static readonly FlagDef Tutorial_01__Break_Floor_1 = new FlagDef("Break Floor 1", SceneInstances.Tutorial_01.SceneName, false, "PersistentBoolData", "Broke floor back up to top");
@@ -405,6 +412,7 @@ namespace CabbyCodes.Flags
 
                 // Individual Stations
                 public static readonly FlagDef openedCrossroads = new FlagDef("openedCrossroads", "Global", false, "PlayerData_Bool", "Crossroads Stag Station");
+                public static readonly FlagDef openedRestingGrounds = new FlagDef("openedRestingGrounds", "Global", false, "PlayerData_Bool", "Resting Grounds Stag Station");
             #endregion
 
         #endregion
@@ -1158,6 +1166,7 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef elderbugSpeechEggTemple = new FlagDef("elderbugSpeechEggTemple", "Global", false, "PlayerData_Bool", "Elderbug speech Egg Temple");
             public static readonly FlagDef elderbugSpeechMapShop = new FlagDef("elderbugSpeechMapShop", "Global", false, "PlayerData_Bool", "Elderbug speech Map Shop");
             public static readonly FlagDef elderbugSpeechSly = new FlagDef("elderbugSpeechSly", "Global", false, "PlayerData_Bool", "Elderbug speech Sly");
+            public static readonly FlagDef elderbugSpeechStation = new FlagDef("elderbugSpeechStation", "Global", false, "PlayerData_Bool", "Elderbug speech Stag Stations");
             public static readonly FlagDef hunterRoared = new FlagDef("hunterRoared", "Global", false, "PlayerData_Bool", "Hunter Roared");
             public static readonly FlagDef metCornifer = new FlagDef("metCornifer", "Global", false, "PlayerData_Bool", "Met Cornifer");
             public static readonly FlagDef metElderbug = new FlagDef("metElderbug", "Global", false, "PlayerData_Bool", "Met Elderbug");
@@ -1452,7 +1461,6 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef elderbugSpeechJiji = new FlagDef("elderbugSpeechJiji", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef elderbugSpeechKingsPass = new FlagDef("elderbugSpeechKingsPass", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef elderbugSpeechMinesLift = new FlagDef("elderbugSpeechMinesLift", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef elderbugSpeechStation = new FlagDef("elderbugSpeechStation", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef elderbugTroupeLeftConvo = new FlagDef("elderbugTroupeLeftConvo", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef emilitiaKingsBrandConvo = new FlagDef("emilitiaKingsBrandConvo", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef encounteredGatekeeper = new FlagDef("encounteredGatekeeper", "Global", false, "PlayerData_Bool");
@@ -1656,7 +1664,6 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef openedMageDoor = new FlagDef("openedMageDoor", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef openedMageDoor_v2 = new FlagDef("openedMageDoor_v2", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef openedPalaceGrounds = new FlagDef("openedPalaceGrounds", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef openedRestingGrounds = new FlagDef("openedRestingGrounds", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef openedRestingGrounds02 = new FlagDef("openedRestingGrounds02", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef openedRoyalGardens = new FlagDef("openedRoyalGardens", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef openedRuins1 = new FlagDef("openedRuins1", "Global", false, "PlayerData_Bool");
@@ -1664,7 +1671,6 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef openedSlyShop = new FlagDef("openedSlyShop", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef openedStagNest = new FlagDef("openedStagNest", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef openedTown = new FlagDef("openedTown", "Global", false, "PlayerData_Bool");
-            public static readonly FlagDef openedTownBuilding = new FlagDef("openedTownBuilding", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef openedTramLower = new FlagDef("openedTramLower", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef openedTramRestingGrounds = new FlagDef("openedTramRestingGrounds", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef openedWaterwaysManhole = new FlagDef("openedWaterwaysManhole", "Global", false, "PlayerData_Bool");
@@ -1770,7 +1776,6 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef tramOpenedCrossroads = new FlagDef("tramOpenedCrossroads", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef tramOpenedDeepnest = new FlagDef("tramOpenedDeepnest", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef tramRestingGroundsPosition = new FlagDef("tramRestingGroundsPosition", "Global", false, "PlayerData_Int");
-            public static readonly FlagDef travelling = new FlagDef("travelling", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef troupeInTown = new FlagDef("troupeInTown", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef tukDungEgg = new FlagDef("tukDungEgg", "Global", false, "PlayerData_Bool");
             public static readonly FlagDef tukEggPrice = new FlagDef("tukEggPrice", "Global", false, "PlayerData_Int");
@@ -1829,7 +1834,6 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef dreamGateY = new FlagDef("dreamGateY", "Global", false, "PlayerData_Single");
             public static readonly FlagDef dreamReturnScene = new FlagDef("dreamReturnScene", "Global", false, "PlayerData_String");
             public static readonly FlagDef equippedCharms = new FlagDef("equippedCharms", "Global", false, "PlayerData_List`1");
-            public static readonly FlagDef nextScene = new FlagDef("nextScene", "Global", false, "PlayerData_String");
             public static readonly FlagDef placedMarkers_b = new FlagDef("placedMarkers_b", "Global", false, "PlayerData_List`1");
             public static readonly FlagDef placedMarkers_r = new FlagDef("placedMarkers_r", "Global", false, "PlayerData_List`1");
             public static readonly FlagDef placedMarkers_w = new FlagDef("placedMarkers_w", "Global", false, "PlayerData_List`1");
@@ -1968,6 +1972,7 @@ namespace CabbyCodes.Flags
                 new FlagDef("newCharm_7", "Global", false, "PlayerData_Bool"),
                 new FlagDef("newCharm_8", "Global", false, "PlayerData_Bool"),
                 new FlagDef("newCharm_9", "Global", false, "PlayerData_Bool"),
+                new FlagDef("nextScene", "Global", false, "PlayerData_String"),
                 new FlagDef("openingCreditsPlayed", "Global", false, "PlayerData_Bool", "Opening Credits Played on Game Start"),
                 new FlagDef("previousDarkness", "Global", false, "PlayerData_Int"),
                 new FlagDef("prevHealth", "Global", false, "PlayerData_Int"),
@@ -1981,6 +1986,7 @@ namespace CabbyCodes.Flags
                 new FlagDef("seenJournalMsg", "Global", false, "PlayerData_Bool", "Seen Journal message for new enemy"),
                 new FlagDef("showHealthUI", "Global", false, "PlayerData_Bool", "Show Health UI"),
                 new FlagDef("stagPosition", "Global", false, "PlayerData_Int", "Location of Stag"),
+                new FlagDef("travelling", "Global", false, "PlayerData_Bool", "Riding the Stag"),
             #endregion
 
             #region Scene Flags
@@ -2143,6 +2149,9 @@ namespace CabbyCodes.Flags
 
                 // RestingGrounds_07
                 new FlagDef("Remasker", SceneInstances.RestingGrounds_07.SceneName, false, "PersistentBoolData"),
+
+                // RestingGrounds_09
+                new FlagDef("Shiny", SceneInstances.RestingGrounds_09.SceneName, false, "PersistentBoolData"),
 
                 // Town
                 new FlagDef("Death Respawn Trigger", SceneInstances.Town.SceneName, false, "PersistentBoolData"),

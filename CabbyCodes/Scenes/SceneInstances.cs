@@ -3,8 +3,8 @@ namespace CabbyCodes.Scenes
     /// <summary>
     /// Static references to all Hollow Knight scenes for easy access throughout the mod.
     /// 
-    /// To mark a scene as non-mappable (won't appear in map room toggle panels), 
-    /// set the mappable parameter to false in the SceneMapData constructor.
+    /// To mark a scene as non-mappable (won't appear in map room toggle panels),
+    /// set the areaName parameter to null in the SceneMapData constructor.
     /// Examples of non-mappable scenes:
     /// - Tutorial areas (Tutorial_01)
     /// - Special rooms (Room_temple, Room_Mask_maker)
@@ -131,8 +131,8 @@ namespace CabbyCodes.Scenes
         public static readonly SceneMapData Crossroads_48 = new SceneMapData("Crossroads_48", "Crossroads");
         public static readonly SceneMapData Crossroads_49 = new SceneMapData("Crossroads_49", "Crossroads");
         public static readonly SceneMapData Crossroads_52 = new SceneMapData("Crossroads_52", "Crossroads");
-        public static readonly SceneMapData Room_temple = new SceneMapData("Room_temple", "Crossroads", "Temple of the Black Egg", false);
-        public static readonly SceneMapData Crossroads_ShamanTemple = new SceneMapData("Crossroads_ShamanTemple", "Crossroads", "Ancestral Mound", false);
+        public static readonly SceneMapData Room_temple = new SceneMapData("Room_temple", null, "Temple of the Black Egg");
+        public static readonly SceneMapData Crossroads_ShamanTemple = new SceneMapData("Crossroads_ShamanTemple", null, "Ancestral Mound");
 
         // Deepnest
         public static readonly SceneMapData Abyss_03_b = new SceneMapData("Abyss_03_b", "Deepnest");
@@ -384,7 +384,13 @@ namespace CabbyCodes.Scenes
         public static readonly SceneMapData Waterways_14 = new SceneMapData("Waterways_14", "Waterways");
         public static readonly SceneMapData Waterways_15 = new SceneMapData("Waterways_15", "Waterways");
 
+        // Rooms
+        public static readonly SceneMapData Room_mapper = new SceneMapData("Room_mapper", null, "Map Shop");
+        public static readonly SceneMapData Room_shop = new SceneMapData("Room_shop", null, "Sly Shop");
+        public static readonly SceneMapData Room_Town_Stag_Station = new SceneMapData("Room_Town_Stag_Station", null, "Dirtmouth Stag Station");
+
         // Internal
-        public static readonly SceneMapData Quit_To_Menu = new SceneMapData("Quit_To_Menu", null);
+        public static readonly SceneMapData Cinematic_Stag_travel = new SceneMapData("Cinematic_Stag_travel");
+        public static readonly SceneMapData Quit_To_Menu = new SceneMapData("Quit_To_Menu");
     }
 } 
