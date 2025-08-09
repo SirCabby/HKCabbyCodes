@@ -131,8 +131,7 @@ namespace CabbyCodes.Scenes
         public static readonly SceneMapData Crossroads_48 = new SceneMapData("Crossroads_48", "Crossroads");
         public static readonly SceneMapData Crossroads_49 = new SceneMapData("Crossroads_49", "Crossroads");
         public static readonly SceneMapData Crossroads_52 = new SceneMapData("Crossroads_52", "Crossroads");
-        public static readonly SceneMapData Room_temple = new SceneMapData("Room_temple", null, "Temple of the Black Egg");
-        public static readonly SceneMapData Crossroads_ShamanTemple = new SceneMapData("Crossroads_ShamanTemple", null, "Ancestral Mound");
+        public static readonly SceneMapData Crossroads_10_boss_defeated = new SceneMapData("Crossroads_10_boss_defeated");
 
         // Deepnest
         public static readonly SceneMapData Abyss_03_b = new SceneMapData("Abyss_03_b", "Deepnest");
@@ -182,7 +181,7 @@ namespace CabbyCodes.Scenes
         public static readonly SceneMapData Fungus3_27 = new SceneMapData("Fungus3_27", "FogCanyon");
         public static readonly SceneMapData Fungus3_28 = new SceneMapData("Fungus3_28", "FogCanyon");
         public static readonly SceneMapData Fungus3_30 = new SceneMapData("Fungus3_30", "FogCanyon");
-        public static readonly SceneMapData Fungus3_35 = new SceneMapData("Fungus3_35", "FogCanyon");
+        public static readonly SceneMapData Fungus3_35 = new SceneMapData("Fungus3_35", "FogCanyon", "Banker room");
         public static readonly SceneMapData Fungus3_44 = new SceneMapData("Fungus3_44", "FogCanyon");
         public static readonly SceneMapData Fungus3_47 = new SceneMapData("Fungus3_47", "FogCanyon");
 
@@ -247,15 +246,15 @@ namespace CabbyCodes.Scenes
         public static readonly SceneMapData Fungus1_21 = new SceneMapData("Fungus1_21", "Greenpath");
         public static readonly SceneMapData Fungus1_22 = new SceneMapData("Fungus1_22", "Greenpath");
         public static readonly SceneMapData Fungus1_25 = new SceneMapData("Fungus1_25", "Greenpath");
-        public static readonly SceneMapData Fungus1_26 = new SceneMapData("Fungus1_26", "Greenpath");
+        public static readonly SceneMapData Fungus1_26 = new SceneMapData("Fungus1_26", "Greenpath", "Lake of Unn");
         public static readonly SceneMapData Fungus1_29 = new SceneMapData("Fungus1_29", "Greenpath");
         public static readonly SceneMapData Fungus1_30 = new SceneMapData("Fungus1_30", "Greenpath");
         public static readonly SceneMapData Fungus1_31 = new SceneMapData("Fungus1_31", "Greenpath");
         public static readonly SceneMapData Fungus1_32 = new SceneMapData("Fungus1_32", "Greenpath");
         public static readonly SceneMapData Fungus1_34 = new SceneMapData("Fungus1_34", "Greenpath");
-        public static readonly SceneMapData Fungus1_36 = new SceneMapData("Fungus1_36", "Greenpath");
         public static readonly SceneMapData Fungus1_37 = new SceneMapData("Fungus1_37", "Greenpath");
         public static readonly SceneMapData Fungus1_Slug = new SceneMapData("Fungus1_Slug", "Greenpath");
+        public static readonly SceneMapData Fungus1_04_boss = new SceneMapData("Fungus1_04_boss");
 
         // Mines
         public static readonly SceneMapData Mines_01 = new SceneMapData("Mines_01", "Mines");
@@ -337,6 +336,7 @@ namespace CabbyCodes.Scenes
         public static readonly SceneMapData RestingGrounds_17 = new SceneMapData("RestingGrounds_17", "RestingGrounds");
         public static readonly SceneMapData Ruins2_10 = new SceneMapData("Ruins2_10", "RestingGrounds");
         public static readonly SceneMapData RestingGrounds_10 = new SceneMapData("RestingGrounds_10", "RestingGrounds");
+        public static readonly SceneMapData RestingGrounds_02_boss = new SceneMapData("RestingGrounds_02_boss");
 
         // RoyalGardens
         public static readonly SceneMapData Deepnest_43 = new SceneMapData("Deepnest_43", "RoyalGardens");
@@ -385,8 +385,14 @@ namespace CabbyCodes.Scenes
         public static readonly SceneMapData Waterways_15 = new SceneMapData("Waterways_15", "Waterways");
 
         // Rooms
+        public static readonly SceneMapData Crossroads_ShamanTemple = new SceneMapData("Crossroads_ShamanTemple", null, "Ancestral Mound");
+        public static readonly SceneMapData Fungus1_35 = new SceneMapData("Fungus1_35", null, "Stone Sanctuary");
+        public static readonly SceneMapData Fungus1_36 = new SceneMapData("Fungus1_36", null, "Stone Sanctuary Mask Room");
         public static readonly SceneMapData Room_mapper = new SceneMapData("Room_mapper", null, "Map Shop");
+        public static readonly SceneMapData Room_ruinhouse = new SceneMapData("Room_ruinhouse", null, "Sly's rescue room");
         public static readonly SceneMapData Room_shop = new SceneMapData("Room_shop", null, "Sly Shop");
+        public static readonly SceneMapData Room_Slug_Shrine = new SceneMapData("Room_Slug_Shrine", null, "Slug Shrine");
+        public static readonly SceneMapData Room_temple = new SceneMapData("Room_temple", null, "Temple of the Black Egg");
         public static readonly SceneMapData Room_Town_Stag_Station = new SceneMapData("Room_Town_Stag_Station", null, "Dirtmouth Stag Station");
 
         // Internal

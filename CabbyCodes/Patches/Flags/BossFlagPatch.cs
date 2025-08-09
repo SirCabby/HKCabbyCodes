@@ -28,6 +28,8 @@ namespace CabbyCodes.Patches.Flags
             // Boss Flags
             Add(FlagInstances.falseKnightDefeated, SceneInstances.Crossroads_10, new Vector2(57, 28));
             Add(FlagInstances.Crossroads_09__Mawlek_Body, SceneInstances.Crossroads_09, new Vector2(39, 5));
+            Add(FlagInstances.noEyesDefeated, SceneInstances.Fungus1_35, new Vector2(46, 4));
+            Add(FlagInstances.xeroDefeated, SceneInstances.RestingGrounds_02, new Vector2(93, 12));
             
             return locations;
         }
@@ -38,6 +40,7 @@ namespace CabbyCodes.Patches.Flags
             {
                 FlagInstances.falseKnightDefeated,
                 FlagInstances.Crossroads_09__Mawlek_Body,
+                FlagInstances.xeroDefeated
             };
         }
 

@@ -12,13 +12,15 @@ namespace CabbyCodes.Patches.Flags
                 FlagInstances.openedMapperShop,
                 FlagInstances.openedTownBuilding,
                 FlagInstances.jijiDoorUnlocked,
+                FlagInstances.bankerAccountPurchased,
+                FlagInstances.bankerBalance,
                 FlagInstances.menderSignBroken,
                 FlagInstances.menderState, // Might need to merge with prior flag
                 FlagInstances.crossroadsInfected,
                 FlagInstances.crossroadsMawlekWall,
                 FlagInstances.shamanPillar,
-
-                FlagInstances.noEyesPinned, // keep?
+                FlagInstances.noEyesPinned,
+                FlagInstances.xeroPinned
             };
         }
     }

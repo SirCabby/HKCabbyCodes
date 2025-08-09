@@ -41,7 +41,7 @@ namespace CabbyCodes.Patches
             Add(SceneInstances.Abyss_19);
             
             // Crossroads
-            Add(SceneInstances.Crossroads_03);
+            Add(SceneInstances.Crossroads_03, new Vector2(7, 42));
             Add(SceneInstances.Crossroads_05);
             Add(SceneInstances.Crossroads_31, new Vector2(23, 14));
             Add(SceneInstances.Crossroads_35, new Vector2(7, 4));
@@ -60,7 +60,7 @@ namespace CabbyCodes.Patches
             Add(SceneInstances.Fungus1_06, new Vector2(154, 22));
             Add(SceneInstances.Fungus1_07, new Vector2(51, 13));
             Add(SceneInstances.Fungus1_13);
-            Add(SceneInstances.Fungus1_21);
+            Add(SceneInstances.Fungus1_21, new Vector2(83, 25));
             Add(SceneInstances.Fungus1_28);
             Add(SceneInstances.Fungus2_18);
             Add(SceneInstances.Fungus2_20);

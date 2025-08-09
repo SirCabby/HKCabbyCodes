@@ -43,6 +43,7 @@ namespace CabbyCodes.Patches.Teleport
             new TeleportLocation(SceneInstances.Town.SceneName, SceneInstances.Town.ReadableName, new Vector2(136, 12)),
             new TeleportLocation(SceneInstances.Crossroads_02.SceneName, SceneInstances.Room_temple.ReadableName, new Vector2(41, 5)),
             new TeleportLocation(SceneInstances.Crossroads_38.SceneName, "The Grubfather", new Vector2(64, 4)),
+            new TeleportLocation(SceneInstances.RestingGrounds_07.SceneName, "The Seer", new Vector2(30, 10)),
         };
 
         /// <summary>

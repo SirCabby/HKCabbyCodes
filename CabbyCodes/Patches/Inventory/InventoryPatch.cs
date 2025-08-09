@@ -349,8 +349,11 @@ namespace CabbyCodes.Patches.Inventory
                 CreateHeartPiecePanel(FlagInstances.Crossroads_09__Heart_Piece),
                 CreateHeartPiecePanel(FlagInstances.Crossroads_13__Heart_Piece),
                 CreateHeartPiecePanel(FlagInstances.Fungus1_36__Heart_Piece),
+                CreateHeartPiecePanel(FlagInstances.Fungus2_01__Heart_Piece),
                 CreateHeartPiecePanel(FlagInstances.slyShellFrag1),
                 CreateHeartPiecePanel(FlagInstances.slyShellFrag2),
+                CreateHeartPiecePanel(FlagInstances.slyShellFrag3),
+                CreateHeartPiecePanel(FlagInstances.slyShellFrag4),
             };
             
             return panels;
