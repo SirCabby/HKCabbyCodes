@@ -2,7 +2,6 @@ using CabbyCodes.Flags;
 using CabbyCodes.Patches.BasePatches;
 using CabbyMenu.UI.CheatPanels;
 using CabbyMenu.SyncedReferences;
-using CabbyCodes.Scenes;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -162,7 +161,7 @@ namespace CabbyCodes.Patches.Flags
                     }
                 );
                 
-                panels.Add(new TogglePanel(syncedReference, SceneManagement.GetSceneData(baseFlag.SceneName)?.ReadableName));
+                panels.Add(new TogglePanel(syncedReference, baseFlag.Scene?.ReadableName));
             }
             
             return panels;

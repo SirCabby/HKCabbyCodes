@@ -1,4 +1,4 @@
-namespace CabbyCodes
+namespace CabbyCodes.CheatState
 {
     /// <summary>
     /// Interface for cheats that can have their state restored after scene transitions.

@@ -1,3 +1,5 @@
+using CabbyCodes.Scenes;
+
 namespace CabbyCodes.Flags
 {
     public class FlagDef
@@ -5,15 +7,16 @@ namespace CabbyCodes.Flags
         private readonly string _readableName;
 
         public string Id { get; }
-        public string SceneName { get; }
+        public SceneMapData Scene { get; }
+        public string SceneName => Scene?.SceneName ?? "Global";
         public bool SemiPersistent { get; }
         public string Type { get; }
         public string ReadableName => string.IsNullOrEmpty(_readableName) ? Id : _readableName;
 
-        public FlagDef(string id, string sceneName, bool semiPersistent, string type, string readableName = "")
+        public FlagDef(string id, SceneMapData scene, bool semiPersistent, string type, string readableName = "")
         {
             Id = id;
-            SceneName = sceneName;
+            Scene = scene;
             SemiPersistent = semiPersistent;
             Type = type;
             _readableName = readableName;

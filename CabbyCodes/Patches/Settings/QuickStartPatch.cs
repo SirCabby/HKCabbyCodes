@@ -116,12 +116,17 @@ namespace CabbyCodes.Patches.Settings
         /// </summary>
         public static void AddPanel()
         {
-            // Add toggle for skipping intro screens
-            TogglePanel skipIntroToggle = new TogglePanel(new SkipIntroReference(), "Skip Intro Screens");
+            // Add toggle for skipping intro screens using delegate reference
+            TogglePanel skipIntroToggle = new TogglePanel(
+                new DelegateReference<bool>(GetSkipIntroScreens, SetSkipIntroScreens),
+                "Skip Intro Screens");
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(skipIntroToggle);
 
-            // Add combined quick load panel with toggle and save slot input
-            QuickLoadPanel quickLoadPanel = new QuickLoadPanel(new QuickStartPatch(), new SaveSlotReference(), "Enable Quick Load");
+            // Add combined quick load panel with toggle and save slot input using delegate reference
+            QuickLoadPanel quickLoadPanel = new QuickLoadPanel(
+                new QuickStartPatch(),
+                new DelegateReference<int>(GetSaveSlot, SetSaveSlot),
+                "Enable Quick Load");
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(quickLoadPanel);
         }
 
@@ -317,24 +322,6 @@ namespace CabbyCodes.Patches.Settings
             AsyncOperation loadOperation = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync("Menu_Title");
             loadOperation.allowSceneActivation = true;
             yield return loadOperation;
-        }
-
-        /// <summary>
-        /// Reference class for save slot input field.
-        /// </summary>
-        private class SaveSlotReference : ISyncedReference<int>
-        {
-            public int Get() => GetSaveSlot();
-            public void Set(int value) => SetSaveSlot(value);
-        }
-
-        /// <summary>
-        /// Reference class for skip intro toggle.
-        /// </summary>
-        private class SkipIntroReference : ISyncedReference<bool>
-        {
-            public bool Get() => GetSkipIntroScreens();
-            public void Set(bool value) => SetSkipIntroScreens(value);
         }
     }
 } 

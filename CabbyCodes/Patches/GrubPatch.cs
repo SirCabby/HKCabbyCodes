@@ -1,7 +1,6 @@
 using CabbyMenu.UI.CheatPanels;
 using System.Collections.Generic;
 using System.Linq;
-using CabbyCodes.Scenes;
 using static CabbyCodes.Scenes.SceneManagement;
 using static CabbyCodes.Scenes.Areas;
 using CabbyCodes.Flags;
@@ -17,123 +16,96 @@ namespace CabbyCodes.Patches
     public class GrubPatch : BoolPatch
     {
         /// <summary>
-        /// The identifier for grub bottle persistent data.
-        /// </summary>
-        private static readonly string grubId = "Grub Bottle";
-
-        /// <summary>
         /// Dictionary of all grub locations with their teleport coordinates
         /// </summary>
-        private static readonly Dictionary<SceneMapData, TeleportLocation> grubLocations = CreateGrubLocations();
+        private static readonly Dictionary<FlagDef, TeleportLocation> grubLocations = CreateGrubLocations();
 
         /// <summary>
         /// Creates the grub locations dictionary with teleport coordinates
         /// </summary>
-        private static Dictionary<SceneMapData, TeleportLocation> CreateGrubLocations()
+        private static Dictionary<FlagDef, TeleportLocation> CreateGrubLocations()
         {
-            var locations = new Dictionary<SceneMapData, TeleportLocation>();
-            
-            // Helper method to add a scene with optional teleport coordinates
-            void Add(SceneMapData scene, Vector2? teleportCoords = null) => locations[scene] = teleportCoords.HasValue ? new TeleportLocation(scene, teleportCoords.Value) : null;
+            var locations = new Dictionary<FlagDef, TeleportLocation>();
+
+            void Add(FlagDef flag, Vector2? teleportCoords = null) => locations[flag] = teleportCoords.HasValue ? new TeleportLocation(flag.Scene, teleportCoords.Value) : null;
             
             // Abyss
-            Add(SceneInstances.Abyss_17);
-            Add(SceneInstances.Abyss_19);
+            Add(FlagInstances.Abyss_17__Grub_Bottle);
+            Add(FlagInstances.Abyss_19__Grub_Bottle);
             
             // Crossroads
-            Add(SceneInstances.Crossroads_03, new Vector2(7, 42));
-            Add(SceneInstances.Crossroads_05);
-            Add(SceneInstances.Crossroads_31, new Vector2(23, 14));
-            Add(SceneInstances.Crossroads_35, new Vector2(7, 4));
-            Add(SceneInstances.Crossroads_48, new Vector2(52, 4));
+            Add(FlagInstances.Crossroads_03__Grub_Bottle, new Vector2(7, 42));
+            Add(FlagInstances.Crossroads_05__Grub_Bottle);
+            Add(FlagInstances.Crossroads_31__Grub_Bottle, new Vector2(23, 14));
+            Add(FlagInstances.Crossroads_35__Grub_Bottle, new Vector2(7, 4));
+            Add(FlagInstances.Crossroads_48__Grub_Bottle, new Vector2(52, 4));
             
             // Deepnest
-            Add(SceneInstances.Deepnest_03);
-            Add(SceneInstances.Deepnest_31);
-            Add(SceneInstances.Deepnest_36);
-            Add(SceneInstances.Deepnest_39);
-            Add(SceneInstances.Deepnest_East_11);
-            Add(SceneInstances.Deepnest_East_14);
-            Add(SceneInstances.Deepnest_Spider_Town);
+            Add(FlagInstances.Deepnest_03__Grub_Bottle);
+            Add(FlagInstances.Deepnest_31__Grub_Bottle);
+            Add(FlagInstances.Deepnest_36__Grub_Bottle);
+            Add(FlagInstances.Deepnest_39__Grub_Bottle);
+            Add(FlagInstances.Deepnest_East_11__Grub_Bottle);
+            Add(FlagInstances.Deepnest_East_14__Grub_Bottle);
+            Add(FlagInstances.Deepnest_Spider_Town__Grub_Bottle);
             
             // Fungal Wastes
-            Add(SceneInstances.Fungus1_06, new Vector2(154, 22));
-            Add(SceneInstances.Fungus1_07, new Vector2(51, 13));
-            Add(SceneInstances.Fungus1_13);
-            Add(SceneInstances.Fungus1_21, new Vector2(83, 25));
-            Add(SceneInstances.Fungus1_28);
-            Add(SceneInstances.Fungus2_18);
-            Add(SceneInstances.Fungus2_20);
-            Add(SceneInstances.Fungus3_10);
-            Add(SceneInstances.Fungus3_22);
-            Add(SceneInstances.Fungus3_47);
-            Add(SceneInstances.Fungus3_48);
+            Add(FlagInstances.Fungus1_06__Grub_Bottle, new Vector2(154, 22));
+            Add(FlagInstances.Fungus1_07__Grub_Bottle, new Vector2(51, 13));
+            Add(FlagInstances.Fungus1_13__Grub_Bottle);
+            Add(FlagInstances.Fungus1_21__Grub_Bottle, new Vector2(83, 25));
+            Add(FlagInstances.Fungus1_28__Grub_Bottle);
+            Add(FlagInstances.Fungus2_18__Grub_Bottle);
+            Add(FlagInstances.Fungus2_20__Grub_Bottle);
+            Add(FlagInstances.Fungus3_10__Grub_Bottle);
+            Add(FlagInstances.Fungus3_22__Grub_Bottle);
+            Add(FlagInstances.Fungus3_47__Grub_Bottle);
+            Add(FlagInstances.Fungus3_48__Grub_Bottle);
 
             // Hive
-            Add(SceneInstances.Hive_03);
-            Add(SceneInstances.Hive_04);
+            Add(FlagInstances.Hive_03__Grub_Bottle);
+            Add(FlagInstances.Hive_04__Grub_Bottle);
             
             // Mines
-            Add(SceneInstances.Mines_03);
-            Add(SceneInstances.Mines_04);
-            Add(SceneInstances.Mines_16);
-            Add(SceneInstances.Mines_19);
-            Add(SceneInstances.Mines_24);
-            Add(SceneInstances.Mines_31);
-            Add(SceneInstances.Mines_35);
+            Add(FlagInstances.Mines_03__Grub_Bottle);
+            Add(FlagInstances.Mines_04__Grub_Bottle);
+            Add(FlagInstances.Mines_16__Grub_Bottle);
+            Add(FlagInstances.Mines_19__Grub_Bottle);
+            Add(FlagInstances.Mines_24__Grub_Bottle);
+            Add(FlagInstances.Mines_31__Grub_Bottle);
+            Add(FlagInstances.Mines_35__Grub_Bottle);
             
             // Resting Grounds
-            Add(SceneInstances.RestingGrounds_10);
+            Add(FlagInstances.RestingGrounds_10__Grub_Bottle);
             
             // City of Tears
-            Add(SceneInstances.Ruins_House_01);
-            Add(SceneInstances.Ruins1_05);
-            Add(SceneInstances.Ruins1_32);
-            Add(SceneInstances.Ruins2_03);
-            Add(SceneInstances.Ruins2_07);
-            Add(SceneInstances.Ruins2_11);
+            Add(FlagInstances.Ruins_House_01__Grub_Bottle);
+            Add(FlagInstances.Ruins1_05__Grub_Bottle);
+            Add(FlagInstances.Ruins1_32__Grub_Bottle);
+            Add(FlagInstances.Ruins2_03__Grub_Bottle);
+            Add(FlagInstances.Ruins2_07__Grub_Bottle);
+            Add(FlagInstances.Ruins2_11__Grub_Bottle);
             
             // Waterways
-            Add(SceneInstances.Waterways_04);
-            Add(SceneInstances.Waterways_13);
-            Add(SceneInstances.Waterways_14);
+            Add(FlagInstances.Waterways_04__Grub_Bottle);
+            Add(FlagInstances.Waterways_13__Grub_Bottle);
+            Add(FlagInstances.Waterways_14__Grub_Bottle);
             
             return locations;
         }
 
         /// <summary>
-        /// The scene name this grub patch is associated with.
+        /// The flag that tracks this grub bottle.
         /// </summary>
-        private readonly string sceneName;
+        private readonly FlagDef grubFlag;
 
         /// <summary>
-        /// Initializes a new instance of the GrubPatch class.
+        /// Initializes a new instance of the GrubPatch class with a predefined FlagDef.
         /// </summary>
-        /// <param name="sceneName">The scene name where the grub is located.</param>
-        public GrubPatch(string sceneName) : base(CreateGrubFlagDef(sceneName), GetGrubDisplayName(sceneName))
+        /// <param name="grubFlag">The flag definition representing this grub bottle.</param>
+        public GrubPatch(FlagDef grubFlag) : base(grubFlag, grubFlag.Scene?.ReadableName ?? grubFlag.SceneName)
         {
-            this.sceneName = sceneName;
-        }
-
-        /// <summary>
-        /// Creates a FlagDef for a grub in the specified scene.
-        /// </summary>
-        /// <param name="sceneName">The scene name where the grub is located.</param>
-        /// <returns>A FlagDef for the grub.</returns>
-        private static FlagDef CreateGrubFlagDef(string sceneName)
-        {
-            return new FlagDef(grubId, sceneName, false, "PersistentBoolData", GetGrubDisplayName(sceneName));
-        }
-
-        /// <summary>
-        /// Gets the display name for a grub in the specified scene.
-        /// </summary>
-        /// <param name="sceneName">The scene name where the grub is located.</param>
-        /// <returns>The display name for the grub.</returns>
-        private static string GetGrubDisplayName(string sceneName)
-        {
-            var sceneData = GetSceneData(sceneName);
-            return sceneData?.ReadableName ?? sceneName;
+            this.grubFlag = grubFlag;
         }
 
         /// <summary>
@@ -142,8 +114,7 @@ namespace CabbyCodes.Patches
         /// <returns>True if the grub has been rescued, false otherwise.</returns>
         public override bool Get()
         {
-            // true = got it
-            return FlagManager.GetBoolFlag(grubId, sceneName);
+            return FlagManager.GetBoolFlag(grubFlag);
         }
 
         /// <summary>
@@ -154,9 +125,11 @@ namespace CabbyCodes.Patches
         {
             bool hasGrub = Get();
 
+            var sceneName = grubFlag.SceneName;
+
             if (value && !hasGrub)
             {
-                FlagManager.SetBoolFlag(grubId, sceneName, true);
+                FlagManager.SetBoolFlag(grubFlag, true);
 
                 if (!FlagManager.ListFlagContains(FlagInstances.scenesGrubRescued, sceneName))
                 {
@@ -166,7 +139,7 @@ namespace CabbyCodes.Patches
             }
             else if (!value && hasGrub)
             {
-                FlagManager.SetBoolFlag(grubId, sceneName, false);
+                FlagManager.SetBoolFlag(grubFlag, false);
 
                 if (FlagManager.ListFlagContains(FlagInstances.scenesGrubRescued, sceneName))
                 {
@@ -177,32 +150,22 @@ namespace CabbyCodes.Patches
         }
 
         /// <summary>
-        /// Gets the area name for a given scene name.
-        /// </summary>
-        /// <param name="sceneName">The scene name to look up.</param>
-        /// <returns>The area name, or "Unknown" if not found.</returns>
-        private static string GetAreaForScene(string sceneName)
-        {
-            var sceneData = GetSceneData(sceneName);
-            return sceneData?.AreaName ?? "Unknown";
-        }
-
-        /// <summary>
         /// Groups grub scenes by area.
         /// </summary>
         /// <returns>Dictionary mapping area names to lists of grub scenes in that area.</returns>
-        private static Dictionary<string, List<SceneMapData>> GroupGrubsByArea()
+        private static Dictionary<string, List<FlagDef>> GroupGrubsByArea()
         {
-            var groupedGrubs = new Dictionary<string, List<SceneMapData>>();
+            var groupedGrubs = new Dictionary<string, List<FlagDef>>();
 
-            foreach (var sceneData in grubLocations.Keys)
+            foreach (var flag in grubLocations.Keys)
             {
-                string area = sceneData.AreaName;
+                string area = flag.Scene.AreaName;
                 if (!groupedGrubs.ContainsKey(area))
                 {
-                    groupedGrubs[area] = new List<SceneMapData>();
+                    groupedGrubs[area] = new List<FlagDef>();
                 }
-                groupedGrubs[area].Add(sceneData);
+                
+                groupedGrubs[area].Add(flag);
             }
 
             return groupedGrubs;
@@ -230,24 +193,24 @@ namespace CabbyCodes.Patches
                 CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Area: " + readableAreaName).SetColor(CheatPanel.subHeaderColor));
                 
                 // Add grub panels for this area
-                foreach (var sceneData in groupedGrubs[area])
+                foreach (var grubFlag in groupedGrubs[area])
                 {
-                    string displayName = sceneData.ReadableName;
+                    string displayName = grubFlag.Scene.ReadableName;
                     
                     // Check if this grub has teleport coordinates defined
-                    if (grubLocations.TryGetValue(sceneData, out var grubTeleportLocation) && grubTeleportLocation != null)
+                    if (grubLocations.TryGetValue(grubFlag, out var grubTeleportLocation) && grubTeleportLocation != null)
                     {
                         // Create panel with toggle and teleport button
-                        var grubPatch = new GrubPatch(sceneData.SceneName);
+                        var grubPatch = new GrubPatch(grubFlag);
                         CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new ToggleWithTeleportPanel(
                             grubPatch, 
                             () => TeleportService.DoTeleport(grubTeleportLocation), 
-                            GetGrubDisplayName(sceneData.SceneName)));
+                            grubFlag.Scene.ReadableName));
                     }
                     else
                     {
                         // Create panel with just toggle (no teleport button)
-                        var grubPatch = new GrubPatch(sceneData.SceneName);
+                        var grubPatch = new GrubPatch(grubFlag);
                         CabbyCodesPlugin.cabbyMenu.AddCheatPanel(grubPatch.CreatePanel());
                     }
                 }

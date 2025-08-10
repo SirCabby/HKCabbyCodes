@@ -3,6 +3,7 @@ using System.Reflection;
 using HarmonyLib;
 using CabbyMenu;
 using CabbyCodes.Flags;
+using CabbyCodes.CheatState;
 
 namespace CabbyCodes.Patches.Player
 {

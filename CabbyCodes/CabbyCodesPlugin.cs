@@ -6,7 +6,6 @@ using CabbyCodes.Patches;
 using CabbyCodes.Patches.Achievements;
 using CabbyCodes.Patches.Flags;
 using CabbyCodes.Patches.Flags.Triage;
-using CabbyCodes.Patches.Inventory;
 using CabbyCodes.Patches.Maps;
 using CabbyCodes.Patches.Player;
 using CabbyCodes.Patches.Settings;

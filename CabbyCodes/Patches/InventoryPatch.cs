@@ -2,12 +2,11 @@ using CabbyCodes.Patches.BasePatches;
 using CabbyCodes.Flags;
 using CabbyMenu.UI.CheatPanels;
 using CabbyMenu.SyncedReferences;
-using CabbyCodes.Scenes;
 using System;
 using System.Collections.Generic;
 using CabbyCodes.SavedGames;
 
-namespace CabbyCodes.Patches.Inventory
+namespace CabbyCodes.Patches
 {
     public class InventoryPatch : BasePatch
     {
@@ -67,10 +66,6 @@ namespace CabbyCodes.Patches.Inventory
             panels.Add(new InfoPanel("Keys").SetColor(CheatPanel.subHeaderColor));
             panels.AddRange(CreateKeyPanels());
 
-            // Wanderer's Journals section
-            panels.Add(new InfoPanel("Wanderer's Journals").SetColor(CheatPanel.subHeaderColor));
-            panels.AddRange(CreateWanderersJournalPanels());
-
             // Map Accessories section
             panels.Add(new InfoPanel("Map Accessories").SetColor(CheatPanel.subHeaderColor));
             panels.AddRange(CreateMapAccessoryPanels());
@@ -84,6 +79,10 @@ namespace CabbyCodes.Patches.Inventory
             panels.Add(new InfoPanel("Vessel Fragments").SetColor(CheatPanel.subHeaderColor));
             panels.Add(new InfoPanel("May require restart to take effect").SetColor(CheatPanel.warningColor));
             panels.AddRange(CreateVesselFragmentPanels());
+
+            // Wanderer's Journals section
+            panels.Add(new InfoPanel("Wanderer's Journals").SetColor(CheatPanel.subHeaderColor));
+            panels.AddRange(CreateWanderersJournalPanels());
 
             return panels;
         }
@@ -111,12 +110,63 @@ namespace CabbyCodes.Patches.Inventory
         {
             var panels = new List<CheatPanel>
             {
-                new DropdownPanel(new MothwingCloakReference(), FlagInstances.hasDash.ReadableName + " / " + FlagInstances.hasShadowDash.ReadableName, Constants.DEFAULT_PANEL_HEIGHT),
+                new DropdownPanel(new DelegateValueList(
+                    // Getter: 0 = NONE, 1 = Dash only, 2 = Shadow Dash
+                    () => {
+                        if (!FlagManager.GetBoolFlag(FlagInstances.hasDash)) return 0;
+                        else if (!FlagManager.GetBoolFlag(FlagInstances.hasShadowDash)) return 1;
+                        return 2;
+                    },
+                    // Setter
+                    value => {
+                        if (value > 1)
+                        {
+                            FlagManager.SetBoolFlag(FlagInstances.hasDash, true);
+                            FlagManager.SetBoolFlag(FlagInstances.hasShadowDash, true);
+                        }
+                        else if (value == 1)
+                        {
+                            FlagManager.SetBoolFlag(FlagInstances.hasDash, true);
+                            FlagManager.SetBoolFlag(FlagInstances.hasShadowDash, false);
+                        }
+                        else
+                        {
+                            FlagManager.SetBoolFlag(FlagInstances.hasDash, false);
+                            FlagManager.SetBoolFlag(FlagInstances.hasShadowDash, false);
+                        }
+                    },
+                    // Value list
+                    () => new List<string> { "NONE", FlagInstances.hasDash.ReadableName, FlagInstances.hasShadowDash.ReadableName }
+                ), FlagInstances.hasDash.ReadableName + " / " + FlagInstances.hasShadowDash.ReadableName, Constants.DEFAULT_PANEL_HEIGHT),
                 new BoolPatch(FlagInstances.hasDoubleJump).CreatePanel(),
                 new BoolPatch(FlagInstances.hasWalljump).CreatePanel(),
                 new BoolPatch(FlagInstances.hasSuperDash).CreatePanel(),
                 new BoolPatch(FlagInstances.hasAcidArmour).CreatePanel(),
-                new DropdownPanel(new DreamNailReference(), FlagInstances.hasDreamNail.ReadableName + " / " + FlagInstances.dreamNailUpgraded.ReadableName, Constants.DEFAULT_PANEL_HEIGHT),
+                new DropdownPanel(new DelegateValueList(
+                    () => {
+                        if (FlagManager.GetBoolFlag(FlagInstances.dreamNailUpgraded)) return 2;
+                        else if (FlagManager.GetBoolFlag(FlagInstances.hasDreamNail)) return 1;
+                        return 0;
+                    },
+                    value => {
+                        if (value == 2)
+                        {
+                            FlagManager.SetBoolFlag(FlagInstances.hasDreamNail, true);
+                            FlagManager.SetBoolFlag(FlagInstances.dreamNailUpgraded, true);
+                        }
+                        else if (value == 1)
+                        {
+                            FlagManager.SetBoolFlag(FlagInstances.hasDreamNail, true);
+                            FlagManager.SetBoolFlag(FlagInstances.dreamNailUpgraded, false);
+                        }
+                        else
+                        {
+                            FlagManager.SetBoolFlag(FlagInstances.hasDreamNail, false);
+                            FlagManager.SetBoolFlag(FlagInstances.dreamNailUpgraded, false);
+                        }
+                    },
+                    () => new List<string> { "NONE", FlagInstances.hasDreamNail.ReadableName, FlagInstances.dreamNailUpgraded.ReadableName }
+                ), FlagInstances.hasDreamNail.ReadableName + " / " + FlagInstances.dreamNailUpgraded.ReadableName, Constants.DEFAULT_PANEL_HEIGHT),
                 new BoolPatch(FlagInstances.hasDreamGate).CreatePanel(),
                                         new BoolPatch(FlagInstances.unlockedCompletionRate).CreatePanel(),
                 new BoolPatch(FlagInstances.salubraBlessing).CreatePanel()
@@ -169,7 +219,31 @@ namespace CabbyCodes.Patches.Inventory
                 new BoolPatch(FlagInstances.hasPinGrub).CreatePanel(),
                 new BoolPatch(FlagInstances.hasJournal).CreatePanel(),
                 new BoolPatch(FlagInstances.hasHuntersMark).CreatePanel(),
-                new DropdownPanel(new DelicateFlowerReference(), FlagInstances.hasXunFlower.ReadableName, Constants.DEFAULT_PANEL_HEIGHT),
+                new DropdownPanel(new DelegateValueList(
+                    () => {
+                        if (FlagManager.GetBoolFlag(FlagInstances.hasXunFlower) && !FlagManager.GetBoolFlag(FlagInstances.xunFlowerBroken)) return 2;
+                        else if (FlagManager.GetBoolFlag(FlagInstances.hasXunFlower) && FlagManager.GetBoolFlag(FlagInstances.xunFlowerBroken)) return 1;
+                        return 0;
+                    },
+                    value => {
+                        if (value == 1)
+                        {
+                            FlagManager.SetBoolFlag(FlagInstances.hasXunFlower, true);
+                            FlagManager.SetBoolFlag(FlagInstances.xunFlowerBroken, true);
+                        }
+                        else if (value == 2)
+                        {
+                            FlagManager.SetBoolFlag(FlagInstances.hasXunFlower, true);
+                            FlagManager.SetBoolFlag(FlagInstances.xunFlowerBroken, false);
+                        }
+                        else
+                        {
+                            FlagManager.SetBoolFlag(FlagInstances.hasXunFlower, false);
+                            FlagManager.SetBoolFlag(FlagInstances.xunFlowerBroken, false);
+                        }
+                    },
+                    () => new List<string> { "NONE", FlagInstances.xunFlowerBroken.ReadableName, FlagInstances.hasXunFlower.ReadableName }
+                ), FlagInstances.hasXunFlower.ReadableName, Constants.DEFAULT_PANEL_HEIGHT),
                 new BoolPatch(FlagInstances.hasGodfinder).CreatePanel()
             };
 
@@ -529,9 +603,9 @@ namespace CabbyCodes.Patches.Inventory
         private TogglePanel CreateWanderersJournalPanel(FlagDef journalFlag)
         {
             // Determine human-readable label automatically from scene metadata
-            string label = journalFlag.SceneName == "Global"
+            string label = journalFlag.Scene == null
                 ? journalFlag.ReadableName
-                : SceneManagement.GetSceneData(journalFlag.SceneName)?.ReadableName ?? journalFlag.SceneName;
+                : journalFlag.Scene.ReadableName;
 
             return new TogglePanel(new DelegateReference<bool>(
                 () => FlagManager.GetBoolFlag(journalFlag),

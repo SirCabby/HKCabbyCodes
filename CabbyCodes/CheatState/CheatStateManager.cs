@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections.Generic;
 using System;
 
-namespace CabbyCodes
+namespace CabbyCodes.CheatState
 {
     /// <summary>
     /// Manages cheat states across GameManager lifecycle changes and ensures proper state restoration.

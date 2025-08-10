@@ -145,7 +145,6 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
             
             // Calculate available space below the dropdown
             float dropdownBottom = dropdownScreenRect.y; // Y is the bottom in screen coordinates
-            float screenHeight = Screen.height;
             float availableSpaceBelow = dropdownBottom; // Space from bottom of dropdown to bottom of screen
             
             // Add some safety margin (20 pixels) to prevent dropdown from touching screen edge
@@ -922,7 +921,6 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
 
             // Set the handle for the scrollbar
             scrollbarComponent.handleRect = handleRect;
-
         }
 
         public void SetOptions(List<string> options)
@@ -983,7 +981,6 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
             {
                 CreateSingleOptionButton(i);
             }
-
         }
 
         private void ClearExistingOptionButtons()
@@ -1061,7 +1058,6 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
 
             // Store the parent panel reference (which contains the button)
             optionButtons.Add(parentPanel);
-
         }
 
         private void ConfigureOptionLayoutElement(LayoutElement layoutElement)
@@ -1151,7 +1147,6 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
                                     buttonRect.pivot = new Vector2(0, 0.5f); // Left, center Y
                                     buttonRect.sizeDelta = new Vector2(mainButtonWidth - 21f, dynamicOptionHeight);
                                     buttonRect.anchoredPosition = new Vector2(6f, 0); // Left-aligned with 6px padding
-
                                 }
                             }
                         }
@@ -1309,8 +1304,6 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
             ResetScrollPosition();
 
             EnsureProperZOrder();
-
-
         }
 
         private void ConfigurePanelComponents()
@@ -1323,41 +1316,7 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
                 panelImage.color = Constants.DROPDOWN_PANEL_BACKGROUND;
             }
         }
-
-
-
-        /// <summary>
-        /// Gets the screen rect for a RectTransform, converting from world space to screen space.
-        /// </summary>
-        /// <param name="rectTransform">The RectTransform to get bounds for</param>
-        /// <param name="camera">The camera to use for conversion (can be null)</param>
-        /// <returns>The screen rect in pixels</returns>
-        private Rect GetScreenRect(RectTransform rectTransform, Camera camera)
-        {
-            if (rectTransform == null) return new Rect();
-
-            // Get the four corners of the RectTransform in world space
-            Vector3[] corners = new Vector3[4];
-            rectTransform.GetWorldCorners(corners);
-
-            // Convert corners to screen space
-            Vector3[] screenCorners = new Vector3[4];
-            for (int i = 0; i < 4; i++)
-            {
-                screenCorners[i] = camera != null ? 
-                    camera.WorldToScreenPoint(corners[i]) : 
-                    corners[i];
-            }
-
-            // Calculate the bounding rect
-            float minX = Mathf.Min(screenCorners[0].x, screenCorners[1].x, screenCorners[2].x, screenCorners[3].x);
-            float maxX = Mathf.Max(screenCorners[0].x, screenCorners[1].x, screenCorners[2].x, screenCorners[3].x);
-            float minY = Mathf.Min(screenCorners[0].y, screenCorners[1].y, screenCorners[2].y, screenCorners[3].y);
-            float maxY = Mathf.Max(screenCorners[0].y, screenCorners[1].y, screenCorners[2].y, screenCorners[3].y);
-
-            return new Rect(minX, minY, maxX - minX, maxY - minY);
-        }
-
+        
         /// <summary>
         /// Gets accurate screen rect for UI elements using RectTransformUtility.
         /// This method properly handles Canvas scaling and different render modes.
@@ -1405,7 +1364,6 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
                     scrollRectComponent.inertia = false;
                     scrollRectComponent.scrollSensitivity = DEFAULT_SCROLL_SENSITIVITY; // Increased from 10f for faster scrolling
                     scrollRectComponent.elasticity = 0f; // Prevent over-scrolling
-
                 }
 
                 // Ensure ScrollView is properly positioned within the panel
@@ -1453,7 +1411,6 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
                 {
                     viewportMask.enabled = true;
                     viewportMask.showMaskGraphic = false;
-
                 }
 
                 // Force the viewport to update its mask
@@ -1508,12 +1465,12 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
             RectTransform contentRect = content.GetComponent<RectTransform>();
             if (contentRect != null)
             {
-                            // Calculate content size based on ALL options, not just visible ones
-            // This ensures scrolling works when there are more options than can fit
-            // Include top and bottom padding (OPTION_MARGIN) to match the panel height calculation
-            float contentHeight = OPTION_MARGIN + options.Count * dynamicOptionHeight + (options.Count - 1) * OPTION_GAP;
+                // Calculate content size based on ALL options, not just visible ones
+                // This ensures scrolling works when there are more options than can fit
+                // Include top and bottom padding (OPTION_MARGIN) to match the panel height calculation
+                float contentHeight = OPTION_MARGIN + options.Count * dynamicOptionHeight + (options.Count - 1) * OPTION_GAP;
 
-            // Configure content to stretch across viewport width and position at top
+                // Configure content to stretch across viewport width and position at top
                 contentRect.anchorMin = new Vector2(0, 1);
                 contentRect.anchorMax = new Vector2(1, 1);
                 contentRect.pivot = new Vector2(0.5f, 1f);
@@ -1606,14 +1563,6 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
             }
         }
 
-        private void CheckParentCanvasConfiguration()
-        {
-            Canvas parentCanvas = dropdownPanel.GetComponentInParent<Canvas>();
-            if (parentCanvas != null)
-            {
-            }
-        }
-
         // These methods are stubs for external compatibility - implement if needed
         public void SetValue(int value) 
         { 
@@ -1648,7 +1597,7 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
             UpdateMainButtonText();
         }
 
-#pragma warning disable IDE0060 // Remove unused parameter
+        #pragma warning disable IDE0060 // Remove unused parameter
         public void SetFontSize(int size) { /* TODO: implement if needed */ }
         
         /// <summary>

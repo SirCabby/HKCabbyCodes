@@ -97,7 +97,7 @@ namespace CabbyCodes.Scenes
                         continue;
                     
                     // Get the area name for this scene
-                    var sceneData = GetSceneData(flagDef.SceneName);
+                    var sceneData = flagDef.Scene;
                     if (sceneData != null)
                     {
                         string areaName = sceneData.AreaName;

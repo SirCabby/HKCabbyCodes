@@ -21,13 +21,29 @@ namespace CabbyCodes.Patches.SpriteViewer
 
             InitializeSpriteCollections();
 
-            // Collection selector
-            var collectionSelector = new CollectionSelector();
+            // Collection selector using delegate-based reference
+            var collectionSelector = new DelegateValueList(
+                () => selectedCollectionIndex.Get(),
+                value => selectedCollectionIndex.Set(value),
+                () => spriteCollections.Keys.OrderBy(k => k).ToList());
+
             var collectionDropdown = new DropdownPanel(collectionSelector, "Select Collection", Constants.DEFAULT_PANEL_HEIGHT);
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(collectionDropdown);
 
-            // Sprite selector (will be recreated when collection changes)
-            var spriteSelector = new SpriteSelector();
+            // Sprite selector (will be recreated when collection changes) using delegate-based reference
+            var spriteSelector = new DelegateValueList(
+                () => selectedSpriteIndex.Get(),
+                value => selectedSpriteIndex.Set(value),
+                () =>
+                {
+                    var collectionName = GetSelectedCollection();
+                    if (string.IsNullOrEmpty(collectionName) || !collectionSprites.ContainsKey(collectionName))
+                    {
+                        return new List<string>();
+                    }
+                    return collectionSprites[collectionName];
+                });
+
             var spriteDropdown = new DropdownPanel(spriteSelector, "Select Sprite", Constants.DEFAULT_PANEL_HEIGHT);
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(spriteDropdown);
 
@@ -38,7 +54,7 @@ namespace CabbyCodes.Patches.SpriteViewer
             // Hook up the update chain
             collectionDropdown.GetDropDownSync().GetCustomDropdown().onValueChanged.AddListener(_ => 
             {
-                spriteSelector.UpdateSpriteList();
+                RefreshSpriteList();
                 
                 // Store the current panel's background colors
                 var spriteDropdownColor = spriteDropdown.cheatPanel.GetComponent<Image>().color;
@@ -100,7 +116,7 @@ namespace CabbyCodes.Patches.SpriteViewer
             if (spriteCollections.Count > 0)
             {
                 selectedCollectionIndex.Set(0);
-                spriteSelector.UpdateSpriteList();
+                RefreshSpriteList();
                 spriteDropdown.Update();
                 spriteDisplay.UpdateSprite();
             }
@@ -252,74 +268,27 @@ namespace CabbyCodes.Patches.SpriteViewer
             return null;
         }
 
-        private class CollectionSelector : ISyncedValueList
+        // Local helper to ensure sprite index stays in range when list changes
+        private static void RefreshSpriteList()
         {
-            public int Get()
+            var collectionName = GetSelectedCollection();
+            List<string> sprites = new List<string>();
+            if (!string.IsNullOrEmpty(collectionName) && collectionSprites.ContainsKey(collectionName))
             {
-                return selectedCollectionIndex.Get();
+                sprites = collectionSprites[collectionName];
             }
 
-            public void Set(int value)
+            if (sprites.Count > 0)
             {
-                selectedCollectionIndex.Set(value);
-            }
-
-            public List<string> GetValueList()
-            {
-                return spriteCollections.Keys.OrderBy(k => k).ToList();
-            }
-        }
-
-        private class SpriteSelector : ISyncedValueList
-        {
-            public int Get()
-            {
-                return selectedSpriteIndex.Get();
-            }
-
-            public void Set(int value)
-            {
-                selectedSpriteIndex.Set(value);
-            }
-
-            public List<string> GetValueList()
-            {
-                var sprites = GetCurrentSpriteList();
-                return sprites;
-            }
-
-            public void UpdateSpriteList()
-            {
-                var sprites = GetCurrentSpriteList();
-                if (sprites.Count > 0)
-                {
-                    var currentSprite = GetSelectedSprite();
-                    if (!sprites.Contains(currentSprite))
-                    {
-                        selectedSpriteIndex.Set(0);
-                    }
-                }
-                else
+                var currentSprite = GetSelectedSprite();
+                if (!sprites.Contains(currentSprite))
                 {
                     selectedSpriteIndex.Set(0);
                 }
             }
-
-            private List<string> GetCurrentSpriteList()
+            else
             {
-                var collectionName = GetSelectedCollection();
-                if (string.IsNullOrEmpty(collectionName))
-                {
-                    return new List<string>();
-                }
-                
-                if (!collectionSprites.ContainsKey(collectionName))
-                {
-                    return new List<string>();
-                }
-                
-                var sprites = collectionSprites[collectionName];
-                return sprites;
+                selectedSpriteIndex.Set(0);
             }
         }
     }

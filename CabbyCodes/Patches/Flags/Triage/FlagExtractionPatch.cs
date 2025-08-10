@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using CabbyCodes.Flags;
+using CabbyCodes.Scenes;
 
 namespace CabbyCodes.Patches.Flags.Triage
 {
@@ -57,9 +58,10 @@ namespace CabbyCodes.Patches.Flags.Triage
             
             foreach (var pbd in SceneData.instance.persistentBoolItems)
             {
+                var sceneData = SceneManagement.GetSceneData(pbd.sceneName) ?? new SceneMapData(pbd.sceneName);
                 allFlags.Add(new FlagDef(
                     pbd.id,
-                    pbd.sceneName,
+                    sceneData,
                     pbd.semiPersistent,
                     "PersistentBoolData"
                 ));
@@ -72,9 +74,10 @@ namespace CabbyCodes.Patches.Flags.Triage
             
             foreach (var pid in SceneData.instance.persistentIntItems)
             {
+                var sceneData = SceneManagement.GetSceneData(pid.sceneName) ?? new SceneMapData(pid.sceneName);
                 allFlags.Add(new FlagDef(
                     pid.id,
-                    pid.sceneName,
+                    sceneData,
                     pid.semiPersistent,
                     "PersistentIntData"
                 ));
@@ -87,9 +90,10 @@ namespace CabbyCodes.Patches.Flags.Triage
             
             foreach (var grd in SceneData.instance.geoRocks)
             {
+                var sceneData = SceneManagement.GetSceneData(grd.sceneName) ?? new SceneMapData(grd.sceneName);
                 allFlags.Add(new FlagDef(
                     grd.id,
-                    grd.sceneName,
+                    sceneData,
                     false,
                     "GeoRockData"
                 ));
@@ -109,7 +113,7 @@ namespace CabbyCodes.Patches.Flags.Triage
                 {
                     allFlags.Add(new FlagDef(
                         field.Name,
-                        "Global",
+                        null,
                         false,
                         "PlayerData_Bool"
                     ));
@@ -118,7 +122,7 @@ namespace CabbyCodes.Patches.Flags.Triage
                 {
                     allFlags.Add(new FlagDef(
                         field.Name,
-                        "Global",
+                        null,
                         false,
                         "PlayerData_Int"
                     ));

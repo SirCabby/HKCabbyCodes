@@ -425,7 +425,7 @@ namespace CabbyCodes.Patches.Flags.Triage
             if (category == "PlayerData")
             {
                 string fieldName = flagKey;
-                return $"public static readonly FlagDef {fieldName} = new FlagDef(\"{fieldName}\", \"Global\", false, \"{flagType}\");";
+                return $"public static readonly FlagDef {fieldName} = new FlagDef(\"{fieldName}\", null, false, \"{flagType}\");";
             }
             else
             {
@@ -439,7 +439,7 @@ namespace CabbyCodes.Patches.Flags.Triage
                     string sceneInstanceName = sceneName.Replace("-", "_");
                     string flagIdClean = CleanFieldName(flagId);
                     
-                    return $"public static readonly FlagDef {sceneInstanceName}__{flagIdClean} = new FlagDef(\"{flagId}\", SceneInstances.{sceneInstanceName}.SceneName, false, \"{flagType}\");";
+                    return $"public static readonly FlagDef {sceneInstanceName}__{flagIdClean} = new FlagDef(\"{flagId}\", SceneInstances.{sceneInstanceName}, false, \"{flagType}\");";
                 }
                 else
                 {
@@ -1243,7 +1243,7 @@ namespace CabbyCodes.Patches.Flags.Triage
                 if (flagType.StartsWith("PlayerData_"))
                 {
                     string fieldName = flagKey;
-                    string codeLine = $"public static readonly FlagDef {fieldName} = new FlagDef(\"{fieldName}\", \"Global\", false, \"{flagType}\");";
+                    string codeLine = $"public static readonly FlagDef {fieldName} = new FlagDef(\"{fieldName}\", null, false, \"{flagType}\");";
                     playerDataFlags.Add(codeLine);
                 }
                 else
@@ -1258,7 +1258,7 @@ namespace CabbyCodes.Patches.Flags.Triage
                         string sceneInstanceName = sceneName.Replace("-", "_");
                         string flagIdClean = flagId.Replace(" ", "_");
                         
-                        string codeLine = $"public static readonly FlagDef {sceneInstanceName}__{flagIdClean} = new FlagDef(\"{flagId}\", SceneInstances.{sceneInstanceName}.SceneName, false, \"{flagType}\");";
+                        string codeLine = $"public static readonly FlagDef {sceneInstanceName}__{flagIdClean} = new FlagDef(\"{flagId}\", SceneInstances.{sceneInstanceName}, false, \"{flagType}\");";
                         sceneFlags.Add(codeLine);
                     }
                 }
@@ -1490,7 +1490,7 @@ namespace CabbyCodes.Patches.Flags.Triage
                         AddNotification(notification);
                         
                         // Log to console with copy-paste ready format
-                        string codeFormat = $"public static readonly FlagDef {fieldName} = new FlagDef(\"{fieldName}\", \"Global\", false, \"PlayerData_{flagType}\");";
+                        string codeFormat = $"public static readonly FlagDef {fieldName} = new FlagDef(\"{fieldName}\", null, false, \"PlayerData_{flagType}\");";
                         
                         // Log to file
                         fileLoggingReference.LogMessage($"[DISCOVERY] New PlayerData flag: {codeFormat}");
@@ -1926,7 +1926,7 @@ namespace CabbyCodes.Patches.Flags.Triage
                         AddNotification(notification);
                         
                         // Log to console with copy-paste ready format
-                        string codeFormat = $"public static readonly FlagDef {pbd.sceneName.Replace("-", "_")}__{pbd.id.Replace(" ", "_")} = new FlagDef(\"{pbd.id}\", SceneInstances.{pbd.sceneName.Replace("-", "_")}.SceneName, false, \"PersistentBoolData\");";
+                        string codeFormat = $"public static readonly FlagDef {pbd.sceneName.Replace("-", "_")}__{pbd.id.Replace(" ", "_")} = new FlagDef(\"{pbd.id}\", SceneInstances.{pbd.sceneName.Replace("-", "_")}, false, \"PersistentBoolData\");";
                         
                         // Log to file
                         fileLoggingReference.LogMessage($"[DISCOVERY] New Scene flag: {codeFormat}");
@@ -1995,7 +1995,7 @@ namespace CabbyCodes.Patches.Flags.Triage
                         AddNotification(notification);
                         
                         // Log to console with copy-paste ready format
-                        string codeFormat = $"public static readonly FlagDef {pid.sceneName.Replace("-", "_")}__{pid.id.Replace(" ", "_")} = new FlagDef(\"{pid.id}\", SceneInstances.{pid.sceneName.Replace("-", "_")}.SceneName, false, \"PersistentIntData\");";
+                        string codeFormat = $"public static readonly FlagDef {pid.sceneName.Replace("-", "_")}__{pid.id.Replace(" ", "_")} = new FlagDef(\"{pid.id}\", SceneInstances.{pid.sceneName.Replace("-", "_")}, false, \"PersistentIntData\");";
                         
                         // Log to file
                         fileLoggingReference.LogMessage($"[DISCOVERY] New Scene flag: {codeFormat}");
@@ -2067,7 +2067,7 @@ namespace CabbyCodes.Patches.Flags.Triage
                         AddNotification(notification);
                         
                         // Log to console with copy-paste ready format
-                        string codeFormat = $"public static readonly FlagDef {grd.sceneName.Replace("-", "_")}__Geo_Rock_{grd.id.Replace(" ", "_")} = new FlagDef(\"{grd.id}\", SceneInstances.{grd.sceneName.Replace("-", "_")}.SceneName, false, \"GeoRockData\");";
+                        string codeFormat = $"public static readonly FlagDef {grd.sceneName.Replace("-", "_")}__Geo_Rock_{grd.id.Replace(" ", "_")} = new FlagDef(\"{grd.id}\", SceneInstances.{grd.sceneName.Replace("-", "_")}, false, \"GeoRockData\");";
                         
                         // Log to file
                         fileLoggingReference.LogMessage($"[DISCOVERY] New GeoRock flag: {codeFormat}");

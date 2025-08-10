@@ -1,5 +1,6 @@
 using CabbyMenu;
 using UnityEngine;
+using CabbyCodes.CheatState;
 
 namespace CabbyCodes
 {

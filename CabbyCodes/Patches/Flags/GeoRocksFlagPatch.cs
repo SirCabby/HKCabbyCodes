@@ -1,6 +1,5 @@
 using CabbyCodes.Flags;
 using CabbyCodes.Patches.BasePatches;
-using CabbyCodes.Scenes;
 
 namespace CabbyCodes.Patches.Flags
 {
@@ -43,8 +42,7 @@ namespace CabbyCodes.Patches.Flags
         
         protected override string GetDescription(FlagDef flag)
         {
-            var sceneData = SceneManagement.GetSceneData(flag.SceneName);
-            var sceneDisplayName = sceneData?.ReadableName ?? flag.SceneName;
+            var sceneDisplayName = flag.Scene?.ReadableName ?? flag.SceneName;
             return $"{sceneDisplayName}: {flag.ReadableName}";
         }
     }
