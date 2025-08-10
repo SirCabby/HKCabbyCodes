@@ -33,7 +33,7 @@ namespace CabbyCodes.Patches.Teleport
                 return;
             }
 
-            CabbyCodesPlugin.BLogger.LogInfo(string.Format("Teleporting to [{0}] ({1}, {2})", teleportLocation.SceneName, teleportLocation.Location.x, teleportLocation.Location.y));
+            CabbyCodesPlugin.BLogger.LogInfo(string.Format("Teleporting to [{0}] ({1}, {2})", teleportLocation.Scene.SceneName, teleportLocation.Location.x, teleportLocation.Location.y));
 
             GameManager gm = GameManager._instance;
             if (gm == null)
@@ -118,7 +118,7 @@ namespace CabbyCodes.Patches.Teleport
                 AlwaysUnloadUnusedAssets = true,
                 EntryGateName = "dreamGate", // Use a valid entry gate or empty if not needed
                 PreventCameraFadeOut = true,
-                SceneName = teleportLocation.SceneName,
+                SceneName = teleportLocation.Scene.SceneName,
                 Visualization = GameManager.SceneLoadVisualizations.Dream
             });
         }

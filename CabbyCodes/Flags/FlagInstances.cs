@@ -1265,6 +1265,7 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef hunterRoared = new FlagDef("hunterRoared", null, false, "PlayerData_Bool", "Hunter Roared");
             public static readonly FlagDef jijiMet = new FlagDef("jijiMet", null, false, "PlayerData_Bool", "Met Jiji");
             public static readonly FlagDef metBanker = new FlagDef("metBanker", null, false, "PlayerData_Bool", "Met Millibelle the Banker");
+            public static readonly FlagDef metCharmSlug = new FlagDef("metCharmSlug", null, false, "PlayerData_Bool", "Met Salubra");
             public static readonly FlagDef metCornifer = new FlagDef("metCornifer", null, false, "PlayerData_Bool", "Met Cornifer");
             public static readonly FlagDef metElderbug = new FlagDef("metElderbug", null, false, "PlayerData_Bool", "Met Elderbug");
             public static readonly FlagDef metHunter = new FlagDef("metHunter", null, false, "PlayerData_Bool", "Met Hunter");
@@ -1682,7 +1683,6 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef megaMossChargerEncountered = new FlagDef("megaMossChargerEncountered", null, false, "PlayerData_Bool");
             public static readonly FlagDef menderDoorOpened = new FlagDef("menderDoorOpened", null, false, "PlayerData_Bool");
             public static readonly FlagDef metBrum = new FlagDef("metBrum", null, false, "PlayerData_Bool");
-            public static readonly FlagDef metCharmSlug = new FlagDef("metCharmSlug", null, false, "PlayerData_Bool");
             public static readonly FlagDef metCloth = new FlagDef("metCloth", null, false, "PlayerData_Bool");
             public static readonly FlagDef metDivine = new FlagDef("metDivine", null, false, "PlayerData_Bool");
             public static readonly FlagDef metEmilitia = new FlagDef("metEmilitia", null, false, "PlayerData_Bool");

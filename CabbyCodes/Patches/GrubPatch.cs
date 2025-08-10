@@ -1,7 +1,6 @@
 using CabbyMenu.UI.CheatPanels;
 using System.Collections.Generic;
 using System.Linq;
-using static CabbyCodes.Scenes.SceneManagement;
 using static CabbyCodes.Scenes.Areas;
 using CabbyCodes.Flags;
 using CabbyCodes.Patches.Teleport;
@@ -35,7 +34,7 @@ namespace CabbyCodes.Patches
             
             // Crossroads
             Add(FlagInstances.Crossroads_03__Grub_Bottle, new Vector2(7, 42));
-            Add(FlagInstances.Crossroads_05__Grub_Bottle);
+            Add(FlagInstances.Crossroads_05__Grub_Bottle, new Vector2(53, 17));
             Add(FlagInstances.Crossroads_31__Grub_Bottle, new Vector2(23, 14));
             Add(FlagInstances.Crossroads_35__Grub_Bottle, new Vector2(7, 4));
             Add(FlagInstances.Crossroads_48__Grub_Bottle, new Vector2(52, 4));

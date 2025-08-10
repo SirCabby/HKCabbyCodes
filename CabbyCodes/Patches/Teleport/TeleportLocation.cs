@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using CabbyCodes.Scenes;
 
@@ -9,9 +10,9 @@ namespace CabbyCodes.Patches.Teleport
     public class TeleportLocation
     {
         /// <summary>
-        /// Gets or sets the name of the scene where this location is located.
+        /// Strongly-typed reference to the scene of this teleport.
         /// </summary>
-        public virtual string SceneName { get; protected set; }
+        public virtual SceneMapData Scene { get; protected set; }
 
         /// <summary>
         /// Gets or sets the display name for this teleport location.
@@ -29,28 +30,24 @@ namespace CabbyCodes.Patches.Teleport
         protected TeleportLocation() { }
 
         /// <summary>
-        /// Initializes a new instance of the TeleportLocation class.
+        /// Initializes a new instance of the TeleportLocation class using a SceneMapData instance.
         /// </summary>
-        /// <param name="sceneName">The name of the scene where this location is located.</param>
-        /// <param name="displayName">The display name for this teleport location.</param>
+        /// <param name="sceneData">The scene data containing scene name and readable name.</param>
         /// <param name="location">The 2D position coordinates of this teleport location.</param>
-        public TeleportLocation(string sceneName, string displayName, Vector2 location)
+        public TeleportLocation(SceneMapData sceneData, string displayName, Vector2 location)
         {
-            SceneName = sceneName;
+            Scene = sceneData ?? throw new System.ArgumentNullException(nameof(sceneData));
             DisplayName = displayName;
             Location = location;
         }
 
         /// <summary>
-        /// Initializes a new instance of the TeleportLocation class using a SceneMapData instance.
+        /// Convenience constructor matching the historical signature that only required a <see cref="SceneMapData"/> and coordinates.
+        /// The <paramref name="location"/> parameter is required; the display name will default to <see cref="SceneMapData.ReadableName"/>.
         /// </summary>
-        /// <param name="sceneData">The scene data containing scene name and readable name.</param>
-        /// <param name="location">The 2D position coordinates of this teleport location.</param>
         public TeleportLocation(SceneMapData sceneData, Vector2 location)
+            : this(sceneData, sceneData?.ReadableName, location)
         {
-            SceneName = sceneData.SceneName;
-            DisplayName = sceneData.ReadableName;
-            Location = location;
         }
     }
 } 

@@ -7,6 +7,7 @@ using System.Text;
 using UnityEngine;
 using CabbyCodes.Patches.Teleport;
 using CabbyCodes.CheatState;
+using CabbyCodes.Scenes;
 
 namespace CabbyCodes.SavedGames
 {
@@ -218,7 +219,8 @@ namespace CabbyCodes.SavedGames
                     Vector2 targetPosition = saveGameData.GetPlayerPosition();
 
                     // Create a teleport location for the saved scene and position
-                    var teleportLocation = new TeleportLocation(saveGameData.sceneName, "Custom Save Location", targetPosition);
+                    var sceneData = SceneManagement.GetSceneData(saveGameData.sceneName) ?? new SceneMapData(saveGameData.sceneName);
+                    var teleportLocation = new TeleportLocation(sceneData, "Custom Save Location", targetPosition);
 
                     // Subscribe to the scene entry event to trigger teleport after the game loads
                     void handler()
@@ -266,7 +268,7 @@ namespace CabbyCodes.SavedGames
             string currentScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
             string baseSceneName = GameManager.GetBaseSceneName(currentScene);
 
-            if (baseSceneName == teleportLocation.SceneName)
+            if (baseSceneName == teleportLocation.Scene.SceneName)
             {
                 // We're already in the correct scene, just move to the position
                 var gm = GameManager._instance;
@@ -278,14 +280,14 @@ namespace CabbyCodes.SavedGames
                     gm.cameraCtrl?.SnapTo(newPos.x, newPos.y);
 
                     CabbyCodesPlugin.BLogger.LogDebug(string.Format("Moved to position ({0}, {1}) in scene '{2}'",
-                        teleportLocation.Location.x, teleportLocation.Location.y, teleportLocation.SceneName));
+                        teleportLocation.Location.x, teleportLocation.Location.y, teleportLocation.Scene.SceneName));
                 }
             }
             else
             {
                 // We need to teleport to a different scene
                 CabbyCodesPlugin.BLogger.LogDebug(string.Format("Teleporting to scene '{0}' at position ({1}, {2})",
-                    teleportLocation.SceneName, teleportLocation.Location.x, teleportLocation.Location.y));
+                    teleportLocation.Scene.SceneName, teleportLocation.Location.x, teleportLocation.Location.y));
 
                 TeleportService.DoTeleport(teleportLocation);
             }

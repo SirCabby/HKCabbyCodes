@@ -39,11 +39,12 @@ namespace CabbyCodes.Patches.Teleport
         /// </summary>
         private static readonly List<TeleportLocation> teleportLocations = new List<TeleportLocation>
         {
-            new TeleportLocation("", "<Select Location>", Vector2.zero),
-            new TeleportLocation(SceneInstances.Town.SceneName, SceneInstances.Town.ReadableName, new Vector2(136, 12)),
-            new TeleportLocation(SceneInstances.Crossroads_02.SceneName, SceneInstances.Room_temple.ReadableName, new Vector2(41, 5)),
-            new TeleportLocation(SceneInstances.Crossroads_38.SceneName, "The Grubfather", new Vector2(64, 4)),
-            new TeleportLocation(SceneInstances.RestingGrounds_07.SceneName, "The Seer", new Vector2(30, 10)),
+            new TeleportLocation(new SceneMapData(""), "<Select Location>", Vector2.zero),
+            new TeleportLocation(SceneInstances.Town, SceneInstances.Town.ReadableName, new Vector2(136, 12)),
+            new TeleportLocation(SceneInstances.Crossroads_02, SceneInstances.Room_temple.ReadableName, new Vector2(41, 5)),
+            new TeleportLocation(SceneInstances.Crossroads_38, "The Grubfather", new Vector2(64, 4)),
+            new TeleportLocation(SceneInstances.RestingGrounds_07, "The Seer", new Vector2(30, 10)),
+            new TeleportLocation(SceneInstances.Crossroads_04, "Salubra's Charm Shop", new Vector2(141, 12)),
         };
 
         /// <summary>
@@ -307,11 +308,11 @@ namespace CabbyCodes.Patches.Teleport
                         // Update the saved locations list
                         UpdateSavedLocationsList();
 
-                        CabbyCodesPlugin.BLogger.LogDebug(string.Format("Removed teleport location: {0}", customLocation.SceneName));
+                        CabbyCodesPlugin.BLogger.LogDebug(string.Format("Removed teleport location: {0}", customLocation.Scene.SceneName));
                     }
                     catch (Exception ex)
                     {
-                        CabbyCodesPlugin.BLogger.LogWarning(string.Format("Failed to remove teleport location from config: {0} - {1}", customLocation.SceneName, ex.Message));
+                        CabbyCodesPlugin.BLogger.LogWarning(string.Format("Failed to remove teleport location from config: {0} - {1}", customLocation.Scene.SceneName, ex.Message));
                     }
                 }
             });

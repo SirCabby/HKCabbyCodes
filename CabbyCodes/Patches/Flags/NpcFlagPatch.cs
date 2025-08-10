@@ -69,6 +69,12 @@ namespace CabbyCodes.Patches.Flags
                 FlagInstances.quirrelLeftEggTemple,
                 FlagInstances.quirrelSlugShrine
             }));
+
+            // Salubra section
+            panels.Add(new InfoPanel("Salubra").SetColor(CheatPanel.subHeaderColor));
+            panels.AddRange(CreateNpcPanels(new[] {
+                FlagInstances.metCharmSlug 
+            }));
             
             // Shaman section
             panels.Add(new InfoPanel("Shaman").SetColor(CheatPanel.subHeaderColor));

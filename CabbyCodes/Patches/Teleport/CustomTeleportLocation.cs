@@ -1,5 +1,6 @@
 using BepInEx.Configuration;
 using UnityEngine;
+using CabbyCodes.Scenes;
 
 namespace CabbyCodes.Patches.Teleport
 {
@@ -19,13 +20,13 @@ namespace CabbyCodes.Patches.Teleport
         private readonly ConfigEntry<string> configEntry;
 
         private readonly string displayName;
-        private string sceneName;
+        private SceneMapData scene;
         private Vector2 location;
 
         /// <summary>
-        /// Gets the scene name for teleporting.
+        /// Gets the scene reference for teleporting.
         /// </summary>
-        public override string SceneName { get => sceneName; }
+        public override SceneMapData Scene { get => scene; }
 
         /// <summary>
         /// Gets the display name for the UI.
@@ -62,7 +63,8 @@ namespace CabbyCodes.Patches.Teleport
         {
             // Format: sceneName|x|y (validated before creation)
             var parts = value.Split('|');
-            sceneName = parts[0];
+            var sceneName = parts[0];
+            scene = SceneManagement.GetSceneData(sceneName) ?? new SceneMapData(sceneName);
             float.TryParse(parts[1], out float x);
             float.TryParse(parts[2], out float y);
             location = new Vector2(x, y);
@@ -70,7 +72,7 @@ namespace CabbyCodes.Patches.Teleport
 
         private void SaveToConfig()
         {
-            configEntry.Value = $"{sceneName}|{location.x}|{location.y}";
+            configEntry.Value = $"{scene.SceneName}|{location.x}|{location.y}";
         }
     }
 } 
