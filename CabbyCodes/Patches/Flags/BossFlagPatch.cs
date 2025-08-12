@@ -29,6 +29,7 @@ namespace CabbyCodes.Patches.Flags
             Add(FlagInstances.falseKnightDefeated, SceneInstances.Crossroads_10, new Vector2(57, 28));
             Add(FlagInstances.Crossroads_09__Mawlek_Body, SceneInstances.Crossroads_09, new Vector2(39, 5));
             //Add(FlagInstances.hornet1Defeated)
+            Add(FlagInstances.defeatedMantisLords, SceneInstances.Fungus2_15, new Vector2(36, 8));
             Add(FlagInstances.elderHuDefeated, SceneInstances.Fungus2_32, new Vector2(46, 4));
             Add(FlagInstances.falseKnightDreamDefeated, SceneInstances.Crossroads_10, new Vector2(58, 48));
             Add(FlagInstances.aladarSlugDefeated, SceneInstances.Cliffs_02, new Vector2(50, 34));
@@ -45,9 +46,13 @@ namespace CabbyCodes.Patches.Flags
                 FlagInstances.falseKnightDefeated,
                 FlagInstances.Crossroads_09__Mawlek_Body,
                 FlagInstances.hornet1Defeated,
+                FlagInstances.defeatedMantisLords,
+
+
                 FlagInstances.elderHuDefeated,
                 FlagInstances.falseKnightDreamDefeated,
                 FlagInstances.galienDefeated,
+                FlagInstances.aladarSlugDefeated,
                 FlagInstances.noEyesDefeated,
                 FlagInstances.xeroDefeated
             };

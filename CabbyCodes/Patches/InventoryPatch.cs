@@ -74,6 +74,9 @@ namespace CabbyCodes.Patches
             panels.Add(new InfoPanel("Notches").SetColor(CheatPanel.subHeaderColor));
             panels.AddRange(CreateNotchPanels());
 
+            panels.Add(new InfoPanel("Pale Ore").SetColor(CheatPanel.subHeaderColor));
+            panels.AddRange(CreatePaleOrePanels());
+
             panels.Add(new InfoPanel("Wanderer's Journals").SetColor(CheatPanel.subHeaderColor));
             panels.AddRange(CreateWanderersJournalPanels());
 
@@ -668,6 +671,38 @@ namespace CabbyCodes.Patches
             ), notchFlag.ReadableName);
         }
 
+        private List<CheatPanel> CreatePaleOrePanels()
+        {
+            var panels = new List<CheatPanel>
+            {
+                CreatePaleOrePanel(FlagInstances.Abyss_17__Shiny_Item_Stand)
+            };
+
+            return panels;
+        }
+
+        private TogglePanel CreatePaleOrePanel(FlagDef flag)
+        {
+            return new TogglePanel(new DelegateReference<bool>(
+                () => FlagManager.GetBoolFlag(flag),
+                value =>
+                {
+                    var current = FlagManager.GetIntFlag(FlagInstances.ore);
+                    
+                    if (value)
+                    {
+                        FlagManager.SetIntFlag(FlagInstances.ore, current + 1);
+                    }
+                    else
+                    {
+                        FlagManager.SetIntFlag(FlagInstances.ore, Math.Max(0, current - 1));
+                    }
+                    
+                    FlagManager.SetBoolFlag(flag, value);
+                }
+            ), flag.ReadableName);
+        }
+
         // Wanderer's Journals panels
         private List<CheatPanel> CreateWanderersJournalPanels()
         {
@@ -706,6 +741,7 @@ namespace CabbyCodes.Patches
                 CreateHallownestSealPanel(FlagInstances.Fungus2_03__Shiny_Item),
                 CreateHallownestSealPanel(FlagInstances.Fungus3_30__Shiny_Item),
                 CreateHallownestSealPanel(FlagInstances.Deepnest_Spider_Town__Shiny_Item),
+                CreateHallownestSealPanel(FlagInstances.Fungus2_31__Shiny_Item),
             };
 
             return panels;

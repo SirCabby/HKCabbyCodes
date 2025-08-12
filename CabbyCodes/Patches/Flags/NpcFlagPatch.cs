@@ -11,9 +11,21 @@ namespace CabbyCodes.Patches.Flags
         {
             var panels = new List<CheatPanel>();
 
+            panels.Add(new InfoPanel("Bretta").SetColor(CheatPanel.subHeaderColor));
+            panels.AddRange(CreateNpcPanels(new[] {
+                FlagInstances.brettaRescued,
+                FlagInstances.brettaPosition,
+            }));
+
+            panels.Add(new InfoPanel("Brumm").SetColor(CheatPanel.subHeaderColor));
+            panels.AddRange(CreateNpcPanels(new[] {
+                FlagInstances.metBrum
+            }));
+
             panels.Add(new InfoPanel("Cloth").SetColor(CheatPanel.subHeaderColor));
             panels.AddRange(CreateNpcPanels(new[] {
-                FlagInstances.metCloth
+                FlagInstances.metCloth,
+                FlagInstances.savedCloth
             }));
 
             panels.Add(new InfoPanel("Cornifer").SetColor(CheatPanel.subHeaderColor));
@@ -48,14 +60,20 @@ namespace CabbyCodes.Patches.Flags
                 FlagInstances.elderbugSpeechMapShop,
                 FlagInstances.elderbugSpeechSly,
                 FlagInstances.elderbugSpeechStation,
+                FlagInstances.elderbugSpeechKingsPass,
 
-                
+
                 FlagInstances.elderbugConvoGrimm
             }));
 
             panels.Add(new InfoPanel("Gorb").SetColor(CheatPanel.subHeaderColor));
             panels.AddRange(CreateNpcPanels(new[] {
                 FlagInstances.ALADAR_encountered
+            }));
+
+            panels.Add(new InfoPanel("Grimm").SetColor(CheatPanel.subHeaderColor));
+            panels.AddRange(CreateNpcPanels(new[] {
+                FlagInstances.metGrimm
             }));
             
             panels.Add(new InfoPanel("Hornet").SetColor(CheatPanel.subHeaderColor));
@@ -161,6 +179,11 @@ namespace CabbyCodes.Patches.Flags
             panels.AddRange(CreateNpcPanels(new[] {
                 FlagInstances.metStag,
                 FlagInstances.stagRemember1,
+            }));
+
+            panels.Add(new InfoPanel("Tiso").SetColor(CheatPanel.subHeaderColor));
+            panels.AddRange(CreateNpcPanels(new[] {
+                FlagInstances.tisoEncounteredTown
             }));
 
             panels.Add(new InfoPanel("Warriors' Graves").SetColor(CheatPanel.subHeaderColor));

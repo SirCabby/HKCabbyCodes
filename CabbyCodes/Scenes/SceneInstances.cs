@@ -200,7 +200,7 @@ namespace CabbyCodes.Scenes
         public static readonly SceneMapData Fungus2_11 = new SceneMapData("Fungus2_11", "FungalWastes");
         public static readonly SceneMapData Fungus2_12 = new SceneMapData("Fungus2_12", "FungalWastes");
         public static readonly SceneMapData Fungus2_13 = new SceneMapData("Fungus2_13", "FungalWastes");
-        public static readonly SceneMapData Fungus2_14 = new SceneMapData("Fungus2_14", "FungalWastes");
+        public static readonly SceneMapData Fungus2_14 = new SceneMapData("Fungus2_14", "FungalWastes", "Mantis Village");
         public static readonly SceneMapData Fungus2_14_b = new SceneMapData("Fungus2_14_b", "FungalWastes");
         public static readonly SceneMapData Fungus2_14_c = new SceneMapData("Fungus2_14_c", "FungalWastes");
         public static readonly SceneMapData Fungus2_15 = new SceneMapData("Fungus2_15", "FungalWastes");
@@ -219,6 +219,8 @@ namespace CabbyCodes.Scenes
         public static readonly SceneMapData Fungus2_29_b = new SceneMapData("Fungus2_29_b", "FungalWastes");
         public static readonly SceneMapData Fungus2_33 = new SceneMapData("Fungus2_33", "FungalWastes");
         public static readonly SceneMapData Fungus2_34 = new SceneMapData("Fungus2_34", "FungalWastes");
+        public static readonly SceneMapData Fungus2_15_boss = new SceneMapData("Fungus2_15_boss");
+        public static readonly SceneMapData Fungus2_15_boss_defeated = new SceneMapData("Fungus2_15_boss_defeated");
 
         // Greenpath
         public static readonly SceneMapData Fungus1_01 = new SceneMapData("Fungus1_01", "Greenpath");
@@ -387,11 +389,12 @@ namespace CabbyCodes.Scenes
         // Rooms
         public static readonly SceneMapData Crossroads_ShamanTemple = new SceneMapData("Crossroads_ShamanTemple", null, "Ancestral Mound");
         public static readonly SceneMapData Cutscene_Boss_Door = new SceneMapData("Cutscene_Boss_Door");
-        public static readonly SceneMapData Dream_01_False_Knight = new SceneMapData("Dream_01_False_Knight", "Crossroads");
+        public static readonly SceneMapData Dream_01_False_Knight = new SceneMapData("Dream_01_False_Knight");
         public static readonly SceneMapData Dream_Guardian_Hegemol = new SceneMapData("Dream_Guardian_Hegemol");
         public static readonly SceneMapData Fungus1_35 = new SceneMapData("Fungus1_35", null, "Stone Sanctuary");
         public static readonly SceneMapData Fungus1_36 = new SceneMapData("Fungus1_36", null, "Stone Sanctuary Mask Room");
-        public static readonly SceneMapData Grimm_Divine = new SceneMapData("Grimm_Divine", "Dirtmouth", "Divine's room");
+        public static readonly SceneMapData Grimm_Divine = new SceneMapData("Grimm_Divine", null, "Divine's room");
+        public static readonly SceneMapData Grimm_Main_Tent = new SceneMapData("Grimm_Main_Tent", null, "Grimm's Tent");
         public static readonly SceneMapData Room_Charm_Shop = new SceneMapData("Room_Charm_Shop", null, "Salubra's Charm Shop");
         public static readonly SceneMapData Room_mapper = new SceneMapData("Room_mapper", null, "Map Shop");
         public static readonly SceneMapData Room_Mask_Maker = new SceneMapData("Room_Mask_Maker", null, "Mask Maker's room");

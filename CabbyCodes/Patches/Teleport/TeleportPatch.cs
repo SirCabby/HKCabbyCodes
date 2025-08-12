@@ -49,6 +49,7 @@ namespace CabbyCodes.Patches.Teleport
             new TeleportLocation(SceneInstances.Fungus2_26, "Leg Eater's Shop", new Vector2(35, 6)),
             new TeleportLocation(SceneInstances.Room_nailmaster, "Nailmaster Mato", new Vector2(57, 5)),
             new TeleportLocation(SceneInstances.Room_Mask_Maker, "Mask Maker", new Vector2(26, 7)),
+            new TeleportLocation(SceneInstances.Fungus2_14, "Mantis Village", new Vector2(35, 31)),
         };
 
         /// <summary>
