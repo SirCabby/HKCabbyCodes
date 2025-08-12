@@ -41,48 +41,47 @@ namespace CabbyCodes.Patches
             var panels = new List<CheatPanel>
             {
                 new InfoPanel("Inventory").SetColor(CheatPanel.headerColor),
-                // Currency section
                 new InfoPanel("Currency").SetColor(CheatPanel.subHeaderColor)
             };
             panels.AddRange(CreateCurrencyPanels());
 
-            // Ability Items section
             panels.Add(new InfoPanel("Ability Items").SetColor(CheatPanel.subHeaderColor));
             panels.AddRange(CreateAbilityPanels());
 
-            // Nail Arts section
             panels.Add(new InfoPanel("Nail Arts").SetColor(CheatPanel.subHeaderColor));
             panels.AddRange(CreateNailArtPanels());
 
-            // Spells section
             panels.Add(new InfoPanel("Spells").SetColor(CheatPanel.subHeaderColor));
             panels.AddRange(CreateSpellPanels());
 
-            // Items section
             panels.Add(new InfoPanel("Items").SetColor(CheatPanel.subHeaderColor));
             panels.AddRange(CreateItemPanels());
 
-            // Keys section
             panels.Add(new InfoPanel("Keys").SetColor(CheatPanel.subHeaderColor));
             panels.AddRange(CreateKeyPanels());
 
-            // Map Accessories section
             panels.Add(new InfoPanel("Map Accessories").SetColor(CheatPanel.subHeaderColor));
             panels.AddRange(CreateMapAccessoryPanels());
 
-            // Mask Shards section
             panels.Add(new InfoPanel("Mask Shards").SetColor(CheatPanel.subHeaderColor));
             panels.Add(new InfoPanel("May require restart to take effect").SetColor(CheatPanel.warningColor));
             panels.AddRange(CreateMaskShardPanels());
 
-            // Vessel Fragments section
             panels.Add(new InfoPanel("Vessel Fragments").SetColor(CheatPanel.subHeaderColor));
             panels.Add(new InfoPanel("May require restart to take effect").SetColor(CheatPanel.warningColor));
             panels.AddRange(CreateVesselFragmentPanels());
 
-            // Wanderer's Journals section
+            panels.Add(new InfoPanel("Notches").SetColor(CheatPanel.subHeaderColor));
+            panels.AddRange(CreateNotchPanels());
+
             panels.Add(new InfoPanel("Wanderer's Journals").SetColor(CheatPanel.subHeaderColor));
             panels.AddRange(CreateWanderersJournalPanels());
+
+            panels.Add(new InfoPanel("Hallownest Seals").SetColor(CheatPanel.subHeaderColor));
+            panels.AddRange(CreateHallownestSealPanels());
+
+            panels.Add(new InfoPanel("King's Idols").SetColor(CheatPanel.subHeaderColor));
+            panels.AddRange(CreateKingsIdolPanels());
 
             return panels;
         }
@@ -168,7 +167,7 @@ namespace CabbyCodes.Patches
                     () => new List<string> { "NONE", FlagInstances.hasDreamNail.ReadableName, FlagInstances.dreamNailUpgraded.ReadableName }
                 ), FlagInstances.hasDreamNail.ReadableName + " / " + FlagInstances.dreamNailUpgraded.ReadableName, Constants.DEFAULT_PANEL_HEIGHT),
                 new BoolPatch(FlagInstances.hasDreamGate).CreatePanel(),
-                                        new BoolPatch(FlagInstances.unlockedCompletionRate).CreatePanel(),
+                new BoolPatch(FlagInstances.unlockedCompletionRate).CreatePanel(),
                 new BoolPatch(FlagInstances.salubraBlessing).CreatePanel()
             };
 
@@ -179,9 +178,35 @@ namespace CabbyCodes.Patches
         {
             var panels = new List<CheatPanel>
             {
-                new BoolPatch(FlagInstances.hasCyclone).CreatePanel(),
-                new BoolPatch(FlagInstances.hasUpwardSlash).CreatePanel(),
-                new BoolPatch(FlagInstances.hasDashSlash).CreatePanel()
+                // Cyclone Slash
+                new TogglePanel(new DelegateReference<bool>(
+                    () => FlagManager.GetBoolFlag(FlagInstances.hasCyclone),
+                    value =>
+                    {
+                        FlagManager.SetBoolFlag(FlagInstances.hasCyclone, value);
+                        UpdateHasNailArtFlag();
+                    }
+                ), FlagInstances.hasCyclone.ReadableName),
+
+                // Upward Slash
+                new TogglePanel(new DelegateReference<bool>(
+                    () => FlagManager.GetBoolFlag(FlagInstances.hasUpwardSlash),
+                    value =>
+                    {
+                        FlagManager.SetBoolFlag(FlagInstances.hasUpwardSlash, value);
+                        UpdateHasNailArtFlag();
+                    }
+                ), FlagInstances.hasUpwardSlash.ReadableName),
+
+                // Dash Slash
+                new TogglePanel(new DelegateReference<bool>(
+                    () => FlagManager.GetBoolFlag(FlagInstances.hasDashSlash),
+                    value =>
+                    {
+                        FlagManager.SetBoolFlag(FlagInstances.hasDashSlash, value);
+                        UpdateHasNailArtFlag();
+                    }
+                ), FlagInstances.hasDashSlash.ReadableName)
             };
 
             return panels;
@@ -421,6 +446,17 @@ namespace CabbyCodes.Patches
             FlagManager.SetBoolFlag(FlagInstances.hasMarker, anyMarkerEnabled);
         }
 
+        private void UpdateHasNailArtFlag()
+        {
+            // Check if any Nail Art is enabled
+            bool anyNailArtEnabled = FlagManager.GetBoolFlag(FlagInstances.hasCyclone) ||
+                                     FlagManager.GetBoolFlag(FlagInstances.hasUpwardSlash) ||
+                                     FlagManager.GetBoolFlag(FlagInstances.hasDashSlash);
+
+            // Set aggregate hasNailArt flag based on individual Nail Arts
+            FlagManager.SetBoolFlag(FlagInstances.hasNailArt, anyNailArtEnabled);
+        }
+
         private List<CheatPanel> CreateMaskShardPanels()
         {
             var panels = new List<CheatPanel>
@@ -446,6 +482,7 @@ namespace CabbyCodes.Patches
                 CreateVesselFragmentPanel(FlagInstances.slyVesselFrag2),
                 CreateVesselFragmentPanel(FlagInstances.slyVesselFrag3),
                 CreateVesselFragmentPanel(FlagInstances.slyVesselFrag4),
+                CreateVesselFragmentPanel(FlagInstances.Fungus1_13__Vessel_Fragment)
             };
             
             return panels;
@@ -546,6 +583,8 @@ namespace CabbyCodes.Patches
                         if (newVesselFragments >= 3)
                         {
                             newVesselFragments = 0;
+                            var currentMpReserveMax = FlagManager.GetIntFlag(FlagInstances.MPReserveMax);
+                            FlagManager.SetIntFlag(FlagInstances.MPReserveMax, currentMpReserveMax + 33);
                         }
                     }
                     else
@@ -557,6 +596,8 @@ namespace CabbyCodes.Patches
                         if (newVesselFragments < 0)
                         {
                             newVesselFragments = 2;
+                            var currentMpReserveMax = FlagManager.GetIntFlag(FlagInstances.MPReserveMax);
+                            FlagManager.SetIntFlag(FlagInstances.MPReserveMax, currentMpReserveMax - 33);
                         }
                     }
                     
@@ -589,39 +630,130 @@ namespace CabbyCodes.Patches
             ), simpleKeyFlag.ReadableName);
         }
 
+        private List<CheatPanel> CreateNotchPanels()
+        {
+            var panels = new List<CheatPanel>
+            {
+                CreateNotchPanel(FlagInstances.salubraNotch1),
+                CreateNotchPanel(FlagInstances.salubraNotch2),
+                CreateNotchPanel(FlagInstances.salubraNotch3),
+                CreateNotchPanel(FlagInstances.salubraNotch4),
+                CreateNotchPanel(FlagInstances.notchShroomOgres),
+            };
+
+            return panels;
+        }
+
+        private TogglePanel CreateNotchPanel(FlagDef notchFlag)
+        {
+            return new TogglePanel(new DelegateReference<bool>(
+                () => FlagManager.GetBoolFlag(notchFlag),
+                value =>
+                {
+                    var currentNotches = FlagManager.GetIntFlag(FlagInstances.charmSlots);
+                    
+                    if (value)
+                    {
+                        // Increment simple keys when enabling
+                        FlagManager.SetIntFlag(FlagInstances.charmSlots, currentNotches + 1);
+                    }
+                    else
+                    {
+                        // Decrement simple keys when disabling
+                        FlagManager.SetIntFlag(FlagInstances.charmSlots, Math.Max(0, currentNotches - 1));
+                    }
+                    
+                    FlagManager.SetBoolFlag(notchFlag, value);
+                }
+            ), notchFlag.ReadableName);
+        }
+
         // Wanderer's Journals panels
         private List<CheatPanel> CreateWanderersJournalPanels()
         {
             var panels = new List<CheatPanel>
             {
                 CreateWanderersJournalPanel(FlagInstances.Fungus1_22__Shiny_Item),
+                CreateWanderersJournalPanel(FlagInstances.Fungus2_17__Shiny_Item),
+                CreateWanderersJournalPanel(FlagInstances.Cliffs_01__Shiny_Item_1),
+                CreateWanderersJournalPanel(FlagInstances.Fungus2_04__Shiny_Item),
             };
 
             return panels;
         }
 
-        private TogglePanel CreateWanderersJournalPanel(FlagDef journalFlag)
+        private TogglePanel CreateWanderersJournalPanel(FlagDef flag)
         {
-            // Determine human-readable label automatically from scene metadata
-            string label = journalFlag.Scene == null
-                ? journalFlag.ReadableName
-                : journalFlag.Scene.ReadableName;
-
             return new TogglePanel(new DelegateReference<bool>(
-                () => FlagManager.GetBoolFlag(journalFlag),
+                () => FlagManager.GetBoolFlag(flag),
                 value =>
                 {
-                    FlagManager.SetBoolFlag(journalFlag, value);
+                    FlagManager.SetBoolFlag(flag, value);
 
                     int currentJournals = FlagManager.GetIntFlag(FlagInstances.trinket1);
                     int newJournals = value ? currentJournals + 1 : Math.Max(0, currentJournals - 1);
 
                     FlagManager.SetIntFlag(FlagInstances.trinket1, newJournals);
-
-                    // foundTrinket1 should be true if any journals are collected
                     FlagManager.SetBoolFlag(FlagInstances.foundTrinket1, newJournals > 0);
                 }
-            ), label);
+            ), flag.Scene.ReadableName);
+        }
+
+        private List<CheatPanel> CreateHallownestSealPanels()
+        {
+            var panels = new List<CheatPanel>
+            {
+                CreateHallownestSealPanel(FlagInstances.Fungus2_03__Shiny_Item),
+                CreateHallownestSealPanel(FlagInstances.Fungus3_30__Shiny_Item),
+                CreateHallownestSealPanel(FlagInstances.Deepnest_Spider_Town__Shiny_Item),
+            };
+
+            return panels;
+        }
+
+        private TogglePanel CreateHallownestSealPanel(FlagDef flag)
+        {
+            return new TogglePanel(new DelegateReference<bool>(
+                () => FlagManager.GetBoolFlag(flag),
+                value =>
+                {
+                    FlagManager.SetBoolFlag(flag, value);
+
+                    int current = FlagManager.GetIntFlag(FlagInstances.trinket2);
+                    int newCount = value ? current + 1 : Math.Max(0, current - 1);
+
+                    FlagManager.SetIntFlag(FlagInstances.trinket2, newCount);
+                    FlagManager.SetBoolFlag(FlagInstances.foundTrinket2, newCount > 0);
+                }
+            ), flag.Scene.ReadableName);
+        }
+
+        private List<CheatPanel> CreateKingsIdolPanels()
+        {
+            var panels = new List<CheatPanel>
+            {
+                CreateKingsIdolPanel(FlagInstances.Cliffs_01__Shiny_Item),
+                CreateKingsIdolPanel(FlagInstances.Deepnest_33__Shiny_Item),
+            };
+
+            return panels;
+        }
+
+        private TogglePanel CreateKingsIdolPanel(FlagDef flag)
+        {
+            return new TogglePanel(new DelegateReference<bool>(
+                () => FlagManager.GetBoolFlag(flag),
+                value =>
+                {
+                    FlagManager.SetBoolFlag(flag, value);
+
+                    int current = FlagManager.GetIntFlag(FlagInstances.trinket3);
+                    int newCount = value ? current + 1 : Math.Max(0, current - 1);
+
+                    FlagManager.SetIntFlag(FlagInstances.trinket3, newCount);
+                    FlagManager.SetBoolFlag(FlagInstances.foundTrinket3, newCount > 0);
+                }
+            ), flag.Scene.ReadableName);
         }
     }
 }

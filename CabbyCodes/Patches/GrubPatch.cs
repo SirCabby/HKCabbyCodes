@@ -40,22 +40,22 @@ namespace CabbyCodes.Patches
             Add(FlagInstances.Crossroads_48__Grub_Bottle, new Vector2(52, 4));
             
             // Deepnest
-            Add(FlagInstances.Deepnest_03__Grub_Bottle);
+            Add(FlagInstances.Deepnest_03__Grub_Bottle, new Vector2(9, 104));
             Add(FlagInstances.Deepnest_31__Grub_Bottle);
-            Add(FlagInstances.Deepnest_36__Grub_Bottle);
-            Add(FlagInstances.Deepnest_39__Grub_Bottle);
+            Add(FlagInstances.Deepnest_36__Grub_Bottle, new Vector2(62, 5));
+            Add(FlagInstances.Deepnest_39__Grub_Bottle, new Vector2(128, 47));
             Add(FlagInstances.Deepnest_East_11__Grub_Bottle);
             Add(FlagInstances.Deepnest_East_14__Grub_Bottle);
-            Add(FlagInstances.Deepnest_Spider_Town__Grub_Bottle);
+            Add(FlagInstances.Deepnest_Spider_Town__Grub_Bottle, new Vector2(96, 120));
             
             // Fungal Wastes
             Add(FlagInstances.Fungus1_06__Grub_Bottle, new Vector2(154, 22));
             Add(FlagInstances.Fungus1_07__Grub_Bottle, new Vector2(51, 13));
-            Add(FlagInstances.Fungus1_13__Grub_Bottle);
+            Add(FlagInstances.Fungus1_13__Grub_Bottle, new Vector2(132, 25));
             Add(FlagInstances.Fungus1_21__Grub_Bottle, new Vector2(83, 25));
-            Add(FlagInstances.Fungus1_28__Grub_Bottle);
-            Add(FlagInstances.Fungus2_18__Grub_Bottle);
-            Add(FlagInstances.Fungus2_20__Grub_Bottle);
+            Add(FlagInstances.Fungus1_28__Grub_Bottle, new Vector2(82, 53));
+            Add(FlagInstances.Fungus2_18__Grub_Bottle, new Vector2(138, 53));
+            Add(FlagInstances.Fungus2_20__Grub_Bottle, new Vector2(11, 43));
             Add(FlagInstances.Fungus3_10__Grub_Bottle);
             Add(FlagInstances.Fungus3_22__Grub_Bottle);
             Add(FlagInstances.Fungus3_47__Grub_Bottle);

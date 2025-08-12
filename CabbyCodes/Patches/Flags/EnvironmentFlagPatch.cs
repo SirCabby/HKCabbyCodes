@@ -19,6 +19,24 @@ namespace CabbyCodes.Patches.Flags
                 FlagInstances.crossroadsInfected,
                 FlagInstances.crossroadsMawlekWall,
                 FlagInstances.shamanPillar,
+                FlagInstances.defeatedDoubleBlockers,
+                FlagInstances.megaMossChargerDefeated,
+                FlagInstances.deepnestWall,
+                FlagInstances.deepnestBridgeCollapsed,
+                FlagInstances.steppedBeyondBridge,
+                FlagInstances.spiderCapture,
+
+
+                
+
+
+
+
+                
+                FlagInstances.galienPinned,
+                FlagInstances.huPinned,
+                FlagInstances.nightmareLanternAppeared,
+                FlagInstances.nightmareLanternLit,
                 FlagInstances.noEyesPinned,
                 FlagInstances.xeroPinned
             };

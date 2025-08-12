@@ -44,7 +44,11 @@ namespace CabbyCodes.Patches.Teleport
             new TeleportLocation(SceneInstances.Crossroads_02, SceneInstances.Room_temple.ReadableName, new Vector2(41, 5)),
             new TeleportLocation(SceneInstances.Crossroads_38, "The Grubfather", new Vector2(64, 4)),
             new TeleportLocation(SceneInstances.RestingGrounds_07, "The Seer", new Vector2(30, 10)),
+            new TeleportLocation(SceneInstances.Fungus1_08, "The Hunter", new Vector2(43, 39)),
             new TeleportLocation(SceneInstances.Crossroads_04, "Salubra's Charm Shop", new Vector2(141, 12)),
+            new TeleportLocation(SceneInstances.Fungus2_26, "Leg Eater's Shop", new Vector2(35, 6)),
+            new TeleportLocation(SceneInstances.Room_nailmaster, "Nailmaster Mato", new Vector2(57, 5)),
+            new TeleportLocation(SceneInstances.Room_Mask_Maker, "Mask Maker", new Vector2(26, 7)),
         };
 
         /// <summary>

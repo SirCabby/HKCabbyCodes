@@ -13,10 +13,12 @@ namespace CabbyCodes.Patches.Flags
         {
             var panels = new List<CheatPanel>();
             
-            panels.AddRange(CreateStagPanels(new[] { 
+            panels.AddRange(CreateStagPanels(new[] {
                 FlagInstances.openedCrossroads,
                 FlagInstances.openedRestingGrounds,
-                FlagInstances.openedGreenpath
+                FlagInstances.openedGreenpath,
+                FlagInstances.openedFungalWastes,
+                FlagInstances.openedDeepnest
             }));
             
             return panels;

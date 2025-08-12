@@ -101,6 +101,11 @@ namespace CabbyCodes.Scenes
                     if (sceneData != null)
                     {
                         string areaName = sceneData.AreaName;
+                        if (string.IsNullOrEmpty(areaName))
+                        {
+                            // Skip non-mappable scenes (boss rooms, transition rooms, etc.) that have no associated area
+                            continue;
+                        }
                         
                         if (!areaFlags.ContainsKey(areaName))
                         {

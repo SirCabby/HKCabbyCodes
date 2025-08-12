@@ -9,20 +9,34 @@ namespace CabbyCodes.Patches.Flags
     {
         public override List<CheatPanel> CreatePanels()
         {
-            // Cornifer section
-            var panels = new List<CheatPanel>
-            {
-                new InfoPanel("Cornifer").SetColor(CheatPanel.subHeaderColor)
-            };
+            var panels = new List<CheatPanel>();
+
+            panels.Add(new InfoPanel("Cloth").SetColor(CheatPanel.subHeaderColor));
+            panels.AddRange(CreateNpcPanels(new[] {
+                FlagInstances.metCloth
+            }));
+
+            panels.Add(new InfoPanel("Cornifer").SetColor(CheatPanel.subHeaderColor));
             panels.AddRange(CreateNpcPanels(new[] {
                 FlagInstances.metCornifer,
                 FlagInstances.corniferIntroduced,
                 FlagInstances.corn_crossroadsLeft,
                 FlagInstances.corn_greenpathEncountered,
-                FlagInstances.corn_greenpathLeft
+                FlagInstances.corn_greenpathLeft,
+                FlagInstances.corn_fungalWastesLeft,
+                FlagInstances.corn_cliffsEncountered,
+                FlagInstances.corn_cliffsLeft,
+                FlagInstances.corn_deepnestEncountered,
+                FlagInstances.corn_deepnestMet1,
+                FlagInstances.corn_deepnestLeft,
             }));
-            
-            // Elderbug section
+
+            panels.Add(new InfoPanel("Divine").SetColor(CheatPanel.subHeaderColor));
+            panels.AddRange(CreateNpcPanels(new[] {
+                FlagInstances.divineInTown,
+                FlagInstances.metDivine,
+            }));
+
             panels.Add(new InfoPanel("Elderbug").SetColor(CheatPanel.subHeaderColor));
             panels.AddRange(CreateNpcPanels(new[] {
                 FlagInstances.metElderbug,
@@ -33,35 +47,82 @@ namespace CabbyCodes.Patches.Flags
                 FlagInstances.elderbugSpeechEggTemple,
                 FlagInstances.elderbugSpeechMapShop,
                 FlagInstances.elderbugSpeechSly,
-                FlagInstances.elderbugSpeechStation
+                FlagInstances.elderbugSpeechStation,
+
+                
+                FlagInstances.elderbugConvoGrimm
+            }));
+
+            panels.Add(new InfoPanel("Gorb").SetColor(CheatPanel.subHeaderColor));
+            panels.AddRange(CreateNpcPanels(new[] {
+                FlagInstances.ALADAR_encountered
             }));
             
-            // Hunter section
+            panels.Add(new InfoPanel("Hornet").SetColor(CheatPanel.subHeaderColor));
+            panels.AddRange(CreateNpcPanels(new[] {
+                FlagInstances.hornetGreenpath,
+                FlagInstances.hornetFung,
+                FlagInstances.hornetCityBridge_ready,
+                FlagInstances.hornetCityBridge_completed,
+                FlagInstances.hornetFountainEncounter,
+                FlagInstances.hornetDenEncounter
+            }));
+            
             panels.Add(new InfoPanel("Hunter").SetColor(CheatPanel.subHeaderColor));
             panels.AddRange(CreateNpcPanels(new[] {
                 FlagInstances.metHunter 
             }));
             
-            // Iselda section
             panels.Add(new InfoPanel("Iselda").SetColor(CheatPanel.subHeaderColor));
             panels.AddRange(CreateNpcPanels(new[] {
                 FlagInstances.metIselda 
             }));
             
-            // Jiji section
             panels.Add(new InfoPanel("Jiji").SetColor(CheatPanel.subHeaderColor));
             panels.AddRange(CreateNpcPanels(new[] {
                 FlagInstances.jijiMet 
             }));
 
-            // Myla section
+            panels.Add(new InfoPanel("Leg Eater").SetColor(CheatPanel.subHeaderColor));
+            panels.AddRange(CreateNpcPanels(new[] {
+                FlagInstances.metLegEater,
+                FlagInstances.paidLegEater
+            }));
+
+            panels.Add(new InfoPanel("Mask Maker").SetColor(CheatPanel.subHeaderColor));
+            panels.AddRange(CreateNpcPanels(new[] {
+                FlagInstances.maskmakerMet,
+                FlagInstances.maskmakerConvo1,
+                FlagInstances.maskmakerConvo2,
+            }));
+            
+            panels.Add(new InfoPanel("Midwife").SetColor(CheatPanel.subHeaderColor));
+            panels.AddRange(CreateNpcPanels(new[] {
+                FlagInstances.midwifeMet,
+                FlagInstances.midwifeConvo1
+            }));
+            
+            panels.Add(new InfoPanel("Moss Prophet").SetColor(CheatPanel.subHeaderColor));
+            panels.AddRange(CreateNpcPanels(new[] {
+                FlagInstances.mossCultist 
+            }));
+
             panels.Add(new InfoPanel("Myla").SetColor(CheatPanel.subHeaderColor));
             panels.AddRange(CreateNpcPanels(new[] {
                 FlagInstances.metMiner, 
                 FlagInstances.Crossroads_45__Zombie_Myla 
             }));
+
+            panels.Add(new InfoPanel("Nailmaster Mato").SetColor(CheatPanel.subHeaderColor));
+            panels.AddRange(CreateNpcPanels(new[] {
+                FlagInstances.metNailmasterMato,
+            }));
             
-            // Quirrel section
+            panels.Add(new InfoPanel("Nightmare Troupe").SetColor(CheatPanel.subHeaderColor));
+            panels.AddRange(CreateNpcPanels(new[] {
+                FlagInstances.troupeInTown 
+            }));
+            
             panels.Add(new InfoPanel("Quirrel").SetColor(CheatPanel.subHeaderColor));
             panels.AddRange(CreateNpcPanels(new[] {
                 FlagInstances.metQuirrel,
@@ -70,49 +131,57 @@ namespace CabbyCodes.Patches.Flags
                 FlagInstances.quirrelSlugShrine
             }));
 
-            // Salubra section
+            panels.Add(new InfoPanel("Relic Seeker Lemm").SetColor(CheatPanel.subHeaderColor));
+            panels.AddRange(CreateNpcPanels(new[] {
+                FlagInstances.marmOutside 
+            }));
+            
             panels.Add(new InfoPanel("Salubra").SetColor(CheatPanel.subHeaderColor));
             panels.AddRange(CreateNpcPanels(new[] {
                 FlagInstances.metCharmSlug 
             }));
             
-            // Shaman section
             panels.Add(new InfoPanel("Shaman").SetColor(CheatPanel.subHeaderColor));
             panels.AddRange(CreateNpcPanels(new[] {
                 FlagInstances.shaman 
             }));
 
-            // Seer section
             panels.Add(new InfoPanel("Seer").SetColor(CheatPanel.subHeaderColor));
             panels.AddRange(CreateNpcPanels(new[] {
                 FlagInstances.metMoth
             }));
 
-            // Sly section
             panels.Add(new InfoPanel("Sly").SetColor(CheatPanel.subHeaderColor));
             panels.AddRange(CreateNpcPanels(new[] {
                 FlagInstances.slyRescued,
                 FlagInstances.metSlyShop
             }));
 
-            // Stag section
             panels.Add(new InfoPanel("Stag").SetColor(CheatPanel.subHeaderColor));
             panels.AddRange(CreateNpcPanels(new[] {
-                FlagInstances.metStag
+                FlagInstances.metStag,
+                FlagInstances.stagRemember1,
             }));
 
-            // Warriors' Graves
             panels.Add(new InfoPanel("Warriors' Graves").SetColor(CheatPanel.subHeaderColor));
             panels.AddRange(CreateNpcPanels(new[] {
+                FlagInstances.GALIEN_encountered,
+                FlagInstances.HU_encountered,
                 FlagInstances.NOEYES_encountered,
                 FlagInstances.XERO_encountered
             }));
 
-            // Zote
+            panels.Add(new InfoPanel("Willoh").SetColor(CheatPanel.subHeaderColor));
+            panels.AddRange(CreateNpcPanels(new[] {
+                FlagInstances.metGiraffe
+            }));
+            
             panels.Add(new InfoPanel("Zote").SetColor(CheatPanel.subHeaderColor));
             panels.AddRange(CreateNpcPanels(new[] {
+                FlagInstances.zoteRescuedBuzzer,
                 FlagInstances.zote,
-                FlagInstances.zoteRescuedBuzzer
+                FlagInstances.zoteTownConvo,
+                FlagInstances.zoteRescuedDeepnest,
             }));
             
             return panels;

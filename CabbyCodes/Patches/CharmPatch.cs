@@ -59,19 +59,15 @@ namespace CabbyCodes.Patches
                 new DropdownPatch(FlagInstances.royalCharmState, new List<string> { "NONE", "Kingsoul", "Void Heart" }, "Kingsoul / Void Heart").CreatePanel()
             };
             
-            // Broken charm panels
-            var breakableCharms = CharmData.GetBreakableCharms();
-            foreach (var charm in breakableCharms)
+            // Fragile charm panels (replacing separate broken and upgraded panels)
+            var fragileCharms = CharmData.GetBreakableCharms();
+            foreach (var charm in fragileCharms)
             {
-                panels.Add(CreateBrokenCharmPanel(charm));
+                panels.Add(CreateFragileCharmPanel(charm));
             }
             
-            // Upgrade charm panels
-            var upgradeableCharms = CharmData.GetUpgradeableCharms();
-            foreach (var charm in upgradeableCharms)
-            {
-                panels.Add(CreateUpgradeCharmPanel(charm));
-            }
+            // Add subheader for individual charm toggles
+            panels.Add(new InfoPanel("Charms Obtained").SetColor(CheatPanel.subHeaderColor));
             
             return panels;
         }
@@ -89,48 +85,77 @@ namespace CabbyCodes.Patches
             return panels;
         }
 
-        private CheatPanel CreateBrokenCharmPanel(CharmInfo charm)
+        private CheatPanel CreateFragileCharmPanel(CharmInfo charm)
         {
             int index = charms.IndexOf(charm) + 1;
-            TogglePanel togglePanel = new TogglePanel(new BoolPatch(charm.BrokenFlag), index + ": " + charm.Name + " is Broken");
-            (_, ImageMod spriteImageMod) = PanelAdder.AddSprite(togglePanel, CharmIconList.Instance.GetSprite(charm.Id), 1);
+            
+            // Create a custom dropdown for fragile charm states using DelegateValueList pattern
+            var dropdownPanel = new DropdownPanel(new DelegateValueList(
+                // Getter: 0 = Normal, 1 = Broken, 2 = Gave to Divine, 3 = Unbreakable
+                () => GetFragileCharmState(charm),
+                // Setter
+                value => SetFragileCharmState(charm, value),
+                // Value list
+                () => new List<string> { "Normal", "Broken", "Gave to Divine", "Unbreakable" }
+            ), index + ": " + charm.Name + " State", CabbyMenu.Constants.DEFAULT_PANEL_HEIGHT);
+            
+            (_, ImageMod spriteImageMod) = PanelAdder.AddSprite(dropdownPanel, CharmIconList.Instance.GetSprite(charm.Id), 1);
 
-            togglePanel.updateActions.Add(() =>
+            dropdownPanel.updateActions.Add(() =>
             {
                 spriteImageMod.SetSprite(GetCharmIcon(charm.Id));
-                if (FlagManager.GetBoolFlag(charm.BrokenFlag))
-                {
-                    spriteImageMod.SetColor(Color.white);
-                }
-                else
+                int currentState = GetFragileCharmState(charm);
+                if (currentState == 0) // Normal
                 {
                     spriteImageMod.SetColor(unearnedColor);
                 }
+                else // Broken, Unbreakable, or Gave to Divine
+                {
+                    spriteImageMod.SetColor(Color.white);
+                }
             });
             
-            return togglePanel;
+            return dropdownPanel;
         }
 
-        private CheatPanel CreateUpgradeCharmPanel(CharmInfo charm)
+        private static int GetFragileCharmState(CharmInfo charm)
         {
-            int index = charms.IndexOf(charm) + 1;
-            TogglePanel togglePanel = new TogglePanel(new BoolPatch(charm.UpgradeFlag), index + ": " + charm.Name + " is Upgraded");
-            (_, ImageMod spriteImageMod) = PanelAdder.AddSprite(togglePanel, CharmIconList.Instance.GetSprite(charm.Id), 1);
-
-            togglePanel.updateActions.Add(() =>
-            {
-                spriteImageMod.SetSprite(GetCharmIcon(charm.Id));
-                if (FlagManager.GetBoolFlag(charm.UpgradeFlag))
-                {
-                    spriteImageMod.SetColor(Color.white);
-                }
-                else
-                {
-                    spriteImageMod.SetColor(unearnedColor);
-                }
-            });
+            bool isBroken = FlagManager.GetBoolFlag(charm.BrokenFlag);
+            bool isUpgraded = FlagManager.GetBoolFlag(charm.UpgradeFlag);
+            bool isGave = FlagManager.GetBoolFlag(charm.GaveFlag);
             
-            return togglePanel;
+            if (isUpgraded)
+                return 3; // Unbreakable
+            else if (isGave)
+                return 2; // Gave to Divine
+            else if (isBroken)
+                return 1; // Broken
+            else
+                return 0; // Normal
+        }
+
+        private static void SetFragileCharmState(CharmInfo charm, int state)
+        {
+            bool isBroken = state == 1;
+            bool isGave = state == 2;
+            bool isUpgraded = state == 3;
+            
+            // Clear all flags first
+            FlagManager.SetBoolFlag(charm.BrokenFlag, false);
+            FlagManager.SetBoolFlag(charm.UpgradeFlag, false);
+            FlagManager.SetBoolFlag(charm.GaveFlag, false);
+            
+            // Set the appropriate flag based on state
+            if (isBroken)
+                FlagManager.SetBoolFlag(charm.BrokenFlag, true);
+            else if (isGave)
+                FlagManager.SetBoolFlag(charm.GaveFlag, true);
+            else if (isUpgraded)
+                FlagManager.SetBoolFlag(charm.UpgradeFlag, true);
+            
+            // Update pooed status: true if unbreakable, false otherwise
+            bool shouldBePooed = isUpgraded;
+            FlagManager.SetBoolFlag(charm.PooedFlag, shouldBePooed);
         }
 
         private CheatPanel CreateCharmTogglePanel(CharmInfo charm)

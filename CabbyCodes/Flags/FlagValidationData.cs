@@ -48,83 +48,66 @@ namespace CabbyCodes.Flags
             // Check for specific integer flag validations
             switch (flag.Id)
             {
+                case "elderbugHistory":
+                case "menderState":
+                case "permadeathMode":
+                    return new IntFlagValidationMetadata(0, 1, KeyCodeMap.ValidChars.Numeric);
+
+                case "mossCultist":
+                case "vesselFragments":
+                case "xeroDefeated":
+                case "zote":
+                case "zoteTownConvo":
+                    return new IntFlagValidationMetadata(0, 2, KeyCodeMap.ValidChars.Numeric);
+
+                case "guardiansDefeated":
+                case "quirrelSlugShrine":
+                    return new IntFlagValidationMetadata(0, 3, KeyCodeMap.ValidChars.Numeric);
+
                 case "heartPieces":
+                case "hornetGreenpath":
+                case "nailSmithUpgrades":
+                case "quirrelEggTemple":
+                case "simpleKeys":
+                case "trinket4":
                     return new IntFlagValidationMetadata(0, 4, KeyCodeMap.ValidChars.Numeric);
                 
                 case "ore":
+                case "shaman":
                     return new IntFlagValidationMetadata(0, 6, KeyCodeMap.ValidChars.Numeric);
                 
-                case "rancidEggs":
-                    return new IntFlagValidationMetadata(0, 80, KeyCodeMap.ValidChars.Numeric);
-                
-                case "simpleKeys":
-                    return new IntFlagValidationMetadata(0, 4, KeyCodeMap.ValidChars.Numeric);
-                
-                case "geo":
-                    return new IntFlagValidationMetadata(0, 999999, KeyCodeMap.ValidChars.Numeric);
-                
-                case "dreamOrbs":
-                    return new IntFlagValidationMetadata(0, 9999, KeyCodeMap.ValidChars.Numeric);
-                
+                case "trinket3":
+                    return new IntFlagValidationMetadata(0, 8, KeyCodeMap.ValidChars.Numeric);
+
                 case "trinket1":
                     return new IntFlagValidationMetadata(0, 14, KeyCodeMap.ValidChars.Numeric);
                 
                 case "trinket2":
                     return new IntFlagValidationMetadata(0, 17, KeyCodeMap.ValidChars.Numeric);
-                
-                case "trinket3":
-                    return new IntFlagValidationMetadata(0, 8, KeyCodeMap.ValidChars.Numeric);
-                
-                case "trinket4":
-                    return new IntFlagValidationMetadata(0, 4, KeyCodeMap.ValidChars.Numeric);
 
-                case "xeroDefeated":
-                    return new IntFlagValidationMetadata(0, 2, KeyCodeMap.ValidChars.Numeric);
-                
-                case "nailSmithUpgrades":
-                    return new IntFlagValidationMetadata(0, 4, KeyCodeMap.ValidChars.Numeric);
-                
-                case "vesselFragments":
-                    return new IntFlagValidationMetadata(0, 2, KeyCodeMap.ValidChars.Numeric);
-                
-                case "grubsCollected":
-                    return new IntFlagValidationMetadata(0, 46, KeyCodeMap.ValidChars.Numeric);
-                
                 case "grubRewards":
                     return new IntFlagValidationMetadata(0, 23, KeyCodeMap.ValidChars.Numeric);
-                
-                case "permadeathMode":
-                    return new IntFlagValidationMetadata(0, 1, KeyCodeMap.ValidChars.Numeric);
+
+                case "grubsCollected":
+                    return new IntFlagValidationMetadata(0, 46, KeyCodeMap.ValidChars.Numeric);
+
+                case "rancidEggs":
+                    return new IntFlagValidationMetadata(0, 80, KeyCodeMap.ValidChars.Numeric);
+
+                case "dreamOrbs":
+                    return new IntFlagValidationMetadata(0, 9999, KeyCodeMap.ValidChars.Numeric);
+
+                case "geo":
+                    return new IntFlagValidationMetadata(0, 999999, KeyCodeMap.ValidChars.Numeric);
                 
                 case "profileID":
                     return new IntFlagValidationMetadata(1, 4, KeyCodeMap.ValidChars.Numeric);
                 
-                case "currentArea":
-                    return new IntFlagValidationMetadata(0, 999, KeyCodeMap.ValidChars.Numeric);
 
+                // Needs corrected
+                case "currentArea":
                 case "stationsOpened":
                     return new IntFlagValidationMetadata(0, 999, KeyCodeMap.ValidChars.Numeric);
-                
-                case "elderbugHistory":
-                    return new IntFlagValidationMetadata(0, 1, KeyCodeMap.ValidChars.Numeric);
-                
-                case "quirrelEggTemple":
-                    return new IntFlagValidationMetadata(0, 4, KeyCodeMap.ValidChars.Numeric);
-                
-                case "shaman":
-                    return new IntFlagValidationMetadata(0, 6, KeyCodeMap.ValidChars.Numeric);
-                
-                case "menderState":
-                    return new IntFlagValidationMetadata(0, 1, KeyCodeMap.ValidChars.Numeric);
-            
-                case "zote":
-                    return new IntFlagValidationMetadata(0, 2, KeyCodeMap.ValidChars.Numeric);
-
-                case "hornetGreenpath":
-                    return new IntFlagValidationMetadata(0, 4, KeyCodeMap.ValidChars.Numeric);
-
-                case "quirrelSlugShrine":
-                    return new IntFlagValidationMetadata(0, 3, KeyCodeMap.ValidChars.Numeric);
 
                 default:
                     // For unknown integer flags, provide reasonable defaults

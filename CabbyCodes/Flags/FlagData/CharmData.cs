@@ -21,9 +21,9 @@ namespace CabbyCodes.Flags.FlagData
         {
             var charms = new Dictionary<int, CharmInfo>();
             
-            // Helper method to add a charm with optional broken and upgrade flags
-            void Add(int id, FlagDef gotFlag, FlagDef costFlag, FlagDef brokenFlag = null, FlagDef upgradeFlag = null) 
-                => charms[id] = new CharmInfo(id, gotFlag, costFlag, brokenFlag, upgradeFlag);
+            // Helper method to add a charm with optional broken, upgrade, gave, and pooed flags
+            void Add(int id, FlagDef gotFlag, FlagDef costFlag, FlagDef brokenFlag = null, FlagDef upgradeFlag = null, FlagDef gaveFlag = null, FlagDef pooedFlag = null) 
+                => charms[id] = new CharmInfo(id, gotFlag, costFlag, brokenFlag, upgradeFlag, gaveFlag, pooedFlag);
             
             // Charm 1-22: Standard charms
             Add(1, FlagInstances.gotCharm_1, FlagInstances.charmCost_1);
@@ -49,13 +49,16 @@ namespace CabbyCodes.Flags.FlagData
             Add(21, FlagInstances.gotCharm_21, FlagInstances.charmCost_21);
             Add(22, FlagInstances.gotCharm_22, FlagInstances.charmCost_22);
             
-            // Charm 23-25: Fragile charms (can be broken and upgraded)
+            // Charm 23-25: Fragile charms (can be broken, upgraded, given to Divine, or pooed)
             Add(23, FlagInstances.gotCharm_23, FlagInstances.charmCost_23, 
-                FlagInstances.brokenCharm_23, FlagInstances.fragileHealth_unbreakable);
+                FlagInstances.brokenCharm_23, FlagInstances.fragileHealth_unbreakable,
+                FlagInstances.gaveFragileHeart, FlagInstances.pooedFragileHeart);
             Add(24, FlagInstances.gotCharm_24, FlagInstances.charmCost_24, 
-                FlagInstances.brokenCharm_24, FlagInstances.fragileGreed_unbreakable);
+                FlagInstances.brokenCharm_24, FlagInstances.fragileGreed_unbreakable,
+                FlagInstances.gaveFragileGreed, FlagInstances.pooedFragileGreed);
             Add(25, FlagInstances.gotCharm_25, FlagInstances.charmCost_25, 
-                FlagInstances.brokenCharm_25, FlagInstances.fragileStrength_unbreakable);
+                FlagInstances.brokenCharm_25, FlagInstances.fragileStrength_unbreakable,
+                FlagInstances.gaveFragileStrength, FlagInstances.pooedFragileStrength);
             
             // Charm 26-40: Standard charms
             Add(26, FlagInstances.gotCharm_26, FlagInstances.charmCost_26);

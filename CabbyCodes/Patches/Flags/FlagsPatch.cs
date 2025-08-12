@@ -15,7 +15,7 @@ namespace CabbyCodes.Patches.Flags
 
             var flagTypeSection = new CategorizedPanelSection(
                 "Flag Type", 
-                new List<string> { "Environment", "NPC", "Boss", "Shop", "Stag", "Room", "Geo Rocks", "Whispering Roots" },
+                new List<string> { "Environment", "NPC", "Boss", "Progression", "Shop", "Stag", "Room", "Geo Rocks", "Whispering Roots" },
                 CreateFlagTypePanels
             );
             flagTypeSection.AddToMenu(CabbyCodesPlugin.cabbyMenu);
@@ -48,26 +48,31 @@ namespace CabbyCodes.Patches.Flags
                     panels.AddRange(bossPatch.CreatePanels());
                     break;
                 
-                case 3: // Shop
+                case 3: // Progression
+                    var progressionPatch = new ProgressionPatch();
+                    panels.AddRange(progressionPatch.CreatePanels());
+                    break;
+                
+                case 4: // Shop
                     var shopPatch = new ShopFlagPatch();
                     panels.AddRange(shopPatch.CreatePanels());
                     break;
                     
-                case 4: // Stag
+                case 5: // Stag
                     var stagPatch = new StagFlagPatch();
                     panels.AddRange(stagPatch.CreatePanels());
                     break;
                     
-                case 5: // Room
+                case 6: // Room
                     panels.AddRange(RoomFlagsPatch.CreatePanels());
                     break;
                     
-                case 6: // Geo Rocks
+                case 7: // Geo Rocks
                     var geoPatch = new GeoRocksFlagPatch();
                     panels.AddRange(geoPatch.CreatePanels());
                     break;
                     
-                case 7: // Whispering Roots
+                case 8: // Whispering Roots
                     var whisperingPatch = new WhisperingRootsPatch();
                     panels.AddRange(whisperingPatch.CreatePanels());
                     break;
