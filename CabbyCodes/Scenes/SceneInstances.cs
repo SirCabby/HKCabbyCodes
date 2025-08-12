@@ -72,12 +72,15 @@ namespace CabbyCodes.Scenes
         public static readonly SceneMapData Ruins2_08 = new SceneMapData("Ruins2_08", "City");
         public static readonly SceneMapData Ruins2_09 = new SceneMapData("Ruins2_09", "City");
         public static readonly SceneMapData Ruins2_10_b = new SceneMapData("Ruins2_10_b", "City");
+        public static readonly SceneMapData Ruins2_10b = new SceneMapData("Ruins2_10b", "City");
         public static readonly SceneMapData Ruins2_11 = new SceneMapData("Ruins2_11", "City");
         public static readonly SceneMapData Ruins2_11_b = new SceneMapData("Ruins2_11_b", "City");
         public static readonly SceneMapData Ruins2_Watcher_Room = new SceneMapData("Ruins2_Watcher_Room", "City");
         public static readonly SceneMapData Ruins_Bathhouse = new SceneMapData("Ruins_Bathhouse", "City");
         public static readonly SceneMapData Ruins_Elevator = new SceneMapData("Ruins_Elevator", "City");
-        public static readonly SceneMapData Ruins_House_01 = new SceneMapData("Ruins_House_01", "City");
+        public static readonly SceneMapData Ruins_House_01 = new SceneMapData("Ruins_House_01");
+        public static readonly SceneMapData Ruins_House_02 = new SceneMapData("Ruins_House_02");
+        public static readonly SceneMapData Room_nailsmith = new SceneMapData("Room_nailsmith");
 
         // Cliffs
         public static readonly SceneMapData Cliffs_01 = new SceneMapData("Cliffs_01", "Cliffs");

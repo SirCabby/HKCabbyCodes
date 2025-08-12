@@ -18,6 +18,7 @@ namespace CabbyCodes.Patches.Flags.Triage
         public static GameObject notificationPanel;
         public static TextMeshProUGUI notificationText;
         private static readonly Queue<string> notificationQueue = new Queue<string>();
+        private const int MAX_NOTIFICATIONS = 200;
         private static readonly FlagMonitorReference monitorReference = FlagMonitorReference.Instance;
         private static readonly FlagFileLoggingReference fileLoggingReference = FlagFileLoggingReference.Instance;
         
@@ -1100,6 +1101,13 @@ namespace CabbyCodes.Patches.Flags.Triage
             if (monitorReference.IsEnabled)
             {
                 notificationQueue.Enqueue(message);
+                
+                // Truncate to last MAX_NOTIFICATIONS if queue gets too long
+                while (notificationQueue.Count > MAX_NOTIFICATIONS)
+                {
+                    notificationQueue.Dequeue();
+                }
+                
                 UpdateNotificationDisplay();
             }
         }
@@ -1149,7 +1157,7 @@ namespace CabbyCodes.Patches.Flags.Triage
             if (notificationPanel == null) return;
             
             int count = notificationQueue.Count;
-            string displayText = $"<color=#FFFFFF><b>Flag Monitor Active - Total Notifications: {count}</b></color>\n\n";
+            string displayText = $"<color=#FFFFFF><b>Flag Monitor Active - Notifications: {count}/{MAX_NOTIFICATIONS}</b></color>\n\n";
             
             foreach (string notification in notificationQueue)
             {
@@ -1200,7 +1208,7 @@ namespace CabbyCodes.Patches.Flags.Triage
             notificationQueue.Clear();
             if (notificationText != null)
             {
-                notificationText.text = "<color=#FFFFFF><b>Flag Monitor Active - Total Notifications: 0</b></color>\n\n<color=#CCCCCC>Notifications cleared.</color>";
+                notificationText.text = $"<color=#FFFFFF><b>Flag Monitor Active - Notifications: 0/{MAX_NOTIFICATIONS}</b></color>\n\n<color=#CCCCCC>Notifications cleared.</color>";
                 
                 LayoutRebuilder.ForceRebuildLayoutImmediate(notificationText.GetComponent<RectTransform>());
                 LayoutRebuilder.ForceRebuildLayoutImmediate(notificationText.transform.parent.GetComponent<RectTransform>());

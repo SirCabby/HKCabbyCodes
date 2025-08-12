@@ -305,6 +305,46 @@ namespace CabbyCodes.Patches.Flags
                         FlagInstances.Deepnest_39__Dream_Plant_Orb_9,
                     }
                 },
+                { 
+                    FlagInstances.Abyss_01__Dream_Plant, new List<FlagDef>
+                    {
+                        FlagInstances.Abyss_01__Dream_Plant_Orb,
+                        FlagInstances.Abyss_01__Dream_Plant_Orb_1,
+                        FlagInstances.Abyss_01__Dream_Plant_Orb_10,
+                        FlagInstances.Abyss_01__Dream_Plant_Orb_11,
+                        FlagInstances.Abyss_01__Dream_Plant_Orb_12,
+                        FlagInstances.Abyss_01__Dream_Plant_Orb_13,
+                        FlagInstances.Abyss_01__Dream_Plant_Orb_14,
+                        FlagInstances.Abyss_01__Dream_Plant_Orb_15,
+                        FlagInstances.Abyss_01__Dream_Plant_Orb_16,
+                        FlagInstances.Abyss_01__Dream_Plant_Orb_17,
+                        FlagInstances.Abyss_01__Dream_Plant_Orb_18,
+                        FlagInstances.Abyss_01__Dream_Plant_Orb_19,
+                        FlagInstances.Abyss_01__Dream_Plant_Orb_2,
+                        FlagInstances.Abyss_01__Dream_Plant_Orb_20,
+                        FlagInstances.Abyss_01__Dream_Plant_Orb_21,
+                        FlagInstances.Abyss_01__Dream_Plant_Orb_22,
+                        FlagInstances.Abyss_01__Dream_Plant_Orb_23,
+                        FlagInstances.Abyss_01__Dream_Plant_Orb_24,
+                        FlagInstances.Abyss_01__Dream_Plant_Orb_25,
+                        FlagInstances.Abyss_01__Dream_Plant_Orb_26,
+                        FlagInstances.Abyss_01__Dream_Plant_Orb_27,
+                        FlagInstances.Abyss_01__Dream_Plant_Orb_28,
+                        FlagInstances.Abyss_01__Dream_Plant_Orb_29,
+                        FlagInstances.Abyss_01__Dream_Plant_Orb_3,
+                        FlagInstances.Abyss_01__Dream_Plant_Orb_30,
+                        FlagInstances.Abyss_01__Dream_Plant_Orb_31,
+                        FlagInstances.Abyss_01__Dream_Plant_Orb_32,
+                        FlagInstances.Abyss_01__Dream_Plant_Orb_33,
+                        FlagInstances.Abyss_01__Dream_Plant_Orb_34,
+                        FlagInstances.Abyss_01__Dream_Plant_Orb_4,
+                        FlagInstances.Abyss_01__Dream_Plant_Orb_5,
+                        FlagInstances.Abyss_01__Dream_Plant_Orb_6,
+                        FlagInstances.Abyss_01__Dream_Plant_Orb_7,
+                        FlagInstances.Abyss_01__Dream_Plant_Orb_8,
+                        FlagInstances.Abyss_01__Dream_Plant_Orb_9
+                    }
+                },
             };
         }
 

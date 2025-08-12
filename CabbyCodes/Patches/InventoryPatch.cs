@@ -485,7 +485,9 @@ namespace CabbyCodes.Patches
                 CreateVesselFragmentPanel(FlagInstances.slyVesselFrag2),
                 CreateVesselFragmentPanel(FlagInstances.slyVesselFrag3),
                 CreateVesselFragmentPanel(FlagInstances.slyVesselFrag4),
-                CreateVesselFragmentPanel(FlagInstances.Fungus1_13__Vessel_Fragment)
+                CreateVesselFragmentPanel(FlagInstances.Fungus1_13__Vessel_Fragment),
+                CreateVesselFragmentPanel(FlagInstances.Deepnest_38__Vessel_Fragment),
+                CreateVesselFragmentPanel(FlagInstances.Ruins2_09__Vessel_Fragment),
             };
             
             return panels;
@@ -712,6 +714,9 @@ namespace CabbyCodes.Patches
                 CreateWanderersJournalPanel(FlagInstances.Fungus2_17__Shiny_Item),
                 CreateWanderersJournalPanel(FlagInstances.Cliffs_01__Shiny_Item_1),
                 CreateWanderersJournalPanel(FlagInstances.Fungus2_04__Shiny_Item),
+                CreateWanderersJournalPanel(FlagInstances.Abyss_02__Shiny_Item),
+                CreateWanderersJournalPanel(FlagInstances.Ruins_Elevator__Shiny_Item_1),
+                CreateWanderersJournalPanel(FlagInstances.Ruins2_05__Shiny_Item),
             };
 
             return panels;
@@ -742,6 +747,8 @@ namespace CabbyCodes.Patches
                 CreateHallownestSealPanel(FlagInstances.Fungus3_30__Shiny_Item),
                 CreateHallownestSealPanel(FlagInstances.Deepnest_Spider_Town__Shiny_Item),
                 CreateHallownestSealPanel(FlagInstances.Fungus2_31__Shiny_Item),
+                CreateHallownestSealPanel(FlagInstances.Ruins2_08__Shiny_Item),
+                CreateHallownestSealPanel(FlagInstances.Ruins1_03__Shiny_Item),
             };
 
             return panels;

@@ -41,6 +41,7 @@ namespace CabbyCodes.Patches.Flags
                 FlagInstances.corn_deepnestEncountered,
                 FlagInstances.corn_deepnestMet1,
                 FlagInstances.corn_deepnestLeft,
+                FlagInstances.corn_abyssEncountered,
             }));
 
             panels.Add(new InfoPanel("Divine").SetColor(CheatPanel.subHeaderColor));
@@ -151,7 +152,8 @@ namespace CabbyCodes.Patches.Flags
 
             panels.Add(new InfoPanel("Relic Seeker Lemm").SetColor(CheatPanel.subHeaderColor));
             panels.AddRange(CreateNpcPanels(new[] {
-                FlagInstances.marmOutside 
+                FlagInstances.marmOutside,
+                FlagInstances.marmOutsideConvo,
             }));
             
             panels.Add(new InfoPanel("Salubra").SetColor(CheatPanel.subHeaderColor));
@@ -179,6 +181,7 @@ namespace CabbyCodes.Patches.Flags
             panels.AddRange(CreateNpcPanels(new[] {
                 FlagInstances.metStag,
                 FlagInstances.stagRemember1,
+                FlagInstances.stagConvoTram,
             }));
 
             panels.Add(new InfoPanel("Tiso").SetColor(CheatPanel.subHeaderColor));
