@@ -170,7 +170,19 @@ namespace CabbyCodes.Patches.Teleport
                     // Match on display name
                     if (ctl.DisplayName == displayName)
                     {
-                        ctl.Location = teleportLocation;
+                        // Ask for confirmation before overwrite
+                        var menu = CabbyCodesPlugin.cabbyMenu;
+                        Action doOverwrite = () => { ctl.Location = teleportLocation; };
+                        if (menu != null)
+                        {
+                            string msg = string.Format("Overwrite teleport '{0}' with current position?", displayName);
+                            var popup = new CabbyMenu.UI.Popups.ConfirmationPopup(menu, "Overwrite Teleport?", msg, "Overwrite", "Cancel", doOverwrite, null);
+                            popup.Show();
+                        }
+                        else
+                        {
+                            doOverwrite();
+                        }
                         locationFound = true;
                         break;
                     }
@@ -293,26 +305,36 @@ namespace CabbyCodes.Patches.Teleport
         /// <param name="location">The teleport location to create a panel for.</param>
         private static void AddCustomPanel(TeleportLocation location)
         {
-            ButtonPanel buttonPanel = new ButtonPanel(() => { DoTeleport(location); }, "Teleport", location.DisplayName);
+            ButtonPanel buttonPanel = new ButtonPanel(() =>
+            {
+                var menu = CabbyCodesPlugin.cabbyMenu;
+                if (menu == null) { DoTeleport(location); return; }
+                string msg = string.Format("Teleport to '{0}'?", location.DisplayName);
+                var popup = new CabbyMenu.UI.Popups.ConfirmationPopup(
+                    menu,
+                    "Are you sure?",
+                    msg,
+                    "Teleport",
+                    "Cancel",
+                    () => { DoTeleport(location); },
+                    null);
+                popup.Show();
+            }, "Teleport", location.DisplayName);
 
             // Add the panel to the menu first so it has a parent
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(buttonPanel);
 
             // Create the X button after the panel has been added to the menu
-            GameObject destroyButton = PanelAdder.AddDestroyButtonToPanel(buttonPanel, () =>
+            PanelAdder.AddDestroyButtonToPanel(buttonPanel, () =>
             {
                 savedTeleports.Remove(location);
                 if (location is CustomTeleportLocation customLocation)
                 {
-                    // Remove the config entry directly
                     try
                     {
                         CabbyCodesPlugin.configFile.Remove(customLocation.configDef);
                         CabbyCodesPlugin.configFile.Save();
-
-                        // Update the saved locations list
                         UpdateSavedLocationsList();
-
                         CabbyCodesPlugin.BLogger.LogDebug(string.Format("Removed teleport location: {0}", customLocation.Scene.SceneName));
                     }
                     catch (Exception ex)
@@ -320,7 +342,42 @@ namespace CabbyCodes.Patches.Teleport
                         CabbyCodesPlugin.BLogger.LogWarning(string.Format("Failed to remove teleport location from config: {0} - {1}", customLocation.Scene.SceneName, ex.Message));
                     }
                 }
+            }, "X", 60f, (confirm, cancel) =>
+            {
+                var menu = CabbyCodesPlugin.cabbyMenu;
+                if (menu == null) { confirm(); return; }
+                string msg = string.Format("Delete teleport '{0}'?\n\nThis action cannot be undone.", location.DisplayName);
+                var popup = new CabbyMenu.UI.Popups.ConfirmationPopup(menu, "Are you sure?", msg, "Delete", "Keep", confirm, cancel);
+                popup.Show();
             });
+
+            // Add inline Save button to overwrite this teleport location
+            PanelAdder.AddButton(buttonPanel, 1, () =>
+            {
+                // Confirm overwrite
+                var menu = CabbyCodesPlugin.cabbyMenu;
+                Action performSave = () =>
+                {
+                    Vector2 newLoc = TeleportService.GetCurrentPlayerPosition().position;
+                    if (location is CustomTeleportLocation ctl)
+                    {
+                        ctl.Location = newLoc;
+                        CabbyCodesPlugin.BLogger.LogDebug(string.Format("Overwrote teleport location {0} to new coords {1}", location.DisplayName, newLoc));
+                    }
+                };
+
+                if (menu != null)
+                {
+                    string msg = string.Format("Overwrite teleport '{0}' with current position?", location.DisplayName);
+                    var popup = new CabbyMenu.UI.Popups.ConfirmationPopup(menu, "Overwrite Teleport?", msg, "Overwrite", "Cancel", performSave, null);
+                    popup.Show();
+                }
+                else
+                {
+                    performSave();
+                }
+
+            }, "Save", new Vector2(CabbyMenu.Constants.MIN_PANEL_WIDTH, CabbyMenu.Constants.DEFAULT_PANEL_HEIGHT));
         }
 
         /// <summary>

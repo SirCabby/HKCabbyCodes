@@ -88,16 +88,30 @@ namespace CabbyMenu.UI.CheatPanels
         /// <param name="additionalAction">Additional action to perform when the button is clicked.</param>
         /// <param name="buttonText">Text to display on the button (default: "X").</param>
         /// <param name="buttonSize">Size of the button (default: 60x60).</param>
-        /// <returns>The created destroy button GameObject.</returns>
-        public static GameObject AddDestroyButtonToPanel(CheatPanel targetPanel, Action additionalAction, string buttonText = "X", float buttonSize = 60f)
+        /// <param name="popupBuilder">Optional builder that shows a confirmation popup. The first Action parameter should be invoked when the user confirms, the second when the user cancels.</param>
+        public static GameObject AddDestroyButtonToPanel(CheatPanel targetPanel, Action additionalAction, string buttonText = "X", float buttonSize = 60f, Action<Action, Action> popupBuilder = null)
         {
             // Create the destroy button using the same factory as other buttons
             (GameObject button, _, _) = ButtonBuilder.BuildDanger(buttonText);
-            
-            button.GetComponent<Button>().onClick.AddListener(delegate
+
+            void DoDestroy()
             {
                 UnityEngine.Object.Destroy(targetPanel.cheatPanel);
-                additionalAction();
+                additionalAction?.Invoke();
+            }
+
+            // Wire up click behaviour
+            button.GetComponent<Button>().onClick.AddListener(() =>
+            {
+                if (popupBuilder != null)
+                {
+                    // Show confirmation popup; pass confirm and cancel actions
+                    popupBuilder.Invoke(DoDestroy, () => { /* canceled: nothing */ });
+                }
+                else
+                {
+                    DoDestroy();
+                }
             });
 
             // Check if the target panel exists
@@ -105,24 +119,24 @@ namespace CabbyMenu.UI.CheatPanels
             {
                 return button;
             }
-            
+
             // Attach the button to the target panel
             button.transform.SetParent(targetPanel.cheatPanel.transform, false);
-            
+
             // Configure the RectTransform for positioning
             RectTransform buttonRect = button.GetComponent<RectTransform>();
-            
+
             // Set the size
             buttonRect.sizeDelta = new Vector2(buttonSize, buttonSize);
-            
+
             // Add LayoutElement to prevent the HorizontalLayoutGroup from controlling this button
             LayoutElement buttonLayout = button.AddComponent<LayoutElement>();
             buttonLayout.ignoreLayout = true;
-            
+
             // Use right-center anchors to position the button at the right edge of the panel
             buttonRect.anchorMin = new Vector2(0.99f, 0.5f);
             buttonRect.anchorMax = new Vector2(0.99f, 0.5f);
-            
+
             // Position the button at the right edge with a small offset to center it
             float buttonOffset = buttonSize / 2f;
             buttonRect.anchoredPosition = new Vector2(-buttonOffset, 0f);

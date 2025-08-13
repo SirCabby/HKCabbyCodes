@@ -1,5 +1,7 @@
 using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
+using CabbyMenu.UI.Controls;
+using UnityEngine.UI;
 using System.Collections.Generic;
 using UnityEngine;
 using CabbyMenu.Utilities;
@@ -36,7 +38,7 @@ namespace CabbyCodes.Patches.Settings
         /// </summary>
         public static ButtonPanel CreateSaveButtonPanel()
         {
-            return new ButtonPanel(SaveCustomGame, "Save", "Save game at current location");
+            return new ButtonPanel(AttemptSaveCustomGame, "Save", "Save game at current location");
         }
 
         /// <summary>
@@ -52,17 +54,87 @@ namespace CabbyCodes.Patches.Settings
             {
                 string displayName = SavedGameManager.GetDisplayNameFromFileName(saveFileName);
 
-                var buttonPanel = new ButtonPanel(() => { LoadCustomSave(saveFileName); }, "Load", displayName);
+                var buttonPanel = new ButtonPanel(() =>
+                {
+                    var menu = CabbyCodesPlugin.cabbyMenu;
+                    if (menu == null)
+                    {
+                        LoadCustomSave(saveFileName);
+                        return;
+                    }
 
-                // add X destroy button
+                    string msg = $"Load the save '{displayName}'?\n\nYou will lose any unsaved progress.";
+                    var popup = new CabbyMenu.UI.Popups.ConfirmationPopup(
+                        menu,
+                        "Are you sure?",
+                        msg,
+                        "Load",
+                        "Cancel",
+                        () => { LoadCustomSave(saveFileName); },
+                        null);
+                    popup.Show();
+                }, "Load", displayName);
+
+                // Add destroy button with confirmation popup
                 PanelAdder.AddDestroyButtonToPanel(buttonPanel, () =>
                 {
+                    // actual deletion logic after panel removal
                     if (SavedGameManager.DeleteCustomSave(saveFileName))
                     {
                         SaveGameAnalysisPatch.RefreshFileList();
                         onListChanged?.Invoke();
                     }
+                }, "X", 60f, (confirm, cancel) =>
+                {
+                    var menu = CabbyCodesPlugin.cabbyMenu;
+                    if (menu == null) { confirm(); return; }
+                    string msg = $"Delete the save '{displayName}'?\n\n This action cannot be undone.";
+                    var popup = new CabbyMenu.UI.Popups.ConfirmationPopup(
+                        menu,
+                        "Are you sure?",
+                        msg,
+                        "Delete",
+                        "Keep",
+                        confirm,
+                        cancel);
+                    popup.Show();
                 });
+
+                // Add inline SAVE button between Load button and description label
+                PanelAdder.AddButton(buttonPanel, 1, () =>
+                {
+                    // Save (overwrite) logic for this slot
+                    string customName = displayName; // use display name as save name
+                    string fileName = SavedGameManager.GenerateSaveFileName(customName);
+                    string filePath = System.IO.Path.Combine(SavedGameManager.GetCabbySavesDirectory(), fileName);
+
+                    if (System.IO.File.Exists(filePath))
+                    {
+                        var menu = CabbyCodesPlugin.cabbyMenu;
+                        if (menu != null)
+                        {
+                            string msg = $"Overwrite the save '{displayName}'?\n\nThis action cannot be undone.";
+                            var popup = new CabbyMenu.UI.Popups.ConfirmationPopup(
+                                menu,
+                                "Overwrite Save File?",
+                                msg,
+                                "Overwrite",
+                                "Cancel",
+                                () => { SavedGameManager.SaveCustomGame(customName); },
+                                null);
+                            popup.Show();
+                        }
+                        else
+                        {
+                            SavedGameManager.SaveCustomGame(customName);
+                        }
+                    }
+                    else
+                    {
+                        // No file exists - just save
+                        SavedGameManager.SaveCustomGame(customName);
+                    }
+                }, "Save", new UnityEngine.Vector2(CabbyMenu.Constants.MIN_PANEL_WIDTH, CabbyMenu.Constants.DEFAULT_PANEL_HEIGHT));
 
                 panels.Add(buttonPanel);
             }
@@ -180,6 +252,41 @@ namespace CabbyCodes.Patches.Settings
             
             // Unsubscribe to avoid memory leaks
             gm.OnFinishedEnteringScene -= () => OnFinishedEnteringSceneLoad(targetPosition);
+        }
+
+        /// <summary>
+        /// Attempts to save the game, prompting for overwrite if file exists.
+        /// </summary>
+        private static void AttemptSaveCustomGame()
+        {
+            string customName = ((customSaveNameRef?.Get()) ?? "").Trim();
+            string fileName = SavedGameManager.GenerateSaveFileName(customName);
+            string filePath = System.IO.Path.Combine(SavedGameManager.GetCabbySavesDirectory(), fileName);
+
+            if (System.IO.File.Exists(filePath))
+            {
+                var menu = CabbyCodesPlugin.cabbyMenu;
+                if (menu == null)
+                {
+                    SaveCustomGame();
+                    return;
+                }
+
+                string msg = $"A save named '{customName}' already exists.\n\nOverwrite the existing file?";
+                var popup = new CabbyMenu.UI.Popups.ConfirmationPopup(
+                    menu,
+                    "Overwrite Save File?",
+                    msg,
+                    "Overwrite",
+                    "Cancel",
+                    () => { SaveCustomGame(); },
+                    null);
+                popup.Show();
+            }
+            else
+            {
+                SaveCustomGame();
+            }
         }
 
         /// <summary>

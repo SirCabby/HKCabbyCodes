@@ -614,5 +614,17 @@ namespace CabbyMenu.UI
 
             OnCategorySelected(0);
         }
+
+        /// <summary>
+        /// Gets the root GameObject (canvas) for the menu. Creates it if it does not yet exist.
+        /// </summary>
+        public GameObject GetRootGameObject()
+        {
+            if (rootGameObject == null)
+            {
+                BuildCanvas();
+            }
+            return rootGameObject;
+        }
     }
 }
