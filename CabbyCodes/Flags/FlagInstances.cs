@@ -1847,6 +1847,9 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef midwifeConvo1 = new FlagDef("midwifeConvo1", null, false, "PlayerData_Bool", "Midwife conversation 1");
             public static readonly FlagDef midwifeMet = new FlagDef("midwifeMet", null, false, "PlayerData_Bool", "Met Midwife");
             public static readonly FlagDef mossCultist = new FlagDef("mossCultist", null, false, "PlayerData_Int", "Spoke with Moss Prophet (0-2)");
+            public static readonly FlagDef nailsmithCliff = new FlagDef("nailsmithCliff", null, false, "PlayerData_Bool", "Nailsmith gave all upgrades and moved to Cliff");
+            public static readonly FlagDef nailsmithKillSpeech = new FlagDef("nailsmithKillSpeech", null, false, "PlayerData_Bool", "Nailsmith gave his speech of death");
+            public static readonly FlagDef nailsmithKilled = new FlagDef("nailsmithKilled", null, false, "PlayerData_Bool", "Nailsmith killed");
             public static readonly FlagDef NOEYES_encountered = new FlagDef("NOEYES_encountered", null, false, "PlayerData_Bool", "Met No Eyes");
             public static readonly FlagDef paidLegEater = new FlagDef("paidLegEater", null, false, "PlayerData_Bool", "Paid Leg Eater");
             public static readonly FlagDef quirrelEggTemple = new FlagDef("quirrelEggTemple", null, false, "PlayerData_Int", "Talked with Quirrel about Egg Temple (0-4)");
@@ -2323,11 +2326,8 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef mumCaterpillarDefeated = new FlagDef("mumCaterpillarDefeated", null, false, "PlayerData_Int");
             public static readonly FlagDef mumCaterpillarPinned = new FlagDef("mumCaterpillarPinned", null, false, "PlayerData_Bool");
             public static readonly FlagDef nailRange = new FlagDef("nailRange", null, false, "PlayerData_Int");
-            public static readonly FlagDef nailsmithCliff = new FlagDef("nailsmithCliff", null, false, "PlayerData_Bool");
             public static readonly FlagDef nailsmithConvoArt = new FlagDef("nailsmithConvoArt", null, false, "PlayerData_Bool");
             public static readonly FlagDef nailsmithCorpseAppeared = new FlagDef("nailsmithCorpseAppeared", null, false, "PlayerData_Bool");
-            public static readonly FlagDef nailsmithKillSpeech = new FlagDef("nailsmithKillSpeech", null, false, "PlayerData_Bool");
-            public static readonly FlagDef nailsmithKilled = new FlagDef("nailsmithKilled", null, false, "PlayerData_Bool");
             public static readonly FlagDef nailsmithSheo = new FlagDef("nailsmithSheo", null, false, "PlayerData_Bool");
             public static readonly FlagDef nailsmithSpared = new FlagDef("nailsmithSpared", null, false, "PlayerData_Bool");
             public static readonly FlagDef newDatTraitorLord = new FlagDef("newDatTraitorLord", null, false, "PlayerData_Bool");

@@ -15,6 +15,9 @@ namespace CabbyCodes.Patches
         private static int startingMaxHealthBase = -1;
         private static bool hasInitializedStartingState = false;
 
+        // Reference to the nail upgrade dropdown for updating disabled options
+        private static CabbyMenu.UI.Controls.CustomDropdown.CustomDropdown nailUpgradeDropdown;
+
         public static void AddPanels()
         {
             var inventoryPatch = new InventoryPatch();
@@ -22,6 +25,76 @@ namespace CabbyCodes.Patches
             foreach (var panel in panels)
             {
                 CabbyCodesPlugin.cabbyMenu.AddCheatPanel(panel);
+            }
+        }
+
+        /// <summary>
+        /// Refreshes the nail upgrade dropdown disabled options based on current ore count and upgrade level.
+        /// Call this when ore count or upgrade level changes.
+        /// </summary>
+        public static void RefreshNailUpgradeDropdown()
+        {
+            if (nailUpgradeDropdown != null)
+            {
+                var currentOre = FlagManager.GetIntFlag(FlagInstances.ore);
+                var currentUpgradeLevel = FlagManager.GetIntFlag(FlagInstances.nailSmithUpgrades);
+                
+                // Calculate which options should be disabled
+                var disabledOptions = new List<bool>();
+                var hoverMessages = new List<string>();
+                
+                // Option 0: Old Nail - always available (0 ore)
+                disabledOptions.Add(false);
+                hoverMessages.Add("");
+                
+                // Option 1: Sharpened Nail - always available (0 ore)
+                disabledOptions.Add(false);
+                hoverMessages.Add("");
+                
+                // Option 2: Channelled Nail - requires cost difference from current level
+                int costForLevel2 = GetCumulativeOreCost(currentUpgradeLevel, 2);
+                bool canAffordChannelled = currentOre >= costForLevel2;
+                disabledOptions.Add(!canAffordChannelled);
+                if (canAffordChannelled)
+                {
+                    hoverMessages.Add("");
+                }
+                else
+                {
+                    hoverMessages.Add($"You require {costForLevel2} ore(s) to upgrade to this level");
+                }
+                
+                // Option 3: Coiled Nail - requires cost difference from current level
+                int costForLevel3 = GetCumulativeOreCost(currentUpgradeLevel, 3);
+                bool canAffordCoiled = currentOre >= costForLevel3;
+                disabledOptions.Add(!canAffordCoiled);
+                if (canAffordCoiled)
+                {
+                    hoverMessages.Add("");
+                }
+                else
+                {
+                    hoverMessages.Add($"You require {costForLevel3} ore(s) to upgrade to this level");
+                }
+                
+                // Option 4: Pure Nail - requires cost difference from current level
+                int costForLevel4 = GetCumulativeOreCost(currentUpgradeLevel, 4);
+                bool canAffordPure = currentOre >= costForLevel4;
+                disabledOptions.Add(!canAffordPure);
+                if (canAffordPure)
+                {
+                    hoverMessages.Add("");
+                }
+                else
+                {
+                    hoverMessages.Add($"You require {costForLevel4} ore(s) to upgrade to this level");
+                }
+                
+                // Update the disabled options and hover messages
+                nailUpgradeDropdown.SetOptions(new List<string> { "Old Nail", "Sharpened Nail", "Channelled Nail", "Coiled Nail", "Pure Nail" }, disabledOptions, hoverMessages);
+
+                // Ensure the dropdown shows the correct current level
+                nailUpgradeDropdown.SetValue(currentUpgradeLevel);
             }
         }
 
@@ -144,6 +217,7 @@ namespace CabbyCodes.Patches
                 new BoolPatch(FlagInstances.hasWalljump).CreatePanel(),
                 new BoolPatch(FlagInstances.hasSuperDash).CreatePanel(),
                 new BoolPatch(FlagInstances.hasAcidArmour).CreatePanel(),
+                CreateNailUpgradePanel(),
                 new DropdownPanel(new DelegateValueList(
                     () => {
                         if (FlagManager.GetBoolFlag(FlagInstances.dreamNailUpgraded)) return 2;
@@ -797,6 +871,255 @@ namespace CabbyCodes.Patches
                     FlagManager.SetBoolFlag(FlagInstances.foundTrinket3, newCount > 0);
                 }
             ), flag.Scene.ReadableName);
+        }
+
+        private CheatPanel CreateNailUpgradePanel()
+        {
+            // Create a custom dropdown panel that can handle disabled options
+            var dropdownPanel = new DropdownPanel(new DelegateValueList(
+                // Getter: returns current nail upgrade level
+                () => FlagManager.GetIntFlag(FlagInstances.nailSmithUpgrades),
+                
+                // Setter: handles nail upgrade logic
+                value => {
+                    // Don't allow setting disabled options
+                    var currentOre = FlagManager.GetIntFlag(FlagInstances.ore);
+                    var currentUpgradeLevel = FlagManager.GetIntFlag(FlagInstances.nailSmithUpgrades);
+                    
+                    // Check if the selected upgrade can be afforded
+                    bool canAfford = false;
+                    switch (value)
+                    {
+                        case 0: // Old Nail - always available (0 ore)
+                            canAfford = true;
+                            break;
+                        case 1: // Sharpened Nail - always available (0 ore)
+                            canAfford = true;
+                            break;
+                        case 2: // Channelled Nail - requires cumulative ore from current level
+                            int oreForLevel2 = GetCumulativeOreCost(currentUpgradeLevel, 2);
+                            canAfford = currentOre >= oreForLevel2;
+                            break;
+                        case 3: // Coiled Nail - requires cumulative ore from current level
+                            int oreForLevel3 = GetCumulativeOreCost(currentUpgradeLevel, 3);
+                            canAfford = currentOre >= oreForLevel3;
+                            break;
+                        case 4: // Pure Nail - requires cumulative ore from current level
+                            int oreForLevel4 = GetCumulativeOreCost(currentUpgradeLevel, 4);
+                            canAfford = currentOre >= oreForLevel4;
+                            break;
+                    }
+                    
+                    if (!canAfford)
+                    {
+                        return; // Don't allow the upgrade if it can't be afforded
+                    }
+                    
+                    // Calculate ore cost difference and update ore count
+                    int oreCostDifference = CalculateOreCostDifference(currentUpgradeLevel, value);
+                    FlagManager.SetIntFlag(FlagInstances.ore, currentOre - oreCostDifference);
+                    
+                    // Apply the upgrade
+                    switch (value)
+                    {
+                        case 0: // Old Nail
+                            FlagManager.SetIntFlag(FlagInstances.nailDamage, 5);
+                            FlagManager.SetIntFlag(FlagInstances.beamDamage, 2);
+                            FlagManager.SetIntFlag(FlagInstances.nailSmithUpgrades, 0);
+                            FlagManager.SetBoolFlag(FlagInstances.honedNail, false);
+                            FlagManager.SetBoolFlag(FlagInstances.nailsmithCliff, false);
+                            break;
+                        case 1: // Sharpened Nail
+                            FlagManager.SetIntFlag(FlagInstances.nailDamage, 9);
+                            FlagManager.SetIntFlag(FlagInstances.beamDamage, 4);
+                            FlagManager.SetIntFlag(FlagInstances.nailSmithUpgrades, 1);
+                            FlagManager.SetBoolFlag(FlagInstances.honedNail, true);
+                            FlagManager.SetBoolFlag(FlagInstances.nailsmithCliff, false);
+                            break;
+                        case 2: // Channelled Nail
+                            FlagManager.SetIntFlag(FlagInstances.nailDamage, 13);
+                            FlagManager.SetIntFlag(FlagInstances.beamDamage, 6);
+                            FlagManager.SetIntFlag(FlagInstances.nailSmithUpgrades, 2);
+                            FlagManager.SetBoolFlag(FlagInstances.honedNail, true);
+                            FlagManager.SetBoolFlag(FlagInstances.nailsmithCliff, false);
+                            break;
+                        case 3: // Coiled Nail
+                            FlagManager.SetIntFlag(FlagInstances.nailDamage, 17);
+                            FlagManager.SetIntFlag(FlagInstances.beamDamage, 8);
+                            FlagManager.SetIntFlag(FlagInstances.nailSmithUpgrades, 3);
+                            FlagManager.SetBoolFlag(FlagInstances.honedNail, true);
+                            FlagManager.SetBoolFlag(FlagInstances.nailsmithCliff, false);
+                            break;
+                        case 4: // Pure Nail
+                            FlagManager.SetIntFlag(FlagInstances.nailDamage, 21);
+                            FlagManager.SetIntFlag(FlagInstances.beamDamage, 10);
+                            FlagManager.SetIntFlag(FlagInstances.nailSmithUpgrades, 4);
+                            FlagManager.SetBoolFlag(FlagInstances.honedNail, true);
+                            FlagManager.SetBoolFlag(FlagInstances.nailsmithCliff, true);
+                            break;
+                    }
+
+                    FlagManager.SetBoolFlag(FlagInstances.nailsmithKillSpeech, false);
+                    FlagManager.SetBoolFlag(FlagInstances.nailsmithKilled, false);
+                    
+                    // Refresh the dropdown to update disabled options after the upgrade
+                    RefreshNailUpgradeDropdown();
+                },
+                
+                // Value list: returns the nail upgrade options
+                () => new List<string> { "Old Nail", "Sharpened Nail", "Channelled Nail", "Coiled Nail", "Pure Nail" }
+            ), "Nail Upgrade", Constants.DEFAULT_PANEL_HEIGHT);
+            
+            // Get the CustomDropdown component to set up disabled options
+            var customDropdown = dropdownPanel.GetDropDownSync().GetCustomDropdown();
+            
+            // Set up callback to refresh disabled options when dropdown is opened
+            customDropdown.onDropdownOpened = () => UpdateNailUpgradeDisabledOptions(customDropdown);
+            
+            // Store the reference for updating
+            nailUpgradeDropdown = customDropdown;
+            
+            return dropdownPanel;
+        }
+
+        private void UpdateNailUpgradeDisabledOptions(CabbyMenu.UI.Controls.CustomDropdown.CustomDropdown customDropdown)
+        {
+            var currentOre = FlagManager.GetIntFlag(FlagInstances.ore);
+            var currentUpgradeLevel = FlagManager.GetIntFlag(FlagInstances.nailSmithUpgrades);
+            
+            // Calculate which options should be disabled
+            var disabledOptions = new List<bool>();
+            var hoverMessages = new List<string>();
+            
+            // Option 0: Old Nail - always available (0 ore)
+            disabledOptions.Add(false);
+            hoverMessages.Add("");
+            
+            // Option 1: Sharpened Nail - always available (0 ore)
+            disabledOptions.Add(false);
+            hoverMessages.Add("");
+            
+            // Option 2: Channelled Nail - requires cost difference from current level
+            int costForLevel2 = GetCumulativeOreCost(currentUpgradeLevel, 2);
+            bool canAffordChannelled = currentOre >= costForLevel2;
+            disabledOptions.Add(!canAffordChannelled);
+            if (canAffordChannelled)
+            {
+                hoverMessages.Add("");
+            }
+            else
+            {
+                if (costForLevel2 == 0)
+                {
+                    hoverMessages.Add("You already have this upgrade or higher");
+                }
+                else
+                {
+                    hoverMessages.Add($"You require {costForLevel2} ore(s) to upgrade to this level");
+                }
+            }
+            
+            // Option 3: Coiled Nail - requires cost difference from current level
+            int costForLevel3 = GetCumulativeOreCost(currentUpgradeLevel, 3);
+            bool canAffordCoiled = currentOre >= costForLevel3;
+            disabledOptions.Add(!canAffordCoiled);
+            if (canAffordCoiled)
+            {
+                hoverMessages.Add("");
+            }
+            else
+            {
+                if (costForLevel3 == 0)
+                {
+                    hoverMessages.Add("You already have this upgrade or higher");
+                }
+                else
+                {
+                    hoverMessages.Add($"You require {costForLevel3} ore(s) to upgrade to this level");
+                }
+            }
+            
+            // Option 4: Pure Nail - requires cost difference from current level
+            int costForLevel4 = GetCumulativeOreCost(currentUpgradeLevel, 4);
+            bool canAffordPure = currentOre >= costForLevel4;
+            disabledOptions.Add(!canAffordPure);
+            if (canAffordPure)
+            {
+                hoverMessages.Add("");
+            }
+            else
+            {
+                if (costForLevel4 == 0)
+                {
+                    hoverMessages.Add("You already have this upgrade or higher");
+                }
+                else
+                {
+                    hoverMessages.Add($"You require {costForLevel4} ore(s) to upgrade to this level");
+                }
+            }
+            
+            // Set the disabled options and hover messages
+            customDropdown.SetOptions(new List<string> { "Old Nail", "Sharpened Nail", "Channelled Nail", "Coiled Nail", "Pure Nail" }, disabledOptions, hoverMessages);
+
+            // Ensure the dropdown shows the correct current level
+            customDropdown.SetValue(currentUpgradeLevel);
+        }
+
+        /// <summary>
+        /// Calculates the cumulative ore cost to upgrade from current level to target level
+        /// </summary>
+        /// <param name="currentLevel">Current nail upgrade level</param>
+        /// <param name="targetLevel">Target nail upgrade level</param>
+        /// <returns>Total ore cost needed</returns>
+        private static int GetCumulativeOreCost(int currentLevel, int targetLevel)
+        {
+            if (targetLevel <= currentLevel) return 0; // Already at or above target level
+            
+            int totalCost = 0;
+            for (int level = currentLevel + 1; level <= targetLevel; level++)
+            {
+                totalCost += GetOreCostForLevel(level);
+            }
+            return totalCost;
+        }
+
+        /// <summary>
+        /// Gets the ore cost for a specific nail level
+        /// </summary>
+        /// <param name="level">Nail upgrade level</param>
+        /// <returns>Ore cost for that level</returns>
+        private static int GetOreCostForLevel(int level)
+        {
+            switch (level)
+            {
+                case 0: return 0; // Old Nail
+                case 1: return 0; // Sharpened Nail
+                case 2: return 1; // Channelled Nail
+                case 3: return 2; // Coiled Nail
+                case 4: return 3; // Pure Nail
+                default: return 0;
+            }
+        }
+
+        /// <summary>
+        /// Calculates the ore cost difference when changing from one nail level to another.
+        /// Positive values mean ore is consumed, negative values mean ore is refunded.
+        /// </summary>
+        /// <param name="fromLevel">Current nail upgrade level</param>
+        /// <param name="toLevel">Target nail upgrade level</param>
+        /// <returns>Ore cost difference (positive = cost, negative = refund)</returns>
+        private int CalculateOreCostDifference(int fromLevel, int toLevel)
+        {
+            // If upgrading to the same level, no cost difference
+            if (fromLevel == toLevel) return 0;
+            
+            // Calculate cumulative cost for each level
+            int fromCost = GetCumulativeOreCost(0, fromLevel);
+            int toCost = GetCumulativeOreCost(0, toLevel);
+            
+            // The cost difference is what needs to be paid or refunded
+            return toCost - fromCost;
         }
     }
 }

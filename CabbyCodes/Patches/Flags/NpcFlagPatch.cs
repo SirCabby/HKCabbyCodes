@@ -136,6 +136,13 @@ namespace CabbyCodes.Patches.Flags
             panels.AddRange(CreateNpcPanels(new[] {
                 FlagInstances.metNailmasterMato,
             }));
+
+            panels.Add(new InfoPanel("Nailsmith").SetColor(CheatPanel.subHeaderColor));
+            panels.AddRange(CreateNpcPanels(new[] {
+                FlagInstances.nailsmithCliff,
+                FlagInstances.nailsmithKillSpeech,
+                FlagInstances.nailsmithKilled
+            }));
             
             panels.Add(new InfoPanel("Nightmare Troupe").SetColor(CheatPanel.subHeaderColor));
             panels.AddRange(CreateNpcPanels(new[] {
