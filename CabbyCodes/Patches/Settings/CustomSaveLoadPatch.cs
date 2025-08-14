@@ -1,7 +1,5 @@
 using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
-using CabbyMenu.UI.Controls;
-using UnityEngine.UI;
 using System.Collections.Generic;
 using UnityEngine;
 using CabbyMenu.Utilities;

@@ -77,9 +77,7 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
         private Color optionDisabledColor = new Color(0.7f, 0.7f, 0.7f, 0.5f); // Disabled option color
 
         // Hover popup system
-        private GameObject hoverPopup;
-        private Text hoverPopupText;
-        private Canvas hoverPopupCanvas;
+        private HoverPopup hoverPopup;
         private bool isHoveringOverDisabledOption = false;
         private int currentHoveredOptionIndex = -1;
 
@@ -1096,107 +1094,14 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
         }
 
         /// <summary>
-        /// Creates the hover popup GameObject and components.
+        /// Creates the hover popup component.
         /// </summary>
         private void CreateHoverPopup()
         {
-            if (hoverPopup != null) return;
-
-            // Create popup GameObject - always attach to the root canvas to ensure proper z-order
-            Canvas rootCanvas = GetComponentInParent<Canvas>();
-            if (rootCanvas == null)
+            if (hoverPopup == null)
             {
-                // Fallback to root transform if no canvas found
-                hoverPopup = new GameObject("HoverPopup");
-                hoverPopup.transform.SetParent(transform.root, false);
+                hoverPopup = gameObject.AddComponent<HoverPopup>();
             }
-            else
-            {
-                hoverPopup = new GameObject("HoverPopup");
-                hoverPopup.transform.SetParent(rootCanvas.transform, false);
-            }
-
-            // Add Canvas component for proper rendering with maximum sorting order
-            hoverPopupCanvas = hoverPopup.AddComponent<Canvas>();
-            hoverPopupCanvas.renderMode = RenderMode.ScreenSpaceOverlay;
-            hoverPopupCanvas.sortingOrder = 32767; // Maximum sorting order value
-            hoverPopupCanvas.overrideSorting = true; // Override any parent canvas sorting
-
-            // Add GraphicRaycaster to prevent blocking UI events
-            hoverPopup.AddComponent<GraphicRaycaster>();
-
-            // Create background image with proper layout system
-            GameObject background = new GameObject("Background");
-            background.transform.SetParent(hoverPopup.transform, false);
-
-            RectTransform backgroundRect = background.AddComponent<RectTransform>();
-            Image backgroundImage = background.AddComponent<Image>();
-            HorizontalLayoutGroup backgroundLayout = background.AddComponent<HorizontalLayoutGroup>();
-            ContentSizeFitter backgroundFitter = background.AddComponent<ContentSizeFitter>();
-
-            // Configure background with proper layout
-            backgroundRect.anchorMin = Vector2.zero;
-            backgroundRect.anchorMax = Vector2.zero;
-            backgroundRect.sizeDelta = new Vector2(200f, 40f); // Initial size
-            backgroundImage.color = new Color(0.1f, 0.1f, 0.1f, 1f); // Completely opaque
-            
-            // Configure HorizontalLayoutGroup for proper text sizing
-            backgroundLayout.padding = new RectOffset(10, 10, 10, 10); // 10px padding on all sides
-            backgroundLayout.spacing = 0f;
-            backgroundLayout.childAlignment = TextAnchor.MiddleLeft;
-            backgroundLayout.childControlWidth = true;
-            backgroundLayout.childControlHeight = true;
-            backgroundLayout.childForceExpandWidth = false;
-            backgroundLayout.childForceExpandHeight = false;
-            
-            // Configure ContentSizeFitter to size based on content
-            backgroundFitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
-            backgroundFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
-
-            // Create text component
-            GameObject textObj = new GameObject("Text");
-            textObj.transform.SetParent(background.transform, false);
-
-            RectTransform textRect = textObj.AddComponent<RectTransform>();
-            hoverPopupText = textObj.AddComponent<Text>();
-            ContentSizeFitter textFitter = textObj.AddComponent<ContentSizeFitter>();
-
-            // Configure text with proper sizing
-            textRect.anchorMin = Vector2.zero;
-            textRect.anchorMax = Vector2.zero;
-            textRect.sizeDelta = new Vector2(180f, 20f); // Initial size, will be adjusted by ContentSizeFitter
-
-            hoverPopupText.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-            hoverPopupText.fontSize = CalculateOptionFontSize(); // Use same font size as dropdown options
-            hoverPopupText.fontStyle = FontStyle.Bold; // Make text bold
-            hoverPopupText.color = Color.white;
-            hoverPopupText.alignment = TextAnchor.MiddleLeft; // Left-aligned text
-            hoverPopupText.text = " "; // Start with a space to ensure proper sizing
-            
-            // Configure ContentSizeFitter for the text
-            textFitter.horizontalFit = ContentSizeFitter.FitMode.PreferredSize;
-            textFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;
-
-            // Configure the popup's RectTransform for proper positioning
-            RectTransform popupRect = hoverPopup.GetComponent<RectTransform>();
-            if (popupRect != null)
-            {
-                // Set anchors to top-left for absolute positioning
-                popupRect.anchorMin = Vector2.zero;
-                popupRect.anchorMax = Vector2.zero;
-                popupRect.pivot = Vector2.zero; // Top-left pivot for easier positioning
-                popupRect.sizeDelta = new Vector2(200f, 40f); // Initial size, will be adjusted by ContentSizeFitter
-                
-                // CRITICAL: Don't set initial position here - let ShowHoverPopup handle it
-                // This prevents the popup from appearing at (0,0) before being positioned
-                popupRect.anchoredPosition = Vector2.zero;
-            }
-
-            // Ensure the popup is at the very front of the hierarchy
-            hoverPopup.transform.SetAsLastSibling();
-
-            // Initially hide the popup
-            hoverPopup.SetActive(false);
         }
 
         /// <summary>
@@ -1212,81 +1117,11 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
 
             if (hoverPopup != null)
             {
-                // CRITICAL: Set text and resize BEFORE making popup visible
-                // This ensures proper sizing calculations
-                hoverPopupText.text = message;
-                ResizePopupToFitText(message);
-                
-                // CRITICAL: Ensure popup is at the very front of the hierarchy
-                // Move it to the root canvas level to avoid hierarchy conflicts
-                Canvas rootCanvas = GetComponentInParent<Canvas>();
-                if (rootCanvas != null)
-                {
-                    hoverPopup.transform.SetParent(rootCanvas.transform, false);
-                    // Force it to be the very last sibling (rendered on top)
-                    hoverPopup.transform.SetAsLastSibling();
-                    
-                    // Also ensure the root canvas itself is at the front
-                    rootCanvas.transform.SetAsLastSibling();
-                }
-                
-                // Force the popup's canvas to have the highest possible sorting order
-                if (hoverPopupCanvas != null)
-                {
-                    hoverPopupCanvas.sortingOrder = 32767; // Maximum sorting order value
-                    hoverPopupCanvas.overrideSorting = true;
-                }
-                
-                // CRITICAL: Force canvas update to ensure proper rendering and sizing
-                // This must happen BEFORE positioning to get accurate dimensions
-                Canvas.ForceUpdateCanvases();
-                
-                // CRITICAL: Position the popup correctly BEFORE making it visible
-                // This ensures the initial position is correct from the very first frame
-                UpdateHoverPopupPosition();
-                
-                // NOW make the popup visible - it should already be in the correct position
-                hoverPopup.SetActive(true);
-                
-                // Additional safety: ensure popup is still at the front after canvas update
-                if (rootCanvas != null)
-                {
-                    hoverPopup.transform.SetAsLastSibling();
-                }
+                hoverPopup.ShowPopup(message);
             }
         }
         
-        /// <summary>
-        /// Resizes the popup to fit the text content.
-        /// </summary>
-        /// <param name="message">The message to fit</param>
-        private void ResizePopupToFitText(string message)
-        {
-            if (hoverPopup == null || hoverPopupText == null) return;
 
-            // Set the text content
-            hoverPopupText.text = message;
-            
-            // Force layout update to ensure ContentSizeFitter and HorizontalLayoutGroup calculate the correct size
-            Canvas.ForceUpdateCanvases();
-            LayoutRebuilder.ForceRebuildLayoutImmediate(hoverPopup.GetComponent<RectTransform>());
-            
-            // Get the updated size from the background after layout has been calculated
-            Transform backgroundTransform = hoverPopup.transform.Find("Background");
-            if (backgroundTransform != null)
-            {
-                RectTransform backgroundRect = backgroundTransform.GetComponent<RectTransform>();
-                if (backgroundRect != null)
-                {
-                    // Update the popup size to match the background size
-                    RectTransform popupRect = hoverPopup.GetComponent<RectTransform>();
-                    if (popupRect != null)
-                    {
-                        popupRect.sizeDelta = backgroundRect.sizeDelta;
-                    }
-                }
-            }
-        }
 
         /// <summary>
         /// Hides the hover popup.
@@ -1295,7 +1130,7 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
         {
             if (hoverPopup != null)
             {
-                hoverPopup.SetActive(false);
+                hoverPopup.HidePopup();
             }
             isHoveringOverDisabledOption = false;
             currentHoveredOptionIndex = -1;
@@ -1303,63 +1138,12 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
 
         /// <summary>
         /// Updates the hover popup position to follow the mouse.
+        /// This method is no longer needed as the HoverPopup component handles its own positioning.
         /// </summary>
         private void UpdateHoverPopupPosition()
         {
-            if (hoverPopup == null || !hoverPopup.activeSelf) return;
-
-            Vector3 mousePosition = Input.mousePosition;
-            
-            // Get popup size - ensure it's properly calculated
-            RectTransform popupRect = hoverPopup.GetComponent<RectTransform>();
-            if (popupRect == null) return;
-            
-            // Force a layout update to ensure the popup size is accurate
-            LayoutRebuilder.ForceRebuildLayoutImmediate(popupRect);
-            
-            Vector2 popupSize = popupRect.sizeDelta;
-            
-            // Ensure we have valid size before positioning
-            if (popupSize.x <= 0 || popupSize.y <= 0)
-            {
-                // Fallback to default size if layout hasn't calculated properly yet
-                popupSize = new Vector2(200f, 40f);
-            }
-            
-            // Calculate screen center
-            Vector2 screenCenter = new Vector2(Screen.width / 2f, Screen.height / 2f);
-            
-            // Determine which side of the mouse to position the popup based on screen center
-            Vector3 popupPosition = Vector3.zero;
-            
-            if (mousePosition.x < screenCenter.x)
-            {
-                // Mouse is on left side of screen - position popup to the right of mouse
-                popupPosition.x = mousePosition.x + (popupSize.x / 2f);
-            }
-            else
-            {
-                // Mouse is on right side of screen - position popup to the left of mouse
-                popupPosition.x = mousePosition.x - (popupSize.x / 2f);
-            }
-            
-            if (mousePosition.y < screenCenter.y)
-            {
-                // Mouse is on bottom half of screen - position popup above mouse
-                popupPosition.y = mousePosition.y + (popupSize.y / 2f);
-            }
-            else
-            {
-                // Mouse is on top half of screen - position popup below mouse
-                popupPosition.y = mousePosition.y - (popupSize.y / 2f);
-            }
-            
-            // Ensure popup doesn't go off-screen
-            popupPosition.x = Mathf.Clamp(popupPosition.x, 0f, Screen.width - popupSize.x);
-            popupPosition.y = Mathf.Clamp(popupPosition.y, 0f, Screen.height - popupSize.y);
-            
-            // Use position directly for ScreenSpaceOverlay Canvas
-            popupRect.position = popupPosition;
+            // The HoverPopup component handles its own positioning updates
+            // No additional work needed here
         }
 
         /// <summary>
@@ -2423,17 +2207,10 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
         /// </summary>
         private void EnsurePopupOnTop()
         {
-            if (hoverPopup != null && hoverPopup.activeSelf)
+            if (hoverPopup != null && hoverPopup.IsVisible())
             {
-                // Force the popup to be the last sibling (rendered on top)
-                hoverPopup.transform.SetAsLastSibling();
-                
-                // Ensure the popup's canvas has maximum sorting order
-                if (hoverPopupCanvas != null)
-                {
-                    hoverPopupCanvas.sortingOrder = 32767;
-                    hoverPopupCanvas.overrideSorting = true;
-                }
+                // The HoverPopup component handles its own z-order management
+                // No additional work needed here
             }
         }
 
@@ -2453,11 +2230,10 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
             }
 
             // Update hover popup position if it's visible
-            if (isHoveringOverDisabledOption && hoverPopup != null && hoverPopup.activeSelf)
+            if (isHoveringOverDisabledOption && hoverPopup != null && hoverPopup.IsVisible())
             {
-                UpdateHoverPopupPosition();
-                // Ensure popup stays on top
-                EnsurePopupOnTop();
+                // The HoverPopup component handles its own positioning updates
+                // No additional work needed here
             }
         }
 

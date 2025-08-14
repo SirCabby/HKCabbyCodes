@@ -759,7 +759,8 @@ namespace CabbyCodes.Patches
 
         private TogglePanel CreatePaleOrePanel(FlagDef flag)
         {
-            return new TogglePanel(new DelegateReference<bool>(
+            // Create a custom synced reference that handles ore count changes and interactable state
+            var syncedReference = new DelegateReference<bool>(
                 () => FlagManager.GetBoolFlag(flag),
                 value =>
                 {
@@ -775,8 +776,62 @@ namespace CabbyCodes.Patches
                     }
                     
                     FlagManager.SetBoolFlag(flag, value);
+                    
+                    // Update all pale ore panel interactable states after ore count changes
+                    UpdateAllPaleOrePanels();
                 }
-            ), flag.ReadableName);
+            );
+
+            var togglePanel = new TogglePanel(syncedReference, flag.ReadableName);
+            
+            // Store reference to this panel for ore count change notifications
+            RegisterPaleOrePanel(togglePanel, flag);
+            
+            return togglePanel;
+        }
+
+        // Static list to track all pale ore panels for ore count change notifications
+        private static readonly List<(TogglePanel panel, FlagDef flag)> paleOrePanels = new List<(TogglePanel, FlagDef)>();
+
+        private static void RegisterPaleOrePanel(TogglePanel togglePanel, FlagDef flag)
+        {
+            paleOrePanels.Add((togglePanel, flag));
+            // Initial interactable state check
+            UpdatePaleOreInteractable(togglePanel, flag);
+        }
+
+        /// <summary>
+        /// Updates all pale ore panel interactable states. Call this whenever ore count changes.
+        /// </summary>
+        public static void UpdateAllPaleOrePanels()
+        {
+            foreach (var (panel, flag) in paleOrePanels)
+            {
+                if (panel != null && panel.GetGameObject() != null)
+                {
+                    UpdatePaleOreInteractable(panel, flag);
+                }
+            }
+        }
+
+        private static void UpdatePaleOreInteractable(TogglePanel togglePanel, FlagDef flag)
+        {
+            var currentOre = FlagManager.GetIntFlag(FlagInstances.ore);
+            var isCurrentlyOn = FlagManager.GetBoolFlag(flag);
+            bool shouldBeInteractable = !(currentOre == 0 && isCurrentlyOn);
+            
+            var toggleButton = togglePanel.GetToggleButton();
+            toggleButton.SetInteractable(shouldBeInteractable);
+            
+            // Set disabled message for hover popup
+            if (!shouldBeInteractable)
+            {
+                toggleButton.SetDisabledMessage("Cannot disable pale ore when ore count is 0\n\nReduce the Nail Upgrade to free up ores");
+            }
+            else
+            {
+                toggleButton.SetDisabledMessage(""); // Clear message when enabled
+            }
         }
 
         // Wanderer's Journals panels
@@ -964,6 +1019,7 @@ namespace CabbyCodes.Patches
                     
                     // Refresh the dropdown to update disabled options after the upgrade
                     RefreshNailUpgradeDropdown();
+                    UpdateAllPaleOrePanels();
                 },
                 
                 // Value list: returns the nail upgrade options

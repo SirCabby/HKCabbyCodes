@@ -2,6 +2,7 @@ using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.Modders;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 namespace CabbyMenu.UI.Controls
 {
@@ -20,6 +21,11 @@ namespace CabbyMenu.UI.Controls
         private readonly ImageMod imageMod;
         private readonly Button buttonComponent;
         public ISyncedReference<bool> IsOn { get; private set; }
+        private bool isInteractable = true;
+        
+        // Hover popup for disabled state messages
+        private HoverPopup hoverPopup;
+        private string disabledMessage = "";
 
         public ToggleButton(ISyncedReference<bool> IsOn)
         {
@@ -33,6 +39,12 @@ namespace CabbyMenu.UI.Controls
             textMod = new TextMod(toggleButton.GetComponentInChildren<Text>());
             imageMod = new ImageMod(toggleButton.GetComponent<Image>());
 
+            // Create hover popup for disabled state messages
+            CreateHoverPopup();
+
+            // Add EventTrigger for hover events
+            AddHoverEventTriggers();
+
             Update();
         }
 
@@ -43,6 +55,7 @@ namespace CabbyMenu.UI.Controls
 
         public void Toggle()
         {
+            if (!isInteractable) return;
             IsOn.Set(!IsOn.Get());
             Update();
         }
@@ -51,6 +64,97 @@ namespace CabbyMenu.UI.Controls
         {
             IsOn = isOn;
             Update();
+        }
+
+        public void SetInteractable(bool interactable)
+        {
+            isInteractable = interactable;
+            buttonComponent.interactable = interactable;
+            Update(); // Update colors to reflect disabled state
+        }
+
+        /// <summary>
+        /// Sets the message to display when hovering over a disabled toggle button.
+        /// </summary>
+        /// <param name="message">The message to display on hover</param>
+        public void SetDisabledMessage(string message)
+        {
+            disabledMessage = message;
+        }
+
+        /// <summary>
+        /// Creates the hover popup component for disabled state messages.
+        /// </summary>
+        private void CreateHoverPopup()
+        {
+            if (hoverPopup == null)
+            {
+                hoverPopup = toggleButton.AddComponent<HoverPopup>();
+            }
+        }
+
+        /// <summary>
+        /// Shows the hover popup when hovering over a disabled button.
+        /// </summary>
+        public void OnPointerEnter()
+        {
+            if (!isInteractable && !string.IsNullOrEmpty(disabledMessage))
+            {
+                hoverPopup?.ShowPopup(disabledMessage);
+            }
+        }
+
+        /// <summary>
+        /// Hides the hover popup when leaving a disabled button.
+        /// </summary>
+        public void OnPointerExit()
+        {
+            hoverPopup?.HidePopup();
+        }
+
+        /// <summary>
+        /// Manually shows the hover popup with the current disabled message.
+        /// Useful for testing or external triggering.
+        /// </summary>
+        public void ShowHoverPopup()
+        {
+            if (!isInteractable && !string.IsNullOrEmpty(disabledMessage))
+            {
+                hoverPopup?.ShowPopup(disabledMessage);
+            }
+        }
+
+        /// <summary>
+        /// Manually hides the hover popup.
+        /// Useful for testing or external triggering.
+        /// </summary>
+        public void HideHoverPopup()
+        {
+            hoverPopup?.HidePopup();
+        }
+
+        /// <summary>
+        /// Adds EventTrigger components to handle mouse enter/exit events for hover popup.
+        /// </summary>
+        private void AddHoverEventTriggers()
+        {
+            var eventTrigger = toggleButton.GetComponent<EventTrigger>();
+            if (eventTrigger == null)
+            {
+                eventTrigger = toggleButton.AddComponent<EventTrigger>();
+            }
+
+            // Mouse Enter event
+            EventTrigger.Entry enterEntry = new EventTrigger.Entry();
+            enterEntry.eventID = EventTriggerType.PointerEnter;
+            enterEntry.callback.AddListener((data) => OnPointerEnter());
+            eventTrigger.triggers.Add(enterEntry);
+
+            // Mouse Exit event
+            EventTrigger.Entry exitEntry = new EventTrigger.Entry();
+            exitEntry.eventID = EventTriggerType.PointerExit;
+            exitEntry.callback.AddListener((data) => OnPointerExit());
+            eventTrigger.triggers.Add(exitEntry);
         }
 
         public void Update()
@@ -72,6 +176,14 @@ namespace CabbyMenu.UI.Controls
                 pressedColor = offPressedColor;
             }
 
+            // If button is disabled, use disabled colors
+            if (!isInteractable)
+            {
+                normalColor = offColor;
+                hoverColor = offColor;
+                pressedColor = offColor;
+            }
+
             // Update the image color (normal state)
             imageMod.SetColor(normalColor);
 
@@ -80,6 +192,7 @@ namespace CabbyMenu.UI.Controls
             colors.normalColor = normalColor;
             colors.highlightedColor = hoverColor;
             colors.pressedColor = pressedColor;
+            colors.disabledColor = offColor; // Set disabled color to off color
             buttonComponent.colors = colors;
         }
     }

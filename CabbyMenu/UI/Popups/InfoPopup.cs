@@ -1,10 +1,8 @@
 using System;
 using UnityEngine;
 using UnityEngine.UI;
-using CabbyMenu;
 using CabbyMenu.UI.Controls;
 using CabbyMenu.UI.Modders;
-using CabbyMenu.UI;
 
 namespace CabbyMenu.UI.Popups
 {
