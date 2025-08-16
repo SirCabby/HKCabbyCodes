@@ -345,6 +345,78 @@ namespace CabbyCodes.Patches.Flags
                         FlagInstances.Abyss_01__Dream_Plant_Orb_9
                     }
                 },
+                { 
+                    FlagInstances.Ruins1_17__Dream_Plant, new List<FlagDef>
+                    {
+                        FlagInstances.Ruins1_17__Dream_Plant_Orb,
+                        FlagInstances.Ruins1_17__Dream_Plant_Orb_1,
+                        FlagInstances.Ruins1_17__Dream_Plant_Orb_10,
+                        FlagInstances.Ruins1_17__Dream_Plant_Orb_11,
+                        FlagInstances.Ruins1_17__Dream_Plant_Orb_12,
+                        FlagInstances.Ruins1_17__Dream_Plant_Orb_13,
+                        FlagInstances.Ruins1_17__Dream_Plant_Orb_14,
+                        FlagInstances.Ruins1_17__Dream_Plant_Orb_15,
+                        FlagInstances.Ruins1_17__Dream_Plant_Orb_16,
+                        FlagInstances.Ruins1_17__Dream_Plant_Orb_17,
+                        FlagInstances.Ruins1_17__Dream_Plant_Orb_18,
+                        FlagInstances.Ruins1_17__Dream_Plant_Orb_19,
+                        FlagInstances.Ruins1_17__Dream_Plant_Orb_2,
+                        FlagInstances.Ruins1_17__Dream_Plant_Orb_20,
+                        FlagInstances.Ruins1_17__Dream_Plant_Orb_21,
+                        FlagInstances.Ruins1_17__Dream_Plant_Orb_22,
+                        FlagInstances.Ruins1_17__Dream_Plant_Orb_23,
+                        FlagInstances.Ruins1_17__Dream_Plant_Orb_24,
+                        FlagInstances.Ruins1_17__Dream_Plant_Orb_25,
+                        FlagInstances.Ruins1_17__Dream_Plant_Orb_26,
+                        FlagInstances.Ruins1_17__Dream_Plant_Orb_27,
+                        FlagInstances.Ruins1_17__Dream_Plant_Orb_3,
+                        FlagInstances.Ruins1_17__Dream_Plant_Orb_4,
+                        FlagInstances.Ruins1_17__Dream_Plant_Orb_5,
+                        FlagInstances.Ruins1_17__Dream_Plant_Orb_6,
+                        FlagInstances.Ruins1_17__Dream_Plant_Orb_7,
+                        FlagInstances.Ruins1_17__Dream_Plant_Orb_8,
+                        FlagInstances.Ruins1_17__Dream_Plant_Orb_9,
+                    }
+                },
+                { 
+                    FlagInstances.RestingGrounds_08__Dream_Plant, new List<FlagDef>
+                    {
+                        FlagInstances.RestingGrounds_08__Dream_Plant_Orb,
+                        FlagInstances.RestingGrounds_08__Dream_Plant_Orb_1,
+                        FlagInstances.RestingGrounds_08__Dream_Plant_Orb_10,
+                        FlagInstances.RestingGrounds_08__Dream_Plant_Orb_11,
+                        FlagInstances.RestingGrounds_08__Dream_Plant_Orb_12,
+                        FlagInstances.RestingGrounds_08__Dream_Plant_Orb_13,
+                        FlagInstances.RestingGrounds_08__Dream_Plant_Orb_14,
+                        FlagInstances.RestingGrounds_08__Dream_Plant_Orb_15,
+                        FlagInstances.RestingGrounds_08__Dream_Plant_Orb_16,
+                        FlagInstances.RestingGrounds_08__Dream_Plant_Orb_17,
+                        FlagInstances.RestingGrounds_08__Dream_Plant_Orb_18,
+                        FlagInstances.RestingGrounds_08__Dream_Plant_Orb_19,
+                        FlagInstances.RestingGrounds_08__Dream_Plant_Orb_2,
+                        FlagInstances.RestingGrounds_08__Dream_Plant_Orb_20,
+                        FlagInstances.RestingGrounds_08__Dream_Plant_Orb_21,
+                        FlagInstances.RestingGrounds_08__Dream_Plant_Orb_22,
+                        FlagInstances.RestingGrounds_08__Dream_Plant_Orb_23,
+                        FlagInstances.RestingGrounds_08__Dream_Plant_Orb_24,
+                        FlagInstances.RestingGrounds_08__Dream_Plant_Orb_25,
+                        FlagInstances.RestingGrounds_08__Dream_Plant_Orb_26,
+                        FlagInstances.RestingGrounds_08__Dream_Plant_Orb_27,
+                        FlagInstances.RestingGrounds_08__Dream_Plant_Orb_28,
+                        FlagInstances.RestingGrounds_08__Dream_Plant_Orb_29,
+                        FlagInstances.RestingGrounds_08__Dream_Plant_Orb_3,
+                        FlagInstances.RestingGrounds_08__Dream_Plant_Orb_30,
+                        FlagInstances.RestingGrounds_08__Dream_Plant_Orb_31,
+                        FlagInstances.RestingGrounds_08__Dream_Plant_Orb_32,
+                        FlagInstances.RestingGrounds_08__Dream_Plant_Orb_33,
+                        FlagInstances.RestingGrounds_08__Dream_Plant_Orb_4,
+                        FlagInstances.RestingGrounds_08__Dream_Plant_Orb_5,
+                        FlagInstances.RestingGrounds_08__Dream_Plant_Orb_6,
+                        FlagInstances.RestingGrounds_08__Dream_Plant_Orb_7,
+                        FlagInstances.RestingGrounds_08__Dream_Plant_Orb_8,
+                        FlagInstances.RestingGrounds_08__Dream_Plant_Orb_9
+                    }
+                },
             };
         }
 

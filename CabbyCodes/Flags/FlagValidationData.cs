@@ -53,7 +53,11 @@ namespace CabbyCodes.Flags
                 case "permadeathMode":
                     return new IntFlagValidationMetadata(0, 1, KeyCodeMap.ValidChars.Numeric);
 
+                case "aladarSlugDefeated":
+                case "elderHuDefeated":
+                case "galienDefeated":
                 case "mossCultist":
+                case "noEyesDefeated":
                 case "vesselFragments":
                 case "xeroDefeated":
                 case "zote":
@@ -61,6 +65,7 @@ namespace CabbyCodes.Flags
                     return new IntFlagValidationMetadata(0, 2, KeyCodeMap.ValidChars.Numeric);
 
                 case "guardiansDefeated":
+                case "quirrelRuins":
                 case "quirrelSlugShrine":
                     return new IntFlagValidationMetadata(0, 3, KeyCodeMap.ValidChars.Numeric);
 

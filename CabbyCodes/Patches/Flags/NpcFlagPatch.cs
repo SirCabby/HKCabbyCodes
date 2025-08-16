@@ -1,6 +1,9 @@
 using CabbyCodes.Flags;
+using CabbyCodes.Flags.FlagData;
 using CabbyCodes.Patches.BasePatches;
+using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
+using System;
 using System.Collections.Generic;
 
 namespace CabbyCodes.Patches.Flags
@@ -42,6 +45,7 @@ namespace CabbyCodes.Patches.Flags
                 FlagInstances.corn_deepnestMet1,
                 FlagInstances.corn_deepnestLeft,
                 FlagInstances.corn_abyssEncountered,
+                FlagInstances.corn_cityEncountered,
             }));
 
             panels.Add(new InfoPanel("Divine").SetColor(CheatPanel.subHeaderColor));
@@ -70,6 +74,11 @@ namespace CabbyCodes.Patches.Flags
             panels.Add(new InfoPanel("Gorb").SetColor(CheatPanel.subHeaderColor));
             panels.AddRange(CreateNpcPanels(new[] {
                 FlagInstances.ALADAR_encountered
+            }));
+
+            panels.Add(new InfoPanel("Grey Mourner").SetColor(CheatPanel.subHeaderColor));
+            panels.AddRange(CreateNpcPanels(new[] {
+                FlagInstances.metXun,
             }));
 
             panels.Add(new InfoPanel("Grimm").SetColor(CheatPanel.subHeaderColor));
@@ -154,13 +163,19 @@ namespace CabbyCodes.Patches.Flags
                 FlagInstances.metQuirrel,
                 FlagInstances.quirrelEggTemple,
                 FlagInstances.quirrelLeftEggTemple,
-                FlagInstances.quirrelSlugShrine
+                FlagInstances.quirrelLeftStation,
+                FlagInstances.quirrelSlugShrine,
+                FlagInstances.quirrelSpaReady,
+                FlagInstances.quirrelSpaEncountered,
+                FlagInstances.quirrelCityEncountered,
+                FlagInstances.quirrelRuins,
             }));
 
             panels.Add(new InfoPanel("Relic Seeker Lemm").SetColor(CheatPanel.subHeaderColor));
             panels.AddRange(CreateNpcPanels(new[] {
                 FlagInstances.marmOutside,
                 FlagInstances.marmOutsideConvo,
+                FlagInstances.metRelicDealerShop,
             }));
             
             panels.Add(new InfoPanel("Salubra").SetColor(CheatPanel.subHeaderColor));
@@ -175,7 +190,17 @@ namespace CabbyCodes.Patches.Flags
 
             panels.Add(new InfoPanel("Seer").SetColor(CheatPanel.subHeaderColor));
             panels.AddRange(CreateNpcPanels(new[] {
-                FlagInstances.metMoth
+                FlagInstances.metMoth,
+                FlagInstances.dreamReward1,
+                FlagInstances.dreamReward2,
+                FlagInstances.dreamReward3,
+                FlagInstances.dreamReward4,
+                FlagInstances.dreamReward5,
+                FlagInstances.dreamReward5b,
+                FlagInstances.dreamReward6,
+                FlagInstances.dreamReward7,
+                FlagInstances.dreamReward8,
+                FlagInstances.dreamReward9,
             }));
 
             panels.Add(new InfoPanel("Sly").SetColor(CheatPanel.subHeaderColor));
@@ -225,10 +250,64 @@ namespace CabbyCodes.Patches.Flags
             var panels = new List<CheatPanel>();
             foreach (var flag in flags)
             {
+                if (flag == FlagInstances.dreamReward1)
+                {
+                    panels.Add(InventoryPatch.CreateHallownestSealPanel(flag));
+                    continue;
+                }
+                else if (flag == FlagInstances.dreamReward2)
+                {
+                    panels.Add(CreateDreamRewardPanel(flag));
+                    continue;
+                }
+                else if (flag == FlagInstances.dreamReward3)
+                {
+                    panels.Add(InventoryPatch.CreatePaleOrePanel(flag));
+                    continue;
+                }
+                else if (flag == FlagInstances.dreamReward4)
+                {
+                    CharmPatch.CreateCharmTogglePanel(CharmData.GetCharm(3));
+                    continue;
+                }
+                else if (flag == FlagInstances.dreamReward5)
+                {
+                    InventoryPatch.CreateVesselFragmentPanel(flag);
+                    continue;
+                }
+                else if (flag == FlagInstances.dreamReward5b)
+                {
+                    InventoryPatch.CreateDreamGatePanel();
+                    continue;
+                }
+
                 var flagPatch = CreatePatch(flag);
                 panels.Add(flagPatch.CreatePanel());
             }
             return panels;
         }
+
+        public static TogglePanel CreateDreamRewardPanel(FlagDef dreamFlag)
+        {
+            // Find the corresponding reward flags entry
+            var rewardEntry = rewardFlags.TryGetValue(dreamFlag, out var additionalAction);
+
+            return new TogglePanel(new DelegateReference<bool>(
+                () => FlagManager.GetBoolFlag(dreamFlag),
+                value =>
+                {
+                    FlagManager.SetBoolFlag(dreamFlag, value);
+                    
+                    additionalAction.Invoke();
+                }
+            ), dreamFlag.ReadableName);
+        }
+
+        public static Dictionary<FlagDef, Action> rewardFlags = new Dictionary<FlagDef, Action>()
+        {
+            { FlagInstances.dreamReward2, () => {
+                FlagManager.SetBoolFlag(FlagInstances.gladeDoorOpened, FlagManager.GetBoolFlag(FlagInstances.dreamReward2));
+            }},
+        };
     }
 } 

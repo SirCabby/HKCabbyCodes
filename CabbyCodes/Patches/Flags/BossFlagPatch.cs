@@ -5,6 +5,7 @@ using CabbyMenu.UI.CheatPanels;
 using CabbyCodes.Scenes;
 using System.Collections.Generic;
 using UnityEngine;
+using CabbyMenu.SyncedReferences;
 
 namespace CabbyCodes.Patches.Flags
 {
@@ -30,8 +31,10 @@ namespace CabbyCodes.Patches.Flags
             Add(FlagInstances.Crossroads_09__Mawlek_Body, SceneInstances.Crossroads_09, new Vector2(39, 5));
             //Add(FlagInstances.hornet1Defeated)
             Add(FlagInstances.defeatedMantisLords, SceneInstances.Fungus2_15, new Vector2(36, 8));
+            Add(FlagInstances.mageLordDefeated, SceneInstances.Ruins1_24 , new Vector2(41, 30));
             Add(FlagInstances.elderHuDefeated, SceneInstances.Fungus2_32, new Vector2(46, 4));
             Add(FlagInstances.falseKnightDreamDefeated, SceneInstances.Crossroads_10, new Vector2(58, 48));
+            Add(FlagInstances.galienDefeated, SceneInstances.Cliffs_01, new Vector2(50, 34));
             Add(FlagInstances.aladarSlugDefeated, SceneInstances.Cliffs_02, new Vector2(50, 34));
             Add(FlagInstances.noEyesDefeated, SceneInstances.Fungus1_35, new Vector2(46, 4));
             Add(FlagInstances.xeroDefeated, SceneInstances.RestingGrounds_02, new Vector2(93, 12));
@@ -47,10 +50,15 @@ namespace CabbyCodes.Patches.Flags
                 FlagInstances.Crossroads_09__Mawlek_Body,
                 FlagInstances.hornet1Defeated,
                 FlagInstances.defeatedMantisLords,
+                FlagInstances.mageLordDefeated,
 
 
-                FlagInstances.elderHuDefeated,
+
+
+                
                 FlagInstances.falseKnightDreamDefeated,
+                FlagInstances.mageLordDreamDefeated,
+                FlagInstances.elderHuDefeated,
                 FlagInstances.galienDefeated,
                 FlagInstances.aladarSlugDefeated,
                 FlagInstances.noEyesDefeated,
@@ -69,10 +77,16 @@ namespace CabbyCodes.Patches.Flags
             
             foreach (var flag in flags)
             {
+                if (flag == FlagInstances.mageLordDefeated)
+                {
+                    panels.Add(CreateMageLordPanel());
+                    continue;
+                }
+
                 // Check if this boss has teleport coordinates defined
                 if (bossLocations.TryGetValue(flag, out var bossTeleportLocation) && bossTeleportLocation != null)
                 {
-                    // Create panel with toggle and teleport button
+                    // Create panel with toggle/input and teleport button
                     var flagPatch = CreatePatch(flag);
                     if (flagPatch is BoolPatch boolPatch)
                     {
@@ -81,9 +95,23 @@ namespace CabbyCodes.Patches.Flags
                             () => TeleportService.DoTeleport(bossTeleportLocation), 
                             GetDescription(flag)));
                     }
+                    else if (flagPatch is IntPatch intPatch)
+                    {
+                        // For int-type boss flags, create panel with int input and teleport button
+                        // Get validation data for proper min/max values
+                        var validationData = FlagValidationData.GetIntValidationData(flag);
+                        int minValue = validationData?.MinValue ?? 0;
+                        int maxValue = validationData?.MaxValue ?? 999;
+                        
+                        panels.Add(new IntWithTeleportPanel(
+                            intPatch, 
+                            () => TeleportService.DoTeleport(bossTeleportLocation), 
+                            GetDescription(flag),
+                            minValue, maxValue));
+                    }
                     else
                     {
-                        // Fallback to regular panel if not a bool patch
+                        // Fallback to regular panel if not a bool or int patch
                         panels.Add(flagPatch.CreatePanel());
                     }
                 }
@@ -96,6 +124,22 @@ namespace CabbyCodes.Patches.Flags
             }
             
             return panels;
+        }
+
+        private ToggleWithTeleportPanel CreateMageLordPanel()
+        {
+            var flag = FlagInstances.mageLordDefeated;
+            bossLocations.TryGetValue(flag, out var bossTeleportLocation);
+
+            return new ToggleWithTeleportPanel(new DelegateReference<bool>(
+                () => FlagManager.GetBoolFlag(flag),
+                value =>
+                {
+                    FlagManager.SetBoolFlag(flag, value);
+                    FlagManager.SetBoolFlag(FlagInstances.mageLordEncountered, value);
+                    FlagManager.SetBoolFlag(FlagInstances.mageLordEncountered_2, value);
+                }
+            ), () => TeleportService.DoTeleport(bossTeleportLocation), flag.ReadableName);
         }
     }
 } 

@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace CabbyCodes.Flags.FlagInfo
 {
     /// <summary>
@@ -15,10 +17,11 @@ namespace CabbyCodes.Flags.FlagInfo
         public FlagDef PooedFlag { get; }
         public bool CanBeBroken { get; }
         public bool CanBeUpgraded { get; }
+        public List<FlagDef> AssociatedFlags { get; }
 
         public CharmInfo(int id, FlagDef gotFlag, FlagDef costFlag, 
                        FlagDef brokenFlag = null, FlagDef upgradeFlag = null,
-                       FlagDef gaveFlag = null, FlagDef pooedFlag = null)
+                       FlagDef gaveFlag = null, FlagDef pooedFlag = null, List<FlagDef> associatedFlags = null)
         {
             Id = id;
             GotFlag = gotFlag;
@@ -29,6 +32,7 @@ namespace CabbyCodes.Flags.FlagInfo
             PooedFlag = pooedFlag;
             CanBeBroken = brokenFlag != null;
             CanBeUpgraded = upgradeFlag != null;
+            AssociatedFlags = associatedFlags;
         }
     }
 } 

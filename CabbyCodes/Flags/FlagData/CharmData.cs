@@ -22,13 +22,13 @@ namespace CabbyCodes.Flags.FlagData
             var charms = new Dictionary<int, CharmInfo>();
             
             // Helper method to add a charm with optional broken, upgrade, gave, and pooed flags
-            void Add(int id, FlagDef gotFlag, FlagDef costFlag, FlagDef brokenFlag = null, FlagDef upgradeFlag = null, FlagDef gaveFlag = null, FlagDef pooedFlag = null) 
-                => charms[id] = new CharmInfo(id, gotFlag, costFlag, brokenFlag, upgradeFlag, gaveFlag, pooedFlag);
+            void Add(int id, FlagDef gotFlag, FlagDef costFlag, FlagDef brokenFlag = null, FlagDef upgradeFlag = null, FlagDef gaveFlag = null, FlagDef pooedFlag = null, List<FlagDef> associatedFlags = null) 
+                => charms[id] = new CharmInfo(id, gotFlag, costFlag, brokenFlag, upgradeFlag, gaveFlag, pooedFlag, associatedFlags);
             
             // Charm 1-22: Standard charms
             Add(1, FlagInstances.gotCharm_1, FlagInstances.charmCost_1);
             Add(2, FlagInstances.gotCharm_2, FlagInstances.charmCost_2);
-            Add(3, FlagInstances.gotCharm_3, FlagInstances.charmCost_3);
+            Add(3, FlagInstances.gotCharm_3, FlagInstances.charmCost_3, null, null, null, null, new List<FlagDef>() { FlagInstances.Crossroads_38__Reward_10, FlagInstances.Crossroads_38__Shiny_Item_Grubsong });
             Add(4, FlagInstances.gotCharm_4, FlagInstances.charmCost_4);
             Add(5, FlagInstances.gotCharm_5, FlagInstances.charmCost_5);
             Add(6, FlagInstances.gotCharm_6, FlagInstances.charmCost_6);
@@ -95,20 +95,58 @@ namespace CabbyCodes.Flags.FlagData
         }
 
         /// <summary>
-        /// Gets all charms as a list, ordered by ID.
+        /// Gets all charms as a list, ordered by game menu order
         /// </summary>
         /// <returns>List of all charms</returns>
         public static List<CharmInfo> GetAllCharms()
         {
-            var result = new List<CharmInfo>();
-            for (int i = 1; i <= 40; i++)
+            return new List<CharmInfo>()
             {
-                if (AllCharms.ContainsKey(i))
-                {
-                    result.Add(AllCharms[i]);
-                }
-            }
-            return result;
+                // 1
+                AllCharms[2],
+                AllCharms[1],
+                AllCharms[4],
+                AllCharms[20],
+                AllCharms[19],
+                AllCharms[21],
+                AllCharms[31],
+                AllCharms[37],
+                AllCharms[3],
+                AllCharms[35],
+                // 11
+                AllCharms[23],
+                AllCharms[24],
+                AllCharms[25],
+                AllCharms[33],
+                AllCharms[14],
+                AllCharms[15],
+                AllCharms[32],
+                AllCharms[18],
+                AllCharms[13],
+                AllCharms[6],
+                // 21
+                AllCharms[12],
+                AllCharms[5],
+                AllCharms[11],
+                AllCharms[10],
+                AllCharms[22],
+                AllCharms[7],
+                AllCharms[34],
+                AllCharms[8],
+                AllCharms[9],
+                AllCharms[27],
+                // 31
+                AllCharms[29],
+                AllCharms[17],
+                AllCharms[16],
+                AllCharms[28],
+                AllCharms[26],
+                AllCharms[39],
+                AllCharms[30],
+                AllCharms[38],
+                AllCharms[40],
+                AllCharms[36],
+            };
         }
 
         /// <summary>

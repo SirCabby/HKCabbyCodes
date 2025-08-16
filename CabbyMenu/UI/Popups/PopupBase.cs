@@ -65,9 +65,9 @@ namespace CabbyMenu.UI.Popups
             headerContainerLE.preferredHeight = 80f;
 
             // Header text.
-            var headerFactory = TextMod.Build(headerText);
-            GameObject headerObj = headerFactory.gameObject;
-            headerTextMod = headerFactory.textMod;
+            var (gameObject, gameObjectMod, textMod) = TextMod.Build(headerText);
+            GameObject headerObj = gameObject;
+            headerTextMod = textMod;
             headerTextMod.SetFontStyle(FontStyle.Bold).SetFontSize(Constants.DEFAULT_FONT_SIZE).SetColor(Color.white).SetAlignment(TextAnchor.MiddleLeft);
             // Adjust padding inside header
             RectTransform headerRect = headerObj.GetComponent<RectTransform>();

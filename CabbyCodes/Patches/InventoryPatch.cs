@@ -243,12 +243,26 @@ namespace CabbyCodes.Patches
                     },
                     () => new List<string> { "NONE", FlagInstances.hasDreamNail.ReadableName, FlagInstances.dreamNailUpgraded.ReadableName }
                 ), FlagInstances.hasDreamNail.ReadableName + " / " + FlagInstances.dreamNailUpgraded.ReadableName, Constants.DEFAULT_PANEL_HEIGHT),
-                new BoolPatch(FlagInstances.hasDreamGate).CreatePanel(),
+                CreateDreamGatePanel(),
                 new BoolPatch(FlagInstances.unlockedCompletionRate).CreatePanel(),
                 new BoolPatch(FlagInstances.salubraBlessing).CreatePanel()
             };
 
             return panels;
+        }
+
+        public static TogglePanel CreateDreamGatePanel()
+        {
+            var flag = FlagInstances.dreamReward5b;
+
+            return new TogglePanel(new DelegateReference<bool>(
+                () => FlagManager.GetBoolFlag(flag),
+                value =>
+                {
+                    FlagManager.SetBoolFlag(flag, value);
+                    FlagManager.SetBoolFlag(FlagInstances.hasDreamGate, value);
+                }
+            ), flag.ReadableName);
         }
 
         private List<CheatPanel> CreateNailArtPanels()
@@ -361,7 +375,8 @@ namespace CabbyCodes.Patches
                 new BoolPatch(FlagInstances.hasSlykey).CreatePanel(),
                 new BoolPatch(FlagInstances.hasCityKey).CreatePanel(),
                 new BoolPatch(FlagInstances.hasKingsBrand).CreatePanel(),
-                CreateSimpleKeyPanel(FlagInstances.slySimpleKey)
+                CreateSimpleKeyPanel(FlagInstances.slySimpleKey),
+                CreateSimpleKeyPanel(FlagInstances.Ruins1_17__Shiny_Item),
             };
 
             return panels;
@@ -538,6 +553,7 @@ namespace CabbyCodes.Patches
         {
             var panels = new List<CheatPanel>
             {
+                CreateHeartPiecePanel(FlagInstances.Crossroads_38__Heart_Piece),
                 CreateHeartPiecePanel(FlagInstances.Crossroads_09__Heart_Piece),
                 CreateHeartPiecePanel(FlagInstances.Crossroads_13__Heart_Piece),
                 CreateHeartPiecePanel(FlagInstances.Fungus1_36__Heart_Piece),
@@ -546,33 +562,17 @@ namespace CabbyCodes.Patches
                 CreateHeartPiecePanel(FlagInstances.slyShellFrag2),
                 CreateHeartPiecePanel(FlagInstances.slyShellFrag3),
                 CreateHeartPiecePanel(FlagInstances.slyShellFrag4),
+                CreateHeartPiecePanel(FlagInstances.Crossroads_38__Reward_5, new List<FlagDef> { FlagInstances.Crossroads_38__Heart_Piece })
             };
             
             return panels;
         }
 
-        private List<CheatPanel> CreateVesselFragmentPanels()
-        {
-            var panels = new List<CheatPanel>
-            {
-                CreateVesselFragmentPanel(FlagInstances.slyVesselFrag1),
-                CreateVesselFragmentPanel(FlagInstances.slyVesselFrag2),
-                CreateVesselFragmentPanel(FlagInstances.slyVesselFrag3),
-                CreateVesselFragmentPanel(FlagInstances.slyVesselFrag4),
-                CreateVesselFragmentPanel(FlagInstances.Fungus1_13__Vessel_Fragment),
-                CreateVesselFragmentPanel(FlagInstances.Deepnest_38__Vessel_Fragment),
-                CreateVesselFragmentPanel(FlagInstances.Ruins2_09__Vessel_Fragment),
-            };
-            
-            return panels;
-        }
-
-        private TogglePanel CreateHeartPiecePanel(FlagDef heartPieceFlag)
+        private TogglePanel CreateHeartPiecePanel(FlagDef flag, List<FlagDef> additionalFlags = null)
         {
             return new TogglePanel(new DelegateReference<bool>(
-                () => FlagManager.GetBoolFlag(heartPieceFlag),
-                value =>
-                {
+                () => FlagManager.GetBoolFlag(flag),
+                value => {
                     // Initialize starting state if not done yet
                     if (!hasInitializedStartingState)
                     {
@@ -581,15 +581,21 @@ namespace CabbyCodes.Patches
                         hasInitializedStartingState = true;
                     }
 
-                    FlagManager.SetBoolFlag(heartPieceFlag, value);
-                    
+                    FlagManager.SetBoolFlag(flag, value);
+                    if (additionalFlags != null){
+                        foreach (FlagDef flagDef in additionalFlags)
+                        {
+                            FlagManager.SetBoolFlag(flagDef, value);
+                        }
+                    }
+
                     var currentHeartPieces = FlagManager.GetIntFlag(FlagInstances.heartPieces);
                     var newHeartPieces = currentHeartPieces;
                     
                     if (value)
                     {
                         // Increment heart pieces when enabling
-                        newHeartPieces = currentHeartPieces + 1;
+                        newHeartPieces++;
                         
                         // If we hit 4 heart pieces, reset to 0 and increase max health
                         if (newHeartPieces >= 4)
@@ -604,7 +610,7 @@ namespace CabbyCodes.Patches
                     else
                     {
                         // Decrement heart pieces when disabling
-                        newHeartPieces = currentHeartPieces - 1;
+                        newHeartPieces--;
                         
                         // If we go below 0, reset to 3 and decrease max health
                         if (newHeartPieces < 0)
@@ -639,10 +645,28 @@ namespace CabbyCodes.Patches
                         GameReloadManager.CancelReload($"HeartPiece");
                     }
                 }
-            ), heartPieceFlag.ReadableName);
+            ), flag.ReadableName);
         }
 
-        private TogglePanel CreateVesselFragmentPanel(FlagDef vesselFragmentFlag)
+        private List<CheatPanel> CreateVesselFragmentPanels()
+        {
+            var panels = new List<CheatPanel>
+            {
+                CreateVesselFragmentPanel(FlagInstances.slyVesselFrag1),
+                CreateVesselFragmentPanel(FlagInstances.slyVesselFrag2),
+                CreateVesselFragmentPanel(FlagInstances.slyVesselFrag3),
+                CreateVesselFragmentPanel(FlagInstances.slyVesselFrag4),
+                CreateVesselFragmentPanel(FlagInstances.Fungus1_13__Vessel_Fragment),
+                CreateVesselFragmentPanel(FlagInstances.Deepnest_38__Vessel_Fragment),
+                CreateVesselFragmentPanel(FlagInstances.Ruins2_09__Vessel_Fragment),
+                CreateVesselFragmentPanel(FlagInstances.Crossroads_37__Vessel_Fragment),
+                CreateVesselFragmentPanel(FlagInstances.dreamReward5),
+            };
+            
+            return panels;
+        }
+
+        public static TogglePanel CreateVesselFragmentPanel(FlagDef vesselFragmentFlag)
         {
             return new TogglePanel(new DelegateReference<bool>(
                 () => FlagManager.GetBoolFlag(vesselFragmentFlag),
@@ -751,21 +775,21 @@ namespace CabbyCodes.Patches
         {
             var panels = new List<CheatPanel>
             {
-                CreatePaleOrePanel(FlagInstances.Abyss_17__Shiny_Item_Stand)
+                CreatePaleOrePanel(FlagInstances.Abyss_17__Shiny_Item_Stand),
+                CreatePaleOrePanel(FlagInstances.dreamReward3),
             };
 
             return panels;
         }
 
-        private TogglePanel CreatePaleOrePanel(FlagDef flag)
+        public static TogglePanel CreatePaleOrePanel(FlagDef flag)
         {
             // Create a custom synced reference that handles ore count changes and interactable state
             var syncedReference = new DelegateReference<bool>(
                 () => FlagManager.GetBoolFlag(flag),
-                value =>
-                {
+                value => {
                     var current = FlagManager.GetIntFlag(FlagInstances.ore);
-                    
+            
                     if (value)
                     {
                         FlagManager.SetIntFlag(FlagInstances.ore, current + 1);
@@ -846,6 +870,8 @@ namespace CabbyCodes.Patches
                 CreateWanderersJournalPanel(FlagInstances.Abyss_02__Shiny_Item),
                 CreateWanderersJournalPanel(FlagInstances.Ruins_Elevator__Shiny_Item_1),
                 CreateWanderersJournalPanel(FlagInstances.Ruins2_05__Shiny_Item),
+                CreateWanderersJournalPanel(FlagInstances.Ruins1_28__Shiny_Item),
+                CreateWanderersJournalPanel(FlagInstances.RestingGrounds_10__Shiny_Item),
             };
 
             return panels;
@@ -878,17 +904,30 @@ namespace CabbyCodes.Patches
                 CreateHallownestSealPanel(FlagInstances.Fungus2_31__Shiny_Item),
                 CreateHallownestSealPanel(FlagInstances.Ruins2_08__Shiny_Item),
                 CreateHallownestSealPanel(FlagInstances.Ruins1_03__Shiny_Item),
+                CreateHallownestSealPanel(FlagInstances.Ruins1_32__Shiny_Item),
+                CreateHallownestSealPanel(FlagInstances.RestingGrounds_10__Shiny_Item_1),
+                CreateHallownestSealPanel(FlagInstances.dreamReward1),
             };
 
             return panels;
         }
 
-        private TogglePanel CreateHallownestSealPanel(FlagDef flag)
+        public static TogglePanel CreateHallownestSealPanel(FlagDef flag)
         {
+            string label;
+
+            if (flag.Scene != null)
+            {
+                label = flag.Scene.ReadableName;
+            }
+            else
+            {
+                label = flag.ReadableName;
+            }
+
             return new TogglePanel(new DelegateReference<bool>(
                 () => FlagManager.GetBoolFlag(flag),
-                value =>
-                {
+                value => {
                     FlagManager.SetBoolFlag(flag, value);
 
                     int current = FlagManager.GetIntFlag(FlagInstances.trinket2);
@@ -897,7 +936,7 @@ namespace CabbyCodes.Patches
                     FlagManager.SetIntFlag(FlagInstances.trinket2, newCount);
                     FlagManager.SetBoolFlag(FlagInstances.foundTrinket2, newCount > 0);
                 }
-            ), flag.Scene.ReadableName);
+            ), label);
         }
 
         private List<CheatPanel> CreateKingsIdolPanels()
@@ -906,6 +945,7 @@ namespace CabbyCodes.Patches
             {
                 CreateKingsIdolPanel(FlagInstances.Cliffs_01__Shiny_Item),
                 CreateKingsIdolPanel(FlagInstances.Deepnest_33__Shiny_Item),
+                CreateKingsIdolPanel(FlagInstances.RestingGrounds_08__Shiny_Item),
             };
 
             return panels;

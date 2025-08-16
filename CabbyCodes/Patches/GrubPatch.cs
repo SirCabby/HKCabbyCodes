@@ -75,12 +75,13 @@ namespace CabbyCodes.Patches
             Add(FlagInstances.Mines_35__Grub_Bottle);
             
             // Resting Grounds
-            Add(FlagInstances.RestingGrounds_10__Grub_Bottle);
+            Add(FlagInstances.RestingGrounds_10__Grub_Bottle, new Vector2(114, 18));
             
             // City of Tears
             Add(FlagInstances.Ruins_House_01__Grub_Bottle);
             Add(FlagInstances.Ruins1_05__Grub_Bottle);
-            Add(FlagInstances.Ruins1_32__Grub_Bottle);
+            Add(FlagInstances.Ruins1_05__Grub_Bottle_1, new Vector2(54, 143));
+            Add(FlagInstances.Ruins1_32__Grub_Bottle, new Vector2(9, 25));
             Add(FlagInstances.Ruins2_03__Grub_Bottle);
             Add(FlagInstances.Ruins2_07__Grub_Bottle);
             Add(FlagInstances.Ruins2_11__Grub_Bottle);

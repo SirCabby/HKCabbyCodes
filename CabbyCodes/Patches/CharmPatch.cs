@@ -158,7 +158,7 @@ namespace CabbyCodes.Patches
             FlagManager.SetBoolFlag(charm.PooedFlag, shouldBePooed);
         }
 
-        private CheatPanel CreateCharmTogglePanel(CharmInfo charm)
+        public static CheatPanel CreateCharmTogglePanel(CharmInfo charm)
         {
             int index = charms.IndexOf(charm) + 1;
             TogglePanel togglePanel = new TogglePanel(
@@ -173,6 +173,15 @@ namespace CabbyCodes.Patches
                         // Set the charm flag
                         FlagManager.SetBoolFlag(charm.GotFlag, value);
                         
+                        if (charm.AssociatedFlags != null)
+                        {
+                            foreach (FlagDef flag in charm.AssociatedFlags)
+                            {
+                                CabbyCodesPlugin.BLogger.LogInfo("flag: " + flag.ReadableName);
+                                FlagManager.SetBoolFlag(flag, value);
+                            }
+                        }
+
                         // Update charmsOwned count
                         if (value && !wasCharmOwned)
                         {
