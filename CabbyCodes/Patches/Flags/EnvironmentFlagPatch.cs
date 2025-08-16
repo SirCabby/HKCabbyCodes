@@ -37,6 +37,7 @@ namespace CabbyCodes.Patches.Flags
                 FlagInstances.restingGroundsCryptWall,
                 FlagInstances.dreamReward2,
                 FlagInstances.mageLordOrbsCollected,
+                FlagInstances.spaBugsEncountered,
 
                 
 

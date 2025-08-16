@@ -169,6 +169,9 @@ namespace CabbyCodes.Patches.Flags
                 FlagInstances.quirrelSpaEncountered,
                 FlagInstances.quirrelCityEncountered,
                 FlagInstances.quirrelRuins,
+                FlagInstances.quirrelCityLeft,
+                FlagInstances.quirrelMinesEncountered,
+                FlagInstances.quirrelMines,
             }));
 
             panels.Add(new InfoPanel("Relic Seeker Lemm").SetColor(CheatPanel.subHeaderColor));
@@ -185,7 +188,9 @@ namespace CabbyCodes.Patches.Flags
             
             panels.Add(new InfoPanel("Shaman").SetColor(CheatPanel.subHeaderColor));
             panels.AddRange(CreateNpcPanels(new[] {
-                FlagInstances.shaman 
+                FlagInstances.shaman,
+                FlagInstances.shamanQuakeConvo,
+                FlagInstances.shamanScreamConvo
             }));
 
             panels.Add(new InfoPanel("Seer").SetColor(CheatPanel.subHeaderColor));

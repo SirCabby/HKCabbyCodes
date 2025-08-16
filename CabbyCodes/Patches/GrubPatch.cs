@@ -66,7 +66,7 @@ namespace CabbyCodes.Patches
             Add(FlagInstances.Hive_04__Grub_Bottle);
             
             // Mines
-            Add(FlagInstances.Mines_03__Grub_Bottle);
+            Add(FlagInstances.Mines_03__Grub_Bottle, new Vector2(28, 76));
             Add(FlagInstances.Mines_04__Grub_Bottle);
             Add(FlagInstances.Mines_16__Grub_Bottle);
             Add(FlagInstances.Mines_19__Grub_Bottle);

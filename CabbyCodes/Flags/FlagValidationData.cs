@@ -108,6 +108,8 @@ namespace CabbyCodes.Flags
                 case "profileID":
                     return new IntFlagValidationMetadata(1, 4, KeyCodeMap.ValidChars.Numeric);
                 
+                case "quirrelMines":
+                    return new IntFlagValidationMetadata(-2147483647, 2147483647, KeyCodeMap.ValidChars.Numeric);
 
                 // Needs corrected
                 case "currentArea":
