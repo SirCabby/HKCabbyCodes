@@ -155,11 +155,13 @@ namespace CabbyCodes.Patches
         /// <returns>Dictionary mapping area names to lists of grub scenes in that area.</returns>
         private static Dictionary<string, List<FlagDef>> GroupGrubsByArea()
         {
+            const string defaultArea = "Rooms";
             var groupedGrubs = new Dictionary<string, List<FlagDef>>();
 
             foreach (var flag in grubLocations.Keys)
             {
-                string area = flag.Scene.AreaName;
+                string area = string.IsNullOrEmpty(flag.Scene?.AreaName) ? defaultArea : flag.Scene.AreaName;
+                
                 if (!groupedGrubs.ContainsKey(area))
                 {
                     groupedGrubs[area] = new List<FlagDef>();
