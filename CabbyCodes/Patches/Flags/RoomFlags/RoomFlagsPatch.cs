@@ -1,7 +1,9 @@
 using CabbyMenu.UI.CheatPanels;
 using CabbyMenu.UI.DynamicPanels;
+using CabbyMenu.UI.Controls;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine.EventSystems;
 
 namespace CabbyCodes.Patches.Flags.RoomFlags
 {
@@ -118,46 +120,115 @@ namespace CabbyCodes.Patches.Flags.RoomFlags
         private static CheatPanel CreateFlagPanel(CabbyCodes.Flags.FlagDef flagDef)
         {
             var displayName = flagDef.ReadableName;
+            CheatPanel panel = null;
 
             switch (flagDef.Type)
             {
                 case "PlayerData_Bool":
-                    return new TogglePanel(
+                    var togglePanel = new TogglePanel(
                         new CabbyMenu.SyncedReferences.DelegateReference<bool>(
                             () => CabbyCodes.Flags.FlagManager.GetBoolFlag(flagDef, flagDef.SemiPersistent),
                             v => CabbyCodes.Flags.FlagManager.SetBoolFlag(flagDef, v, flagDef.SemiPersistent)),
                         displayName);
+                    
+                    // Check if we're in the same scene and disable if so
+                    if (IsInSameScene(flagDef.SceneName))
+                    {
+                        togglePanel.GetToggleButton().SetInteractable(false);
+                        togglePanel.GetToggleButton().SetDisabledMessage("Cannot edit room flags while in the room");
+                    }
+                    
+                    panel = togglePanel;
+                    break;
 
                 case "PlayerData_Int":
-                    return new RangeInputFieldPanel<int>(
+                    var intPanel = new RangeInputFieldPanel<int>(
                         new CabbyMenu.SyncedReferences.DelegateReference<int>(
                             () => CabbyCodes.Flags.FlagManager.GetIntFlag(flagDef),
                             v => CabbyCodes.Flags.FlagManager.SetIntFlag(flagDef, v)),
                         CabbyMenu.Utilities.KeyCodeMap.ValidChars.Numeric, 0, 999, displayName);
+                    
+                    // Check if we're in the same scene and disable if so
+                    if (IsInSameScene(flagDef.SceneName))
+                    {
+                        // For input field panels, we need to disable the input field component
+                        var inputField = intPanel.GetInputField();
+                        if (inputField != null)
+                        {
+                            inputField.interactable = false;
+                            // Add hover popup to the panel itself since input fields don't have built-in hover popups
+                            AddHoverPopupToPanel(intPanel, "Cannot edit room flags while in the room");
+                        }
+                    }
+                    
+                    panel = intPanel;
+                    break;
 
                 case "PlayerData_Float":
-                    return new RangeInputFieldPanel<float>(
+                    var floatPanel = new RangeInputFieldPanel<float>(
                         new CabbyMenu.SyncedReferences.DelegateReference<float>(
                             () => CabbyCodes.Flags.FlagManager.GetFloatFlag(flagDef),
                             v => CabbyCodes.Flags.FlagManager.SetFloatFlag(flagDef, v)),
                         CabbyMenu.Utilities.KeyCodeMap.ValidChars.Decimal, 0f, 999f, displayName);
+                    
+                    // Check if we're in the same scene and disable if so
+                    if (IsInSameScene(flagDef.SceneName))
+                    {
+                        // For input field panels, we need to disable the input field component
+                        var inputField = floatPanel.GetInputField();
+                        if (inputField != null)
+                        {
+                            inputField.interactable = false;
+                            // Add hover popup to the panel itself since input fields don't have built-in hover popups
+                            AddHoverPopupToPanel(floatPanel, "Cannot edit room flags while in the room");
+                        }
+                    }
+                    
+                    panel = floatPanel;
+                    break;
 
                 case "PersistentBoolData":
-                    return new TogglePanel(
+                    var persistentTogglePanel = new TogglePanel(
                         new CabbyMenu.SyncedReferences.DelegateReference<bool>(
                             () => CabbyCodes.Flags.FlagManager.GetBoolFlag(flagDef, flagDef.SemiPersistent),
                             v => CabbyCodes.Flags.FlagManager.SetBoolFlag(flagDef, v, flagDef.SemiPersistent)),
                         displayName);
+                    
+                    // Check if we're in the same scene and disable if so
+                    if (IsInSameScene(flagDef.SceneName))
+                    {
+                        persistentTogglePanel.GetToggleButton().SetInteractable(false);
+                        persistentTogglePanel.GetToggleButton().SetDisabledMessage("Cannot edit room flags while in the room");
+                    }
+                    
+                    panel = persistentTogglePanel;
+                    break;
 
                 case "PersistentIntData":
-                    return new RangeInputFieldPanel<int>(
+                    var persistentIntPanel = new RangeInputFieldPanel<int>(
                         new CabbyMenu.SyncedReferences.DelegateReference<int>(
                             () => CabbyCodes.Flags.FlagManager.GetIntFlag(flagDef),
                             v => CabbyCodes.Flags.FlagManager.SetIntFlag(flagDef, v)),
                         CabbyMenu.Utilities.KeyCodeMap.ValidChars.Numeric, 0, 999, displayName);
+                    
+                    // Check if we're in the same scene and disable if so
+                    if (IsInSameScene(flagDef.SceneName))
+                    {
+                        // For input field panels, we need to disable the input field component
+                        var inputField = persistentIntPanel.GetInputField();
+                        if (inputField != null)
+                        {
+                            inputField.interactable = false;
+                            // Add hover popup to the panel itself since input fields don't have built-in hover popups
+                            AddHoverPopupToPanel(persistentIntPanel, "Cannot edit room flags while in the room");
+                        }
+                    }
+                    
+                    panel = persistentIntPanel;
+                    break;
 
                 case "GeoRockData":
-                    return new RangeInputFieldPanel<int>(
+                    var geoRockPanel = new RangeInputFieldPanel<int>(
                         new CabbyMenu.SyncedReferences.DelegateReference<int>(
                             () => {
                                 if (SceneData.instance?.geoRocks == null) return 0;
@@ -176,9 +247,78 @@ namespace CabbyCodes.Patches.Flags.RoomFlags
                                     }
                             }),
                         CabbyMenu.Utilities.KeyCodeMap.ValidChars.Numeric, 0, 10, displayName + " (Hits Left)");
+                    
+                    // Check if we're in the same scene and disable if so
+                    if (IsInSameScene(flagDef.SceneName))
+                    {
+                        // For input field panels, we need to disable the input field component
+                        var inputField = geoRockPanel.GetInputField();
+                        if (inputField != null)
+                        {
+                            inputField.interactable = false;
+                            // Add hover popup to the panel itself since input fields don't have built-in hover popups
+                            AddHoverPopupToPanel(geoRockPanel, "Cannot edit room flags while in the room");
+                        }
+                    }
+                    
+                    panel = geoRockPanel;
+                    break;
 
                 default:
                     return null;
+            }
+            
+            return panel;
+        }
+
+        /// <summary>
+        /// Checks if the current scene matches the specified scene name.
+        /// </summary>
+        /// <param name="sceneName">The scene name to check against</param>
+        /// <returns>True if the current scene matches, false otherwise</returns>
+        private static bool IsInSameScene(string sceneName)
+        {
+            try
+            {
+                string currentSceneName = GameStateProvider.GetCurrentSceneName();
+                return currentSceneName == sceneName;
+            }
+            catch
+            {
+                // If anything goes wrong, assume we're not in the same scene
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Adds a hover popup to a panel for disabled input field panels.
+        /// </summary>
+        /// <param name="panel">The panel to add the hover popup to</param>
+        /// <param name="message">The message to display on hover</param>
+        private static void AddHoverPopupToPanel(CheatPanel panel, string message)
+        {
+            if (panel?.GetGameObject() != null)
+            {
+                var hoverPopup = panel.GetGameObject().AddComponent<HoverPopup>();
+                
+                // Add EventTrigger to handle mouse enter/exit events for the hover popup
+                var eventTrigger = panel.GetGameObject().GetComponent<EventTrigger>();
+                if (eventTrigger == null)
+                {
+                    eventTrigger = panel.GetGameObject().AddComponent<EventTrigger>();
+                }
+
+                // Mouse Enter event
+                EventTrigger.Entry enterEntry = new EventTrigger.Entry();
+                enterEntry.eventID = EventTriggerType.PointerEnter;
+                enterEntry.callback.AddListener((data) => hoverPopup.ShowPopup(message));
+                eventTrigger.triggers.Add(enterEntry);
+
+                // Mouse Exit event
+                EventTrigger.Entry exitEntry = new EventTrigger.Entry();
+                exitEntry.eventID = EventTriggerType.PointerExit;
+                exitEntry.callback.AddListener((data) => hoverPopup.HidePopup());
+                eventTrigger.triggers.Add(exitEntry);
             }
         }
     }
