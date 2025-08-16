@@ -267,17 +267,17 @@ namespace CabbyCodes.Patches.Flags
                 }
                 else if (flag == FlagInstances.dreamReward4)
                 {
-                    CharmPatch.CreateCharmTogglePanel(CharmData.GetCharm(3));
+                    panels.Add(CharmPatch.CreateCharmTogglePanel(CharmData.GetCharm(3)));
                     continue;
                 }
                 else if (flag == FlagInstances.dreamReward5)
                 {
-                    InventoryPatch.CreateVesselFragmentPanel(flag);
+                    panels.Add(InventoryPatch.CreateVesselFragmentPanel(flag));
                     continue;
                 }
                 else if (flag == FlagInstances.dreamReward5b)
                 {
-                    InventoryPatch.CreateDreamGatePanel();
+                    panels.Add(InventoryPatch.CreateDreamGatePanel());
                     continue;
                 }
 

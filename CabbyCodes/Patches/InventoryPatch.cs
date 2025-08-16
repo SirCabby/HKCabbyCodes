@@ -373,7 +373,7 @@ namespace CabbyCodes.Patches
                 new BoolPatch(FlagInstances.hasWhiteKey).CreatePanel(),
                 new BoolPatch(FlagInstances.hasLoveKey).CreatePanel(),
                 new BoolPatch(FlagInstances.hasSlykey).CreatePanel(),
-                new BoolPatch(FlagInstances.hasCityKey).CreatePanel(),
+                CreateCityKeyPanel(),
                 new BoolPatch(FlagInstances.hasKingsBrand).CreatePanel(),
                 CreateSimpleKeyPanel(FlagInstances.slySimpleKey),
                 CreateSimpleKeyPanel(FlagInstances.Ruins1_17__Shiny_Item),
@@ -731,6 +731,47 @@ namespace CabbyCodes.Patches
                     FlagManager.SetBoolFlag(simpleKeyFlag, value);
                 }
             ), simpleKeyFlag.ReadableName);
+        }
+
+        private TogglePanel CreateCityKeyPanel()
+        {
+            TogglePanel panel = null;
+            
+            panel = new TogglePanel(new DelegateReference<bool>(
+                () => FlagManager.GetBoolFlag(FlagInstances.hasCityKey),
+                value =>
+                {
+                    FlagManager.SetBoolFlag(FlagInstances.hasCityKey, value);
+                    // Update the panel's interactable state after changing the key value
+                    UpdateCityKeyPanelInteractable(panel);
+                }
+            ), FlagInstances.hasCityKey.ReadableName);
+
+            // Set initial interactable state
+            UpdateCityKeyPanelInteractable(panel);
+
+            return panel;
+        }
+
+        private void UpdateCityKeyPanelInteractable(TogglePanel panel)
+        {
+            var openedCityGate = FlagManager.GetBoolFlag(FlagInstances.openedCityGate);
+            
+            // Disable the panel if the key has been used to open the gate
+            bool shouldBeInteractable = !openedCityGate;
+            
+            var toggleButton = panel.GetToggleButton();
+            toggleButton.SetInteractable(shouldBeInteractable);
+            
+            // Set disabled message for hover popup
+            if (!shouldBeInteractable)
+            {
+                toggleButton.SetDisabledMessage("Key has been used to open the City of Tears gate");
+            }
+            else
+            {
+                toggleButton.SetDisabledMessage(""); // Clear message when enabled
+            }
         }
 
         private List<CheatPanel> CreateNotchPanels()
