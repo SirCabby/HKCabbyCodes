@@ -29,7 +29,7 @@ namespace CabbyCodes.Patches.Flags
             // Boss Flags
             Add(FlagInstances.falseKnightDefeated, SceneInstances.Crossroads_10, new Vector2(57, 28));
             Add(FlagInstances.Crossroads_09__Mawlek_Body, SceneInstances.Crossroads_09, new Vector2(39, 5));
-            //Add(FlagInstances.hornet1Defeated)
+            Add(FlagInstances.hornet1Defeated, SceneInstances.Fungus1_04 , new Vector2(40, 36));
             Add(FlagInstances.defeatedMantisLords, SceneInstances.Fungus2_15, new Vector2(36, 8));
             Add(FlagInstances.mageLordDefeated, SceneInstances.Ruins1_24 , new Vector2(41, 30));
             Add(FlagInstances.elderHuDefeated, SceneInstances.Fungus2_32, new Vector2(46, 4));

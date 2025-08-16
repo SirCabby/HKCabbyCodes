@@ -29,7 +29,7 @@ namespace CabbyCodes.Patches
             // Unlock All toggle
             ButtonPanel buttonPanel = new ButtonPanel(() =>
             {
-                foreach (HunterInfo hunterInfo in HunterData.GetAllHunterTargets())
+                foreach (HunterInfo hunterInfo in HunterData.AllHunterTargets)
                 {
                     PlayerData.instance.SetBool(hunterInfo.KilledFlag.Id, true);
                 }
@@ -40,7 +40,7 @@ namespace CabbyCodes.Patches
             // Lock all toggle
             PanelAdder.AddButton(buttonPanel, 1, () =>
             {
-                foreach (HunterInfo hunterInfo in HunterData.GetAllHunterTargets())
+                foreach (HunterInfo hunterInfo in HunterData.AllHunterTargets)
                 {
                     PlayerData.instance.SetBool(hunterInfo.KilledFlag.Id, false);
                 }
@@ -52,7 +52,7 @@ namespace CabbyCodes.Patches
             // Set kills remaining 0
             ButtonPanel setPanel = new ButtonPanel(() =>
             {
-                foreach (HunterInfo hunterInfo in HunterData.GetAllHunterTargets())
+                foreach (HunterInfo hunterInfo in HunterData.AllHunterTargets)
                 {
                     PlayerData.instance.SetInt(hunterInfo.KillsFlag.Id, 0);
                 }
@@ -63,7 +63,7 @@ namespace CabbyCodes.Patches
             // Set kills remaining 1
             PanelAdder.AddButton(setPanel, 1, () =>
             {
-                foreach (HunterInfo hunterInfo in HunterData.GetAllHunterTargets())
+                foreach (HunterInfo hunterInfo in HunterData.AllHunterTargets)
                 {
                     PlayerData.instance.SetInt(hunterInfo.KillsFlag.Id, 1);
                 }
@@ -75,7 +75,7 @@ namespace CabbyCodes.Patches
             panels.Add(new InfoPanel("<ON> to unlock entry, kills left to unlock notes (0 = unlocked)").SetColor(CheatPanel.subHeaderColor));
 
             // Add individual hunter panels
-            foreach (HunterInfo hunterInfo in HunterData.GetAllHunterTargets())
+            foreach (HunterInfo hunterInfo in HunterData.AllHunterTargets)
             {
                 panels.AddRange(CreateHunterPanels(hunterInfo));
             }
