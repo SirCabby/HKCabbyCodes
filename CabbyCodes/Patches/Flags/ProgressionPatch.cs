@@ -21,18 +21,21 @@ namespace CabbyCodes.Patches.Flags
         /// </summary>
         private static Dictionary<string, TeleportLocation> CreateDreamerLocations()
         {
-            var locations = new Dictionary<string, TeleportLocation>();
-            
-            locations[FlagInstances.hegemolDefeated.ReadableName] = new TeleportLocation(SceneInstances.Deepnest_Spider_Town, new Vector2(58, 153));
+            var locations = new Dictionary<string, TeleportLocation>
+            {
+                [FlagInstances.hegemolDefeated.ReadableName] = new TeleportLocation(SceneInstances.Deepnest_Spider_Town, new Vector2(58, 153)),
+                [FlagInstances.lurienDefeated.ReadableName] = new TeleportLocation(SceneInstances.Ruins2_Watcher_Room, new Vector2(52, 136))
+            };
             
             return locations;
         }
 
         public override List<CheatPanel> CreatePanels()
         {
-            var panels = new List<CheatPanel>();
-
-            panels.Add(new InfoPanel("Dreamers").SetColor(CheatPanel.subHeaderColor));
+            var panels = new List<CheatPanel>
+            {
+                new InfoPanel("Dreamers").SetColor(CheatPanel.subHeaderColor)
+            };
             panels.AddRange(CreateDreamerPanels(new[] {
                 new[] { FlagInstances.hegemolDefeated, FlagInstances.maskBrokenHegemol },
                 new[] { FlagInstances.lurienDefeated, FlagInstances.maskBrokenLurien },
@@ -64,17 +67,13 @@ namespace CabbyCodes.Patches.Flags
                             {
                                 // Toggle ON: increment both flags by 1
                                 var currentGuardianValue = FlagManager.GetIntFlag(FlagInstances.guardiansDefeated);
-                                var currentMaskValue = FlagManager.GetIntFlag(FlagInstances.maskToBreak);
                                 FlagManager.SetIntFlag(FlagInstances.guardiansDefeated, currentGuardianValue + 1);
-                                FlagManager.SetIntFlag(FlagInstances.maskToBreak, currentMaskValue + 1);
                             }
                             else
                             {
                                 // Toggle OFF: decrement both flags by 1
                                 var currentGuardianValue = FlagManager.GetIntFlag(FlagInstances.guardiansDefeated);
-                                var currentMaskValue = FlagManager.GetIntFlag(FlagInstances.maskToBreak);
                                 FlagManager.SetIntFlag(FlagInstances.guardiansDefeated, Math.Max(0, currentGuardianValue - 1));
-                                FlagManager.SetIntFlag(FlagInstances.maskToBreak, Math.Max(0, currentMaskValue - 1));
                             }
                         }
                     );

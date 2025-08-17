@@ -417,6 +417,32 @@ namespace CabbyCodes.Patches.Flags
                         FlagInstances.RestingGrounds_08__Dream_Plant_Orb_9
                     }
                 },
+                { 
+                    FlagInstances.Mines_23__Dream_Plant, new List<FlagDef>
+                    {
+                        FlagInstances.Mines_23__Dream_Plant_Orb,
+                        FlagInstances.Mines_23__Dream_Plant_Orb_1,
+                        FlagInstances.Mines_23__Dream_Plant_Orb_10,
+                        FlagInstances.Mines_23__Dream_Plant_Orb_11,
+                        FlagInstances.Mines_23__Dream_Plant_Orb_12,
+                        FlagInstances.Mines_23__Dream_Plant_Orb_13,
+                        FlagInstances.Mines_23__Dream_Plant_Orb_14,
+                        FlagInstances.Mines_23__Dream_Plant_Orb_15,
+                        FlagInstances.Mines_23__Dream_Plant_Orb_16,
+                        FlagInstances.Mines_23__Dream_Plant_Orb_17,
+                        FlagInstances.Mines_23__Dream_Plant_Orb_18,
+                        FlagInstances.Mines_23__Dream_Plant_Orb_19,
+                        FlagInstances.Mines_23__Dream_Plant_Orb_2,
+                        FlagInstances.Mines_23__Dream_Plant_Orb_20,
+                        FlagInstances.Mines_23__Dream_Plant_Orb_3,
+                        FlagInstances.Mines_23__Dream_Plant_Orb_4,
+                        FlagInstances.Mines_23__Dream_Plant_Orb_5,
+                        FlagInstances.Mines_23__Dream_Plant_Orb_6,
+                        FlagInstances.Mines_23__Dream_Plant_Orb_7,
+                        FlagInstances.Mines_23__Dream_Plant_Orb_8,
+                        FlagInstances.Mines_23__Dream_Plant_Orb_9
+                    }
+                },
             };
         }
 

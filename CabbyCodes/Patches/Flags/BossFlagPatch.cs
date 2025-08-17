@@ -27,15 +27,18 @@ namespace CabbyCodes.Patches.Flags
             void Add(FlagDef flag, SceneMapData scene, Vector2? teleportCoords = null) => locations[flag] = teleportCoords.HasValue ? new TeleportLocation(scene, teleportCoords.Value) : null;
             
             // Boss Flags
-            Add(FlagInstances.falseKnightDefeated, SceneInstances.Crossroads_10, new Vector2(57, 28));
+            Add(FlagInstances.aladarSlugDefeated, SceneInstances.Cliffs_02, new Vector2(50, 34));
             Add(FlagInstances.Crossroads_09__Mawlek_Body, SceneInstances.Crossroads_09, new Vector2(39, 5));
-            Add(FlagInstances.hornet1Defeated, SceneInstances.Fungus1_04 , new Vector2(40, 36));
             Add(FlagInstances.defeatedMantisLords, SceneInstances.Fungus2_15, new Vector2(36, 8));
-            Add(FlagInstances.mageLordDefeated, SceneInstances.Ruins1_24 , new Vector2(41, 30));
             Add(FlagInstances.elderHuDefeated, SceneInstances.Fungus2_32, new Vector2(46, 4));
+            Add(FlagInstances.falseKnightDefeated, SceneInstances.Crossroads_10, new Vector2(57, 28));
             Add(FlagInstances.falseKnightDreamDefeated, SceneInstances.Crossroads_10, new Vector2(58, 48));
             Add(FlagInstances.galienDefeated, SceneInstances.Cliffs_01, new Vector2(50, 34));
-            Add(FlagInstances.aladarSlugDefeated, SceneInstances.Cliffs_02, new Vector2(50, 34));
+            Add(FlagInstances.hornet1Defeated, SceneInstances.Fungus1_04 , new Vector2(40, 36));
+            Add(FlagInstances.infectedKnightDreamDefeated, SceneInstances.Abyss_20, new Vector2(28, 29));
+            Add(FlagInstances.infectedKnightEncountered, SceneInstances.Abyss_19, new Vector2(44, 29));
+            Add(FlagInstances.mageLordDefeated, SceneInstances.Ruins1_24 , new Vector2(41, 30));
+            Add(FlagInstances.Mines_32__Battle_Scene, SceneInstances.Mines_32, new Vector2(44, 12));
             Add(FlagInstances.noEyesDefeated, SceneInstances.Fungus1_35, new Vector2(46, 4));
             Add(FlagInstances.xeroDefeated, SceneInstances.RestingGrounds_02, new Vector2(93, 12));
             
@@ -51,13 +54,18 @@ namespace CabbyCodes.Patches.Flags
                 FlagInstances.hornet1Defeated,
                 FlagInstances.defeatedMantisLords,
                 FlagInstances.mageLordDefeated,
-
-
+                FlagInstances.infectedKnightEncountered,
+                FlagInstances.Mines_32__Battle_Scene,
 
 
                 
                 FlagInstances.falseKnightDreamDefeated,
                 FlagInstances.mageLordDreamDefeated,
+                FlagInstances.infectedKnightDreamDefeated,
+
+
+
+
                 FlagInstances.elderHuDefeated,
                 FlagInstances.galienDefeated,
                 FlagInstances.aladarSlugDefeated,
@@ -82,6 +90,11 @@ namespace CabbyCodes.Patches.Flags
                     panels.Add(CreateMageLordPanel());
                     continue;
                 }
+                else if (flag == FlagInstances.infectedKnightDreamDefeated)
+                {
+                    panels.Add(CreateBrokenVesselPanel());
+                    continue;
+                }
 
                 // Check if this boss has teleport coordinates defined
                 if (bossLocations.TryGetValue(flag, out var bossTeleportLocation) && bossTeleportLocation != null)
@@ -91,8 +104,8 @@ namespace CabbyCodes.Patches.Flags
                     if (flagPatch is BoolPatch boolPatch)
                     {
                         panels.Add(new ToggleWithTeleportPanel(
-                            boolPatch, 
-                            () => TeleportService.DoTeleport(bossTeleportLocation), 
+                            boolPatch,
+                            () => TeleportService.DoTeleport(bossTeleportLocation),
                             GetDescription(flag)));
                     }
                     else if (flagPatch is IntPatch intPatch)
@@ -104,8 +117,8 @@ namespace CabbyCodes.Patches.Flags
                         int maxValue = validationData?.MaxValue ?? 999;
                         
                         panels.Add(new IntWithTeleportPanel(
-                            intPatch, 
-                            () => TeleportService.DoTeleport(bossTeleportLocation), 
+                            intPatch,
+                            () => TeleportService.DoTeleport(bossTeleportLocation),
                             GetDescription(flag),
                             minValue, maxValue));
                     }
@@ -138,6 +151,21 @@ namespace CabbyCodes.Patches.Flags
                     FlagManager.SetBoolFlag(flag, value);
                     FlagManager.SetBoolFlag(FlagInstances.mageLordEncountered, value);
                     FlagManager.SetBoolFlag(FlagInstances.mageLordEncountered_2, value);
+                }
+            ), () => TeleportService.DoTeleport(bossTeleportLocation), flag.ReadableName);
+        }
+
+        private ToggleWithTeleportPanel CreateBrokenVesselPanel()
+        {
+            var flag = FlagInstances.infectedKnightDreamDefeated;
+            bossLocations.TryGetValue(flag, out var bossTeleportLocation);
+
+            return new ToggleWithTeleportPanel(new DelegateReference<bool>(
+                () => FlagManager.GetBoolFlag(flag),
+                value =>
+                {
+                    FlagManager.SetBoolFlag(flag, value);
+                    FlagManager.SetBoolFlag(FlagInstances.infectedKnightOrbsCollected, value);
                 }
             ), () => TeleportService.DoTeleport(bossTeleportLocation), flag.ReadableName);
         }

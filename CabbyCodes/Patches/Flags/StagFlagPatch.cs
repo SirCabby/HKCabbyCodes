@@ -19,7 +19,8 @@ namespace CabbyCodes.Patches.Flags
                 FlagInstances.openedGreenpath,
                 FlagInstances.openedFungalWastes,
                 FlagInstances.openedDeepnest,
-                FlagInstances.openedRuins2
+                FlagInstances.openedRuins2,
+                FlagInstances.openedHiddenStation,
             }));
             
             return panels;

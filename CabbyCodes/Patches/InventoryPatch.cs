@@ -159,6 +159,9 @@ namespace CabbyCodes.Patches
             panels.Add(new InfoPanel("King's Idols").SetColor(CheatPanel.subHeaderColor));
             panels.AddRange(CreateKingsIdolPanels());
 
+            panels.Add(new InfoPanel("Arcane Eggs").SetColor(CheatPanel.subHeaderColor));
+            panels.AddRange(CreateArcaneEggPanels());
+
             return panels;
         }
 
@@ -218,37 +221,45 @@ namespace CabbyCodes.Patches
                 new BoolPatch(FlagInstances.hasSuperDash).CreatePanel(),
                 new BoolPatch(FlagInstances.hasAcidArmour).CreatePanel(),
                 CreateNailUpgradePanel(),
-                new DropdownPanel(new DelegateValueList(
-                    () => {
-                        if (FlagManager.GetBoolFlag(FlagInstances.dreamNailUpgraded)) return 2;
-                        else if (FlagManager.GetBoolFlag(FlagInstances.hasDreamNail)) return 1;
-                        return 0;
-                    },
-                    value => {
-                        if (value == 2)
-                        {
-                            FlagManager.SetBoolFlag(FlagInstances.hasDreamNail, true);
-                            FlagManager.SetBoolFlag(FlagInstances.dreamNailUpgraded, true);
-                        }
-                        else if (value == 1)
-                        {
-                            FlagManager.SetBoolFlag(FlagInstances.hasDreamNail, true);
-                            FlagManager.SetBoolFlag(FlagInstances.dreamNailUpgraded, false);
-                        }
-                        else
-                        {
-                            FlagManager.SetBoolFlag(FlagInstances.hasDreamNail, false);
-                            FlagManager.SetBoolFlag(FlagInstances.dreamNailUpgraded, false);
-                        }
-                    },
-                    () => new List<string> { "NONE", FlagInstances.hasDreamNail.ReadableName, FlagInstances.dreamNailUpgraded.ReadableName }
-                ), FlagInstances.hasDreamNail.ReadableName + " / " + FlagInstances.dreamNailUpgraded.ReadableName, Constants.DEFAULT_PANEL_HEIGHT),
+                CreateDreamNailPanel(),
                 CreateDreamGatePanel(),
                 new BoolPatch(FlagInstances.unlockedCompletionRate).CreatePanel(),
                 new BoolPatch(FlagInstances.salubraBlessing).CreatePanel()
             };
 
             return panels;
+        }
+
+        public static DropdownPanel CreateDreamNailPanel()
+        {
+            return new DropdownPanel(new DelegateValueList(
+                () => {
+                    if (FlagManager.GetBoolFlag(FlagInstances.dreamNailUpgraded)) return 2;
+                    else if (FlagManager.GetBoolFlag(FlagInstances.hasDreamNail)) return 1;
+                    return 0;
+                },
+                value => {
+                    if (value == 2)
+                    {
+                        FlagManager.SetBoolFlag(FlagInstances.hasDreamNail, true);
+                        FlagManager.SetBoolFlag(FlagInstances.dreamNailUpgraded, true);
+                        FlagManager.SetBoolFlag(FlagInstances.dreamReward8, true);
+                    }
+                    else if (value == 1)
+                    {
+                        FlagManager.SetBoolFlag(FlagInstances.hasDreamNail, true);
+                        FlagManager.SetBoolFlag(FlagInstances.dreamNailUpgraded, false);
+                        FlagManager.SetBoolFlag(FlagInstances.dreamReward8, false);
+                    }
+                    else
+                    {
+                        FlagManager.SetBoolFlag(FlagInstances.hasDreamNail, false);
+                        FlagManager.SetBoolFlag(FlagInstances.dreamNailUpgraded, false);
+                        FlagManager.SetBoolFlag(FlagInstances.dreamReward8, false);
+                    }
+                },
+                () => new List<string> { "NONE", FlagInstances.hasDreamNail.ReadableName, FlagInstances.dreamNailUpgraded.ReadableName }
+            ), FlagInstances.hasDreamNail.ReadableName + " / " + FlagInstances.dreamNailUpgraded.ReadableName, Constants.DEFAULT_PANEL_HEIGHT);
         }
 
         public static TogglePanel CreateDreamGatePanel()
@@ -372,14 +383,54 @@ namespace CabbyCodes.Patches
             {
                 new BoolPatch(FlagInstances.hasWhiteKey).CreatePanel(),
                 new BoolPatch(FlagInstances.hasLoveKey).CreatePanel(),
-                new BoolPatch(FlagInstances.hasSlykey).CreatePanel(),
+                CreateSlyKeyPanel(),
                 CreateCityKeyPanel(),
                 new BoolPatch(FlagInstances.hasKingsBrand).CreatePanel(),
                 CreateSimpleKeyPanel(FlagInstances.slySimpleKey),
                 CreateSimpleKeyPanel(FlagInstances.Ruins1_17__Shiny_Item),
+                CreateSimpleKeyPanel(FlagInstances.Abyss_20__Shiny_Item_Stand),
             };
 
             return panels;
+        }
+
+        private TogglePanel CreateSlyKeyPanel()
+        {
+            TogglePanel panel = null;
+            
+            panel = new TogglePanel(new DelegateReference<bool>(
+                () => FlagManager.GetBoolFlag(FlagInstances.hasSlykey),
+                value =>
+                {
+                    FlagManager.SetBoolFlag(FlagInstances.hasSlykey, value);
+                    UpdateSlyKeyPanelInteractable(panel);
+                }
+            ), FlagInstances.hasSlykey.ReadableName);
+
+            UpdateSlyKeyPanelInteractable(panel);
+
+            return panel;
+        }
+
+        private void UpdateSlyKeyPanelInteractable(TogglePanel panel)
+        {
+            var gaveSlyKey = FlagManager.GetBoolFlag(FlagInstances.gaveSlykey);
+            
+            // Disable the panel if the key has been given to Sly
+            bool shouldBeInteractable = !gaveSlyKey;
+            
+            var toggleButton = panel.GetToggleButton();
+            toggleButton.SetInteractable(shouldBeInteractable);
+            
+            // Set disabled message for hover popup
+            if (!shouldBeInteractable)
+            {
+                toggleButton.SetDisabledMessage("Key already given to Sly, untoggle that flag to get the key back");
+            }
+            else
+            {
+                toggleButton.SetDisabledMessage(""); // Clear message when enabled
+            }
         }
 
         private List<CheatPanel> CreateMapAccessoryPanels()
@@ -562,13 +613,17 @@ namespace CabbyCodes.Patches
                 CreateHeartPiecePanel(FlagInstances.slyShellFrag2),
                 CreateHeartPiecePanel(FlagInstances.slyShellFrag3),
                 CreateHeartPiecePanel(FlagInstances.slyShellFrag4),
-                CreateHeartPiecePanel(FlagInstances.Crossroads_38__Reward_5, new List<FlagDef> { FlagInstances.Crossroads_38__Heart_Piece })
+                CreateHeartPiecePanel(FlagInstances.Crossroads_38__Reward_5, new List<FlagDef> { FlagInstances.Crossroads_38__Heart_Piece }),
+                CreateHeartPiecePanel(FlagInstances.Fungus2_25__Heart_Piece),
+                CreateHeartPiecePanel(FlagInstances.Mines_32__Heart_Piece),
+                CreateHeartPiecePanel(FlagInstances.dreamReward7),
+                CreateHeartPiecePanel(FlagInstances.Room_Bretta__Heart_Piece),
             };
             
             return panels;
         }
 
-        private TogglePanel CreateHeartPiecePanel(FlagDef flag, List<FlagDef> additionalFlags = null)
+        public static TogglePanel CreateHeartPiecePanel(FlagDef flag, List<FlagDef> additionalFlags = null)
         {
             return new TogglePanel(new DelegateReference<bool>(
                 () => FlagManager.GetBoolFlag(flag),
@@ -818,6 +873,7 @@ namespace CabbyCodes.Patches
             {
                 CreatePaleOrePanel(FlagInstances.Abyss_17__Shiny_Item_Stand),
                 CreatePaleOrePanel(FlagInstances.dreamReward3),
+                CreatePaleOrePanel(FlagInstances.Mines_34__Shiny_Item_Stand),
             };
 
             return panels;
@@ -913,6 +969,7 @@ namespace CabbyCodes.Patches
                 CreateWanderersJournalPanel(FlagInstances.Ruins2_05__Shiny_Item),
                 CreateWanderersJournalPanel(FlagInstances.Ruins1_28__Shiny_Item),
                 CreateWanderersJournalPanel(FlagInstances.RestingGrounds_10__Shiny_Item),
+                CreateWanderersJournalPanel(FlagInstances.Mines_20__Shiny_Item_1),
             };
 
             return panels;
@@ -948,6 +1005,7 @@ namespace CabbyCodes.Patches
                 CreateHallownestSealPanel(FlagInstances.Ruins1_32__Shiny_Item),
                 CreateHallownestSealPanel(FlagInstances.RestingGrounds_10__Shiny_Item_1),
                 CreateHallownestSealPanel(FlagInstances.dreamReward1),
+                CreateHallownestSealPanel(FlagInstances.Ruins2_03__Shiny_Item),
             };
 
             return panels;
@@ -986,7 +1044,9 @@ namespace CabbyCodes.Patches
             {
                 CreateKingsIdolPanel(FlagInstances.Cliffs_01__Shiny_Item),
                 CreateKingsIdolPanel(FlagInstances.Deepnest_33__Shiny_Item),
+                CreateKingsIdolPanel(FlagInstances.Ruins1_32__Shiny_Item),
                 CreateKingsIdolPanel(FlagInstances.RestingGrounds_08__Shiny_Item),
+                CreateKingsIdolPanel(FlagInstances.Mines_30__Shiny_Item_Stand)
             };
 
             return panels;
@@ -1007,6 +1067,35 @@ namespace CabbyCodes.Patches
                     FlagManager.SetBoolFlag(FlagInstances.foundTrinket3, newCount > 0);
                 }
             ), flag.Scene.ReadableName);
+        }
+
+        private List<CheatPanel> CreateArcaneEggPanels()
+        {
+            var panels = new List<CheatPanel>
+            {
+                CreateArcaneEggPanel(FlagInstances.dreamReward6),
+            };
+
+            return panels;
+        }
+
+        public static TogglePanel CreateArcaneEggPanel(FlagDef flag)
+        {
+            var label = flag.Scene?.ReadableName ?? flag.ReadableName;
+
+            return new TogglePanel(new DelegateReference<bool>(
+                () => FlagManager.GetBoolFlag(flag),
+                value =>
+                {
+                    FlagManager.SetBoolFlag(flag, value);
+
+                    int current = FlagManager.GetIntFlag(FlagInstances.trinket4);
+                    int newCount = value ? current + 1 : Math.Max(0, current - 1);
+
+                    FlagManager.SetIntFlag(FlagInstances.trinket4, newCount);
+                    FlagManager.SetBoolFlag(FlagInstances.foundTrinket4, newCount > 0);
+                }
+            ), label);
         }
 
         private CheatPanel CreateNailUpgradePanel()

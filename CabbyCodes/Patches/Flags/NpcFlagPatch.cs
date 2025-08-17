@@ -12,12 +12,14 @@ namespace CabbyCodes.Patches.Flags
     {
         public override List<CheatPanel> CreatePanels()
         {
-            var panels = new List<CheatPanel>();
-
-            panels.Add(new InfoPanel("Bretta").SetColor(CheatPanel.subHeaderColor));
+            var panels = new List<CheatPanel>
+            {
+                new InfoPanel("Bretta").SetColor(CheatPanel.subHeaderColor)
+            };
             panels.AddRange(CreateNpcPanels(new[] {
                 FlagInstances.brettaRescued,
                 FlagInstances.brettaPosition,
+                FlagInstances.brettaSeenBench,
             }));
 
             panels.Add(new InfoPanel("Brumm").SetColor(CheatPanel.subHeaderColor));
@@ -45,6 +47,7 @@ namespace CabbyCodes.Patches.Flags
                 FlagInstances.corn_deepnestMet1,
                 FlagInstances.corn_deepnestLeft,
                 FlagInstances.corn_abyssEncountered,
+                FlagInstances.corn_abyssLeft,
                 FlagInstances.corn_cityEncountered,
             }));
 
@@ -66,6 +69,9 @@ namespace CabbyCodes.Patches.Flags
                 FlagInstances.elderbugSpeechSly,
                 FlagInstances.elderbugSpeechStation,
                 FlagInstances.elderbugSpeechKingsPass,
+                FlagInstances.elderbugSpeechBretta,
+                FlagInstances.elderbugSpeechMinesLift,
+
 
 
                 FlagInstances.elderbugConvoGrimm
@@ -128,6 +134,12 @@ namespace CabbyCodes.Patches.Flags
             panels.AddRange(CreateNpcPanels(new[] {
                 FlagInstances.midwifeMet,
                 FlagInstances.midwifeConvo1
+            }));
+            
+            panels.Add(new InfoPanel("Millibelle the Thief").SetColor(CheatPanel.subHeaderColor));
+            panels.AddRange(CreateNpcPanels(new[] {
+                FlagInstances.bankerTheftCheck,
+                FlagInstances.bankerSpaMet
             }));
             
             panels.Add(new InfoPanel("Moss Prophet").SetColor(CheatPanel.subHeaderColor));
@@ -211,7 +223,8 @@ namespace CabbyCodes.Patches.Flags
             panels.Add(new InfoPanel("Sly").SetColor(CheatPanel.subHeaderColor));
             panels.AddRange(CreateNpcPanels(new[] {
                 FlagInstances.slyRescued,
-                FlagInstances.metSlyShop
+                FlagInstances.metSlyShop,
+                FlagInstances.gaveSlykey
             }));
 
             panels.Add(new InfoPanel("Stag").SetColor(CheatPanel.subHeaderColor));
@@ -265,7 +278,7 @@ namespace CabbyCodes.Patches.Flags
                     panels.Add(CreateDreamRewardPanel(flag));
                     continue;
                 }
-                else if (flag == FlagInstances.dreamReward3)
+                else if (flag == FlagInstances.dreamReward3 || flag == FlagInstances.dreamReward9)
                 {
                     panels.Add(InventoryPatch.CreatePaleOrePanel(flag));
                     continue;
@@ -283,6 +296,26 @@ namespace CabbyCodes.Patches.Flags
                 else if (flag == FlagInstances.dreamReward5b)
                 {
                     panels.Add(InventoryPatch.CreateDreamGatePanel());
+                    continue;
+                }
+                else if (flag == FlagInstances.dreamReward6)
+                {
+                    panels.Add(InventoryPatch.CreateArcaneEggPanel(flag));
+                    continue;
+                }
+                else if (flag == FlagInstances.dreamReward7)
+                {
+                    panels.Add(InventoryPatch.CreateHeartPiecePanel(flag));
+                    continue;
+                }
+                else if (flag == FlagInstances.dreamReward8)
+                {
+                    panels.Add(InventoryPatch.CreateDreamNailPanel());
+                    continue;
+                }
+                else if (flag == FlagInstances.gaveSlykey)
+                {
+                    panels.Add(CreateGaveSlykeyPanel());
                     continue;
                 }
 
@@ -313,6 +346,36 @@ namespace CabbyCodes.Patches.Flags
             { FlagInstances.dreamReward2, () => {
                 FlagManager.SetBoolFlag(FlagInstances.gladeDoorOpened, FlagManager.GetBoolFlag(FlagInstances.dreamReward2));
             }},
+            { FlagInstances.dreamReward9, () => {
+                FlagManager.SetBoolFlag(FlagInstances.mothDeparted, FlagManager.GetBoolFlag(FlagInstances.dreamReward9));
+            }},
         };
+
+        private static CheatPanel CreateGaveSlykeyPanel()
+        {
+            // Check if both hasSlyKey and gaveSlyKey are false
+            bool hasSlyKey = FlagManager.GetBoolFlag(FlagInstances.hasSlykey);
+            bool gaveSlyKey = FlagManager.GetBoolFlag(FlagInstances.gaveSlykey);
+            bool shouldBeInteractable = hasSlyKey || gaveSlyKey;
+
+            var togglePanel = new TogglePanel(new DelegateReference<bool>(
+                () => FlagManager.GetBoolFlag(FlagInstances.gaveSlykey),
+                value =>
+                {
+                    FlagManager.SetBoolFlag(FlagInstances.gaveSlykey, value);
+                    FlagManager.SetBoolFlag(FlagInstances.hasSlykey, !value);
+                }
+            ), FlagInstances.gaveSlykey.ReadableName);
+
+            var toggleButton = togglePanel.GetToggleButton();
+            toggleButton.SetInteractable(shouldBeInteractable);
+            
+            if (!shouldBeInteractable)
+            {
+                toggleButton.SetDisabledMessage("Giving Sly the storeroom key requires\nhaving the storeroom key.\n\nGet or toggle it to set this flag.");
+            }
+
+            return togglePanel;
+        }
     }
 } 

@@ -30,7 +30,7 @@ namespace CabbyCodes.Patches
             
             // Abyss
             Add(FlagInstances.Abyss_17__Grub_Bottle);
-            Add(FlagInstances.Abyss_19__Grub_Bottle);
+            Add(FlagInstances.Abyss_19__Grub_Bottle, new Vector2(87, 86));
             
             // Crossroads
             Add(FlagInstances.Crossroads_03__Grub_Bottle, new Vector2(7, 42));
@@ -67,12 +67,12 @@ namespace CabbyCodes.Patches
             
             // Mines
             Add(FlagInstances.Mines_03__Grub_Bottle, new Vector2(28, 76));
-            Add(FlagInstances.Mines_04__Grub_Bottle);
-            Add(FlagInstances.Mines_16__Grub_Bottle);
-            Add(FlagInstances.Mines_19__Grub_Bottle);
-            Add(FlagInstances.Mines_24__Grub_Bottle);
-            Add(FlagInstances.Mines_31__Grub_Bottle);
-            Add(FlagInstances.Mines_35__Grub_Bottle);
+            Add(FlagInstances.Mines_04__Grub_Bottle, new Vector2(19, 78));
+            Add(FlagInstances.Mines_16__Grub_Bottle, new Vector2(51, 23));
+            Add(FlagInstances.Mines_19__Grub_Bottle, new Vector2(34, 27));
+            Add(FlagInstances.Mines_24__Grub_Bottle, new Vector2(46, 7));
+            Add(FlagInstances.Mines_31__Grub_Bottle, new Vector2(24, 34));
+            Add(FlagInstances.Mines_35__Grub_Bottle, new Vector2(103, 70));
             
             // Resting Grounds
             Add(FlagInstances.RestingGrounds_10__Grub_Bottle, new Vector2(114, 18));
@@ -82,7 +82,7 @@ namespace CabbyCodes.Patches
             Add(FlagInstances.Ruins1_05__Grub_Bottle);
             Add(FlagInstances.Ruins1_05__Grub_Bottle_1, new Vector2(54, 143));
             Add(FlagInstances.Ruins1_32__Grub_Bottle, new Vector2(9, 25));
-            Add(FlagInstances.Ruins2_03__Grub_Bottle);
+            Add(FlagInstances.Ruins2_03__Grub_Bottle, new Vector2(29, 51));
             Add(FlagInstances.Ruins2_07__Grub_Bottle);
             Add(FlagInstances.Ruins2_11__Grub_Bottle);
             

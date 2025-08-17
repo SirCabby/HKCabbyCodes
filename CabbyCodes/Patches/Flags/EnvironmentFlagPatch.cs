@@ -38,6 +38,7 @@ namespace CabbyCodes.Patches.Flags
                 FlagInstances.dreamReward2,
                 FlagInstances.mageLordOrbsCollected,
                 FlagInstances.spaBugsEncountered,
+                FlagInstances.mineLiftOpened,
 
                 
 
