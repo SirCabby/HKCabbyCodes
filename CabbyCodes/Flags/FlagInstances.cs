@@ -6,31 +6,40 @@ namespace CabbyCodes.Flags
     {
         #region Bosses
             public static readonly FlagDef aladarSlugDefeated = new FlagDef("aladarSlugDefeated", null, false, "PlayerData_Int", "Warrior's Grave Gorb (0-2). 1 = Defeated, 2 = Claimed Reward");
+            public static readonly FlagDef collectorDefeated = new FlagDef("collectorDefeated", null, false, "PlayerData_Bool", "The Collector defeated");
             public static readonly FlagDef Crossroads_09__Mawlek_Body = new FlagDef("Mawlek Body", SceneInstances.Crossroads_09, false, "PersistentBoolData", "Brooding Mawlek defeated");
             public static readonly FlagDef defeatedMantisLords = new FlagDef("defeatedMantisLords", null, false, "PlayerData_Bool", "Mantis Lords defeated");
             public static readonly FlagDef elderHuDefeated = new FlagDef("elderHuDefeated", null, false, "PlayerData_Int", "Warrior's Grave Elder Hu (0-2). 1 = Defeated, 2 = Claimed Reward");
+            public static readonly FlagDef Fungus3_23__Battle_Scene = new FlagDef("Battle Scene", SceneInstances.Fungus3_23, false, "PersistentBoolData", "Traitor Lord defeated");
             public static readonly FlagDef Mines_32__Battle_Scene = new FlagDef("Battle Scene", SceneInstances.Mines_32, false, "PersistentBoolData", "Enraged Guardian defeated");
             public static readonly FlagDef falseKnightDefeated = new FlagDef("falseKnightDefeated", null, false, "PlayerData_Bool", "False Knight defeated");
             public static readonly FlagDef falseKnightDreamDefeated = new FlagDef("falseKnightDreamDefeated", null, false, "PlayerData_Bool", "Failed Knight defeated");
+            public static readonly FlagDef flukeMotherDefeated = new FlagDef("flukeMotherDefeated", null, false, "PlayerData_Bool", "Flukemarm defeated");
             public static readonly FlagDef galienDefeated = new FlagDef("galienDefeated", null, false, "PlayerData_Int", "Warrior's Grave Galien (0-2). 1 = Defeated, 2 = Claimed Reward");
             public static readonly FlagDef hornet1Defeated = new FlagDef("hornet1Defeated", null, false, "PlayerData_Bool", "Hornet defeated at Greenpath");
+            public static readonly FlagDef hornetOutskirtsDefeated = new FlagDef("hornetOutskirtsDefeated", null, false, "PlayerData_Bool", "Hornet defeated at Kingdom's Edge");
             public static readonly FlagDef infectedKnightDreamDefeated = new FlagDef("infectedKnightDreamDefeated", null, false, "PlayerData_Bool", "Lost Kin defeated");
             public static readonly FlagDef infectedKnightEncountered = new FlagDef("infectedKnightEncountered", null, false, "PlayerData_Bool", "Broken Vessel defeated");
             public static readonly FlagDef infectedKnightOrbsCollected = new FlagDef("infectedKnightOrbsCollected", null, false, "PlayerData_Bool", "Lost Kin orbs collected");
             public static readonly FlagDef mageLordDefeated = new FlagDef("mageLordDefeated", null, false, "PlayerData_Bool", "Soul Master defeated");
             public static readonly FlagDef mageLordDreamDefeated = new FlagDef("mageLordDreamDefeated", null, false, "PlayerData_Bool", "Soul Tyrant defeated");
+            public static readonly FlagDef markothDefeated = new FlagDef("markothDefeated", null, false, "PlayerData_Int", "Warrior's Grave Markoth (0-2). 1 = Defeated, 2 = Claimed Reward");
+            public static readonly FlagDef mumCaterpillarDefeated = new FlagDef("mumCaterpillarDefeated", null, false, "PlayerData_Int", "Warrior's Grave Marmu (0-2). 1 = Defeated, 2 = Claimed Reward");
             public static readonly FlagDef noEyesDefeated = new FlagDef("noEyesDefeated", null, false, "PlayerData_Int", "Warrior's Grave No Eyes (0-2). 1 = Defeated, 2 = Claimed Reward");
             public static readonly FlagDef xeroDefeated = new FlagDef("xeroDefeated", null, false, "PlayerData_Int", "Warrior's Grave Xero (0-2). 1 = Defeated, 2 = Claimed Reward");
 
             // Secondary flags
+            public static readonly FlagDef flukeMotherEncountered = new FlagDef("flukeMotherEncountered", null, false, "PlayerData_Bool", "Met Flukemarm");
             public static readonly FlagDef mageLordEncountered = new FlagDef("mageLordEncountered", null, false, "PlayerData_Bool", "Soul Master phase 1");
             public static readonly FlagDef mageLordEncountered_2 = new FlagDef("mageLordEncountered_2", null, false, "PlayerData_Bool", "Soul Master phase 2");
         #endregion
 
         #region Charms
-            public static readonly FlagDef charmsOwned =        new FlagDef("charmsOwned",      null, false, "PlayerData_Int", "Charms owned count");
-            public static readonly FlagDef charmSlots =         new FlagDef("charmSlots",       null, false, "PlayerData_Int", "Notches");
-            public static readonly FlagDef charmSlotsFilled =   new FlagDef("charmSlotsFilled", null, false, "PlayerData_Int", "Charm notches in use");
+            public static readonly FlagDef charmsOwned =        new FlagDef("charmsOwned",      null, false, "PlayerData_Int",  "Charms owned count");
+            public static readonly FlagDef charmSlots =         new FlagDef("charmSlots",       null, false, "PlayerData_Int",  "Notches");
+            public static readonly FlagDef charmSlotsFilled =   new FlagDef("charmSlotsFilled", null, false, "PlayerData_Int",  "Charm notches in use");
+            public static readonly FlagDef gotKingFragment =    new FlagDef("gotKingFragment",  null, false, "PlayerData_Bool", "Got King's Kingsoul Fragment");
+            public static readonly FlagDef gotQueenFragment =   new FlagDef("gotQueenFragment", null, false, "PlayerData_Bool", "Got Queen's Kingsoul Fragment");
 
             #region Charms
                 public static readonly FlagDef gotCharm_1 = new FlagDef("gotCharm_1", null, false, "PlayerData_Bool", "Gathering Swarm");
@@ -174,12 +183,13 @@ namespace CabbyCodes.Flags
                 public static readonly FlagDef gaveFragileStrength = new FlagDef("gaveFragileStrength", null, false, "PlayerData_Bool", "Divine has Strength charm");
                 // Requires royalCharmState = 4
                 public static readonly FlagDef gotShadeCharm = new FlagDef("gotShadeCharm", null, false, "PlayerData_Bool");
+                public static readonly FlagDef gotSlyCharm = new FlagDef("gotSlyCharm", null, false, "PlayerData_Bool", "Got Nailmaster's charm");
                 public static readonly FlagDef grimmChildLevel = new FlagDef("grimmChildLevel", null, false, "PlayerData_Int");
                 public static readonly FlagDef grimmchildAwoken = new FlagDef("grimmchildAwoken", null, false, "PlayerData_Bool");
                 public static readonly FlagDef pooedFragileGreed = new FlagDef("pooedFragileGreed", null, false, "PlayerData_Bool", "Divine pooed Greed charm");
                 public static readonly FlagDef pooedFragileHeart = new FlagDef("pooedFragileHeart", null, false, "PlayerData_Bool", "Divine pooed Heart charm");
                 public static readonly FlagDef pooedFragileStrength = new FlagDef("pooedFragileStrength", null, false, "PlayerData_Bool", "Divine pooed Strength charm");
-                // 0 = missing, 1|2 = parts, 3 = Kingsoul, 4: Void Heart and gotShadeCharm = true, else false
+                // 0 = missing, 1 = Queen's fragment, 2 = King's Fragment, 3 = Kingsoul, 4: Void Heart and gotShadeCharm = true
                 public static readonly FlagDef royalCharmState = new FlagDef("royalCharmState", null, false, "PlayerData_Int", "Kingsoul state"); 
             #endregion
 
@@ -196,42 +206,57 @@ namespace CabbyCodes.Flags
         #endregion
 
         #region Environment Updates
-            public static readonly FlagDef aladarPinned = new FlagDef("aladarPinned", null, false, "PlayerData_Bool", "Gorb pinned");
-            public static readonly FlagDef bankerAccountPurchased = new FlagDef("bankerAccountPurchased", null, false, "PlayerData_Bool", "Opened Bank Account");
-            public static readonly FlagDef bankerBalance = new FlagDef("bankerBalance", null, false, "PlayerData_Int", "Balance stored in bank");
-            public static readonly FlagDef cityBridge1 = new FlagDef("cityBridge1", null, false, "PlayerData_Bool", "Opened bridged 1 to City of Tears");
-            public static readonly FlagDef cityBridge2 = new FlagDef("cityBridge2", null, false, "PlayerData_Bool", "Opened bridged 2 to City of Tears");
-            public static readonly FlagDef cityGateClosed = new FlagDef("cityGateClosed", null, false, "PlayerData_Bool", "City Gate closed after passing through it");
-            public static readonly FlagDef cityLift1 = new FlagDef("cityLift1", null, false, "PlayerData_Bool", "Unlocked City of Tears elevator to Forgotten Crossroads");
-            public static readonly FlagDef completedQuakeArea = new FlagDef("completedQuakeArea", null, false, "PlayerData_Bool", "Completed Soul Master area");
-            public static readonly FlagDef crossroadsInfected = new FlagDef("crossroadsInfected", null, false, "PlayerData_Bool", "Crossroads Infected");
-            public static readonly FlagDef crossroadsMawlekWall = new FlagDef("crossroadsMawlekWall", null, false, "PlayerData_Bool", "Brooding Mawlek Wall opened");
-            public static readonly FlagDef deepnestBridgeCollapsed = new FlagDef("deepnestBridgeCollapsed", null, false, "PlayerData_Bool", "Deepnest bridge collapsed");
-            public static readonly FlagDef deepnestWall = new FlagDef("deepnestWall", null, false, "PlayerData_Bool", "Opened wall between Fungus2 and Deepnest");
-            public static readonly FlagDef defeatedDoubleBlockers = new FlagDef("defeatedDoubleBlockers", null, false, "PlayerData_Bool", "Defeated double blockers in " + SceneInstances.Fungus1_28.ReadableName);
-            public static readonly FlagDef galienPinned = new FlagDef("galienPinned", null, false, "PlayerData_Bool", "Warrior Galien pinned on map");
-            public static readonly FlagDef huPinned = new FlagDef("huPinned", null, false, "PlayerData_Bool", "Warrior Elder Hu pinned");
-            public static readonly FlagDef jijiDoorUnlocked = new FlagDef("jijiDoorUnlocked", null, false, "PlayerData_Bool", "Jiji's door opened");
-            public static readonly FlagDef mageLordOrbsCollected = new FlagDef("mageLordOrbsCollected", null, false, "PlayerData_Bool", "Soul Tyrant dream essence collected");
-            public static readonly FlagDef megaMossChargerDefeated = new FlagDef("megaMossChargerDefeated", null, false, "PlayerData_Bool", "Massive Moss Charger defeated");
-            public static readonly FlagDef menderSignBroken = new FlagDef("menderSignBroken", null, false, "PlayerData_Bool", "Broke Mender sign");
-            public static readonly FlagDef menderState = new FlagDef("menderState", null, false, "PlayerData_Int", "Mender is aware of broken sign (0-1?)");
-            public static readonly FlagDef mineLiftOpened = new FlagDef("mineLiftOpened", null, false, "PlayerData_Bool", "Opened lift between Dirtmouth and Crystal Peak");
-            public static readonly FlagDef nightmareLanternAppeared = new FlagDef("nightmareLanternAppeared", null, false, "PlayerData_Bool", "Nightmare Lantern appeared");
-            public static readonly FlagDef nightmareLanternLit = new FlagDef("nightmareLanternLit", null, false, "PlayerData_Bool", "Nightmare Lantern lit");
-            public static readonly FlagDef noEyesPinned = new FlagDef("noEyesPinned", null, false, "PlayerData_Bool", "Warrior No Eyes pinned");
-            public static readonly FlagDef openedCityGate = new FlagDef("openedCityGate", null, false, "PlayerData_Bool", "Used City Crest to open door to City of Tears");
-            public static readonly FlagDef openedMapperShop = new FlagDef("openedMapperShop", null, false, "PlayerData_Bool", "Map Shop opened");
-            public static readonly FlagDef openedTownBuilding = new FlagDef("openedTownBuilding", null, false, "PlayerData_Bool", "Town Stag Station building opened");
-            public static readonly FlagDef openedTramLower = new FlagDef("openedTramLower", null, false, "PlayerData_Bool", "Opened lower tram");
-            public static readonly FlagDef queensStationNonDisplay = new FlagDef("queensStationNonDisplay", null, false, "PlayerData_Bool", "???");
-            public static readonly FlagDef restingGroundsCryptWall = new FlagDef("restingGroundsCryptWall", null, false, "PlayerData_Bool", "Opened wall to Resting Grounds elevator from east");
-            public static readonly FlagDef shamanPillar = new FlagDef("shamanPillar", null, false, "PlayerData_Bool", "Snail Shaman door to Crossroads west opened");
-            public static readonly FlagDef spaBugsEncountered = new FlagDef("spaBugsEncountered", null, false, "PlayerData_Bool", "Saw bugs at spa");
-            public static readonly FlagDef spiderCapture = new FlagDef("spiderCapture", null, false, "PlayerData_Bool", "Captured by spiders in Distant Village");
-            public static readonly FlagDef steppedBeyondBridge = new FlagDef("steppedBeyondBridge", null, false, "PlayerData_Bool", "Made it past the collapsing bridge to Deepnest");
-            public static readonly FlagDef tollBenchCity = new FlagDef("tollBenchCity", null, false, "PlayerData_Bool", "City toll machine bench unlocked");
-            public static readonly FlagDef xeroPinned = new FlagDef("xeroPinned", null, false, "PlayerData_Bool", "Warrior Xero pinned on map");
+            #region Player Environment Vars
+                public static readonly FlagDef abyssGateOpened = new FlagDef("abyssGateOpened", null, false, "PlayerData_Bool", "Opened door to Abyss using King's Brand");
+                public static readonly FlagDef aladarPinned = new FlagDef("aladarPinned", null, false, "PlayerData_Bool", "Gorb pinned on map");
+                public static readonly FlagDef bankerAccountPurchased = new FlagDef("bankerAccountPurchased", null, false, "PlayerData_Bool", "Opened Bank Account");
+                public static readonly FlagDef bankerBalance = new FlagDef("bankerBalance", null, false, "PlayerData_Int", "Balance stored in bank");
+                public static readonly FlagDef bathHouseOpened = new FlagDef("bathHouseOpened", null, false, "PlayerData_Bool", "Opened elevator to Pleasure House");
+                public static readonly FlagDef blizzardEnded = new FlagDef("blizzardEnded", null, false, "PlayerData_Bool", "Blizzard ended after getting King's Brand");
+                public static readonly FlagDef cityBridge1 = new FlagDef("cityBridge1", null, false, "PlayerData_Bool", "Opened bridged 1 to City of Tears");
+                public static readonly FlagDef cityBridge2 = new FlagDef("cityBridge2", null, false, "PlayerData_Bool", "Opened bridged 2 to City of Tears");
+                public static readonly FlagDef cityGateClosed = new FlagDef("cityGateClosed", null, false, "PlayerData_Bool", "City Gate closed after passing through it");
+                public static readonly FlagDef cityLift1 = new FlagDef("cityLift1", null, false, "PlayerData_Bool", "Unlocked City of Tears elevator to Forgotten Crossroads");
+                public static readonly FlagDef completedQuakeArea = new FlagDef("completedQuakeArea", null, false, "PlayerData_Bool", "Completed Soul Master area");
+                public static readonly FlagDef crossroadsInfected = new FlagDef("crossroadsInfected", null, false, "PlayerData_Bool", "Crossroads Infected");
+                public static readonly FlagDef crossroadsMawlekWall = new FlagDef("crossroadsMawlekWall", null, false, "PlayerData_Bool", "Brooding Mawlek Wall opened");
+                public static readonly FlagDef deepnestBridgeCollapsed = new FlagDef("deepnestBridgeCollapsed", null, false, "PlayerData_Bool", "Deepnest bridge collapsed");
+                public static readonly FlagDef deepnestWall = new FlagDef("deepnestWall", null, false, "PlayerData_Bool", "Opened wall between Fungus2 and Deepnest");
+                public static readonly FlagDef defeatedDoubleBlockers = new FlagDef("defeatedDoubleBlockers", null, false, "PlayerData_Bool", "Defeated double blockers in " + SceneInstances.Fungus1_28.ReadableName);
+                public static readonly FlagDef extendedGramophone = new FlagDef("extendedGramophone", null, false, "PlayerData_Bool", "Gramophone unlocked");
+                public static readonly FlagDef galienPinned = new FlagDef("galienPinned", null, false, "PlayerData_Bool", "Warrior Galien pinned on map");
+                public static readonly FlagDef godseekerUnlocked = new FlagDef("godseekerUnlocked", null, false, "PlayerData_Bool", "Godseeker unlocked");
+                public static readonly FlagDef huPinned = new FlagDef("huPinned", null, false, "PlayerData_Bool", "Warrior Elder Hu pinned on map");
+                public static readonly FlagDef jijiDoorUnlocked = new FlagDef("jijiDoorUnlocked", null, false, "PlayerData_Bool", "Jiji's door opened");
+                public static readonly FlagDef mageLordOrbsCollected = new FlagDef("mageLordOrbsCollected", null, false, "PlayerData_Bool", "Soul Tyrant dream essence collected");
+                public static readonly FlagDef megaMossChargerDefeated = new FlagDef("megaMossChargerDefeated", null, false, "PlayerData_Bool", "Massive Moss Charger defeated");
+                public static readonly FlagDef markothPinned = new FlagDef("markothPinned", null, false, "PlayerData_Bool", "Markoth pinned on map");
+                public static readonly FlagDef menderSignBroken = new FlagDef("menderSignBroken", null, false, "PlayerData_Bool", "Broke Mender sign");
+                public static readonly FlagDef menderState = new FlagDef("menderState", null, false, "PlayerData_Int", "Mender is aware of broken sign (0-1?)");
+                public static readonly FlagDef mineLiftOpened = new FlagDef("mineLiftOpened", null, false, "PlayerData_Bool", "Opened lift between Dirtmouth and Crystal Peak");
+                public static readonly FlagDef mumCaterpillarPinned = new FlagDef("mumCaterpillarPinned", null, false, "PlayerData_Bool", "Marmu pinned on map");
+                public static readonly FlagDef nightmareLanternAppeared = new FlagDef("nightmareLanternAppeared", null, false, "PlayerData_Bool", "Nightmare Lantern appeared");
+                public static readonly FlagDef nightmareLanternLit = new FlagDef("nightmareLanternLit", null, false, "PlayerData_Bool", "Nightmare Lantern lit");
+                public static readonly FlagDef noEyesPinned = new FlagDef("noEyesPinned", null, false, "PlayerData_Bool", "Warrior No Eyes pinned on map");
+                public static readonly FlagDef oneWayArchive = new FlagDef("oneWayArchive", null, false, "PlayerData_Bool", "Opened wall to Teacher's Archives");
+                public static readonly FlagDef openedCityGate = new FlagDef("openedCityGate", null, false, "PlayerData_Bool", "Used City Crest to open door to City of Tears");
+                public static readonly FlagDef openedLoveDoor = new FlagDef("openedLoveDoor", null, false, "PlayerData_Bool", "Used Love Key to open Tower of Love");
+                public static readonly FlagDef openedMageDoor_v2 = new FlagDef("openedMageDoor_v2", null, false, "PlayerData_Bool", "Used Elegant Key to open door to Shade Soul");
+                public static readonly FlagDef openedMapperShop = new FlagDef("openedMapperShop", null, false, "PlayerData_Bool", "Map Shop opened");
+                public static readonly FlagDef openedTownBuilding = new FlagDef("openedTownBuilding", null, false, "PlayerData_Bool", "Town Stag Station building opened");
+                public static readonly FlagDef openedTramLower = new FlagDef("openedTramLower", null, false, "PlayerData_Bool", "Opened lower tram");
+                public static readonly FlagDef openedWaterwaysManhole = new FlagDef("openedWaterwaysManhole", null, false, "PlayerData_Bool", "Opened door to Royal Waterways");
+                public static readonly FlagDef queensStationNonDisplay = new FlagDef("queensStationNonDisplay", null, false, "PlayerData_Bool", "???");
+                public static readonly FlagDef restingGroundsCryptWall = new FlagDef("restingGroundsCryptWall", null, false, "PlayerData_Bool", "Opened wall to Resting Grounds elevator from east");
+                public static readonly FlagDef shamanPillar = new FlagDef("shamanPillar", null, false, "PlayerData_Bool", "Snail Shaman door to Crossroads west opened");
+                public static readonly FlagDef spaBugsEncountered = new FlagDef("spaBugsEncountered", null, false, "PlayerData_Bool", "Saw bugs at spa");
+                public static readonly FlagDef spiderCapture = new FlagDef("spiderCapture", null, false, "PlayerData_Bool", "Captured by spiders in Distant Village");
+                public static readonly FlagDef steppedBeyondBridge = new FlagDef("steppedBeyondBridge", null, false, "PlayerData_Bool", "Made it past the collapsing bridge to Deepnest");
+                public static readonly FlagDef tollBenchCity = new FlagDef("tollBenchCity", null, false, "PlayerData_Bool", "City toll machine bench unlocked");
+                public static readonly FlagDef tollBenchQueensGardens = new FlagDef("tollBenchQueensGardens", null, false, "PlayerData_Bool", "Queen's Gardens toll machine bench unlocked");
+                public static readonly FlagDef usedWhiteKey = new FlagDef("usedWhiteKey", null, false, "PlayerData_Bool", "Used Elegant Key to open door to Shade Soul");
+                public static readonly FlagDef xeroPinned = new FlagDef("xeroPinned", null, false, "PlayerData_Bool", "Warrior Xero pinned on map");
+            #endregion
 
             #region Categorized Scene Flags
                 #region Abyss
@@ -247,6 +272,9 @@ namespace CabbyCodes.Flags
 
                     // Abyss_19
                     public static readonly FlagDef Abyss_19__One_Way_Wall = new FlagDef("One Way Wall", SceneInstances.Abyss_19, false, "PersistentBoolData", "Opened wall back to entrance");
+
+                    // Abyss_Lighthouse_room
+                    public static readonly FlagDef Abyss_Lighthouse_room__Ruins_Lever = new FlagDef("Ruins Lever", SceneInstances.Abyss_Lighthouse_room, false, "PersistentBoolData", "Turn on Lighthouse");
                 #endregion
 
                 #region Cliffs
@@ -387,8 +415,7 @@ namespace CabbyCodes.Flags
                     public static readonly FlagDef Deepnest_42__Plank_Solid_1_2 = new FlagDef("Plank Solid 1 (2)", SceneInstances.Deepnest_42, false, "PersistentBoolData");
 
                     // Deepnest_44
-                    public static readonly FlagDef Deepnest_44__One_Way_Wall = new FlagDef("One Way Wall", SceneInstances.Deepnest_44, false, "PersistentBoolData");
-                    public static readonly FlagDef Deepnest_44__Shiny_Item_Stand = new FlagDef("Shiny Item Stand", SceneInstances.Deepnest_44, false, "PersistentBoolData");
+                    public static readonly FlagDef Deepnest_44__One_Way_Wall = new FlagDef("One Way Wall", SceneInstances.Deepnest_44, false, "PersistentBoolData", "Opened wall back from charm");
 
                     // Deepnest_Spider_Town
                     public static readonly FlagDef Deepnest_Spider_Town__Collapser_Small_10 = new FlagDef("Collapser Small (10)", SceneInstances.Deepnest_Spider_Town, false, "PersistentBoolData", "Collapsible floor out from secrets");
@@ -404,7 +431,30 @@ namespace CabbyCodes.Flags
                 #endregion
 
                 #region Deepnest East
-                    
+                    // Deepnest_East_04
+                    public static readonly FlagDef Deepnest_East_04__Breakable_Wall_Waterways = new FlagDef("Breakable Wall Waterways", SceneInstances.Deepnest_East_04, false, "PersistentBoolData", "Open wall to Bardoon's tail");
+
+                    // Deepnest_East_06
+                    public static readonly FlagDef Deepnest_East_06__One_Way_Wall = new FlagDef("One Way Wall", SceneInstances.Deepnest_East_06, false, "PersistentBoolData", "Broke wall back from " + SceneInstances.Deepnest_East_06.ReadableName);
+
+                    // Deepnest_East_08
+                    public static readonly FlagDef Deepnest_East_08__Breakable_Wall = new FlagDef("Breakable Wall", SceneInstances.Deepnest_East_08, false, "PersistentBoolData", "Opened wall to King's Idol");
+
+                    // Deepnest_East_09
+                    public static readonly FlagDef Deepnest_East_09__One_Way_Wall = new FlagDef("One Way Wall", SceneInstances.Deepnest_East_09, false, "PersistentBoolData", "Opened wall to west exit");
+
+                    // Deepnest_East_11
+                    public static readonly FlagDef Deepnest_East_11__Breakable_Wall = new FlagDef("Breakable Wall", SceneInstances.Deepnest_East_11, false, "PersistentBoolData", "Broke wall to grub");
+                    public static readonly FlagDef Deepnest_East_11__Breakable_Wall_top = new FlagDef("Breakable Wall top", SceneInstances.Deepnest_East_11, false, "PersistentBoolData", "Broke wall to " + SceneInstances.Deepnest_East_13.ReadableName);
+
+                    // Deepnest_East_14
+                    public static readonly FlagDef Deepnest_East_14__Breakable_Wall = new FlagDef("Breakable Wall", SceneInstances.Deepnest_East_14, false, "PersistentBoolData", "Open " + SceneInstances.Deepnest_East_17);
+                    public static readonly FlagDef Deepnest_East_14__Egg_Sac = new FlagDef("Egg Sac", SceneInstances.Deepnest_East_14, false, "PersistentBoolData", "Rancid Egg");
+                    public static readonly FlagDef Deepnest_East_14__Quake_Floor_1 = new FlagDef("Quake Floor (1)", SceneInstances.Deepnest_East_14, false, "PersistentBoolData", "Break floor 1 towards grub");
+                    public static readonly FlagDef Deepnest_East_14__Quake_Floor_2 = new FlagDef("Quake Floor (2)", SceneInstances.Deepnest_East_14, false, "PersistentBoolData", "Break floor 2 towards grub");
+
+                    // Deepnest_East_16
+                    public static readonly FlagDef Deepnest_East_16__Quake_Floor = new FlagDef("Quake Floor", SceneInstances.Deepnest_East_16, false, "PersistentBoolData", "Open " + SceneInstances.Deepnest_East_14.ReadableName);
                 #endregion
 
                 #region Fungus 1
@@ -438,6 +488,9 @@ namespace CabbyCodes.Flags
                     // Fungus1_14
                     public static readonly FlagDef Fungus1_14__Vine_Platform = new FlagDef("Vine Platform", SceneInstances.Fungus1_14, false, "PersistentBoolData");
 
+                    // Fungus1_15
+                    public static readonly FlagDef Fungus1_15__Shiny_Item = new FlagDef("Shiny Item", SceneInstances.Fungus1_15, false, "PersistentBoolData", "Rancid Egg");
+
                     // Fungus1_21
                     public static readonly FlagDef Fungus1_21__Vine_Platform_2 = new FlagDef("Vine Platform (2)", SceneInstances.Fungus1_21, false, "PersistentBoolData");
 
@@ -446,6 +499,10 @@ namespace CabbyCodes.Flags
                     public static readonly FlagDef Fungus1_22__Gate_Switch = new FlagDef("Gate Switch", SceneInstances.Fungus1_22, false, "PersistentBoolData", "Open gate to lower exit");
                     public static readonly FlagDef Fungus1_22__Vine_Platform = new FlagDef("Vine Platform", SceneInstances.Fungus1_22, false, "PersistentBoolData");
                     public static readonly FlagDef Fungus1_22__Vine_Platform_1 = new FlagDef("Vine Platform (1)", SceneInstances.Fungus1_22, false, "PersistentBoolData");
+
+                    // Fungus1_24
+                    public static readonly FlagDef Fungus1_24__Collapser_Small = new FlagDef("Collapser Small", SceneInstances.Fungus1_24, false, "PersistentBoolData", "Opened floor back from bench");
+                    public static readonly FlagDef Fungus1_24__Ghost_NPC = new FlagDef("Ghost NPC", SceneInstances.Fungus1_24, false, "PersistentBoolData", "Ghosts Caelif & Fera Orthop essence claimed");
 
                     // Fungus1_28
                     public static readonly FlagDef Fungus1_28__Blocker_1 = new FlagDef("Blocker 1", SceneInstances.Fungus1_28, false, "PersistentBoolData", "Blocker 1 killed");
@@ -508,8 +565,69 @@ namespace CabbyCodes.Flags
                 #endregion
 
                 #region Fungus 3
+                    // Fungus3_04
+                    public static readonly FlagDef Fungus3_04__Garden_Slide_Floor = new FlagDef("Garden Slide Floor", SceneInstances.Fungus3_04, false, "PersistentBoolData", "Floor opened to return to bottom side");
+                    public static readonly FlagDef Fungus3_04__Ruins_Lever = new FlagDef("Ruins Lever", SceneInstances.Fungus3_04, false, "PersistentBoolData", "Lever to control sliding floor");
+
+                    // Fungus3_05
+                    public static readonly FlagDef Fungus3_05__Battle_Scene = new FlagDef("Battle Scene", SceneInstances.Fungus3_05, false, "PersistentBoolData", "Mantis Petra battle");
+                    public static readonly FlagDef Fungus3_05__Gate_Switch = new FlagDef("Gate Switch", SceneInstances.Fungus3_05, false, "PersistentBoolData", "Open gate to " + SceneInstances.Fungus3_11.ReadableName);
+                    public static readonly FlagDef Fungus3_05__One_Way_Wall = new FlagDef("One Way Wall", SceneInstances.Fungus3_05, false, "PersistentBoolData", "Open wall return from gate switch");
+
+                    // Fungus3_10
+                    public static readonly FlagDef Fungus3_10__Battle_Scene = new FlagDef("Battle Scene", SceneInstances.Fungus3_10, false, "PersistentBoolData", "Mantis battle");
+
+                    // Fungus3_23
+                    public static readonly FlagDef Fungus3_23__Cloth_Ghost_NPC = new FlagDef("Cloth Ghost NPC", SceneInstances.Fungus3_23, false, "PersistentBoolData", "Ghost Cloth's essence claimed");
+
+                    // Fungus3_28
+                    public static readonly FlagDef Fungus3_28__Collapser_Small = new FlagDef("Collapser Small", SceneInstances.Fungus3_28, false, "PersistentBoolData", "Broke midway shortcut floor");
+
+                    // Fungus3_34
+                    public static readonly FlagDef Fungus3_34__Egg_Sac = new FlagDef("Egg Sac", SceneInstances.Fungus3_34, false, "PersistentBoolData", "Rancid Egg");
+
+                    // Fungus3_39
+                    public static readonly FlagDef Fungus3_39__Battle_Scene = new FlagDef("Battle Scene", SceneInstances.Fungus3_39, false, "PersistentBoolData", "Mantis's guarding Love Key defeated");
+                    public static readonly FlagDef Fungus3_39__One_Way_Wall = new FlagDef("One Way Wall", SceneInstances.Fungus3_39, false, "PersistentBoolData", "Wall opened to Fungal Wastes");
+
+                    // Fungus3_40
+                    public static readonly FlagDef Fungus3_40__Gate_Switch = new FlagDef("Gate Switch", SceneInstances.Fungus3_40, false, "PersistentBoolData", "Open door to " + SceneInstances.Fungus3_13.ReadableName);
+
                     // Fungus3_44
                     public static readonly FlagDef Fungus3_44__One_Way_Wall = new FlagDef("One Way Wall", SceneInstances.Fungus3_44, false, "PersistentBoolData", "Open wall back from Overgrown Mound");
+                    public static readonly FlagDef Fungus3_44__Ruins_Lever = new FlagDef("Ruins Lever", SceneInstances.Fungus3_44, false, "PersistentBoolData", "Opened gate to bottom exit");
+
+                    // Fungus3_47
+                    public static readonly FlagDef Fungus3_47__One_Way_Wall = new FlagDef("One Way Wall", SceneInstances.Fungus3_47, false, "PersistentBoolData", "Open wall back to " + SceneInstances.Fungus3_02.ReadableName);
+
+                    // Fungus3_50
+                    public static readonly FlagDef Fungus3_50__gramaphone = new FlagDef("gramaphone", SceneInstances.Fungus3_50, false, "PersistentBoolData", "Gramaphone broken");
+                #endregion
+
+                #region Hive
+                    // Hive_01
+                    public static readonly FlagDef Hive_01__Hive_Bench = new FlagDef("Hive Bench", SceneInstances.Hive_01, false, "PersistentBoolData", "Opened Hive bench");
+                    public static readonly FlagDef Hive_01__Hive_Breakable_Pillar = new FlagDef("Hive Breakable Pillar", SceneInstances.Hive_01, false, "PersistentBoolData");
+                    public static readonly FlagDef Hive_01__Hive_Breakable_Pillar_1 = new FlagDef("Hive Breakable Pillar (1)", SceneInstances.Hive_01, false, "PersistentBoolData");
+
+                    // Hive_02
+                    public static readonly FlagDef Hive_02__Hive_Breakable_Pillar_2 = new FlagDef("Hive Breakable Pillar (2)", SceneInstances.Hive_02, false, "PersistentBoolData");
+
+                    // Hive_03_c
+                    public static readonly FlagDef Hive_03_c__Break_Floor_1 = new FlagDef("Break Floor 1", SceneInstances.Hive_03_c, false, "PersistentBoolData", "Broke floor back from Mask Shard shortcut");
+                    public static readonly FlagDef Hive_03_c__Hive_Breakable_Pillar_5 = new FlagDef("Hive Breakable Pillar (5)", SceneInstances.Hive_03_c, false, "PersistentBoolData");
+
+                    // Hive_04
+                    public static readonly FlagDef Hive_04__Hive_Break_Wall = new FlagDef("Hive Break Wall", SceneInstances.Hive_04, false, "PersistentBoolData", "Broke wall using Hive Guardian");
+                    public static readonly FlagDef Hive_04__Hive_Breakable_Pillar_3 = new FlagDef("Hive Breakable Pillar (3)", SceneInstances.Hive_04, false, "PersistentBoolData", "Pillar 1 to Hive Knight");
+                    public static readonly FlagDef Hive_04__Hive_Breakable_Pillar_4 = new FlagDef("Hive Breakable Pillar (4)", SceneInstances.Hive_04, false, "PersistentBoolData", "Pillar 2 to Hive Knight");
+                    public static readonly FlagDef Hive_04__Hive_Breakable_Pillar_5 = new FlagDef("Hive Breakable Pillar (5)", SceneInstances.Hive_04, false, "PersistentBoolData", "Break pillar to grub");
+
+                    // Hive_05
+                    public static readonly FlagDef Hive_05__Hive_Breakable_Pillar = new FlagDef("Hive Breakable Pillar", SceneInstances.Hive_05, false, "PersistentBoolData", "Pillar 2 to Hive Knight");
+                    public static readonly FlagDef Hive_05__Hive_Breakable_Pillar_1 = new FlagDef("Hive Breakable Pillar (1)", SceneInstances.Hive_05, false, "PersistentBoolData", "Pillar 1 to Hive Knight");
+                    public static readonly FlagDef Hive_05__Hive_Breakable_Pillar_2 = new FlagDef("Hive Breakable Pillar (2)", SceneInstances.Hive_05, false, "PersistentBoolData", "Pillar 3 to Hive Knight");
+                    public static readonly FlagDef Hive_05__Vespa_NPC = new FlagDef("Vespa NPC", SceneInstances.Hive_05, false, "PersistentBoolData", "Hive Queen Vespa essence claimed");
                 #endregion
 
                 #region Mines
@@ -616,6 +734,23 @@ namespace CabbyCodes.Flags
                 #endregion
 
                 #region Rooms
+                    // GG_Pipeway
+                    public static readonly FlagDef GG_Pipeway__Collapser_Small = new FlagDef("Collapser Small", SceneInstances.GG_Pipeway, false, "PersistentBoolData", "Shortcut floor 1 opened");
+                    public static readonly FlagDef GG_Pipeway__Quake_Floor = new FlagDef("Quake Floor", SceneInstances.GG_Pipeway, false, "PersistentBoolData", "Shortcut floor 2 opened");
+
+                    // GG_Waterways
+                    public static readonly FlagDef GG_Waterways__Chest = new FlagDef("Chest", SceneInstances.GG_Waterways, false, "PersistentBoolData", "Geo Chest 2");
+                    public static readonly FlagDef GG_Waterways__Chest_1 = new FlagDef("Chest (1)", SceneInstances.GG_Waterways, false, "PersistentBoolData", "Geo Chest 3");
+                    public static readonly FlagDef GG_Waterways__Chest_2 = new FlagDef("Chest (2)", SceneInstances.GG_Waterways, false, "PersistentBoolData", "Geo Chest 4");
+                    public static readonly FlagDef GG_Waterways__Chest_3 = new FlagDef("Chest (3)", SceneInstances.GG_Waterways, false, "PersistentBoolData", "Geo Chest 5");
+                    public static readonly FlagDef GG_Waterways__Chest_4 = new FlagDef("Chest (4)", SceneInstances.GG_Waterways, false, "PersistentBoolData", "Geo Chest 1");
+
+                    // Room_Colosseum_02
+                    public static readonly FlagDef Room_Colosseum_02__Breakable_Wall_Silhouette = new FlagDef("Breakable Wall_Silhouette", SceneInstances.Room_Colosseum_02, false, "PersistentBoolData", "Opened wall to hidden spa");
+
+                    // Room_Colosseum_Spectate
+                    public static readonly FlagDef Room_Colosseum_Spectate__Breakable_Wall_Silhouette = new FlagDef("Breakable Wall_Silhouette", SceneInstances.Room_Colosseum_Spectate, false, "PersistentBoolData", "Break wall to " + SceneInstances.GG_Lurker.ReadableName);
+
                     // Room_Fungus_Shaman
                     public static readonly FlagDef Room_Fungus_Shaman__Battle_Scene = new FlagDef("Battle Scene", SceneInstances.Room_Fungus_Shaman, false, "PersistentBoolData", "Squit battle");
                     public static readonly FlagDef Room_Fungus_Shaman__One_Way_Wall = new FlagDef("One Way Wall", SceneInstances.Room_Fungus_Shaman, false, "PersistentBoolData", "Open wall back to entrance");
@@ -665,7 +800,10 @@ namespace CabbyCodes.Flags
                     public static readonly FlagDef Ruins1_30__Ruins_Lever = new FlagDef("Ruins Lever", SceneInstances.Ruins1_30, false, "PersistentBoolData", "Door back to entrance opened");
 
                     // Ruins1_31
+                    public static readonly FlagDef Ruins1_31__Battle_Scene_v2 = new FlagDef("Battle Scene v2", SceneInstances.Ruins1_31, false, "PersistentBoolData", "Battle");
                     public static readonly FlagDef Ruins1_31__Toll_Machine_Bench = new FlagDef("Toll Machine Bench", SceneInstances.Ruins1_31, false, "PersistentBoolData", "Toll machine bench opened");
+                    public static readonly FlagDef Ruins1_31__Ruins_Lever = new FlagDef("Ruins Lever", SceneInstances.Ruins1_31, false, "PersistentBoolData", "Open door to exit Shade Soul");
+                    public static readonly FlagDef Ruins1_31__Breakable_Wall_Ruin_Lift = new FlagDef("Breakable Wall Ruin Lift", SceneInstances.Ruins1_31, false, "PersistentBoolData", "Open wall from elevator to bench");
 
                     // Ruins1_32
                     public static readonly FlagDef Ruins1_32__Chest = new FlagDef("Chest", SceneInstances.Ruins1_32, false, "PersistentBoolData", "Opened Geo chest");
@@ -694,6 +832,9 @@ namespace CabbyCodes.Flags
                     public static readonly FlagDef Ruins2_01__Ruins_Lever = new FlagDef("Ruins Lever", SceneInstances.Ruins2_01, false, "PersistentBoolData", "Open lower door");
                     public static readonly FlagDef Ruins2_01__Ruins_Lever_1 = new FlagDef("Ruins Lever (1)", SceneInstances.Ruins2_01, false, "PersistentBoolData", "Open upper door");
 
+                    // Ruins2_11_b
+                    public static readonly FlagDef Ruins2_11_b__Ruins_Lever = new FlagDef("Ruins Lever", SceneInstances.Ruins2_11_b, false, "PersistentBoolData", "Open door to " + SceneInstances.Ruins2_07.ReadableName);
+
                     // Ruins2_09
                     public static readonly FlagDef Ruins2_09__Battle_Scene = new FlagDef("Battle Scene", SceneInstances.Ruins2_09, false, "PersistentBoolData", "Royal bugs battle");
                 #endregion
@@ -715,6 +856,61 @@ namespace CabbyCodes.Flags
                     public static readonly FlagDef Tutorial_01__Tute_Door_5 = new FlagDef("Tute Door 5", SceneInstances.Tutorial_01, false, "PersistentBoolData", "Intro Door 5");
                     public static readonly FlagDef Tutorial_01__Tute_Door_6 = new FlagDef("Tute Door 6", SceneInstances.Tutorial_01, false, "PersistentBoolData", "Intro Door 6");
                     public static readonly FlagDef Tutorial_01__Tute_Door_7 = new FlagDef("Tute Door 7", SceneInstances.Tutorial_01, false, "PersistentBoolData", "Intro Door 7");
+                #endregion
+
+                #region Waterways
+                    // Waterways_01
+                    public static readonly FlagDef Waterways_01__Breakable_Wall_Waterways = new FlagDef("Breakable Wall Waterways", SceneInstances.Waterways_01, false, "PersistentBoolData", "Opened wall to Tuk");
+
+                    // Waterways_02
+                    public static readonly FlagDef Waterways_02__Egg_Sac = new FlagDef("Egg Sac", SceneInstances.Waterways_02, false, "PersistentBoolData", "Rancid Egg");
+                    public static readonly FlagDef Waterways_02__One_Way_Wall = new FlagDef("One Way Wall", SceneInstances.Waterways_02, false, "PersistentBoolData", "Broke wall to east side from bench");
+                    public static readonly FlagDef Waterways_02__Quake_Floor = new FlagDef("Quake Floor", SceneInstances.Waterways_02, false, "PersistentBoolData", "Broke wall to grub");
+                    public static readonly FlagDef Waterways_02__Quake_Floor_1 = new FlagDef("Quake Floor (1)", SceneInstances.Waterways_02, false, "PersistentBoolData", "Floor broken from " + SceneInstances.Waterways_04.ReadableName);
+
+                    // Waterways_04
+                    public static readonly FlagDef Waterways_04__Breakable_Wall_Waterways = new FlagDef("Breakable Wall Waterways", SceneInstances.Waterways_04, false, "PersistentBoolData");
+                    public static readonly FlagDef Waterways_04__Egg_Sac = new FlagDef("Egg Sac", SceneInstances.Waterways_04, false, "PersistentBoolData", "Rancid Egg");
+                    public static readonly FlagDef Waterways_04__Quake_Floor = new FlagDef("Quake Floor", SceneInstances.Waterways_04, false, "PersistentBoolData", "Broke floor 1 to bench");
+                    public static readonly FlagDef Waterways_04__Quake_Floor_1 = new FlagDef("Quake Floor (1)", SceneInstances.Waterways_04, false, "PersistentBoolData", "Broke floor 2 to bench");
+
+                    // Waterways_04b
+                    public static readonly FlagDef Waterways_04b__Shiny_Item = new FlagDef("Shiny Item", SceneInstances.Waterways_04b, false, "PersistentBoolData", "Rancid Egg");
+
+                    // Waterways_09
+                    public static readonly FlagDef Waterways_09__Battle_Scene = new FlagDef("Battle Scene", SceneInstances.Waterways_09, false, "PersistentBoolData", "Flukefey battle");
+                    public static readonly FlagDef Waterways_09__Collapser_Small = new FlagDef("Collapser Small", SceneInstances.Waterways_09, false, "PersistentBoolData", "Broke floor back from Cornifer");
+                    public static readonly FlagDef Waterways_09__Ruins_Lever = new FlagDef("Ruins Lever", SceneInstances.Waterways_09, false, "PersistentBoolData", "Opened gate to Cornifer");
+                #endregion
+
+                #region White Palace
+                    // White_Palace_02
+                    public static readonly FlagDef White_Palace_02__Battle_Scene = new FlagDef("Battle Scene", SceneInstances.White_Palace_02, false, "PersistentBoolData", "Kingsmould battle");
+                    public static readonly FlagDef White_Palace_02__Collapser_Small = new FlagDef("Collapser Small", SceneInstances.White_Palace_02, false, "PersistentBoolData", "Open shortcut floor back to entrance");
+                    public static readonly FlagDef White_Palace_02__White_Palace_Orb_Lever = new FlagDef("White Palace Orb Lever", SceneInstances.White_Palace_02, false, "PersistentBoolData", "Open elevator in " + SceneInstances.White_Palace_01.ReadableName);
+
+                    // White_Palace_03_hub
+                    public static readonly FlagDef White_Palace_03_hub__WP_Lever = new FlagDef("WP Lever", SceneInstances.White_Palace_03_hub, false, "PersistentBoolData", "Open gate back from west wing");
+
+                    // White_Palace_06
+                    public static readonly FlagDef White_Palace_06__Breakable_Wall_Ruin_Lift = new FlagDef("Breakable Wall Ruin Lift", SceneInstances.White_Palace_06, false, "PersistentBoolData", "Open wall to Path of Pain");
+
+                    // White_Palace_12
+                    public static readonly FlagDef White_Palace_12__Break_Floor_1 = new FlagDef("Break Floor 1", SceneInstances.White_Palace_12, false, "PersistentBoolData", "Broke wall to shortcut exit");
+                    public static readonly FlagDef White_Palace_12__Breakable_Wall_Waterways = new FlagDef("Breakable Wall Waterways", SceneInstances.White_Palace_12, false, "PersistentBoolData", "Broke wall to shortcut entrance");
+                    public static readonly FlagDef White_Palace_12__WP_Lever = new FlagDef("WP Lever", SceneInstances.White_Palace_12, false, "PersistentBoolData", "Open doors to east");
+
+                    // White_Palace_14
+                    public static readonly FlagDef White_Palace_14__White_Palace_Orb_Lever = new FlagDef("White Palace Orb Lever", SceneInstances.White_Palace_14, false, "PersistentBoolData", "West Orb Lever");
+
+                    // White_Palace_15
+                    public static readonly FlagDef White_Palace_15__Quake_Floor = new FlagDef("Quake Floor", SceneInstances.White_Palace_15, false, "PersistentBoolData", "Open shortcut around trapped path");
+                    public static readonly FlagDef White_Palace_15__White_Palace_Orb_Lever = new FlagDef("White Palace Orb Lever", SceneInstances.White_Palace_15, false, "PersistentBoolData", "East Orb Lever");
+                    public static readonly FlagDef White_Palace_15__WP_Lever = new FlagDef("WP Lever", SceneInstances.White_Palace_15, false, "PersistentBoolData", "Open doors to white lever");
+
+                    // White_Palace_17
+                    public static readonly FlagDef White_Palace_17__Collapser_Small = new FlagDef("Collapser Small", SceneInstances.White_Palace_17, false, "PersistentBoolData", "Opened floor shortcut from lever path");
+                    public static readonly FlagDef White_Palace_17__WP_Lever = new FlagDef("WP Lever", SceneInstances.White_Palace_17, false, "PersistentBoolData", "Opened door to east exit");
                 #endregion
 
             #endregion
@@ -937,6 +1133,61 @@ namespace CabbyCodes.Flags
                     public static readonly FlagDef Deepnest_39__Dream_Plant_Orb_9 = new FlagDef("Dream Plant Orb (9)", SceneInstances.Deepnest_39, false, "PersistentBoolData");
                 #endregion
 
+                #region Deepnest_East_07
+                    public static readonly FlagDef Deepnest_East_07__Dream_Plant = new FlagDef("Dream Plant", SceneInstances.Deepnest_East_07, false, "PersistentBoolData");
+                    public static readonly FlagDef Deepnest_East_07__Dream_Plant_Orb = new FlagDef("Dream Plant Orb", SceneInstances.Deepnest_East_07, false, "PersistentBoolData");
+                    public static readonly FlagDef Deepnest_East_07__Dream_Plant_Orb_1 = new FlagDef("Dream Plant Orb (1)", SceneInstances.Deepnest_East_07, false, "PersistentBoolData");
+                    public static readonly FlagDef Deepnest_East_07__Dream_Plant_Orb_10 = new FlagDef("Dream Plant Orb (10)", SceneInstances.Deepnest_East_07, false, "PersistentBoolData");
+                    public static readonly FlagDef Deepnest_East_07__Dream_Plant_Orb_11 = new FlagDef("Dream Plant Orb (11)", SceneInstances.Deepnest_East_07, false, "PersistentBoolData");
+                    public static readonly FlagDef Deepnest_East_07__Dream_Plant_Orb_12 = new FlagDef("Dream Plant Orb (12)", SceneInstances.Deepnest_East_07, false, "PersistentBoolData");
+                    public static readonly FlagDef Deepnest_East_07__Dream_Plant_Orb_13 = new FlagDef("Dream Plant Orb (13)", SceneInstances.Deepnest_East_07, false, "PersistentBoolData");
+                    public static readonly FlagDef Deepnest_East_07__Dream_Plant_Orb_14 = new FlagDef("Dream Plant Orb (14)", SceneInstances.Deepnest_East_07, false, "PersistentBoolData");
+                    public static readonly FlagDef Deepnest_East_07__Dream_Plant_Orb_15 = new FlagDef("Dream Plant Orb (15)", SceneInstances.Deepnest_East_07, false, "PersistentBoolData");
+                    public static readonly FlagDef Deepnest_East_07__Dream_Plant_Orb_16 = new FlagDef("Dream Plant Orb (16)", SceneInstances.Deepnest_East_07, false, "PersistentBoolData");
+                    public static readonly FlagDef Deepnest_East_07__Dream_Plant_Orb_17 = new FlagDef("Dream Plant Orb (17)", SceneInstances.Deepnest_East_07, false, "PersistentBoolData");
+                    public static readonly FlagDef Deepnest_East_07__Dream_Plant_Orb_18 = new FlagDef("Dream Plant Orb (18)", SceneInstances.Deepnest_East_07, false, "PersistentBoolData");
+                    public static readonly FlagDef Deepnest_East_07__Dream_Plant_Orb_19 = new FlagDef("Dream Plant Orb (19)", SceneInstances.Deepnest_East_07, false, "PersistentBoolData");
+                    public static readonly FlagDef Deepnest_East_07__Dream_Plant_Orb_2 = new FlagDef("Dream Plant Orb (2)", SceneInstances.Deepnest_East_07, false, "PersistentBoolData");
+                    public static readonly FlagDef Deepnest_East_07__Dream_Plant_Orb_20 = new FlagDef("Dream Plant Orb (20)", SceneInstances.Deepnest_East_07, false, "PersistentBoolData");
+                    public static readonly FlagDef Deepnest_East_07__Dream_Plant_Orb_21 = new FlagDef("Dream Plant Orb (21)", SceneInstances.Deepnest_East_07, false, "PersistentBoolData");
+                    public static readonly FlagDef Deepnest_East_07__Dream_Plant_Orb_22 = new FlagDef("Dream Plant Orb (22)", SceneInstances.Deepnest_East_07, false, "PersistentBoolData");
+                    public static readonly FlagDef Deepnest_East_07__Dream_Plant_Orb_23 = new FlagDef("Dream Plant Orb (23)", SceneInstances.Deepnest_East_07, false, "PersistentBoolData");
+                    public static readonly FlagDef Deepnest_East_07__Dream_Plant_Orb_24 = new FlagDef("Dream Plant Orb (24)", SceneInstances.Deepnest_East_07, false, "PersistentBoolData");
+                    public static readonly FlagDef Deepnest_East_07__Dream_Plant_Orb_25 = new FlagDef("Dream Plant Orb (25)", SceneInstances.Deepnest_East_07, false, "PersistentBoolData");
+                    public static readonly FlagDef Deepnest_East_07__Dream_Plant_Orb_26 = new FlagDef("Dream Plant Orb (26)", SceneInstances.Deepnest_East_07, false, "PersistentBoolData");
+                    public static readonly FlagDef Deepnest_East_07__Dream_Plant_Orb_27 = new FlagDef("Dream Plant Orb (27)", SceneInstances.Deepnest_East_07, false, "PersistentBoolData");
+                    public static readonly FlagDef Deepnest_East_07__Dream_Plant_Orb_28 = new FlagDef("Dream Plant Orb (28)", SceneInstances.Deepnest_East_07, false, "PersistentBoolData");
+                    public static readonly FlagDef Deepnest_East_07__Dream_Plant_Orb_29 = new FlagDef("Dream Plant Orb (29)", SceneInstances.Deepnest_East_07, false, "PersistentBoolData");
+                    public static readonly FlagDef Deepnest_East_07__Dream_Plant_Orb_3 = new FlagDef("Dream Plant Orb (3)", SceneInstances.Deepnest_East_07, false, "PersistentBoolData");
+                    public static readonly FlagDef Deepnest_East_07__Dream_Plant_Orb_30 = new FlagDef("Dream Plant Orb (30)", SceneInstances.Deepnest_East_07, false, "PersistentBoolData");
+                    public static readonly FlagDef Deepnest_East_07__Dream_Plant_Orb_31 = new FlagDef("Dream Plant Orb (31)", SceneInstances.Deepnest_East_07, false, "PersistentBoolData");
+                    public static readonly FlagDef Deepnest_East_07__Dream_Plant_Orb_32 = new FlagDef("Dream Plant Orb (32)", SceneInstances.Deepnest_East_07, false, "PersistentBoolData");
+                    public static readonly FlagDef Deepnest_East_07__Dream_Plant_Orb_33 = new FlagDef("Dream Plant Orb (33)", SceneInstances.Deepnest_East_07, false, "PersistentBoolData");
+                    public static readonly FlagDef Deepnest_East_07__Dream_Plant_Orb_34 = new FlagDef("Dream Plant Orb (34)", SceneInstances.Deepnest_East_07, false, "PersistentBoolData");
+                    public static readonly FlagDef Deepnest_East_07__Dream_Plant_Orb_35 = new FlagDef("Dream Plant Orb (35)", SceneInstances.Deepnest_East_07, false, "PersistentBoolData");
+                    public static readonly FlagDef Deepnest_East_07__Dream_Plant_Orb_36 = new FlagDef("Dream Plant Orb (36)", SceneInstances.Deepnest_East_07, false, "PersistentBoolData");
+                    public static readonly FlagDef Deepnest_East_07__Dream_Plant_Orb_37 = new FlagDef("Dream Plant Orb (37)", SceneInstances.Deepnest_East_07, false, "PersistentBoolData");
+                    public static readonly FlagDef Deepnest_East_07__Dream_Plant_Orb_39 = new FlagDef("Dream Plant Orb (39)", SceneInstances.Deepnest_East_07, false, "PersistentBoolData");
+                    public static readonly FlagDef Deepnest_East_07__Dream_Plant_Orb_4 = new FlagDef("Dream Plant Orb (4)", SceneInstances.Deepnest_East_07, false, "PersistentBoolData");
+                    public static readonly FlagDef Deepnest_East_07__Dream_Plant_Orb_40 = new FlagDef("Dream Plant Orb (40)", SceneInstances.Deepnest_East_07, false, "PersistentBoolData");
+                    public static readonly FlagDef Deepnest_East_07__Dream_Plant_Orb_41 = new FlagDef("Dream Plant Orb (41)", SceneInstances.Deepnest_East_07, false, "PersistentBoolData");
+                    public static readonly FlagDef Deepnest_East_07__Dream_Plant_Orb_42 = new FlagDef("Dream Plant Orb (42)", SceneInstances.Deepnest_East_07, false, "PersistentBoolData");
+                    public static readonly FlagDef Deepnest_East_07__Dream_Plant_Orb_43 = new FlagDef("Dream Plant Orb (43)", SceneInstances.Deepnest_East_07, false, "PersistentBoolData");
+                    public static readonly FlagDef Deepnest_East_07__Dream_Plant_Orb_44 = new FlagDef("Dream Plant Orb (44)", SceneInstances.Deepnest_East_07, false, "PersistentBoolData");
+                    public static readonly FlagDef Deepnest_East_07__Dream_Plant_Orb_45 = new FlagDef("Dream Plant Orb (45)", SceneInstances.Deepnest_East_07, false, "PersistentBoolData");
+                    public static readonly FlagDef Deepnest_East_07__Dream_Plant_Orb_46 = new FlagDef("Dream Plant Orb (46)", SceneInstances.Deepnest_East_07, false, "PersistentBoolData");
+                    public static readonly FlagDef Deepnest_East_07__Dream_Plant_Orb_47 = new FlagDef("Dream Plant Orb (47)", SceneInstances.Deepnest_East_07, false, "PersistentBoolData");
+                    public static readonly FlagDef Deepnest_East_07__Dream_Plant_Orb_48 = new FlagDef("Dream Plant Orb (48)", SceneInstances.Deepnest_East_07, false, "PersistentBoolData");
+                    public static readonly FlagDef Deepnest_East_07__Dream_Plant_Orb_49 = new FlagDef("Dream Plant Orb (49)", SceneInstances.Deepnest_East_07, false, "PersistentBoolData");
+                    public static readonly FlagDef Deepnest_East_07__Dream_Plant_Orb_5 = new FlagDef("Dream Plant Orb (5)", SceneInstances.Deepnest_East_07, false, "PersistentBoolData");
+                    public static readonly FlagDef Deepnest_East_07__Dream_Plant_Orb_50 = new FlagDef("Dream Plant Orb (50)", SceneInstances.Deepnest_East_07, false, "PersistentBoolData");
+                    public static readonly FlagDef Deepnest_East_07__Dream_Plant_Orb_51 = new FlagDef("Dream Plant Orb (51)", SceneInstances.Deepnest_East_07, false, "PersistentBoolData");
+                    public static readonly FlagDef Deepnest_East_07__Dream_Plant_Orb_6 = new FlagDef("Dream Plant Orb (6)", SceneInstances.Deepnest_East_07, false, "PersistentBoolData");
+                    public static readonly FlagDef Deepnest_East_07__Dream_Plant_Orb_7 = new FlagDef("Dream Plant Orb (7)", SceneInstances.Deepnest_East_07, false, "PersistentBoolData");
+                    public static readonly FlagDef Deepnest_East_07__Dream_Plant_Orb_8 = new FlagDef("Dream Plant Orb (8)", SceneInstances.Deepnest_East_07, false, "PersistentBoolData");
+                    public static readonly FlagDef Deepnest_East_07__Dream_Plant_Orb_9 = new FlagDef("Dream Plant Orb (9)", SceneInstances.Deepnest_East_07, false, "PersistentBoolData");
+                #endregion
+
                 #region Fungus1_13
                     public static readonly FlagDef Fungus1_13__Dream_Plant = new FlagDef("Dream Plant", SceneInstances.Fungus1_13, false, "PersistentBoolData");
                     public static readonly FlagDef Fungus1_13__Dream_Plant_Orb = new FlagDef("Dream Plant Orb", SceneInstances.Fungus1_13, false, "PersistentBoolData");
@@ -1005,6 +1256,87 @@ namespace CabbyCodes.Flags
                     public static readonly FlagDef Fungus2_17__Dream_Plant_Orb_7 = new FlagDef("Dream Plant Orb (7)", SceneInstances.Fungus2_17, false, "PersistentBoolData");
                     public static readonly FlagDef Fungus2_17__Dream_Plant_Orb_8 = new FlagDef("Dream Plant Orb (8)", SceneInstances.Fungus2_17, false, "PersistentBoolData");
                     public static readonly FlagDef Fungus2_17__Dream_Plant_Orb_9 = new FlagDef("Dream Plant Orb (9)", SceneInstances.Fungus2_17, false, "PersistentBoolData");
+                #endregion
+
+                #region Fungus2_33
+                    public static readonly FlagDef Fungus2_33__Dream_Plant = new FlagDef("Dream Plant", SceneInstances.Fungus2_33, false, "PersistentBoolData");
+                    public static readonly FlagDef Fungus2_33__Dream_Plant_Orb = new FlagDef("Dream Plant Orb", SceneInstances.Fungus2_33, false, "PersistentBoolData");
+                    public static readonly FlagDef Fungus2_33__Dream_Plant_Orb_1 = new FlagDef("Dream Plant Orb (1)", SceneInstances.Fungus2_33, false, "PersistentBoolData");
+                    public static readonly FlagDef Fungus2_33__Dream_Plant_Orb_10 = new FlagDef("Dream Plant Orb (10)", SceneInstances.Fungus2_33, false, "PersistentBoolData");
+                    public static readonly FlagDef Fungus2_33__Dream_Plant_Orb_11 = new FlagDef("Dream Plant Orb (11)", SceneInstances.Fungus2_33, false, "PersistentBoolData");
+                    public static readonly FlagDef Fungus2_33__Dream_Plant_Orb_12 = new FlagDef("Dream Plant Orb (12)", SceneInstances.Fungus2_33, false, "PersistentBoolData");
+                    public static readonly FlagDef Fungus2_33__Dream_Plant_Orb_13 = new FlagDef("Dream Plant Orb (13)", SceneInstances.Fungus2_33, false, "PersistentBoolData");
+                    public static readonly FlagDef Fungus2_33__Dream_Plant_Orb_14 = new FlagDef("Dream Plant Orb (14)", SceneInstances.Fungus2_33, false, "PersistentBoolData");
+                    public static readonly FlagDef Fungus2_33__Dream_Plant_Orb_15 = new FlagDef("Dream Plant Orb (15)", SceneInstances.Fungus2_33, false, "PersistentBoolData");
+                    public static readonly FlagDef Fungus2_33__Dream_Plant_Orb_16 = new FlagDef("Dream Plant Orb (16)", SceneInstances.Fungus2_33, false, "PersistentBoolData");
+                    public static readonly FlagDef Fungus2_33__Dream_Plant_Orb_17 = new FlagDef("Dream Plant Orb (17)", SceneInstances.Fungus2_33, false, "PersistentBoolData");
+                    public static readonly FlagDef Fungus2_33__Dream_Plant_Orb_18 = new FlagDef("Dream Plant Orb (18)", SceneInstances.Fungus2_33, false, "PersistentBoolData");
+                    public static readonly FlagDef Fungus2_33__Dream_Plant_Orb_19 = new FlagDef("Dream Plant Orb (19)", SceneInstances.Fungus2_33, false, "PersistentBoolData");
+                    public static readonly FlagDef Fungus2_33__Dream_Plant_Orb_2 = new FlagDef("Dream Plant Orb (2)", SceneInstances.Fungus2_33, false, "PersistentBoolData");
+                    public static readonly FlagDef Fungus2_33__Dream_Plant_Orb_3 = new FlagDef("Dream Plant Orb (3)", SceneInstances.Fungus2_33, false, "PersistentBoolData");
+                    public static readonly FlagDef Fungus2_33__Dream_Plant_Orb_4 = new FlagDef("Dream Plant Orb (4)", SceneInstances.Fungus2_33, false, "PersistentBoolData");
+                    public static readonly FlagDef Fungus2_33__Dream_Plant_Orb_5 = new FlagDef("Dream Plant Orb (5)", SceneInstances.Fungus2_33, false, "PersistentBoolData");
+                    public static readonly FlagDef Fungus2_33__Dream_Plant_Orb_6 = new FlagDef("Dream Plant Orb (6)", SceneInstances.Fungus2_33, false, "PersistentBoolData");
+                    public static readonly FlagDef Fungus2_33__Dream_Plant_Orb_7 = new FlagDef("Dream Plant Orb (7)", SceneInstances.Fungus2_33, false, "PersistentBoolData");
+                    public static readonly FlagDef Fungus2_33__Dream_Plant_Orb_8 = new FlagDef("Dream Plant Orb (8)", SceneInstances.Fungus2_33, false, "PersistentBoolData");
+                    public static readonly FlagDef Fungus2_33__Dream_Plant_Orb_9 = new FlagDef("Dream Plant Orb (9)", SceneInstances.Fungus2_33, false, "PersistentBoolData");
+                #endregion
+
+                #region Fungus3_11
+                    public static readonly FlagDef Fungus3_11__Dream_Plant = new FlagDef("Dream Plant", SceneInstances.Fungus3_11, false, "PersistentBoolData");
+                    public static readonly FlagDef Fungus3_11__Dream_Plant_Orb = new FlagDef("Dream Plant Orb", SceneInstances.Fungus3_11, false, "PersistentBoolData");
+                    public static readonly FlagDef Fungus3_11__Dream_Plant_Orb_1 = new FlagDef("Dream Plant Orb (1)", SceneInstances.Fungus3_11, false, "PersistentBoolData");
+                    public static readonly FlagDef Fungus3_11__Dream_Plant_Orb_10 = new FlagDef("Dream Plant Orb (10)", SceneInstances.Fungus3_11, false, "PersistentBoolData");
+                    public static readonly FlagDef Fungus3_11__Dream_Plant_Orb_11 = new FlagDef("Dream Plant Orb (11)", SceneInstances.Fungus3_11, false, "PersistentBoolData");
+                    public static readonly FlagDef Fungus3_11__Dream_Plant_Orb_12 = new FlagDef("Dream Plant Orb (12)", SceneInstances.Fungus3_11, false, "PersistentBoolData");
+                    public static readonly FlagDef Fungus3_11__Dream_Plant_Orb_13 = new FlagDef("Dream Plant Orb (13)", SceneInstances.Fungus3_11, false, "PersistentBoolData");
+                    public static readonly FlagDef Fungus3_11__Dream_Plant_Orb_14 = new FlagDef("Dream Plant Orb (14)", SceneInstances.Fungus3_11, false, "PersistentBoolData");
+                    public static readonly FlagDef Fungus3_11__Dream_Plant_Orb_15 = new FlagDef("Dream Plant Orb (15)", SceneInstances.Fungus3_11, false, "PersistentBoolData");
+                    public static readonly FlagDef Fungus3_11__Dream_Plant_Orb_16 = new FlagDef("Dream Plant Orb (16)", SceneInstances.Fungus3_11, false, "PersistentBoolData");
+                    public static readonly FlagDef Fungus3_11__Dream_Plant_Orb_17 = new FlagDef("Dream Plant Orb (17)", SceneInstances.Fungus3_11, false, "PersistentBoolData");
+                    public static readonly FlagDef Fungus3_11__Dream_Plant_Orb_18 = new FlagDef("Dream Plant Orb (18)", SceneInstances.Fungus3_11, false, "PersistentBoolData");
+                    public static readonly FlagDef Fungus3_11__Dream_Plant_Orb_19 = new FlagDef("Dream Plant Orb (19)", SceneInstances.Fungus3_11, false, "PersistentBoolData");
+                    public static readonly FlagDef Fungus3_11__Dream_Plant_Orb_2 = new FlagDef("Dream Plant Orb (2)", SceneInstances.Fungus3_11, false, "PersistentBoolData");
+                    public static readonly FlagDef Fungus3_11__Dream_Plant_Orb_20 = new FlagDef("Dream Plant Orb (20)", SceneInstances.Fungus3_11, false, "PersistentBoolData");
+                    public static readonly FlagDef Fungus3_11__Dream_Plant_Orb_21 = new FlagDef("Dream Plant Orb (21)", SceneInstances.Fungus3_11, false, "PersistentBoolData");
+                    public static readonly FlagDef Fungus3_11__Dream_Plant_Orb_22 = new FlagDef("Dream Plant Orb (22)", SceneInstances.Fungus3_11, false, "PersistentBoolData");
+                    public static readonly FlagDef Fungus3_11__Dream_Plant_Orb_23 = new FlagDef("Dream Plant Orb (23)", SceneInstances.Fungus3_11, false, "PersistentBoolData");
+                    public static readonly FlagDef Fungus3_11__Dream_Plant_Orb_24 = new FlagDef("Dream Plant Orb (24)", SceneInstances.Fungus3_11, false, "PersistentBoolData");
+                    public static readonly FlagDef Fungus3_11__Dream_Plant_Orb_25 = new FlagDef("Dream Plant Orb (25)", SceneInstances.Fungus3_11, false, "PersistentBoolData");
+                    public static readonly FlagDef Fungus3_11__Dream_Plant_Orb_26 = new FlagDef("Dream Plant Orb (26)", SceneInstances.Fungus3_11, false, "PersistentBoolData");
+                    public static readonly FlagDef Fungus3_11__Dream_Plant_Orb_27 = new FlagDef("Dream Plant Orb (27)", SceneInstances.Fungus3_11, false, "PersistentBoolData");
+                    public static readonly FlagDef Fungus3_11__Dream_Plant_Orb_28 = new FlagDef("Dream Plant Orb (28)", SceneInstances.Fungus3_11, false, "PersistentBoolData");
+                    public static readonly FlagDef Fungus3_11__Dream_Plant_Orb_3 = new FlagDef("Dream Plant Orb (3)", SceneInstances.Fungus3_11, false, "PersistentBoolData");
+                    public static readonly FlagDef Fungus3_11__Dream_Plant_Orb_4 = new FlagDef("Dream Plant Orb (4)", SceneInstances.Fungus3_11, false, "PersistentBoolData");
+                    public static readonly FlagDef Fungus3_11__Dream_Plant_Orb_5 = new FlagDef("Dream Plant Orb (5)", SceneInstances.Fungus3_11, false, "PersistentBoolData");
+                    public static readonly FlagDef Fungus3_11__Dream_Plant_Orb_6 = new FlagDef("Dream Plant Orb (6)", SceneInstances.Fungus3_11, false, "PersistentBoolData");
+                    public static readonly FlagDef Fungus3_11__Dream_Plant_Orb_7 = new FlagDef("Dream Plant Orb (7)", SceneInstances.Fungus3_11, false, "PersistentBoolData");
+                    public static readonly FlagDef Fungus3_11__Dream_Plant_Orb_8 = new FlagDef("Dream Plant Orb (8)", SceneInstances.Fungus3_11, false, "PersistentBoolData");
+                    public static readonly FlagDef Fungus3_11__Dream_Plant_Orb_9 = new FlagDef("Dream Plant Orb (9)", SceneInstances.Fungus3_11, false, "PersistentBoolData");
+                #endregion
+
+                #region Hive_02
+                    public static readonly FlagDef Hive_02__Dream_Plant = new FlagDef("Dream Plant", SceneInstances.Hive_02, false, "PersistentBoolData");
+                    public static readonly FlagDef Hive_02__Dream_Plant_Orb_1 = new FlagDef("Dream Plant Orb (1)", SceneInstances.Hive_02, false, "PersistentBoolData");
+                    public static readonly FlagDef Hive_02__Dream_Plant_Orb_11 = new FlagDef("Dream Plant Orb (11)", SceneInstances.Hive_02, false, "PersistentBoolData");
+                    public static readonly FlagDef Hive_02__Dream_Plant_Orb_12 = new FlagDef("Dream Plant Orb (12)", SceneInstances.Hive_02, false, "PersistentBoolData");
+                    public static readonly FlagDef Hive_02__Dream_Plant_Orb_13 = new FlagDef("Dream Plant Orb (13)", SceneInstances.Hive_02, false, "PersistentBoolData");
+                    public static readonly FlagDef Hive_02__Dream_Plant_Orb_14 = new FlagDef("Dream Plant Orb (14)", SceneInstances.Hive_02, false, "PersistentBoolData");
+                    public static readonly FlagDef Hive_02__Dream_Plant_Orb_15 = new FlagDef("Dream Plant Orb (15)", SceneInstances.Hive_02, false, "PersistentBoolData");
+                    public static readonly FlagDef Hive_02__Dream_Plant_Orb_16 = new FlagDef("Dream Plant Orb (16)", SceneInstances.Hive_02, false, "PersistentBoolData");
+                    public static readonly FlagDef Hive_02__Dream_Plant_Orb_17 = new FlagDef("Dream Plant Orb (17)", SceneInstances.Hive_02, false, "PersistentBoolData");
+                    public static readonly FlagDef Hive_02__Dream_Plant_Orb_18 = new FlagDef("Dream Plant Orb (18)", SceneInstances.Hive_02, false, "PersistentBoolData");
+                    public static readonly FlagDef Hive_02__Dream_Plant_Orb_19 = new FlagDef("Dream Plant Orb (19)", SceneInstances.Hive_02, false, "PersistentBoolData");
+                    public static readonly FlagDef Hive_02__Dream_Plant_Orb_2 = new FlagDef("Dream Plant Orb (2)", SceneInstances.Hive_02, false, "PersistentBoolData");
+                    public static readonly FlagDef Hive_02__Dream_Plant_Orb_20 = new FlagDef("Dream Plant Orb (20)", SceneInstances.Hive_02, false, "PersistentBoolData");
+                    public static readonly FlagDef Hive_02__Dream_Plant_Orb_21 = new FlagDef("Dream Plant Orb (21)", SceneInstances.Hive_02, false, "PersistentBoolData");
+                    public static readonly FlagDef Hive_02__Dream_Plant_Orb_22 = new FlagDef("Dream Plant Orb (22)", SceneInstances.Hive_02, false, "PersistentBoolData");
+                    public static readonly FlagDef Hive_02__Dream_Plant_Orb_23 = new FlagDef("Dream Plant Orb (23)", SceneInstances.Hive_02, false, "PersistentBoolData");
+                    public static readonly FlagDef Hive_02__Dream_Plant_Orb_4 = new FlagDef("Dream Plant Orb (4)", SceneInstances.Hive_02, false, "PersistentBoolData");
+                    public static readonly FlagDef Hive_02__Dream_Plant_Orb_6 = new FlagDef("Dream Plant Orb (6)", SceneInstances.Hive_02, false, "PersistentBoolData");
+                    public static readonly FlagDef Hive_02__Dream_Plant_Orb_7 = new FlagDef("Dream Plant Orb (7)", SceneInstances.Hive_02, false, "PersistentBoolData");
+                    public static readonly FlagDef Hive_02__Dream_Plant_Orb_8 = new FlagDef("Dream Plant Orb (8)", SceneInstances.Hive_02, false, "PersistentBoolData");
+                    public static readonly FlagDef Hive_02__Dream_Plant_Orb_9 = new FlagDef("Dream Plant Orb (9)", SceneInstances.Hive_02, false, "PersistentBoolData");
                 #endregion
 
                 #region Mines_23
@@ -1195,8 +1527,20 @@ namespace CabbyCodes.Flags
                 public static readonly FlagDef Deepnest_39__Geo_Rock_Deepnest = new FlagDef("Geo Rock Deepnest", SceneInstances.Deepnest_39, false, "GeoRockData");
                 public static readonly FlagDef Deepnest_39__Geo_Rock_Deepnest_1 = new FlagDef("Geo Rock Deepnest (1)", SceneInstances.Deepnest_39, false, "GeoRockData");
                 public static readonly FlagDef Deepnest_39__Geo_Rock_Deepnest_2 = new FlagDef("Geo Rock Deepnest (2)", SceneInstances.Deepnest_39, false, "GeoRockData");
+                public static readonly FlagDef Deepnest_43__Geo_Rock_Green_Path_01 = new FlagDef("Geo Rock Green Path 01", SceneInstances.Deepnest_43, false, "GeoRockData");
+                public static readonly FlagDef Deepnest_43__Geo_Rock_Green_Path_01_1 = new FlagDef("Geo Rock Green Path 01 (1)", SceneInstances.Deepnest_43, false, "GeoRockData");
                 public static readonly FlagDef Deepnest_East_01__Geo_Rock_Deepnest = new FlagDef("Geo Rock Deepnest", SceneInstances.Deepnest_East_01, false, "GeoRockData");
                 public static readonly FlagDef Deepnest_East_01__Geo_Rock_Deepnest_1 = new FlagDef("Geo Rock Deepnest (1)", SceneInstances.Deepnest_East_01, false, "GeoRockData");
+                public static readonly FlagDef Deepnest_East_02__Geo_Rock_Deepnest = new FlagDef("Geo Rock Deepnest", SceneInstances.Deepnest_East_02, false, "GeoRockData");
+                public static readonly FlagDef Deepnest_East_02__Geo_Rock_Deepnest_1 = new FlagDef("Geo Rock Deepnest (1)", SceneInstances.Deepnest_East_02, false, "GeoRockData");
+                public static readonly FlagDef Deepnest_East_04__Geo_Rock_Outskirts = new FlagDef("Geo Rock Outskirts", SceneInstances.Deepnest_East_04, false, "GeoRockData");
+                public static readonly FlagDef Deepnest_East_06__Geo_Rock_Outskirts = new FlagDef("Geo Rock Outskirts", SceneInstances.Deepnest_East_06, false, "GeoRockData");
+                public static readonly FlagDef Deepnest_East_06__Geo_Rock_Outskirts_1 = new FlagDef("Geo Rock Outskirts (1)", SceneInstances.Deepnest_East_06, false, "GeoRockData");
+                public static readonly FlagDef Deepnest_East_07__Geo_Rock_Outskirts = new FlagDef("Geo Rock Outskirts", SceneInstances.Deepnest_East_07, false, "GeoRockData");
+                public static readonly FlagDef Deepnest_East_07__Geo_Rock_Outskirts_1 = new FlagDef("Geo Rock Outskirts (1)", SceneInstances.Deepnest_East_07, false, "GeoRockData");
+                public static readonly FlagDef Deepnest_East_08__Geo_Rock_Outskirts = new FlagDef("Geo Rock Outskirts", SceneInstances.Deepnest_East_08, false, "GeoRockData");
+                public static readonly FlagDef Deepnest_East_17__Geo_Rock_Outskirts = new FlagDef("Geo Rock Outskirts", SceneInstances.Deepnest_East_17, false, "GeoRockData");
+                public static readonly FlagDef Deepnest_East_17__Giant_Geo_Egg = new FlagDef("Giant Geo Egg", SceneInstances.Deepnest_East_17, false, "GeoRockData");
                 public static readonly FlagDef Deepnest_Spider_Town__Geo_Rock_Deepnest = new FlagDef("Geo Rock Deepnest", SceneInstances.Deepnest_Spider_Town, false, "GeoRockData");
                 public static readonly FlagDef Deepnest_Spider_Town__Geo_Rock_Deepnest_1 = new FlagDef("Geo Rock Deepnest (1)", SceneInstances.Deepnest_Spider_Town, false, "GeoRockData");
                 public static readonly FlagDef Deepnest_Spider_Town__Geo_Rock_Deepnest_2 = new FlagDef("Geo Rock Deepnest (2)", SceneInstances.Deepnest_Spider_Town, false, "GeoRockData");
@@ -1258,8 +1602,22 @@ namespace CabbyCodes.Flags
                 public static readonly FlagDef Fungus2_30__Geo_Rock_Fung_01 = new FlagDef("Geo Rock Fung 01", SceneInstances.Fungus2_30, false, "GeoRockData");
                 public static readonly FlagDef Fungus2_30__Geo_Rock_Fung_01_1 = new FlagDef("Geo Rock Fung 01 (1)", SceneInstances.Fungus2_30, false, "GeoRockData");
                 public static readonly FlagDef Fungus3_03__Geo_Rock_Green_Path_01 = new FlagDef("Geo Rock Green Path 01", SceneInstances.Fungus3_03, false, "GeoRockData");
+                public static readonly FlagDef Fungus3_10__Geo_Rock_Green_Path_01 = new FlagDef("Geo Rock Green Path 01", SceneInstances.Fungus3_10, false, "GeoRockData");
+                public static readonly FlagDef Fungus3_26__Geo_Rock_Green_Path_01 = new FlagDef("Geo Rock Green Path 01", SceneInstances.Fungus3_26, false, "GeoRockData");
                 public static readonly FlagDef Fungus3_39__Geo_Rock_Green_Path_01 = new FlagDef("Geo Rock Green Path 01", SceneInstances.Fungus3_39, false, "GeoRockData");
                 public static readonly FlagDef Fungus3_39__Geo_Rock_Green_Path_01_1 = new FlagDef("Geo Rock Green Path 01 (1)", SceneInstances.Fungus3_39, false, "GeoRockData");
+                public static readonly FlagDef Fungus3_48__Geo_Rock_Green_Path_02 = new FlagDef("Geo Rock Green Path 02", SceneInstances.Fungus3_48, false, "GeoRockData");
+                public static readonly FlagDef GG_Lurker__Geo_Rock_Outskirts = new FlagDef("Geo Rock Outskirts", SceneInstances.GG_Lurker, false, "GeoRockData");
+                public static readonly FlagDef GG_Pipeway__Geo_Rock_City_1 = new FlagDef("Geo Rock City 1", SceneInstances.GG_Pipeway, false, "GeoRockData");
+                public static readonly FlagDef Hive_01__Geo_Rock_Hive = new FlagDef("Geo Rock Hive", SceneInstances.Hive_01, false, "GeoRockData");
+                public static readonly FlagDef Hive_02__Geo_Rock_Hive = new FlagDef("Geo Rock Hive", SceneInstances.Hive_02, false, "GeoRockData");
+                public static readonly FlagDef Hive_02__Geo_Rock_Hive_1 = new FlagDef("Geo Rock Hive (1)", SceneInstances.Hive_02, false, "GeoRockData");
+                public static readonly FlagDef Hive_02__Geo_Rock_Hive_2 = new FlagDef("Geo Rock Hive (2)", SceneInstances.Hive_02, false, "GeoRockData");
+                public static readonly FlagDef Hive_03__Geo_Rock_Hive = new FlagDef("Geo Rock Hive", SceneInstances.Hive_03, false, "GeoRockData");
+                public static readonly FlagDef Hive_03__Geo_Rock_Hive_1 = new FlagDef("Geo Rock Hive (1)", SceneInstances.Hive_03, false, "GeoRockData");
+                public static readonly FlagDef Hive_03__Geo_Rock_Hive_2 = new FlagDef("Geo Rock Hive (2)", SceneInstances.Hive_03, false, "GeoRockData");
+                public static readonly FlagDef Hive_04__Geo_Rock_Hive = new FlagDef("Geo Rock Hive", SceneInstances.Hive_04, false, "GeoRockData");
+                public static readonly FlagDef Hive_04__Geo_Rock_Hive_1 = new FlagDef("Geo Rock Hive (1)", SceneInstances.Hive_04, false, "GeoRockData");
                 public static readonly FlagDef Mines_02__Geo_Rock_1 = new FlagDef("Geo Rock 1", SceneInstances.Mines_02, false, "GeoRockData");
                 public static readonly FlagDef Mines_02__Geo_Rock_Mine = new FlagDef("Geo Rock Mine", SceneInstances.Mines_02, false, "GeoRockData");
                 public static readonly FlagDef Mines_02__Geo_Rock_Mine_1 = new FlagDef("Geo Rock Mine (1)", SceneInstances.Mines_02, false, "GeoRockData");
@@ -1298,6 +1656,10 @@ namespace CabbyCodes.Flags
                 public static readonly FlagDef Tutorial_01__Geo_Rock_3 = new FlagDef("Geo Rock 3", SceneInstances.Tutorial_01, false, "GeoRockData");
                 public static readonly FlagDef Tutorial_01__Geo_Rock_4 = new FlagDef("Geo Rock 4", SceneInstances.Tutorial_01, false, "GeoRockData");
                 public static readonly FlagDef Tutorial_01__Geo_Rock_5 = new FlagDef("Geo Rock 5", SceneInstances.Tutorial_01, false, "GeoRockData");
+                public static readonly FlagDef Waterways_01__Geo_Rock_City_1 = new FlagDef("Geo Rock City 1", SceneInstances.Waterways_01, false, "GeoRockData");
+                public static readonly FlagDef Waterways_01__Geo_Rock_City_1_1 = new FlagDef("Geo Rock City 1 (1)", SceneInstances.Waterways_01, false, "GeoRockData");
+                public static readonly FlagDef Waterways_04b__Geo_Rock_City_1 = new FlagDef("Geo Rock City 1", SceneInstances.Waterways_04b, false, "GeoRockData");
+                public static readonly FlagDef Waterways_08__Geo_Rock_City_1 = new FlagDef("Geo Rock City 1", SceneInstances.Waterways_08, false, "GeoRockData");
             #endregion
 
             #region Shop State
@@ -1315,7 +1677,9 @@ namespace CabbyCodes.Flags
                 public static readonly FlagDef openedDeepnest = new FlagDef("openedDeepnest", null, false, "PlayerData_Bool", "Deepnest Stag Station");
                 public static readonly FlagDef openedRuins2 = new FlagDef("openedRuins2", null, false, "PlayerData_Bool", "King's Station Stag Station");
                 public static readonly FlagDef openedRuins1 = new FlagDef("openedRuins1", null, false, "PlayerData_Bool", "City of Tears Stag Station");
-                public static readonly FlagDef openedHiddenStation = new FlagDef("openedHiddenStation", null, false, "PlayerData_Bool");
+                public static readonly FlagDef openedHiddenStation = new FlagDef("openedHiddenStation", null, false, "PlayerData_Bool", "Abyss hidden Stag Station");
+                public static readonly FlagDef openedRoyalGardens = new FlagDef("openedRoyalGardens", null, false, "PlayerData_Bool", "Queen's Gardens Stag Station");
+                public static readonly FlagDef openedStagNest = new FlagDef("openedStagNest", null, false, "PlayerData_Bool", "Stag Nest Station");
             #endregion
 
         #endregion
@@ -1396,24 +1760,24 @@ namespace CabbyCodes.Flags
 
             #region Killed Enemy
                 public static readonly FlagDef killedAbyssCrawler = new FlagDef("killedAbyssCrawler", null, false, "PlayerData_Bool",                   "Shadow Creeper");
-                public static readonly FlagDef killedAbyssTendril = new FlagDef("killedAbyssTendril", null, false, "PlayerData_Bool");
+                public static readonly FlagDef killedAbyssTendril = new FlagDef("killedAbyssTendril", null, false, "PlayerData_Bool",                   "Void Tendrils");
                 public static readonly FlagDef killedAcidFlyer = new FlagDef("killedAcidFlyer", null, false, "PlayerData_Bool",                         "Duranda");
                 public static readonly FlagDef killedAcidWalker = new FlagDef("killedAcidWalker", null, false, "PlayerData_Bool",                       "Durandoo");
                 public static readonly FlagDef killedAngryBuzzer = new FlagDef("killedAngryBuzzer", null, false, "PlayerData_Bool",                     "Furious Vengefly");
                 public static readonly FlagDef killedBabyCentipede = new FlagDef("killedBabyCentipede", null, false, "PlayerData_Bool",                 "Dirtcarver");
                 public static readonly FlagDef killedBeamMiner = new FlagDef("killedBeamMiner", null, false, "PlayerData_Bool",                         "Crystallised Husk");
                 public static readonly FlagDef killedBeeHatchling = new FlagDef("killedBeeHatchling", null, false, "PlayerData_Bool",                   "Hiveling");
-                public static readonly FlagDef killedBeeStinger = new FlagDef("killedBeeStinger", null, false, "PlayerData_Bool");
-                public static readonly FlagDef killedBigBee = new FlagDef("killedBigBee", null, false, "PlayerData_Bool");
+                public static readonly FlagDef killedBeeStinger = new FlagDef("killedBeeStinger", null, false, "PlayerData_Bool",                       "Hive Soldier");
+                public static readonly FlagDef killedBigBee = new FlagDef("killedBigBee", null, false, "PlayerData_Bool",                               "Hive Guardian");
                 public static readonly FlagDef killedBigBuzzer = new FlagDef("killedBigBuzzer", null, false, "PlayerData_Bool",                         "Vengefly King");
                 public static readonly FlagDef killedBigCentipede = new FlagDef("killedBigCentipede", null, false, "PlayerData_Bool");
                 public static readonly FlagDef killedBigFly = new FlagDef("killedBigFly", null, false, "PlayerData_Bool",                               "Gruz Mother");
                 public static readonly FlagDef killedBindingSeal = new FlagDef("killedBindingSeal", null, false, "PlayerData_Bool");
                 public static readonly FlagDef killedBlackKnight = new FlagDef("killedBlackKnight", null, false, "PlayerData_Bool",                     "Watcher Knight");
                 public static readonly FlagDef killedBlobFlyer = new FlagDef("killedBlobFlyer", null, false, "PlayerData_Bool",                         "Obble");
-                public static readonly FlagDef killedBlobble = new FlagDef("killedBlobble", null, false, "PlayerData_Bool");
+                public static readonly FlagDef killedBlobble = new FlagDef("killedBlobble", null, false, "PlayerData_Bool",                             "Battle Obble");
                 public static readonly FlagDef killedBlocker = new FlagDef("killedBlocker", null, false, "PlayerData_Bool",                             "Elder Baldur");
-                public static readonly FlagDef killedBlowFly = new FlagDef("killedBlowFly", null, false, "PlayerData_Bool");
+                public static readonly FlagDef killedBlowFly = new FlagDef("killedBlowFly", null, false, "PlayerData_Bool",                             "Boofly");
                 public static readonly FlagDef killedBouncer = new FlagDef("killedBouncer", null, false, "PlayerData_Bool",                             "Gruzzer");
                 public static readonly FlagDef killedBurstingBouncer = new FlagDef("killedBurstingBouncer", null, false, "PlayerData_Bool",             "Volatile Gruzzer");
                 public static readonly FlagDef killedBurstingZombie = new FlagDef("killedBurstingZombie", null, false, "PlayerData_Bool",               "Violent Husk");
@@ -1421,13 +1785,13 @@ namespace CabbyCodes.Flags
                 public static readonly FlagDef killedCeilingDropper = new FlagDef("killedCeilingDropper", null, false, "PlayerData_Bool",               "Belfly");
                 public static readonly FlagDef killedCentipedeHatcher = new FlagDef("killedCentipedeHatcher", null, false, "PlayerData_Bool",           "Carver Hatcher");
                 public static readonly FlagDef killedClimber = new FlagDef("killedClimber", null, false, "PlayerData_Bool",                             "Tiktik");
-                public static readonly FlagDef killedColFlyingSentry = new FlagDef("killedColFlyingSentry", null, false, "PlayerData_Bool");
-                public static readonly FlagDef killedColHopper = new FlagDef("killedColHopper", null, false, "PlayerData_Bool");
-                public static readonly FlagDef killedColMiner = new FlagDef("killedColMiner", null, false, "PlayerData_Bool");
-                public static readonly FlagDef killedColMosquito = new FlagDef("killedColMosquito", null, false, "PlayerData_Bool");
-                public static readonly FlagDef killedColRoller = new FlagDef("killedColRoller", null, false, "PlayerData_Bool");
-                public static readonly FlagDef killedColShield = new FlagDef("killedColShield", null, false, "PlayerData_Bool");
-                public static readonly FlagDef killedColWorm = new FlagDef("killedColWorm", null, false, "PlayerData_Bool");
+                public static readonly FlagDef killedColFlyingSentry = new FlagDef("killedColFlyingSentry", null, false, "PlayerData_Bool",             "Winged Fool");
+                public static readonly FlagDef killedColHopper = new FlagDef("killedColHopper", null, false, "PlayerData_Bool",                         "Death Loodle");
+                public static readonly FlagDef killedColMiner = new FlagDef("killedColMiner", null, false, "PlayerData_Bool",                           "Sturdy Fool");
+                public static readonly FlagDef killedColMosquito = new FlagDef("killedColMosquito", null, false, "PlayerData_Bool",                     "Armoured Squit");
+                public static readonly FlagDef killedColRoller = new FlagDef("killedColRoller", null, false, "PlayerData_Bool",                         "Sharp Baldur");
+                public static readonly FlagDef killedColShield = new FlagDef("killedColShield", null, false, "PlayerData_Bool",                         "Shielded Fool");
+                public static readonly FlagDef killedColWorm = new FlagDef("killedColWorm", null, false, "PlayerData_Bool",                             "Heavy Fool");
                 public static readonly FlagDef killedCrawler = new FlagDef("killedCrawler", null, false, "PlayerData_Bool");
                 public static readonly FlagDef killedCrystalCrawler = new FlagDef("killedCrystalCrawler", null, false, "PlayerData_Bool",               "Glimback");
                 public static readonly FlagDef killedCrystalFlyer = new FlagDef("killedCrystalFlyer", null, false, "PlayerData_Bool",                   "Crystal Hunter");
@@ -1435,24 +1799,24 @@ namespace CabbyCodes.Flags
                 public static readonly FlagDef killedDummy = new FlagDef("killedDummy", null, false, "PlayerData_Bool");
                 public static readonly FlagDef killedDungDefender = new FlagDef("killedDungDefender", null, false, "PlayerData_Bool");
                 public static readonly FlagDef killedEggSac = new FlagDef("killedEggSac", null, false, "PlayerData_Bool",                               "Bluggsac");
-                public static readonly FlagDef killedElectricMage = new FlagDef("killedElectricMage", null, false, "PlayerData_Bool");
+                public static readonly FlagDef killedElectricMage = new FlagDef("killedElectricMage", null, false, "PlayerData_Bool",                   "Volt Twister");
                 public static readonly FlagDef killedFalseKnight = new FlagDef("killedFalseKnight", null, false, "PlayerData_Bool",                     "False Knight");
-                public static readonly FlagDef killedFatFluke = new FlagDef("killedFatFluke", null, false, "PlayerData_Bool");
+                public static readonly FlagDef killedFatFluke = new FlagDef("killedFatFluke", null, false, "PlayerData_Bool",                           "Flukemunga");
                 public static readonly FlagDef killedFinalBoss = new FlagDef("killedFinalBoss", null, false, "PlayerData_Bool");
                 public static readonly FlagDef killedFlameBearerLarge = new FlagDef("killedFlameBearerLarge", null, false, "PlayerData_Bool");
                 public static readonly FlagDef killedFlameBearerMed = new FlagDef("killedFlameBearerMed", null, false, "PlayerData_Bool");
                 public static readonly FlagDef killedFlameBearerSmall = new FlagDef("killedFlameBearerSmall", null, false, "PlayerData_Bool");
-                public static readonly FlagDef killedFlipHopper = new FlagDef("killedFlipHopper", null, false, "PlayerData_Bool");
+                public static readonly FlagDef killedFlipHopper = new FlagDef("killedFlipHopper", null, false, "PlayerData_Bool",                       "Pilflip");
                 public static readonly FlagDef killedFlukeMother = new FlagDef("killedFlukeMother", null, false, "PlayerData_Bool");
-                public static readonly FlagDef killedFlukefly = new FlagDef("killedFlukefly", null, false, "PlayerData_Bool");
-                public static readonly FlagDef killedFlukeman = new FlagDef("killedFlukeman", null, false, "PlayerData_Bool");
+                public static readonly FlagDef killedFlukefly = new FlagDef("killedFlukefly", null, false, "PlayerData_Bool",                           "Flukefey");
+                public static readonly FlagDef killedFlukeman = new FlagDef("killedFlukeman", null, false, "PlayerData_Bool",                           "Flukemon");
                 public static readonly FlagDef killedFlyingSentryJavelin = new FlagDef("killedFlyingSentryJavelin", null, false, "PlayerData_Bool",     "Lance Sentry");
                 public static readonly FlagDef killedFlyingSentrySword = new FlagDef("killedFlyingSentrySword", null, false, "PlayerData_Bool",         "Winged Sentry");
                 public static readonly FlagDef killedFungCrawler = new FlagDef("killedFungCrawler", null, false, "PlayerData_Bool",                     "Ambloom");
                 public static readonly FlagDef killedFungifiedZombie = new FlagDef("killedFungifiedZombie", null, false, "PlayerData_Bool",             "Fungified Husk");
                 public static readonly FlagDef killedFungoonBaby = new FlagDef("killedFungoonBaby", null, false, "PlayerData_Bool",                     "Fungling");
                 public static readonly FlagDef killedFungusFlyer = new FlagDef("killedFungusFlyer", null, false, "PlayerData_Bool",                     "Fungoon");
-                public static readonly FlagDef killedGardenZombie = new FlagDef("killedGardenZombie", null, false, "PlayerData_Bool");
+                public static readonly FlagDef killedGardenZombie = new FlagDef("killedGardenZombie", null, false, "PlayerData_Bool",                   "Spiny Husk");
                 public static readonly FlagDef killedGhostAladar = new FlagDef("killedGhostAladar", null, false, "PlayerData_Bool",                     "Gorb");
                 public static readonly FlagDef killedGhostGalien = new FlagDef("killedGhostGalien", null, false, "PlayerData_Bool",                     "Galien");
                 public static readonly FlagDef killedGhostHu = new FlagDef("killedGhostHu", null, false, "PlayerData_Bool",                             "Elder Hu");
@@ -1460,10 +1824,10 @@ namespace CabbyCodes.Flags
                 public static readonly FlagDef killedGhostMarmu = new FlagDef("killedGhostMarmu", null, false, "PlayerData_Bool");
                 public static readonly FlagDef killedGhostNoEyes = new FlagDef("killedGhostNoEyes", null, false, "PlayerData_Bool",                     "No Eyes");
                 public static readonly FlagDef killedGhostXero = new FlagDef("killedGhostXero", null, false, "PlayerData_Bool",                         "Xero");
-                public static readonly FlagDef killedGiantHopper = new FlagDef("killedGiantHopper", null, false, "PlayerData_Bool");
+                public static readonly FlagDef killedGiantHopper = new FlagDef("killedGiantHopper", null, false, "PlayerData_Bool",                     "Great Hopper");
                 public static readonly FlagDef killedGodseekerMask = new FlagDef("killedGodseekerMask", null, false, "PlayerData_Bool");
                 public static readonly FlagDef killedGorgeousHusk = new FlagDef("killedGorgeousHusk", null, false, "PlayerData_Bool",                   "Gorgeous Husk");
-                public static readonly FlagDef killedGrassHopper = new FlagDef("killedGrassHopper", null, false, "PlayerData_Bool");
+                public static readonly FlagDef killedGrassHopper = new FlagDef("killedGrassHopper", null, false, "PlayerData_Bool",                     "Loodle");
                 public static readonly FlagDef killedGreatShieldZombie = new FlagDef("killedGreatShieldZombie", null, false, "PlayerData_Bool",         "Great Husk Sentry");
                 public static readonly FlagDef killedGreyPrince = new FlagDef("killedGreyPrince", null, false, "PlayerData_Bool");
                 public static readonly FlagDef killedGrimm = new FlagDef("killedGrimm", null, false, "PlayerData_Bool");
@@ -1471,22 +1835,22 @@ namespace CabbyCodes.Flags
                 public static readonly FlagDef killedHatcher = new FlagDef("killedHatcher", null, false, "PlayerData_Bool",                             "Aspid Mother");
                 public static readonly FlagDef killedHatchling = new FlagDef("killedHatchling", null, false, "PlayerData_Bool",                         "Aspid Hatchling");
                 public static readonly FlagDef killedHealthScuttler = new FlagDef("killedHealthScuttler", null, false, "PlayerData_Bool",               "Lifeseed");
-                public static readonly FlagDef killedHeavyMantis = new FlagDef("killedHeavyMantis", null, false, "PlayerData_Bool");
+                public static readonly FlagDef killedHeavyMantis = new FlagDef("killedHeavyMantis", null, false, "PlayerData_Bool",                     "Mantis Traitor");
                 public static readonly FlagDef killedHiveKnight = new FlagDef("killedHiveKnight", null, false, "PlayerData_Bool");
                 public static readonly FlagDef killedHollowKnight = new FlagDef("killedHollowKnight", null, false, "PlayerData_Bool");
                 public static readonly FlagDef killedHollowKnightPrime = new FlagDef("killedHollowKnightPrime", null, false, "PlayerData_Bool");
-                public static readonly FlagDef killedHopper = new FlagDef("killedHopper", null, false, "PlayerData_Bool");
+                public static readonly FlagDef killedHopper = new FlagDef("killedHopper", null, false, "PlayerData_Bool",                               "Hopper");
                 public static readonly FlagDef killedHornet = new FlagDef("killedHornet", null, false, "PlayerData_Bool",                               "Hornet");
                 public static readonly FlagDef killedHunterMark = new FlagDef("killedHunterMark", null, false, "PlayerData_Bool");
                 public static readonly FlagDef killedInfectedKnight = new FlagDef("killedInfectedKnight", null, false, "PlayerData_Bool");
-                public static readonly FlagDef killedInflater = new FlagDef("killedInflater", null, false, "PlayerData_Bool");
-                public static readonly FlagDef killedJarCollector = new FlagDef("killedJarCollector", null, false, "PlayerData_Bool");
+                public static readonly FlagDef killedInflater = new FlagDef("killedInflater", null, false, "PlayerData_Bool",                           "Hwurmp");
+                public static readonly FlagDef killedJarCollector = new FlagDef("killedJarCollector", null, false, "PlayerData_Bool",                   "The Collector");
                 public static readonly FlagDef killedJellyCrawler = new FlagDef("killedJellyCrawler", null, false, "PlayerData_Bool",                   "Uoma");
                 public static readonly FlagDef killedJellyfish = new FlagDef("killedJellyfish", null, false, "PlayerData_Bool",                         "Ooma");
                 public static readonly FlagDef killedLaserBug = new FlagDef("killedLaserBug", null, false, "PlayerData_Bool",                           "Crystal Crawler");
-                public static readonly FlagDef killedLazyFlyer = new FlagDef("killedLazyFlyer", null, false, "PlayerData_Bool");
+                public static readonly FlagDef killedLazyFlyer = new FlagDef("killedLazyFlyer", null, false, "PlayerData_Bool",                         "Aluba");
                 public static readonly FlagDef killedLesserMawlek = new FlagDef("killedLesserMawlek", null, false, "PlayerData_Bool",                   "Lesser Mawlek");
-                public static readonly FlagDef killedLobsterLancer = new FlagDef("killedLobsterLancer", null, false, "PlayerData_Bool");
+                public static readonly FlagDef killedLobsterLancer = new FlagDef("killedLobsterLancer", null, false, "PlayerData_Bool",                 "God Tamer");
                 public static readonly FlagDef killedMage = new FlagDef("killedMage", null, false, "PlayerData_Bool",                                   "Soul Twister");
                 public static readonly FlagDef killedMageBalloon = new FlagDef("killedMageBalloon", null, false, "PlayerData_Bool",                     "Folly");
                 public static readonly FlagDef killedMageBlob = new FlagDef("killedMageBlob", null, false, "PlayerData_Bool",                           "Mistake");
@@ -1494,8 +1858,8 @@ namespace CabbyCodes.Flags
                 public static readonly FlagDef killedMageLord = new FlagDef("killedMageLord", null, false, "PlayerData_Bool",                           "Soul Master");
                 public static readonly FlagDef killedMantis = new FlagDef("killedMantis", null, false, "PlayerData_Bool",                               "Mantis Warrior");
                 public static readonly FlagDef killedMantisFlyerChild = new FlagDef("killedMantisFlyerChild", null, false, "PlayerData_Bool",           "Mantis Youth");
-                public static readonly FlagDef killedMantisHeavyFlyer = new FlagDef("killedMantisHeavyFlyer", null, false, "PlayerData_Bool");
-                public static readonly FlagDef killedMantisLord = new FlagDef("killedMantisLord", null, false, "PlayerData_Bool");
+                public static readonly FlagDef killedMantisHeavyFlyer = new FlagDef("killedMantisHeavyFlyer", null, false, "PlayerData_Bool",           "Mantis Petra");
+                public static readonly FlagDef killedMantisLord = new FlagDef("killedMantisLord", null, false, "PlayerData_Bool",                       "Mantis Lords");
                 public static readonly FlagDef killedMawlek = new FlagDef("killedMawlek", null, false, "PlayerData_Bool",                               "Brooding Mawlek");
                 public static readonly FlagDef killedMawlekTurret = new FlagDef("killedMawlekTurret", null, false, "PlayerData_Bool",                   "Mawlurk");
                 public static readonly FlagDef killedMegaBeamMiner = new FlagDef("killedMegaBeamMiner", null, false, "PlayerData_Bool",                 "Crystal Guardian");
@@ -1521,42 +1885,42 @@ namespace CabbyCodes.Flags
                 public static readonly FlagDef killedNailBros = new FlagDef("killedNailBros", null, false, "PlayerData_Bool");
                 public static readonly FlagDef killedNailsage = new FlagDef("killedNailsage", null, false, "PlayerData_Bool");
                 public static readonly FlagDef killedNightmareGrimm = new FlagDef("killedNightmareGrimm", null, false, "PlayerData_Bool");
-                public static readonly FlagDef killedOblobble = new FlagDef("killedOblobble", null, false, "PlayerData_Bool");
+                public static readonly FlagDef killedOblobble = new FlagDef("killedOblobble", null, false, "PlayerData_Bool",                           "Oblobble");
                 public static readonly FlagDef killedOrangeBalloon = new FlagDef("killedOrangeBalloon", null, false, "PlayerData_Bool",                 "Infected Balloon");
                 public static readonly FlagDef killedOrangeScuttler = new FlagDef("killedOrangeScuttler", null, false, "PlayerData_Bool",               "Lightseed");
                 public static readonly FlagDef killedPaintmaster = new FlagDef("killedPaintmaster", null, false, "PlayerData_Bool");
-                public static readonly FlagDef killedPalaceFly = new FlagDef("killedPalaceFly", null, false, "PlayerData_Bool");
-                public static readonly FlagDef killedPaleLurker = new FlagDef("killedPaleLurker", null, false, "PlayerData_Bool");
+                public static readonly FlagDef killedPalaceFly = new FlagDef("killedPalaceFly", null, false, "PlayerData_Bool",                         "Wingmould");
+                public static readonly FlagDef killedPaleLurker = new FlagDef("killedPaleLurker", null, false, "PlayerData_Bool",                       "Pale Lurker");
                 public static readonly FlagDef killedPigeon = new FlagDef("killedPigeon", null, false, "PlayerData_Bool",                               "Maskfly");
                 public static readonly FlagDef killedPlantShooter = new FlagDef("killedPlantShooter", null, false, "PlayerData_Bool",                   "Gulka");
                 public static readonly FlagDef killedPrayerSlug = new FlagDef("killedPrayerSlug", null, false, "PlayerData_Bool",                       "Maggot");
                 public static readonly FlagDef killedRoller = new FlagDef("killedRoller", null, false, "PlayerData_Bool",                               "Baldur");
                 public static readonly FlagDef killedRoyalCoward = new FlagDef("killedRoyalCoward", null, false, "PlayerData_Bool",                     "Cowardly Husk");
                 public static readonly FlagDef killedRoyalDandy = new FlagDef("killedRoyalDandy", null, false, "PlayerData_Bool",                       "Husk Dandy");
-                public static readonly FlagDef killedRoyalGuard = new FlagDef("killedRoyalGuard", null, false, "PlayerData_Bool");
+                public static readonly FlagDef killedRoyalGuard = new FlagDef("killedRoyalGuard", null, false, "PlayerData_Bool",                       "Kingsmould");
                 public static readonly FlagDef killedRoyalPlumper = new FlagDef("killedRoyalPlumper", null, false, "PlayerData_Bool",                   "Gluttonous Husk");
                 public static readonly FlagDef killedSentry = new FlagDef("killedSentry", null, false, "PlayerData_Bool",                               "Husk Sentry");
                 public static readonly FlagDef killedSentryFat = new FlagDef("killedSentryFat", null, false, "PlayerData_Bool",                         "Heavy Sentry");
                 public static readonly FlagDef killedShootSpider = new FlagDef("killedShootSpider", null, false, "PlayerData_Bool",                     "Deephunter");
-                public static readonly FlagDef killedSibling = new FlagDef("killedSibling", null, false, "PlayerData_Bool");
+                public static readonly FlagDef killedSibling = new FlagDef("killedSibling", null, false, "PlayerData_Bool",                             "Sibling");
                 public static readonly FlagDef killedSlashSpider = new FlagDef("killedSlashSpider", null, false, "PlayerData_Bool",                     "Stalking Devout");
                 public static readonly FlagDef killedSnapperTrap = new FlagDef("killedSnapperTrap", null, false, "PlayerData_Bool",                     "Fool Eater");
                 public static readonly FlagDef killedSpiderCorpse = new FlagDef("killedSpiderCorpse", null, false, "PlayerData_Bool",                   "Corpse Creeper");
                 public static readonly FlagDef killedSpiderFlyer = new FlagDef("killedSpiderFlyer", null, false, "PlayerData_Bool",                     "Little Weaver");
                 public static readonly FlagDef killedSpitter = new FlagDef("killedSpitter", null, false, "PlayerData_Bool",                             "Aspid Hunter");
                 public static readonly FlagDef killedSpittingZombie = new FlagDef("killedSpittingZombie", null, false, "PlayerData_Bool",               "Slobbering Husk");
-                public static readonly FlagDef killedSuperSpitter = new FlagDef("killedSuperSpitter", null, false, "PlayerData_Bool");
-                public static readonly FlagDef killedTraitorLord = new FlagDef("killedTraitorLord", null, false, "PlayerData_Bool");
+                public static readonly FlagDef killedSuperSpitter = new FlagDef("killedSuperSpitter", null, false, "PlayerData_Bool",                   "Primal Aspid");
+                public static readonly FlagDef killedTraitorLord = new FlagDef("killedTraitorLord", null, false, "PlayerData_Bool",                     "Traitor Lord");
                 public static readonly FlagDef killedVoidIdol_1 = new FlagDef("killedVoidIdol_1", null, false, "PlayerData_Bool");
                 public static readonly FlagDef killedVoidIdol_2 = new FlagDef("killedVoidIdol_2", null, false, "PlayerData_Bool");
                 public static readonly FlagDef killedVoidIdol_3 = new FlagDef("killedVoidIdol_3", null, false, "PlayerData_Bool");
                 public static readonly FlagDef killedWhiteDefender = new FlagDef("killedWhiteDefender", null, false, "PlayerData_Bool");
-                public static readonly FlagDef killedWhiteRoyal = new FlagDef("killedWhiteRoyal", null, false, "PlayerData_Bool");
+                public static readonly FlagDef killedWhiteRoyal = new FlagDef("killedWhiteRoyal", null, false, "PlayerData_Bool",                       "Royal Retainer");
                 public static readonly FlagDef killedWorm = new FlagDef("killedWorm", null, false, "PlayerData_Bool",                                   "Goam");
                 public static readonly FlagDef killedZapBug = new FlagDef("killedZapBug", null, false, "PlayerData_Bool");
                 public static readonly FlagDef killedZombieBarger = new FlagDef("killedZombieBarger", null, false, "PlayerData_Bool",                   "Husk Bully");
                 public static readonly FlagDef killedZombieGuard = new FlagDef("killedZombieGuard", null, false, "PlayerData_Bool",                     "Husk Guard");
-                public static readonly FlagDef killedZombieHive = new FlagDef("killedZombieHive", null, false, "PlayerData_Bool");
+                public static readonly FlagDef killedZombieHive = new FlagDef("killedZombieHive", null, false, "PlayerData_Bool",                       "Husk Hive");
                 public static readonly FlagDef killedZombieHornhead = new FlagDef("killedZombieHornhead", null, false, "PlayerData_Bool",               "Husk Hornhead");
                 public static readonly FlagDef killedZombieLeaper = new FlagDef("killedZombieLeaper", null, false, "PlayerData_Bool",                   "Leaping Husk");
                 public static readonly FlagDef killedZombieMiner = new FlagDef("killedZombieMiner", null, false, "PlayerData_Bool",                     "Husk Miner");
@@ -1981,8 +2345,8 @@ namespace CabbyCodes.Flags
                 public static readonly FlagDef hasAllNailArts =     new FlagDef("hasAllNailArts",       null, false, "PlayerData_Bool", "Has all Nail Arts");
                 public static readonly FlagDef hasCyclone =         new FlagDef("hasCyclone",           null, false, "PlayerData_Bool", "Cyclone Slash");
                 public static readonly FlagDef hasDash =            new FlagDef("hasDash",              null, false, "PlayerData_Bool", "Mothwing Cloak");
-                public static readonly FlagDef hasDoubleJump =      new FlagDef("hasDoubleJump",        null, false, "PlayerData_Bool", "Monarch Wings");
                 public static readonly FlagDef hasDashSlash =       new FlagDef("hasDashSlash",         null, false, "PlayerData_Bool", "Great Slash");
+                public static readonly FlagDef hasDoubleJump =      new FlagDef("hasDoubleJump",        null, false, "PlayerData_Bool", "Monarch Wings");
                 public static readonly FlagDef hasDreamGate =       new FlagDef("hasDreamGate",         null, false, "PlayerData_Bool", "Dream Gate");
                 public static readonly FlagDef hasDreamNail =       new FlagDef("hasDreamNail",         null, false, "PlayerData_Bool", "Dream Nail");
                 public static readonly FlagDef hasNailArt =         new FlagDef("hasNailArt",           null, false, "PlayerData_Bool", "Has a Nail Art");
@@ -2022,12 +2386,14 @@ namespace CabbyCodes.Flags
                 public static readonly FlagDef Fungus1_36__Heart_Piece = new FlagDef("Heart Piece", SceneInstances.Fungus1_36, false, "PersistentBoolData", SceneInstances.Fungus1_36.ReadableName);
                 public static readonly FlagDef Fungus2_01__Heart_Piece = new FlagDef("Heart Piece", SceneInstances.Fungus2_01, false, "PersistentBoolData", SceneInstances.Fungus2_01.ReadableName);
                 public static readonly FlagDef Fungus2_25__Heart_Piece = new FlagDef("Heart Piece", SceneInstances.Fungus2_25, false, "PersistentBoolData", SceneInstances.Fungus2_25.ReadableName);
-                public static readonly FlagDef Mines_32__Heart_Piece = new FlagDef("Heart Piece", SceneInstances.Mines_32, false, "PersistentBoolData");
-                public static readonly FlagDef Room_Bretta__Heart_Piece = new FlagDef("Heart Piece", SceneInstances.Room_Bretta, false, "PersistentBoolData");
+                public static readonly FlagDef Hive_04__Heart_Piece = new FlagDef("Heart Piece", SceneInstances.Hive_04, false, "PersistentBoolData", SceneInstances.Hive_04.ReadableName);
+                public static readonly FlagDef Mines_32__Heart_Piece = new FlagDef("Heart Piece", SceneInstances.Mines_32, false, "PersistentBoolData", SceneInstances.Mines_32.ReadableName);
+                public static readonly FlagDef Room_Bretta__Heart_Piece = new FlagDef("Heart Piece", SceneInstances.Room_Bretta, false, "PersistentBoolData", "Bretta's Room");
                 public static readonly FlagDef slyShellFrag1 = new FlagDef("slyShellFrag1", null, false, "PlayerData_Bool", "Bought Mask Shard 1 from Sly");
                 public static readonly FlagDef slyShellFrag2 = new FlagDef("slyShellFrag2", null, false, "PlayerData_Bool", "Bought Mask Shard 2 from Sly");
                 public static readonly FlagDef slyShellFrag3 = new FlagDef("slyShellFrag3", null, false, "PlayerData_Bool", "Bought Mask Shard 3 from Sly");
                 public static readonly FlagDef slyShellFrag4 = new FlagDef("slyShellFrag4", null, false, "PlayerData_Bool", "Bought Mask Shard 4 from Sly");
+                public static readonly FlagDef Waterways_04b__Heart_Piece = new FlagDef("Heart Piece", SceneInstances.Waterways_04b, false, "PersistentBoolData", SceneInstances.Waterways_04b.ReadableName);
             #endregion
 
             #region Vessel Fragments
@@ -2047,22 +2413,26 @@ namespace CabbyCodes.Flags
             #endregion
 
             #region Notches
+                public static readonly FlagDef Fungus3_28__Shiny_Item = new FlagDef("Shiny Item", SceneInstances.Fungus3_28, false, "PersistentBoolData", "Notch from " + SceneInstances.Fungus3_28.ReadableName);
+                public static readonly FlagDef notchShroomOgres = new FlagDef("notchShroomOgres", null, false, "PlayerData_Bool", "Shrumal Ogre battle notch");
+                public static readonly FlagDef Room_Colosseum_Bronze__Shiny_Item = new FlagDef("Shiny Item", SceneInstances.Room_Colosseum_Bronze, false, "PersistentBoolData", "Bronze Colosseum reward notch");
                 public static readonly FlagDef salubraNotch1 = new FlagDef("salubraNotch1", null, false, "PlayerData_Bool", "Salubra Notch 1");
                 public static readonly FlagDef salubraNotch2 = new FlagDef("salubraNotch2", null, false, "PlayerData_Bool", "Salubra Notch 2");
                 public static readonly FlagDef salubraNotch3 = new FlagDef("salubraNotch3", null, false, "PlayerData_Bool", "Salubra Notch 3");
                 public static readonly FlagDef salubraNotch4 = new FlagDef("salubraNotch4", null, false, "PlayerData_Bool", "Salubra Notch 4");
-                public static readonly FlagDef notchShroomOgres = new FlagDef("notchShroomOgres", null, false, "PlayerData_Bool", "Shrumal Ogre battle notch");
             #endregion
 
             #region Simple Keys
                 public static readonly FlagDef Ruins1_17__Shiny_Item = new FlagDef("Shiny Item", SceneInstances.Ruins1_17, false, "PersistentBoolData", SceneInstances.Ruins1_17.ReadableName + " Simple Key");
                 public static readonly FlagDef slySimpleKey = new FlagDef("slySimpleKey", null, false, "PlayerData_Bool", "Got Sly's Simple Key");
                 public static readonly FlagDef Abyss_20__Shiny_Item_Stand = new FlagDef("Shiny Item Stand", SceneInstances.Abyss_20, false, "PersistentBoolData", SceneInstances.Abyss_20.ReadableName + " Simple Key");
+                public static readonly FlagDef gotLurkerKey = new FlagDef("gotLurkerKey", null, false, "PlayerData_Bool", "Lurker's Simple Key");
             #endregion
 
             #region Pale Ore
                 public static readonly FlagDef Abyss_17__Shiny_Item_Stand = new FlagDef("Shiny Item Stand", SceneInstances.Abyss_17, false, "PersistentBoolData", "Pale Ore " + SceneInstances.Abyss_17.ReadableName);
-                public static readonly FlagDef Mines_34__Shiny_Item_Stand = new FlagDef("Shiny Item Stand", SceneInstances.Mines_34, false, "PersistentBoolData");
+                public static readonly FlagDef Mines_34__Shiny_Item_Stand = new FlagDef("Shiny Item Stand", SceneInstances.Mines_34, false, "PersistentBoolData", "Pale Ore " + SceneInstances.Mines_34.ReadableName);
+                public static readonly FlagDef Room_Colosseum_Silver__Shiny_Item = new FlagDef("Shiny Item", SceneInstances.Room_Colosseum_Silver, false, "PersistentBoolData", "Pale Ore " + SceneInstances.Room_Colosseum_Silver);
             #endregion
 
             #region Trinkets
@@ -2094,6 +2464,8 @@ namespace CabbyCodes.Flags
                     public static readonly FlagDef Ruins1_28__Shiny_Item = new FlagDef("Shiny Item", SceneInstances.Ruins1_28, false, "PersistentBoolData");
                     public static readonly FlagDef RestingGrounds_10__Shiny_Item = new FlagDef("Shiny Item", SceneInstances.RestingGrounds_10, false, "PersistentBoolData");
                     public static readonly FlagDef Mines_20__Shiny_Item_1 = new FlagDef("Shiny Item (1)", SceneInstances.Mines_20, false, "PersistentBoolData");
+                    public static readonly FlagDef Deepnest_East_18__Shiny_Item = new FlagDef("Shiny Item", SceneInstances.Deepnest_East_18, false, "PersistentBoolData");
+                    public static readonly FlagDef Deepnest_East_13__Shiny_Item = new FlagDef("Shiny Item", SceneInstances.Deepnest_East_13, false, "PersistentBoolData");
                 #endregion
 
                 #region Trinket 2
@@ -2105,6 +2477,7 @@ namespace CabbyCodes.Flags
                     public static readonly FlagDef Ruins1_03__Shiny_Item = new FlagDef("Shiny Item", SceneInstances.Ruins1_03, false, "PersistentBoolData");
                     public static readonly FlagDef RestingGrounds_10__Shiny_Item_1 = new FlagDef("Shiny Item (1)", SceneInstances.RestingGrounds_10, false, "PersistentBoolData");
                     public static readonly FlagDef Ruins2_03__Shiny_Item = new FlagDef("Shiny Item", SceneInstances.Ruins2_03, false, "PersistentBoolData");
+                    public static readonly FlagDef Fungus3_48__Shiny_Item = new FlagDef("Shiny Item", SceneInstances.Fungus3_48, false, "PersistentBoolData");
                 #endregion
 
                 #region Trinket 3
@@ -2113,10 +2486,12 @@ namespace CabbyCodes.Flags
                     public static readonly FlagDef Ruins1_32__Shiny_Item = new FlagDef("Shiny Item", SceneInstances.Ruins1_32, false, "PersistentBoolData");
                     public static readonly FlagDef RestingGrounds_08__Shiny_Item = new FlagDef("Shiny Item", SceneInstances.RestingGrounds_08, false, "PersistentBoolData");
                     public static readonly FlagDef Mines_30__Shiny_Item_Stand = new FlagDef("Shiny Item Stand", SceneInstances.Mines_30, false, "PersistentBoolData");
+                    public static readonly FlagDef Deepnest_East_08__Shiny_Item = new FlagDef("Shiny Item", SceneInstances.Deepnest_East_08, false, "PersistentBoolData");
+                    public static readonly FlagDef GG_Lurker__Shiny_Item = new FlagDef("Shiny Item", SceneInstances.GG_Lurker, false, "PersistentBoolData");
                 #endregion
 
                 #region Trinket 4
-
+                    public static readonly FlagDef Abyss_10__Shiny_Item = new FlagDef("Shiny Item", SceneInstances.Abyss_10, false, "PersistentBoolData");
                 #endregion
 
             #endregion
@@ -2127,10 +2502,21 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef ALADAR_encountered = new FlagDef("ALADAR_encountered", null, false, "PlayerData_Bool", "Met Gorb");
             public static readonly FlagDef bankerSpaMet = new FlagDef("bankerSpaMet", null, false, "PlayerData_Bool", "Found banker hiding at Pleasure House");
             public static readonly FlagDef bankerTheftCheck = new FlagDef("bankerTheftCheck", null, false, "PlayerData_Bool", "Found banker's shop closed");
+            public static readonly FlagDef bigCatHitTail = new FlagDef("bigCatHitTail", null, false, "PlayerData_Bool", "Hit Bardoon's tail");
+            public static readonly FlagDef bigCatHitTailConvo = new FlagDef("bigCatHitTailConvo", null, false, "PlayerData_Bool", "Bardoon talked about his tail being hit");
+            public static readonly FlagDef bigCatKingsBrandConvo = new FlagDef("bigCatKingsBrandConvo", null, false, "PlayerData_Bool", "Bardoon discusses King's Brand");
+            public static readonly FlagDef bigCatMeet = new FlagDef("bigCatMeet", null, false, "PlayerData_Bool", "Met Bardoon");
+            public static readonly FlagDef bigCatShadeConvo = new FlagDef("bigCatShadeConvo", null, false, "PlayerData_Bool");
+            public static readonly FlagDef bigCatTalk1 = new FlagDef("bigCatTalk1", null, false, "PlayerData_Bool", "Bardoon's History 1");
+            public static readonly FlagDef bigCatTalk2 = new FlagDef("bigCatTalk2", null, false, "PlayerData_Bool", "Bardoon's History 2");
+            public static readonly FlagDef bigCatTalk3 = new FlagDef("bigCatTalk3", null, false, "PlayerData_Bool", "Bardoon's History 3");
             // 0 = not rescued, 1 = ?
             public static readonly FlagDef brettaPosition = new FlagDef("brettaPosition", null, false, "PlayerData_Int", "Bretta's current location (0-?)");
             public static readonly FlagDef brettaRescued = new FlagDef("brettaRescued", null, false, "PlayerData_Bool", "Rescued Bretta");
             public static readonly FlagDef brettaSeenBench = new FlagDef("brettaSeenBench", null, false, "PlayerData_Bool", "Saw Bretta at Dirthmouth bench");
+            public static readonly FlagDef brettaSeenBenchDiary = new FlagDef("brettaSeenBenchDiary", null, false, "PlayerData_Bool", "Read Bretta's Diary");
+            public static readonly FlagDef clothEncounteredQueensGarden = new FlagDef("clothEncounteredQueensGarden", null, false, "PlayerData_Bool", "Met Cloth at Queen's Garden");
+            public static readonly FlagDef clothKilled = new FlagDef("clothKilled", null, false, "PlayerData_Bool", "Cloth killed by Traitor Lord");
             public static readonly FlagDef corn_abyssEncountered = new FlagDef("corn_abyssEncountered", null, false, "PlayerData_Bool", "Met Cornifer at Abyss");
             public static readonly FlagDef corn_abyssLeft = new FlagDef("corn_abyssLeft", null, false, "PlayerData_Bool", "Cornifer left Abyss");
             public static readonly FlagDef corn_cityEncountered = new FlagDef("corn_cityEncountered", null, false, "PlayerData_Bool", "Met Cornifer at City");
@@ -2140,14 +2526,24 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef corn_deepnestEncountered = new FlagDef("corn_deepnestEncountered", null, false, "PlayerData_Bool", "Encountered Cornifer at Deepnest");
             public static readonly FlagDef corn_deepnestLeft = new FlagDef("corn_deepnestLeft", null, false, "PlayerData_Bool", "Cornifer left Deepnest");
             public static readonly FlagDef corn_deepnestMet1 = new FlagDef("corn_deepnestMet1", null, false, "PlayerData_Bool", "Talked with Cornifer at Deepnest");
+            public static readonly FlagDef corn_fogCanyonEncountered = new FlagDef("corn_fogCanyonEncountered", null, false, "PlayerData_Bool", "Met Cornifer at Fog Canyon");
+            public static readonly FlagDef corn_fogCanyonLeft = new FlagDef("corn_fogCanyonLeft", null, false, "PlayerData_Bool", "Cornifer left Fog Canyon");
             public static readonly FlagDef corn_fungalWastesEncountered = new FlagDef("corn_fungalWastesEncountered", null, false, "PlayerData_Bool", "Met Cornifer at Fungal Wastes");
             public static readonly FlagDef corn_fungalWastesLeft = new FlagDef("corn_fungalWastesLeft", null, false, "PlayerData_Bool", "Cornifer left Fungal Wastes, after getting Mantis Claw");
             public static readonly FlagDef corn_greenpathEncountered = new FlagDef("corn_greenpathEncountered", null, false, "PlayerData_Bool", "Met Cornifer at Greenpath");
             public static readonly FlagDef corn_greenpathLeft = new FlagDef("corn_greenpathLeft", null, false, "PlayerData_Bool", "Cornifer left Greenpath, after defeating Hornet");
             public static readonly FlagDef corn_minesEncountered = new FlagDef("corn_minesEncountered", null, false, "PlayerData_Bool", "Met Cornifer at Crystal Peak");
             public static readonly FlagDef corn_minesLeft = new FlagDef("corn_minesLeft", null, false, "PlayerData_Bool", "Cornifer left Crystal Peak");
+            public static readonly FlagDef corn_outskirtsEncountered = new FlagDef("corn_outskirtsEncountered", null, false, "PlayerData_Bool", "Met Cornifer at Kingdom's Edge");
+            public static readonly FlagDef corn_outskirtsLeft = new FlagDef("corn_outskirtsLeft", null, false, "PlayerData_Bool", "Cornifer left Kingdom's Edge");
+            public static readonly FlagDef corn_royalGardensEncountered = new FlagDef("corn_royalGardensEncountered", null, false, "PlayerData_Bool", "Met Cornifer at Queen's Gardens");
+            public static readonly FlagDef corn_royalGardensLeft = new FlagDef("corn_royalGardensLeft", null, false, "PlayerData_Bool", "Cornifer left Queen's Gardens");
+            public static readonly FlagDef corn_waterwaysEncountered = new FlagDef("corn_waterwaysEncountered", null, false, "PlayerData_Bool", "Met Cornifer at Royal Waterways");
+            public static readonly FlagDef corn_waterwaysLeft = new FlagDef("corn_waterwaysLeft", null, false, "PlayerData_Bool", "Cornifer left Royal Waterways");
+            public static readonly FlagDef corniferAtHome = new FlagDef("corniferAtHome", null, false, "PlayerData_Bool", "Cornifer returned to Dirtmouth");
             public static readonly FlagDef corniferIntroduced = new FlagDef("corniferIntroduced", null, false, "PlayerData_Bool", "Cornifer Introduced");
             public static readonly FlagDef Crossroads_45__Zombie_Myla = new FlagDef("Zombie Myla", SceneInstances.Crossroads_45, false, "PersistentBoolData", "Myla Zombied");
+            public static readonly FlagDef Deepnest_East_12__Hornet_Encounter_Outskirts = new FlagDef("Hornet Encounter Outskirts", SceneInstances.Deepnest_East_12, false, "PersistentBoolData", "Met Hornet at Kingdom's Edge");
             public static readonly FlagDef divineInTown = new FlagDef("divineInTown", null, false, "PlayerData_Bool", "Divine in Dirtmouth");
             public static readonly FlagDef dreamReward1 = new FlagDef("dreamReward1", null, false, "PlayerData_Bool", "Dream Reward 1: Hallownest Seal");
             public static readonly FlagDef dreamReward2 = new FlagDef("dreamReward2", null, false, "PlayerData_Bool", "Dream Reward 2: Door to Spirits' Glade opened");
@@ -2171,6 +2567,7 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef elderbugSpeechMinesLift = new FlagDef("elderbugSpeechMinesLift", null, false, "PlayerData_Bool", "Elderbug speech on Crystal Peak");
             public static readonly FlagDef elderbugSpeechSly = new FlagDef("elderbugSpeechSly", null, false, "PlayerData_Bool", "Elderbug speech Sly");
             public static readonly FlagDef elderbugSpeechStation = new FlagDef("elderbugSpeechStation", null, false, "PlayerData_Bool", "Elderbug speech Stag Stations");
+            public static readonly FlagDef encounteredHornet = new FlagDef("encounteredHornet", null, false, "PlayerData_Bool", "Encountered Hornet at Kingdom's Edge");
             public static readonly FlagDef GALIEN_encountered = new FlagDef("GALIEN_encountered", null, false, "PlayerData_Bool", "Met Galien");
             public static readonly FlagDef gaveSlykey = new FlagDef("gaveSlykey", null, false, "PlayerData_Bool", "Gave Sly storeroom key");
             public static readonly FlagDef gladeDoorOpened = new FlagDef("gladeDoorOpened", null, false, "PlayerData_Bool", "Door to Spirits Glade Opened");
@@ -2183,11 +2580,15 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef HU_encountered = new FlagDef("HU_encountered", null, false, "PlayerData_Bool", "Met Elder Hu");
             public static readonly FlagDef hunterRoared = new FlagDef("hunterRoared", null, false, "PlayerData_Bool", "Hunter Roared");
             public static readonly FlagDef jijiMet = new FlagDef("jijiMet", null, false, "PlayerData_Bool", "Met Jiji");
+            public static readonly FlagDef littleFoolMet = new FlagDef("littleFoolMet", null, false, "PlayerData_Bool", "Met Little Fool");
+            public static readonly FlagDef MARKOTH_encountered = new FlagDef("MARKOTH_encountered", null, false, "PlayerData_Bool", "Met Markoth");
             public static readonly FlagDef marmOutside = new FlagDef("marmOutside", null, false, "PlayerData_Bool", "Lemm at Fountain Square");
             public static readonly FlagDef marmOutsideConvo = new FlagDef("marmOutsideConvo", null, false, "PlayerData_Bool", "Talked with Lemm at Fountain");
             public static readonly FlagDef maskmakerConvo1 = new FlagDef("maskmakerConvo1", null, false, "PlayerData_Bool", "Mask Maker conversation 1");
             public static readonly FlagDef maskmakerConvo2 = new FlagDef("maskmakerConvo2", null, false, "PlayerData_Bool", "Mask Maker conversation 2");
             public static readonly FlagDef maskmakerMet = new FlagDef("maskmakerMet", null, false, "PlayerData_Bool", "Met Mask Maker");
+            public static readonly FlagDef matoConvoOro = new FlagDef("matoConvoOro", null, false, "PlayerData_Bool", "Mato talks about Oro");
+            public static readonly FlagDef matoConvoSheo = new FlagDef("matoConvoSheo", null, false, "PlayerData_Bool", "Mato talks about Sheo");
             public static readonly FlagDef metBanker = new FlagDef("metBanker", null, false, "PlayerData_Bool", "Met Millibelle the Banker");
             public static readonly FlagDef metBrum = new FlagDef("metBrum", null, false, "PlayerData_Bool", "Met Brumm");
             public static readonly FlagDef metCharmSlug = new FlagDef("metCharmSlug", null, false, "PlayerData_Bool", "Met Salubra");
@@ -2203,7 +2604,10 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef metMiner = new FlagDef("metMiner", null, false, "PlayerData_Bool", "Met Myla the Miner");
             public static readonly FlagDef metMoth = new FlagDef("metMoth", null, false, "PlayerData_Bool", "Met the Seer");
             public static readonly FlagDef metNailmasterMato = new FlagDef("metNailmasterMato", null, false, "PlayerData_Bool", "Met Nailmaster Mato");
+            public static readonly FlagDef metNailmasterOro = new FlagDef("metNailmasterOro", null, false, "PlayerData_Bool", "Met Nailmaster Oro");
+            public static readonly FlagDef metNailmasterSheo = new FlagDef("metNailmasterSheo", null, false, "PlayerData_Bool", "Met Nailmaster Sheo");
             public static readonly FlagDef metNailsmith = new FlagDef("metNailsmith", null, false, "PlayerData_Bool", "Met Nailsmith");
+            public static readonly FlagDef metQueen = new FlagDef("metQueen", null, false, "PlayerData_Bool", "Met White Lady");
             public static readonly FlagDef metQuirrel = new FlagDef("metQuirrel", null, false, "PlayerData_Bool", "Met Quirrel");
             public static readonly FlagDef metRelicDealerShop = new FlagDef("metRelicDealerShop", null, false, "PlayerData_Bool", "Met Lemm at Shop");
             public static readonly FlagDef metSlyShop = new FlagDef("metSlyShop", null, false, "PlayerData_Bool", "Met Sly at Shop");
@@ -2213,11 +2617,18 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef midwifeMet = new FlagDef("midwifeMet", null, false, "PlayerData_Bool", "Met Midwife");
             public static readonly FlagDef mossCultist = new FlagDef("mossCultist", null, false, "PlayerData_Int", "Spoke with Moss Prophet (0-2)");
             public static readonly FlagDef mothDeparted = new FlagDef("mothDeparted", null, false, "PlayerData_Bool", "The Seer Departed");
+            public static readonly FlagDef MUMCAT_encountered = new FlagDef("MUMCAT_encountered", null, false, "PlayerData_Bool", "Met Marmu");
             public static readonly FlagDef nailsmithCliff = new FlagDef("nailsmithCliff", null, false, "PlayerData_Bool", "Nailsmith gave all upgrades and moved to Cliff");
             public static readonly FlagDef nailsmithKillSpeech = new FlagDef("nailsmithKillSpeech", null, false, "PlayerData_Bool", "Nailsmith gave his speech of death");
             public static readonly FlagDef nailsmithKilled = new FlagDef("nailsmithKilled", null, false, "PlayerData_Bool", "Nailsmith killed");
             public static readonly FlagDef NOEYES_encountered = new FlagDef("NOEYES_encountered", null, false, "PlayerData_Bool", "Met No Eyes");
+            public static readonly FlagDef oroConvoMato = new FlagDef("oroConvoMato", null, false, "PlayerData_Bool", "Oro talks about Mato");
+            public static readonly FlagDef oroConvoSheo = new FlagDef("oroConvoSheo", null, false, "PlayerData_Bool", "Oro talks about Sheo");
             public static readonly FlagDef paidLegEater = new FlagDef("paidLegEater", null, false, "PlayerData_Bool", "Paid Leg Eater");
+            public static readonly FlagDef queenHornet = new FlagDef("queenHornet", null, false, "PlayerData_Bool", "White Lady discusses Hornet");
+            public static readonly FlagDef queenTalk1 = new FlagDef("queenTalk1", null, false, "PlayerData_Bool", "White Lady talk 1");
+            public static readonly FlagDef queenTalk2 = new FlagDef("queenTalk2", null, false, "PlayerData_Bool", "White Lady talk 2");
+            public static readonly FlagDef quirrelArchiveEncountered = new FlagDef("quirrelArchiveEncountered", null, false, "PlayerData_Bool", "Met Quirrel at Teacher's Archives");
             public static readonly FlagDef quirrelCityEncountered = new FlagDef("quirrelCityEncountered", null, false, "PlayerData_Bool", "Met Quirrel at City of Tears");
             public static readonly FlagDef quirrelCityLeft = new FlagDef("quirrelCityLeft", null, false, "PlayerData_Bool", "Quirrel left City of Tears");
             public static readonly FlagDef quirrelEggTemple = new FlagDef("quirrelEggTemple", null, false, "PlayerData_Int", "Talked with Quirrel about Egg Temple (0-4)");
@@ -2229,18 +2640,26 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef quirrelSlugShrine = new FlagDef("quirrelSlugShrine", null, false, "PlayerData_Int", "Talked with Quirrel at Slug Shrine (0-3)");
             public static readonly FlagDef quirrelSpaEncountered = new FlagDef("quirrelSpaEncountered", null, false, "PlayerData_Bool", "Met Quirrel at Deepnest spa");
             public static readonly FlagDef quirrelSpaReady = new FlagDef("quirrelSpaReady", null, false, "PlayerData_Bool", "Quirrel at Deepnest Spa");
+            public static readonly FlagDef savedByHornet = new FlagDef("savedByHornet", null, false, "PlayerData_Bool", "Saved by Hornet in Kingdom's Edge");
             public static readonly FlagDef savedCloth = new FlagDef("savedCloth", null, false, "PlayerData_Bool", "Saved Cloth from Mawleks");
             public static readonly FlagDef shaman = new FlagDef("shaman", null, false, "PlayerData_Int", "Talked with Snail Shaman (0-6)");
             public static readonly FlagDef shamanQuakeConvo = new FlagDef("shamanQuakeConvo", null, false, "PlayerData_Bool", "Shaman talked about Desolate Dive");
             public static readonly FlagDef shamanScreamConvo = new FlagDef("shamanScreamConvo", null, false, "PlayerData_Bool", "Shaman talked about Howling Wraiths");
+            public static readonly FlagDef sheoConvoMato = new FlagDef("sheoConvoMato", null, false, "PlayerData_Bool", "Sheo talks about Mato");
+            public static readonly FlagDef sheoConvoOro = new FlagDef("sheoConvoOro", null, false, "PlayerData_Bool", "Sheo talks about Oro");
             public static readonly FlagDef slyRescued = new FlagDef("slyRescued", null, false, "PlayerData_Bool", "Rescued Sly");
             public static readonly FlagDef stagConvoTram = new FlagDef("stagConvoTram", null, false, "PlayerData_Bool", "Stag discusses tram pass");
             public static readonly FlagDef stagRemember1 = new FlagDef("stagRemember1", null, false, "PlayerData_Bool", "Stag memories 1 after opening enough stations");
+            public static readonly FlagDef stagRemember2 = new FlagDef("stagRemember2", null, false, "PlayerData_Bool", "Stag memories 2 after opening enough stations");
+            public static readonly FlagDef stagRemember3 = new FlagDef("stagRemember3", null, false, "PlayerData_Bool", "Stag memories 3 after opening enough stations");
             public static readonly FlagDef tisoEncounteredTown = new FlagDef("tisoEncounteredTown", null, false, "PlayerData_Bool", "Met Tiso in Dirtmouth");
             public static readonly FlagDef troupeInTown = new FlagDef("troupeInTown", null, false, "PlayerData_Bool", "Nightmare Troupe in Dirtmouth");
+            public static readonly FlagDef tukEggPrice = new FlagDef("tukEggPrice", null, false, "PlayerData_Int", "Price of next Rancid Egg from Tuk");
+            public static readonly FlagDef tukMet = new FlagDef("tukMet", null, false, "PlayerData_Bool", "Met Tuk");
             public static readonly FlagDef XERO_encountered = new FlagDef("XERO_encountered", null, false, "PlayerData_Bool", "Met Xero");
             public static readonly FlagDef xunFlowerBrokeTimes = new FlagDef("xunFlowerBrokeTimes", null, false, "PlayerData_Int", "Times the Delicate Flower has been broken (0-?)");
             public static readonly FlagDef zote = new FlagDef("zote", null, false, "PlayerData_Int", "Zote conversations (0-2)");
+            public static readonly FlagDef zoteDefeated = new FlagDef("zoteDefeated", null, false, "PlayerData_Bool", "Zote defeated in Bronze Colosseum");
             public static readonly FlagDef zoteRescuedBuzzer = new FlagDef("zoteRescuedBuzzer", null, false, "PlayerData_Bool", "Zote rescued from Vengefly King");
             public static readonly FlagDef zoteRescuedDeepnest = new FlagDef("zoteRescuedDeepnest", null, false, "PlayerData_Bool", "Zoe rescued from web in Deepnest");
             public static readonly FlagDef zoteTownConvo = new FlagDef("zoteTownConvo", null, false, "PlayerData_Int", "Spoke with Zote in Dirtmouth (0-2)");
@@ -2263,8 +2682,13 @@ namespace CabbyCodes.Flags
         #endregion
 
         #region Progression
+            public static readonly FlagDef colosseumBronzeCompleted = new FlagDef("colosseumBronzeCompleted", null, false, "PlayerData_Bool", "Bronze Colosseum completed");
+            public static readonly FlagDef colosseumBronzeOpened = new FlagDef("colosseumBronzeOpened", null, false, "PlayerData_Bool", "Bronze Colosseum opened");
+            public static readonly FlagDef colosseumGoldCompleted = new FlagDef("colosseumGoldCompleted", null, false, "PlayerData_Bool", "Gold Colosseum completed");
+            public static readonly FlagDef colosseumGoldOpened = new FlagDef("colosseumGoldOpened", null, false, "PlayerData_Bool", "Gold Colosseum opened");
+            public static readonly FlagDef colosseumSilverCompleted = new FlagDef("colosseumSilverCompleted", null, false, "PlayerData_Bool", "Silver Colosseum completed");
+            public static readonly FlagDef colosseumSilverOpened = new FlagDef("colosseumSilverOpened", null, false, "PlayerData_Bool", "Silver Colosseum opened");
             public static readonly FlagDef guardiansDefeated = new FlagDef("guardiansDefeated", null, false, "PlayerData_Int", "Dreamers defeated (0-3)");
-
             public static readonly FlagDef hegemolDefeated = new FlagDef("hegemolDefeated", null, false, "PlayerData_Bool", "Dreamer Herrah defeated");
             public static readonly FlagDef lurienDefeated = new FlagDef("lurienDefeated", null, false, "PlayerData_Bool", "Dreamer Lurien defeated");
             public static readonly FlagDef maskBrokenHegemol = new FlagDef("maskBrokenHegemol", null, false, "PlayerData_Bool", "Broke Herrah the Beast's Seal");
@@ -2274,6 +2698,7 @@ namespace CabbyCodes.Flags
         #region Visited Locations
             public static readonly FlagDef eggTempleVisited = new FlagDef("eggTempleVisited", null, false, "PlayerData_Bool");
             public static readonly FlagDef enteredDreamWorld = new FlagDef("enteredDreamWorld", null, false, "PlayerData_Bool");
+            public static readonly FlagDef enteredGGAtrium = new FlagDef("enteredGGAtrium", null, false, "PlayerData_Bool", "Entered Gods");
             public static readonly FlagDef visitedAbyss = new FlagDef("visitedAbyss", null, false, "PlayerData_Bool");
             public static readonly FlagDef visitedAbyssLower = new FlagDef("visitedAbyssLower", null, false, "PlayerData_Bool");
             public static readonly FlagDef visitedCliffs = new FlagDef("visitedCliffs", null, false, "PlayerData_Bool");
@@ -2295,173 +2720,227 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef visitedRuins = new FlagDef("visitedRuins", null, false, "PlayerData_Bool");
             public static readonly FlagDef visitedWaterways = new FlagDef("visitedWaterways", null, false, "PlayerData_Bool");
             public static readonly FlagDef visitedWhitePalace = new FlagDef("visitedWhitePalace", null, false, "PlayerData_Bool");
+            public static readonly FlagDef whitePalaceSecretRoomVisited = new FlagDef("whitePalaceSecretRoomVisited", null, false, "PlayerData_Bool");
         #endregion
 
         #region UNCATEGORIZED SCENE FLAGS
-            // Abyss_03_c
-            public static readonly FlagDef Abyss_03_c__Breakable_Wall = new FlagDef("Breakable Wall", SceneInstances.Abyss_03_c, false, "PersistentBoolData");
+            #region Abyss, Cliffs
+                // Abyss_03_c
+                public static readonly FlagDef Abyss_03_c__Breakable_Wall = new FlagDef("Breakable Wall", SceneInstances.Abyss_03_c, false, "PersistentBoolData");
 
-            // Abyss_04
-            public static readonly FlagDef Abyss_04__Shiny = new FlagDef("Shiny", SceneInstances.Abyss_04, false, "PersistentBoolData");
+                // Abyss_04
+                public static readonly FlagDef Abyss_04__Shiny = new FlagDef("Shiny", SceneInstances.Abyss_04, false, "PersistentBoolData");
 
-            // Cliffs_02
-            public static readonly FlagDef Cliffs_02__One_Way_Wall = new FlagDef("One Way Wall", SceneInstances.Cliffs_02, false, "PersistentBoolData");
+                // Cliffs_02
+                public static readonly FlagDef Cliffs_02__One_Way_Wall = new FlagDef("One Way Wall", SceneInstances.Cliffs_02, false, "PersistentBoolData");
+            #endregion
 
-            // Crossroads_01
-            public static readonly FlagDef Crossroads_01__Shiny_Item = new FlagDef("Shiny Item", SceneInstances.Crossroads_01, false, "PersistentBoolData");
+            #region Crossroads
+                // Crossroads_01
+                public static readonly FlagDef Crossroads_01__Shiny_Item = new FlagDef("Shiny Item", SceneInstances.Crossroads_01, false, "PersistentBoolData");
 
-            // Crossroads_03
-            public static readonly FlagDef Crossroads_03__Break_Floor_1 = new FlagDef("Break Floor 1", SceneInstances.Crossroads_03, false, "PersistentBoolData");
+                // Crossroads_03
+                public static readonly FlagDef Crossroads_03__Break_Floor_1 = new FlagDef("Break Floor 1", SceneInstances.Crossroads_03, false, "PersistentBoolData");
 
-            // Crossroads_07
-            public static readonly FlagDef Crossroads_07__Breakable_Wall_Silhouette = new FlagDef("Breakable Wall_Silhouette", SceneInstances.Crossroads_07, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_07__Remasker = new FlagDef("Remasker", SceneInstances.Crossroads_07, false, "PersistentBoolData");
+                // Crossroads_07
+                public static readonly FlagDef Crossroads_07__Breakable_Wall_Silhouette = new FlagDef("Breakable Wall_Silhouette", SceneInstances.Crossroads_07, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_07__Remasker = new FlagDef("Remasker", SceneInstances.Crossroads_07, false, "PersistentBoolData");
 
-            // Crossroads_10
-            public static readonly FlagDef Crossroads_10__Prayer_Slug = new FlagDef("Prayer Slug", SceneInstances.Crossroads_10, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_10__Prayer_Slug_1 = new FlagDef("Prayer Slug (1)", SceneInstances.Crossroads_10, false, "PersistentBoolData");
+                // Crossroads_10
+                public static readonly FlagDef Crossroads_10__Prayer_Slug = new FlagDef("Prayer Slug", SceneInstances.Crossroads_10, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_10__Prayer_Slug_1 = new FlagDef("Prayer Slug (1)", SceneInstances.Crossroads_10, false, "PersistentBoolData");
 
-            // Crossroads_18
-            public static readonly FlagDef Crossroads_18__Breakable_Wall_Waterways = new FlagDef("Breakable Wall Waterways", SceneInstances.Crossroads_18, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_18__Inverse_Remasker = new FlagDef("Inverse Remasker", SceneInstances.Crossroads_18, false, "PersistentBoolData");
+                // Crossroads_18
+                public static readonly FlagDef Crossroads_18__Breakable_Wall_Waterways = new FlagDef("Breakable Wall Waterways", SceneInstances.Crossroads_18, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_18__Inverse_Remasker = new FlagDef("Inverse Remasker", SceneInstances.Crossroads_18, false, "PersistentBoolData");
 
-            // Crossroads_27
-            public static readonly FlagDef Crossroads_21__Collapser_Small = new FlagDef("Collapser Small", SceneInstances.Crossroads_21, false, "PersistentBoolData");
+                // Crossroads_27
+                public static readonly FlagDef Crossroads_21__Collapser_Small = new FlagDef("Collapser Small", SceneInstances.Crossroads_21, false, "PersistentBoolData");
 
-            // Crossroads_33
-            public static readonly FlagDef Crossroads_33__Shiny = new FlagDef("Shiny", SceneInstances.Crossroads_33, false, "PersistentBoolData");
+                // Crossroads_33
+                public static readonly FlagDef Crossroads_33__Shiny = new FlagDef("Shiny", SceneInstances.Crossroads_33, false, "PersistentBoolData");
 
-            // Crossroads_38
-            public static readonly FlagDef Crossroads_38__Reward_10 = new FlagDef("Reward 10", SceneInstances.Crossroads_38, false, "PersistentBoolData", "Grub Reward 10: Grubsong Charm");
-            public static readonly FlagDef Crossroads_38__Reward_16 = new FlagDef("Reward 16", SceneInstances.Crossroads_38, false, "PersistentBoolData", "Grub Reward 16: Rancid Egg");
-            public static readonly FlagDef Crossroads_38__Reward_5 = new FlagDef("Reward 5", SceneInstances.Crossroads_38, false, "PersistentBoolData", "Grub Reward 5: Mask Shard");
-            public static readonly FlagDef Crossroads_38__Shiny_Item_Grubsong = new FlagDef("Shiny Item Grubsong", SceneInstances.Crossroads_38, false, "PersistentBoolData", "Got Grubsong");
-            public static readonly FlagDef Crossroads_38__Shiny_Item_Rancid_Egg = new FlagDef("Shiny Item Rancid Egg", SceneInstances.Crossroads_38, false, "PersistentBoolData", "Got Rancid Egg");
-            public static readonly FlagDef Crossroads_38__Reward_23 = new FlagDef("Reward 23", SceneInstances.Crossroads_38, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_38__Reward_31 = new FlagDef("Reward 31", SceneInstances.Crossroads_38, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_38__Reward_38 = new FlagDef("Reward 38", SceneInstances.Crossroads_38, false, "PersistentBoolData");
-            public static readonly FlagDef Crossroads_38__Reward_46 = new FlagDef("Reward 46", SceneInstances.Crossroads_38, false, "PersistentBoolData");
+                // Crossroads_38
+                public static readonly FlagDef Crossroads_38__Reward_10 = new FlagDef("Reward 10", SceneInstances.Crossroads_38, false, "PersistentBoolData", "Grub Reward 10: Grubsong Charm");
+                public static readonly FlagDef Crossroads_38__Reward_16 = new FlagDef("Reward 16", SceneInstances.Crossroads_38, false, "PersistentBoolData", "Grub Reward 16: Rancid Egg");
+                public static readonly FlagDef Crossroads_38__Reward_5 = new FlagDef("Reward 5", SceneInstances.Crossroads_38, false, "PersistentBoolData", "Grub Reward 5: Mask Shard");
+                public static readonly FlagDef Crossroads_38__Shiny_Item_Grubsong = new FlagDef("Shiny Item Grubsong", SceneInstances.Crossroads_38, false, "PersistentBoolData", "Got Grubsong");
+                public static readonly FlagDef Crossroads_38__Shiny_Item_Rancid_Egg = new FlagDef("Shiny Item Rancid Egg", SceneInstances.Crossroads_38, false, "PersistentBoolData", "Got Rancid Egg");
+                public static readonly FlagDef Crossroads_38__Reward_23 = new FlagDef("Reward 23", SceneInstances.Crossroads_38, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_38__Reward_31 = new FlagDef("Reward 31", SceneInstances.Crossroads_38, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_38__Reward_38 = new FlagDef("Reward 38", SceneInstances.Crossroads_38, false, "PersistentBoolData");
+                public static readonly FlagDef Crossroads_38__Reward_46 = new FlagDef("Reward 46", SceneInstances.Crossroads_38, false, "PersistentBoolData");
 
-            // Crossroads_52
-            public static readonly FlagDef Crossroads_52__Quake_Floor = new FlagDef("Quake Floor", SceneInstances.Crossroads_52, false, "PersistentBoolData");
+                // Crossroads_52
+                public static readonly FlagDef Crossroads_52__Quake_Floor = new FlagDef("Quake Floor", SceneInstances.Crossroads_52, false, "PersistentBoolData");
+            #endregion
 
-            // Deepnest_01
-            public static readonly FlagDef Deepnest_01__Breakable_Wall = new FlagDef("Breakable Wall", SceneInstances.Deepnest_01, false, "PersistentBoolData");
+            #region Deepnest
+                // Deepnest_01
+                public static readonly FlagDef Deepnest_01__Breakable_Wall = new FlagDef("Breakable Wall", SceneInstances.Deepnest_01, false, "PersistentBoolData");
 
-            // Deepnest_03
-            public static readonly FlagDef Deepnest_03__Breakable_Wall = new FlagDef("Breakable Wall", SceneInstances.Deepnest_03, false, "PersistentBoolData");
+                // Deepnest_03
+                public static readonly FlagDef Deepnest_03__Breakable_Wall = new FlagDef("Breakable Wall", SceneInstances.Deepnest_03, false, "PersistentBoolData");
 
-            // Deepnest_16
-            public static readonly FlagDef Deepnest_16__Shiny_Item = new FlagDef("Shiny Item", SceneInstances.Deepnest_16, false, "PersistentBoolData");
+                // Deepnest_16
+                public static readonly FlagDef Deepnest_16__Shiny_Item = new FlagDef("Shiny Item", SceneInstances.Deepnest_16, false, "PersistentBoolData");
 
-            // Deepnest_26
-            public static readonly FlagDef Deepnest_26__Shiny_Item = new FlagDef("Shiny Item", SceneInstances.Deepnest_26, false, "PersistentBoolData");
+                // Deepnest_26
+                public static readonly FlagDef Deepnest_26__Shiny_Item = new FlagDef("Shiny Item", SceneInstances.Deepnest_26, false, "PersistentBoolData");
 
-            // Deepnest_39
-            public static readonly FlagDef Deepnest_39__Breakable_Wall = new FlagDef("Breakable Wall", SceneInstances.Deepnest_39, false, "PersistentBoolData");
-            public static readonly FlagDef Deepnest_39__One_Way_Wall_1 = new FlagDef("One Way Wall (1)", SceneInstances.Deepnest_39, false, "PersistentBoolData");
+                // Deepnest_39
+                public static readonly FlagDef Deepnest_39__Breakable_Wall = new FlagDef("Breakable Wall", SceneInstances.Deepnest_39, false, "PersistentBoolData");
+                public static readonly FlagDef Deepnest_39__One_Way_Wall_1 = new FlagDef("One Way Wall (1)", SceneInstances.Deepnest_39, false, "PersistentBoolData");
 
-            // Deepnest_East_01
-            public static readonly FlagDef Deepnest_East_01__One_Way_Wall = new FlagDef("One Way Wall", SceneInstances.Deepnest_East_01, false, "PersistentBoolData");
+                // Deepnest_East_01
+                public static readonly FlagDef Deepnest_East_01__One_Way_Wall = new FlagDef("One Way Wall", SceneInstances.Deepnest_East_01, false, "PersistentBoolData");
 
-            // Deepnest_East_09
-            public static readonly FlagDef Deepnest_East_09__One_Way_Wall = new FlagDef("One Way Wall", SceneInstances.Deepnest_East_09, false, "PersistentBoolData");
+                // Deepnest_East_02
+                public static readonly FlagDef Deepnest_East_02__One_Way_Wall = new FlagDef("One Way Wall", SceneInstances.Deepnest_East_02, false, "PersistentBoolData");
+                public static readonly FlagDef Deepnest_East_02__Quake_Floor = new FlagDef("Quake Floor", SceneInstances.Deepnest_East_02, false, "PersistentBoolData");
 
-            // Deepnest_Spider_Town
-            public static readonly FlagDef Deepnest_Spider_Town__Collapser_Small_12 = new FlagDef("Collapser Small (12)", SceneInstances.Deepnest_Spider_Town, false, "PersistentBoolData");
-            public static readonly FlagDef Deepnest_Spider_Town__Collapser_Small_4 = new FlagDef("Collapser Small (4)", SceneInstances.Deepnest_Spider_Town, false, "PersistentBoolData");
-            public static readonly FlagDef Deepnest_Spider_Town__one_way_permanent = new FlagDef("one way permanent", SceneInstances.Deepnest_Spider_Town, false, "PersistentBoolData");
-            public static readonly FlagDef Deepnest_Spider_Town__One_Way_Wall = new FlagDef("One Way Wall", SceneInstances.Deepnest_Spider_Town, false, "PersistentBoolData");
+                // Deepnest_East_03
+                public static readonly FlagDef Deepnest_East_03__Plank_Solid_1 = new FlagDef("Plank Solid 1", SceneInstances.Deepnest_East_03, false, "PersistentBoolData");
+                public static readonly FlagDef Deepnest_East_03__Plank_Solid_2 = new FlagDef("Plank Solid 2", SceneInstances.Deepnest_East_03, false, "PersistentBoolData");
+                public static readonly FlagDef Deepnest_East_03__Plank_Solid_2_1 = new FlagDef("Plank Solid 2 (1)", SceneInstances.Deepnest_East_03, false, "PersistentBoolData");
 
-            // Fungus1_06
-            public static readonly FlagDef Fungus1_06__Shiny = new FlagDef("Shiny", SceneInstances.Fungus1_06, false, "PersistentBoolData");
+                // Deepnest_East_07
+                public static readonly FlagDef Deepnest_East_07__Shiny_Item = new FlagDef("Shiny Item", SceneInstances.Deepnest_East_07, false, "PersistentBoolData");
+                public static readonly FlagDef Deepnest_East_07__Shiny_Item_1 = new FlagDef("Shiny Item (1)", SceneInstances.Deepnest_East_07, false, "PersistentBoolData");
 
-            // Fungus1_08
-            public static readonly FlagDef Fungus1_08__Break_Floor_1 = new FlagDef("Break Floor 1", SceneInstances.Fungus1_08, false, "PersistentBoolData");
-            public static readonly FlagDef Fungus1_08__Break_Floor_1_1 = new FlagDef("Break Floor 1 (1)", SceneInstances.Fungus1_08, false, "PersistentBoolData");
+                // Deepnest_East_17
+                public static readonly FlagDef Deepnest_East_17__Quake_Floor = new FlagDef("Quake Floor", SceneInstances.Deepnest_East_17, false, "PersistentBoolData", "First floor broken to ");
+                public static readonly FlagDef Deepnest_East_17__Quake_Floor_1 = new FlagDef("Quake Floor (1)", SceneInstances.Deepnest_East_17, false, "PersistentBoolData", "Second floor broken to ");
+                public static readonly FlagDef Deepnest_East_17__Quake_Floor_10 = new FlagDef("Quake Floor (10)", SceneInstances.Deepnest_East_17, false, "PersistentBoolData");
+                public static readonly FlagDef Deepnest_East_17__Quake_Floor_2 = new FlagDef("Quake Floor (2)", SceneInstances.Deepnest_East_17, false, "PersistentBoolData");
+                public static readonly FlagDef Deepnest_East_17__Quake_Floor_3 = new FlagDef("Quake Floor (3)", SceneInstances.Deepnest_East_17, false, "PersistentBoolData");
+                public static readonly FlagDef Deepnest_East_17__Quake_Floor_4 = new FlagDef("Quake Floor (4)", SceneInstances.Deepnest_East_17, false, "PersistentBoolData");
+                public static readonly FlagDef Deepnest_East_17__Quake_Floor_5 = new FlagDef("Quake Floor (5)", SceneInstances.Deepnest_East_17, false, "PersistentBoolData");
+                public static readonly FlagDef Deepnest_East_17__Quake_Floor_6 = new FlagDef("Quake Floor (6)", SceneInstances.Deepnest_East_17, false, "PersistentBoolData");
+                public static readonly FlagDef Deepnest_East_17__Quake_Floor_7 = new FlagDef("Quake Floor (7)", SceneInstances.Deepnest_East_17, false, "PersistentBoolData");
+                public static readonly FlagDef Deepnest_East_17__Quake_Floor_8 = new FlagDef("Quake Floor (8)", SceneInstances.Deepnest_East_17, false, "PersistentBoolData");
+                public static readonly FlagDef Deepnest_East_17__Quake_Floor_9 = new FlagDef("Quake Floor (9)", SceneInstances.Deepnest_East_17, false, "PersistentBoolData");
 
-            // Fungus1_19
-            public static readonly FlagDef Fungus1_19__Hornet_Activate = new FlagDef("Hornet_Activate", SceneInstances.Fungus1_19, false, "PersistentBoolData");
+                // Deepnest_East_18
+                public static readonly FlagDef Deepnest_East_18__Quake_Floor_1 = new FlagDef("Quake Floor (1)", SceneInstances.Deepnest_East_18, false, "PersistentBoolData");
+                public static readonly FlagDef Deepnest_East_18__Quake_Floor_2 = new FlagDef("Quake Floor (2)", SceneInstances.Deepnest_East_18, false, "PersistentBoolData");
 
-            // Fungus1_21
-            public static readonly FlagDef Fungus1_21__Battle_Scene = new FlagDef("Battle Scene", SceneInstances.Fungus1_21, false, "PersistentBoolData");
+                // Deepnest_Spider_Town
+                public static readonly FlagDef Deepnest_Spider_Town__Collapser_Small_12 = new FlagDef("Collapser Small (12)", SceneInstances.Deepnest_Spider_Town, false, "PersistentBoolData");
+                public static readonly FlagDef Deepnest_Spider_Town__Collapser_Small_4 = new FlagDef("Collapser Small (4)", SceneInstances.Deepnest_Spider_Town, false, "PersistentBoolData");
+                public static readonly FlagDef Deepnest_Spider_Town__one_way_permanent = new FlagDef("one way permanent", SceneInstances.Deepnest_Spider_Town, false, "PersistentBoolData");
+                public static readonly FlagDef Deepnest_Spider_Town__One_Way_Wall = new FlagDef("One Way Wall", SceneInstances.Deepnest_Spider_Town, false, "PersistentBoolData");
+            #endregion
 
-            // Fungus1_31
-            public static readonly FlagDef Fungus1_31__Breakable_Wall = new FlagDef("Breakable Wall", SceneInstances.Fungus1_31, false, "PersistentBoolData");
-            public static readonly FlagDef Fungus1_31__Toll_Gate_Machine_1 = new FlagDef("Toll Gate Machine (1)", SceneInstances.Fungus1_31, false, "PersistentBoolData");
+            #region Fungus1
+                // Fungus1_06
+                public static readonly FlagDef Fungus1_06__Shiny = new FlagDef("Shiny", SceneInstances.Fungus1_06, false, "PersistentBoolData");
 
-            // Fungus1_32
-            public static readonly FlagDef Fungus1_32__Breakable_Wall = new FlagDef("Breakable Wall", SceneInstances.Fungus1_32, false, "PersistentBoolData");
+                // Fungus1_08
+                public static readonly FlagDef Fungus1_08__Break_Floor_1 = new FlagDef("Break Floor 1", SceneInstances.Fungus1_08, false, "PersistentBoolData");
+                public static readonly FlagDef Fungus1_08__Break_Floor_1_1 = new FlagDef("Break Floor 1 (1)", SceneInstances.Fungus1_08, false, "PersistentBoolData");
 
-            // Fungus2_15
-            public static readonly FlagDef Fungus2_15__Breakable_Wall = new FlagDef("Breakable Wall", SceneInstances.Fungus2_15, false, "PersistentBoolData");
+                // Fungus1_19
+                public static readonly FlagDef Fungus1_19__Hornet_Activate = new FlagDef("Hornet_Activate", SceneInstances.Fungus1_19, false, "PersistentBoolData");
 
-            // Fungus2_18
-            public static readonly FlagDef Fungus2_18__Shiny = new FlagDef("Shiny", SceneInstances.Fungus2_18, false, "PersistentBoolData");
+                // Fungus1_21
+                public static readonly FlagDef Fungus1_21__Battle_Scene = new FlagDef("Battle Scene", SceneInstances.Fungus1_21, false, "PersistentBoolData");
 
-            // Fungus2_21
-            public static readonly FlagDef Fungus2_21__Quake_Floor = new FlagDef("Quake Floor", SceneInstances.Fungus2_21, false, "PersistentBoolData");
+                // Fungus1_31
+                public static readonly FlagDef Fungus1_31__Breakable_Wall = new FlagDef("Breakable Wall", SceneInstances.Fungus1_31, false, "PersistentBoolData");
+                public static readonly FlagDef Fungus1_31__Toll_Gate_Machine_1 = new FlagDef("Toll Gate Machine (1)", SceneInstances.Fungus1_31, false, "PersistentBoolData");
 
-            // Fungus2_29
-            public static readonly FlagDef Fungus2_29__Break_Floor_1 = new FlagDef("Break Floor 1", SceneInstances.Fungus2_29, false, "PersistentBoolData");
-            public static readonly FlagDef Fungus2_29__Shiny_Item = new FlagDef("Shiny Item", SceneInstances.Fungus2_29, false, "PersistentBoolData");
+                // Fungus1_32
+                public static readonly FlagDef Fungus1_32__Breakable_Wall = new FlagDef("Breakable Wall", SceneInstances.Fungus1_32, false, "PersistentBoolData");
+            #endregion
 
-            // Fungus2_34
-            public static readonly FlagDef Fungus2_34__Shiny_Item = new FlagDef("Shiny Item", SceneInstances.Fungus2_34, false, "PersistentBoolData");
+            #region Fungus2
+                // Fungus2_15
+                public static readonly FlagDef Fungus2_15__Breakable_Wall = new FlagDef("Breakable Wall", SceneInstances.Fungus2_15, false, "PersistentBoolData");
 
-            // Fungus3_39
-            public static readonly FlagDef Fungus3_39__Battle_Scene = new FlagDef("Battle Scene", SceneInstances.Fungus3_39, false, "PersistentBoolData");
-            public static readonly FlagDef Fungus3_39__One_Way_Wall = new FlagDef("One Way Wall", SceneInstances.Fungus3_39, false, "PersistentBoolData");
-            public static readonly FlagDef Fungus3_39__Shiny_Item_Stand = new FlagDef("Shiny Item Stand", SceneInstances.Fungus3_39, false, "PersistentBoolData");
+                // Fungus2_18
+                public static readonly FlagDef Fungus2_18__Shiny = new FlagDef("Shiny", SceneInstances.Fungus2_18, false, "PersistentBoolData");
 
-            // Fungus3_44
-            public static readonly FlagDef Fungus3_44__Ruins_Lever = new FlagDef("Ruins Lever", SceneInstances.Fungus3_44, false, "PersistentBoolData");
+                // Fungus2_21
+                public static readonly FlagDef Fungus2_21__Quake_Floor = new FlagDef("Quake Floor", SceneInstances.Fungus2_21, false, "PersistentBoolData");
 
-            // Mines_05
-            public static readonly FlagDef Mines_05__Breakable_Wall = new FlagDef("Breakable Wall", SceneInstances.Mines_05, false, "PersistentBoolData");
+                // Fungus2_29
+                public static readonly FlagDef Fungus2_29__Break_Floor_1 = new FlagDef("Break Floor 1", SceneInstances.Fungus2_29, false, "PersistentBoolData");
+                public static readonly FlagDef Fungus2_29__Shiny_Item = new FlagDef("Shiny Item", SceneInstances.Fungus2_29, false, "PersistentBoolData");
 
-            // Mines_19
-            public static readonly FlagDef Mines_19__Mines_Lever = new FlagDef("Mines Lever", SceneInstances.Mines_19, false, "PersistentBoolData");
+                // Fungus2_34
+                public static readonly FlagDef Fungus2_34__Shiny_Item = new FlagDef("Shiny Item", SceneInstances.Fungus2_34, false, "PersistentBoolData");
+            #endregion
 
-            // Mines_30
-            public static readonly FlagDef Mines_30__Shiny = new FlagDef("Shiny", SceneInstances.Mines_30, false, "PersistentBoolData");
+            #region Fungus3
+                // Fungus3_26
+                public static readonly FlagDef Fungus3_26__Shiny_Item = new FlagDef("Shiny Item", SceneInstances.Fungus3_26, false, "PersistentBoolData");
+            #endregion
 
-            // Mines_33
-            public static readonly FlagDef Mines_33__Toll_Gate_Machine_1 = new FlagDef("Toll Gate Machine (1)", SceneInstances.Mines_33, false, "PersistentBoolData");
+            #region Mines
+                // Mines_05
+                public static readonly FlagDef Mines_05__Breakable_Wall = new FlagDef("Breakable Wall", SceneInstances.Mines_05, false, "PersistentBoolData");
 
-            // Mines_37
-            public static readonly FlagDef Mines_37__Mines_Lever_4 = new FlagDef("Mines Lever (4)", SceneInstances.Mines_37, false, "PersistentBoolData");
+                // Mines_19
+                public static readonly FlagDef Mines_19__Mines_Lever = new FlagDef("Mines Lever", SceneInstances.Mines_19, false, "PersistentBoolData");
 
-            // Ruins1_04
-            public static readonly FlagDef Ruins1_04__One_Way_Wall = new FlagDef("One Way Wall", SceneInstances.Ruins1_04, false, "PersistentBoolData");
+                // Mines_30
+                public static readonly FlagDef Mines_30__Shiny = new FlagDef("Shiny", SceneInstances.Mines_30, false, "PersistentBoolData");
 
-            // Ruins1_31
-            public static readonly FlagDef Ruins1_31__Breakable_Wall_Ruin_Lift = new FlagDef("Breakable Wall Ruin Lift", SceneInstances.Ruins1_31, false, "PersistentBoolData");
-            public static readonly FlagDef Ruins1_31__Ruins_Lever = new FlagDef("Ruins Lever", SceneInstances.Ruins1_31, false, "PersistentBoolData");
-            public static readonly FlagDef Ruins1_31__Shiny = new FlagDef("Shiny", SceneInstances.Ruins1_31, false, "PersistentBoolData");
+                // Mines_33
+                public static readonly FlagDef Mines_33__Toll_Gate_Machine_1 = new FlagDef("Toll Gate Machine (1)", SceneInstances.Mines_33, false, "PersistentBoolData");
 
-            // Ruins1_32
-            public static readonly FlagDef Ruins1_32__Quake_Floor = new FlagDef("Quake Floor", SceneInstances.Ruins1_32, false, "PersistentBoolData");
+                // Mines_37
+                public static readonly FlagDef Mines_37__Mines_Lever_4 = new FlagDef("Mines Lever (4)", SceneInstances.Mines_37, false, "PersistentBoolData");
+            #endregion
 
-            // Ruins2_01_b
-            public static readonly FlagDef Ruins2_01_b__Battle_Scene = new FlagDef("Battle Scene", SceneInstances.Ruins2_01_b, false, "PersistentBoolData");
-            public static readonly FlagDef Ruins2_01_b__Quake_Floor_Glass = new FlagDef("Quake Floor Glass", SceneInstances.Ruins2_01_b, false, "PersistentBoolData");
+            #region Room
+                // GG_Workshop
+                public static readonly FlagDef GG_Workshop__Knight_Statue_Cage = new FlagDef("Knight Statue Cage", SceneInstances.GG_Workshop, false, "PersistentBoolData");
+                public static readonly FlagDef GG_Workshop__Radiance_Statue_Cage = new FlagDef("Radiance Statue Cage", SceneInstances.GG_Workshop, false, "PersistentBoolData");
+                public static readonly FlagDef GG_Workshop__Zote_Break_wall = new FlagDef("Zote_Break_wall", SceneInstances.GG_Workshop, false, "PersistentBoolData");
 
-            // Ruins2_03
-            public static readonly FlagDef Ruins2_03__Breakable_Wall = new FlagDef("Breakable Wall", SceneInstances.Ruins2_03, false, "PersistentBoolData");
-            public static readonly FlagDef Ruins2_03__Chest = new FlagDef("Chest", SceneInstances.Ruins2_03, false, "PersistentBoolData", "Geo chest opened");
-            public static readonly FlagDef Ruins2_03__Battle_Control = new FlagDef("Battle Control", SceneInstances.Ruins2_03, false, "PersistentBoolData", "Watcher Knight battle");
+                // Room_Wyrm
+                public static readonly FlagDef Room_Wyrm__Shiny_Item_Stand = new FlagDef("Shiny Item Stand", SceneInstances.Room_Wyrm, false, "PersistentBoolData");
+            #endregion
 
-            // Town
-            public static readonly FlagDef Town__Interact_Reminder = new FlagDef("Interact Reminder", SceneInstances.Town, false, "PersistentBoolData");
-            public static readonly FlagDef Town__Mines_Lever = new FlagDef("Mines Lever", SceneInstances.Town, false, "PersistentBoolData");
+            #region Ruins
+                // Ruins1_04
+                public static readonly FlagDef Ruins1_04__One_Way_Wall = new FlagDef("One Way Wall", SceneInstances.Ruins1_04, false, "PersistentBoolData");
+
+                // Ruins1_32
+                public static readonly FlagDef Ruins1_32__Quake_Floor = new FlagDef("Quake Floor", SceneInstances.Ruins1_32, false, "PersistentBoolData");
+
+                // Ruins2_01_b
+                public static readonly FlagDef Ruins2_01_b__Battle_Scene = new FlagDef("Battle Scene", SceneInstances.Ruins2_01_b, false, "PersistentBoolData");
+                public static readonly FlagDef Ruins2_01_b__Quake_Floor_Glass = new FlagDef("Quake Floor Glass", SceneInstances.Ruins2_01_b, false, "PersistentBoolData");
+
+                // Ruins2_03
+                public static readonly FlagDef Ruins2_03__Breakable_Wall = new FlagDef("Breakable Wall", SceneInstances.Ruins2_03, false, "PersistentBoolData");
+                public static readonly FlagDef Ruins2_03__Chest = new FlagDef("Chest", SceneInstances.Ruins2_03, false, "PersistentBoolData", "Geo chest opened");
+                public static readonly FlagDef Ruins2_03__Battle_Control = new FlagDef("Battle Control", SceneInstances.Ruins2_03, false, "PersistentBoolData", "Watcher Knight battle");
+            #endregion
+
+            #region Town / White Palace
+                // Town
+                public static readonly FlagDef Town__Interact_Reminder = new FlagDef("Interact Reminder", SceneInstances.Town, false, "PersistentBoolData");
+                public static readonly FlagDef Town__Mines_Lever = new FlagDef("Mines Lever", SceneInstances.Town, false, "PersistentBoolData");
+
+                // White_Palace_09
+                public static readonly FlagDef White_Palace_09__Breakable_Wall_Waterways = new FlagDef("Breakable Wall Waterways", SceneInstances.White_Palace_09, false, "PersistentBoolData");
+                public static readonly FlagDef White_Palace_09__Quake_Floor = new FlagDef("Quake Floor", SceneInstances.White_Palace_09, false, "PersistentBoolData");
+            #endregion
+
+            #region Waterways
+                // Waterways_08
+                public static readonly FlagDef Waterways_08__Break_Floor_1 = new FlagDef("Break Floor 1", SceneInstances.Waterways_08, false, "PersistentBoolData", "Broke wall back to top");
+                public static readonly FlagDef Waterways_08__Breakable_Wall_Waterways = new FlagDef("Breakable Wall Waterways", SceneInstances.Waterways_08, false, "PersistentBoolData");
+            #endregion
+
         #endregion
 
         #region UNCATEGORIZED GLOBAL FLAGS
             // Global
-            public static readonly FlagDef MARKOTH_encountered = new FlagDef("MARKOTH_encountered", null, false, "PlayerData_Bool");
-            public static readonly FlagDef MUMCAT_encountered = new FlagDef("MUMCAT_encountered", null, false, "PlayerData_Bool");
-            public static readonly FlagDef abyssGateOpened = new FlagDef("abyssGateOpened", null, false, "PlayerData_Bool");
             public static readonly FlagDef abyssLighthouse = new FlagDef("abyssLighthouse", null, false, "PlayerData_Bool");
             public static readonly FlagDef allBelieverTabletsDestroyed = new FlagDef("allBelieverTabletsDestroyed", null, false, "PlayerData_Bool");
             public static readonly FlagDef atMapPrompt = new FlagDef("atMapPrompt", null, false, "PlayerData_Bool");
@@ -2469,18 +2948,8 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef backerCredits = new FlagDef("backerCredits", null, false, "PlayerData_Bool");
             public static readonly FlagDef bankerDeclined = new FlagDef("bankerDeclined", null, false, "PlayerData_Bool");
             public static readonly FlagDef bankerTheft = new FlagDef("bankerTheft", null, false, "PlayerData_Int");
-            public static readonly FlagDef bathHouseOpened = new FlagDef("bathHouseOpened", null, false, "PlayerData_Bool");
             public static readonly FlagDef bathHouseWall = new FlagDef("bathHouseWall", null, false, "PlayerData_Bool");
             public static readonly FlagDef betaEnd = new FlagDef("betaEnd", null, false, "PlayerData_Bool");
-            public static readonly FlagDef bigCatHitTail = new FlagDef("bigCatHitTail", null, false, "PlayerData_Bool");
-            public static readonly FlagDef bigCatHitTailConvo = new FlagDef("bigCatHitTailConvo", null, false, "PlayerData_Bool");
-            public static readonly FlagDef bigCatKingsBrandConvo = new FlagDef("bigCatKingsBrandConvo", null, false, "PlayerData_Bool");
-            public static readonly FlagDef bigCatMeet = new FlagDef("bigCatMeet", null, false, "PlayerData_Bool");
-            public static readonly FlagDef bigCatShadeConvo = new FlagDef("bigCatShadeConvo", null, false, "PlayerData_Bool");
-            public static readonly FlagDef bigCatTalk1 = new FlagDef("bigCatTalk1", null, false, "PlayerData_Bool");
-            public static readonly FlagDef bigCatTalk2 = new FlagDef("bigCatTalk2", null, false, "PlayerData_Bool");
-            public static readonly FlagDef bigCatTalk3 = new FlagDef("bigCatTalk3", null, false, "PlayerData_Bool");
-            public static readonly FlagDef blizzardEnded = new FlagDef("blizzardEnded", null, false, "PlayerData_Bool");
             public static readonly FlagDef blocker1Defeated = new FlagDef("blocker1Defeated", null, false, "PlayerData_Bool");
             public static readonly FlagDef blocker2Defeated = new FlagDef("blocker2Defeated", null, false, "PlayerData_Bool");
             public static readonly FlagDef blockerHits = new FlagDef("blockerHits", null, false, "PlayerData_Int");
@@ -2494,7 +2963,6 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef brettaLeftTown = new FlagDef("brettaLeftTown", null, false, "PlayerData_Bool");
             public static readonly FlagDef brettaSeenBed = new FlagDef("brettaSeenBed", null, false, "PlayerData_Bool");
             public static readonly FlagDef brettaSeenBedDiary = new FlagDef("brettaSeenBedDiary", null, false, "PlayerData_Bool");
-            public static readonly FlagDef brettaSeenBenchDiary = new FlagDef("brettaSeenBenchDiary", null, false, "PlayerData_Bool");
             public static readonly FlagDef brettaState = new FlagDef("brettaState", null, false, "PlayerData_Int");
             public static readonly FlagDef brokeMinersWall = new FlagDef("brokeMinersWall", null, false, "PlayerData_Bool");
             public static readonly FlagDef brokenMageWindow = new FlagDef("brokenMageWindow", null, false, "PlayerData_Bool");
@@ -2509,33 +2977,15 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef cityLift1_isUp = new FlagDef("cityLift1_isUp", null, false, "PlayerData_Bool");
             public static readonly FlagDef cityLift2 = new FlagDef("cityLift2", null, false, "PlayerData_Bool");
             public static readonly FlagDef cityLift2_isUp = new FlagDef("cityLift2_isUp", null, false, "PlayerData_Bool");
-            public static readonly FlagDef clothEncounteredQueensGarden = new FlagDef("clothEncounteredQueensGarden", null, false, "PlayerData_Bool");
             public static readonly FlagDef clothEnteredTramRoom = new FlagDef("clothEnteredTramRoom", null, false, "PlayerData_Bool");
             public static readonly FlagDef clothGhostSpoken = new FlagDef("clothGhostSpoken", null, false, "PlayerData_Bool");
             public static readonly FlagDef clothInTown = new FlagDef("clothInTown", null, false, "PlayerData_Bool");
-            public static readonly FlagDef clothKilled = new FlagDef("clothKilled", null, false, "PlayerData_Bool");
             public static readonly FlagDef clothLeftTown = new FlagDef("clothLeftTown", null, false, "PlayerData_Bool");
-            public static readonly FlagDef collectorDefeated = new FlagDef("collectorDefeated", null, false, "PlayerData_Bool");
-            public static readonly FlagDef colosseumBronzeCompleted = new FlagDef("colosseumBronzeCompleted", null, false, "PlayerData_Bool");
-            public static readonly FlagDef colosseumBronzeOpened = new FlagDef("colosseumBronzeOpened", null, false, "PlayerData_Bool");
-            public static readonly FlagDef colosseumGoldCompleted = new FlagDef("colosseumGoldCompleted", null, false, "PlayerData_Bool");
-            public static readonly FlagDef colosseumGoldOpened = new FlagDef("colosseumGoldOpened", null, false, "PlayerData_Bool");
-            public static readonly FlagDef colosseumSilverCompleted = new FlagDef("colosseumSilverCompleted", null, false, "PlayerData_Bool");
-            public static readonly FlagDef colosseumSilverOpened = new FlagDef("colosseumSilverOpened", null, false, "PlayerData_Bool");
             public static readonly FlagDef completedRGDreamPlant = new FlagDef("completedRGDreamPlant", null, false, "PlayerData_Bool");
             public static readonly FlagDef corn_cityLeft = new FlagDef("corn_cityLeft", null, false, "PlayerData_Bool");
             public static readonly FlagDef corn_crossroadsEncountered = new FlagDef("corn_crossroadsEncountered", null, false, "PlayerData_Bool");
             public static readonly FlagDef corn_deepnestMet2 = new FlagDef("corn_deepnestMet2", null, false, "PlayerData_Bool");
-            public static readonly FlagDef corn_fogCanyonEncountered = new FlagDef("corn_fogCanyonEncountered", null, false, "PlayerData_Bool");
-            public static readonly FlagDef corn_fogCanyonLeft = new FlagDef("corn_fogCanyonLeft", null, false, "PlayerData_Bool");
-            public static readonly FlagDef corn_outskirtsEncountered = new FlagDef("corn_outskirtsEncountered", null, false, "PlayerData_Bool");
-            public static readonly FlagDef corn_outskirtsLeft = new FlagDef("corn_outskirtsLeft", null, false, "PlayerData_Bool");
-            public static readonly FlagDef corn_royalGardensEncountered = new FlagDef("corn_royalGardensEncountered", null, false, "PlayerData_Bool");
-            public static readonly FlagDef corn_royalGardensLeft = new FlagDef("corn_royalGardensLeft", null, false, "PlayerData_Bool");
-            public static readonly FlagDef corn_waterwaysEncountered = new FlagDef("corn_waterwaysEncountered", null, false, "PlayerData_Bool");
-            public static readonly FlagDef corn_waterwaysLeft = new FlagDef("corn_waterwaysLeft", null, false, "PlayerData_Bool");
             public static readonly FlagDef cornifer = new FlagDef("cornifer", null, false, "PlayerData_Int");
-            public static readonly FlagDef corniferAtHome = new FlagDef("corniferAtHome", null, false, "PlayerData_Bool");
             public static readonly FlagDef cultistTransformed = new FlagDef("cultistTransformed", null, false, "PlayerData_Bool");
             public static readonly FlagDef deepnest26b_switch = new FlagDef("deepnest26b_switch", null, false, "PlayerData_Bool");
             public static readonly FlagDef defeatedDungDefender = new FlagDef("defeatedDungDefender", null, false, "PlayerData_Bool");
@@ -2571,13 +3021,10 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef elderbugTroupeLeftConvo = new FlagDef("elderbugTroupeLeftConvo", null, false, "PlayerData_Bool");
             public static readonly FlagDef emilitiaKingsBrandConvo = new FlagDef("emilitiaKingsBrandConvo", null, false, "PlayerData_Bool");
             public static readonly FlagDef encounteredGatekeeper = new FlagDef("encounteredGatekeeper", null, false, "PlayerData_Bool");
-            public static readonly FlagDef encounteredHornet = new FlagDef("encounteredHornet", null, false, "PlayerData_Bool");
             public static readonly FlagDef encounteredMegaJelly = new FlagDef("encounteredMegaJelly", null, false, "PlayerData_Bool");
             public static readonly FlagDef encounteredMimicSpider = new FlagDef("encounteredMimicSpider", null, false, "PlayerData_Bool");
-            public static readonly FlagDef enteredGGAtrium = new FlagDef("enteredGGAtrium", null, false, "PlayerData_Bool");
             public static readonly FlagDef enteredMantisLordArea = new FlagDef("enteredMantisLordArea", null, false, "PlayerData_Bool");
             public static readonly FlagDef environmentTypeDefault = new FlagDef("environmentTypeDefault", null, false, "PlayerData_Int");
-            public static readonly FlagDef extendedGramophone = new FlagDef("extendedGramophone", null, false, "PlayerData_Bool");
             public static readonly FlagDef extraFlowerAppear = new FlagDef("extraFlowerAppear", null, false, "PlayerData_Bool");
             public static readonly FlagDef falseKnightGhostDeparted = new FlagDef("falseKnightGhostDeparted", null, false, "PlayerData_Bool");
             public static readonly FlagDef falseKnightOrbsCollected = new FlagDef("falseKnightOrbsCollected", null, false, "PlayerData_Bool");
@@ -2589,8 +3036,6 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef finalGrubRewardCollected = new FlagDef("finalGrubRewardCollected", null, false, "PlayerData_Bool");
             public static readonly FlagDef flamesCollected = new FlagDef("flamesCollected", null, false, "PlayerData_Int");
             public static readonly FlagDef flamesRequired = new FlagDef("flamesRequired", null, false, "PlayerData_Int");
-            public static readonly FlagDef flukeMotherDefeated = new FlagDef("flukeMotherDefeated", null, false, "PlayerData_Bool");
-            public static readonly FlagDef flukeMotherEncountered = new FlagDef("flukeMotherEncountered", null, false, "PlayerData_Bool");
             public static readonly FlagDef focusMP_amount = new FlagDef("focusMP_amount", null, false, "PlayerData_Int");
             public static readonly FlagDef foughtGrimm = new FlagDef("foughtGrimm", null, false, "PlayerData_Bool");
             public static readonly FlagDef foundGhostCoin = new FlagDef("foundGhostCoin", null, false, "PlayerData_Bool");
@@ -2605,23 +3050,17 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef givenWhiteLadyFlower = new FlagDef("givenWhiteLadyFlower", null, false, "PlayerData_Bool");
             public static readonly FlagDef gladeGhostsKilled = new FlagDef("gladeGhostsKilled", null, false, "PlayerData_Int");
             public static readonly FlagDef godseekerSpokenAwake = new FlagDef("godseekerSpokenAwake", null, false, "PlayerData_Bool");
-            public static readonly FlagDef godseekerUnlocked = new FlagDef("godseekerUnlocked", null, false, "PlayerData_Bool");
             public static readonly FlagDef godseekerWaterwaysSeenState = new FlagDef("godseekerWaterwaysSeenState", null, false, "PlayerData_Int");
             public static readonly FlagDef godseekerWaterwaysSpoken1 = new FlagDef("godseekerWaterwaysSpoken1", null, false, "PlayerData_Bool");
             public static readonly FlagDef godseekerWaterwaysSpoken2 = new FlagDef("godseekerWaterwaysSpoken2", null, false, "PlayerData_Bool");
             public static readonly FlagDef godseekerWaterwaysSpoken3 = new FlagDef("godseekerWaterwaysSpoken3", null, false, "PlayerData_Bool");
             public static readonly FlagDef gotBrummsFlame = new FlagDef("gotBrummsFlame", null, false, "PlayerData_Bool");
             public static readonly FlagDef gotGrimmNotch = new FlagDef("gotGrimmNotch", null, false, "PlayerData_Bool");
-            public static readonly FlagDef gotKingFragment = new FlagDef("gotKingFragment", null, false, "PlayerData_Bool");
-            public static readonly FlagDef gotLurkerKey = new FlagDef("gotLurkerKey", null, false, "PlayerData_Bool");
-            public static readonly FlagDef gotQueenFragment = new FlagDef("gotQueenFragment", null, false, "PlayerData_Bool");
-            public static readonly FlagDef gotSlyCharm = new FlagDef("gotSlyCharm", null, false, "PlayerData_Bool");
             public static readonly FlagDef greyPrinceDefeated = new FlagDef("greyPrinceDefeated", null, false, "PlayerData_Bool");
             public static readonly FlagDef greyPrinceDefeats = new FlagDef("greyPrinceDefeats", null, false, "PlayerData_Int");
             public static readonly FlagDef greyPrinceOrbsCollected = new FlagDef("greyPrinceOrbsCollected", null, false, "PlayerData_Bool");
             public static readonly FlagDef heartPieceMax = new FlagDef("heartPieceMax", null, false, "PlayerData_Bool");
             public static readonly FlagDef hornetAbyssEncounter = new FlagDef("hornetAbyssEncounter", null, false, "PlayerData_Bool");
-            public static readonly FlagDef hornetOutskirtsDefeated = new FlagDef("hornetOutskirtsDefeated", null, false, "PlayerData_Bool");
             public static readonly FlagDef hornet_f19 = new FlagDef("hornet_f19", null, false, "PlayerData_Bool");
             public static readonly FlagDef hornheadVinePlat = new FlagDef("hornheadVinePlat", null, false, "PlayerData_Bool");
             public static readonly FlagDef hunterRewardOffered = new FlagDef("hunterRewardOffered", null, false, "PlayerData_Bool");
@@ -2651,9 +3090,6 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef legEaterGoldConvo = new FlagDef("legEaterGoldConvo", null, false, "PlayerData_Bool");
             public static readonly FlagDef legEaterInfectedCrossroadConvo = new FlagDef("legEaterInfectedCrossroadConvo", null, false, "PlayerData_Bool");
             public static readonly FlagDef legEaterLeft = new FlagDef("legEaterLeft", null, false, "PlayerData_Bool");
-            public static readonly FlagDef littleFoolMet = new FlagDef("littleFoolMet", null, false, "PlayerData_Bool");
-            public static readonly FlagDef markothDefeated = new FlagDef("markothDefeated", null, false, "PlayerData_Int");
-            public static readonly FlagDef markothPinned = new FlagDef("markothPinned", null, false, "PlayerData_Bool");
             public static readonly FlagDef marmConvo1 = new FlagDef("marmConvo1", null, false, "PlayerData_Bool");
             public static readonly FlagDef marmConvo2 = new FlagDef("marmConvo2", null, false, "PlayerData_Bool");
             public static readonly FlagDef marmConvo3 = new FlagDef("marmConvo3", null, false, "PlayerData_Bool");
@@ -2663,16 +3099,11 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef maskmakerShadowDash = new FlagDef("maskmakerShadowDash", null, false, "PlayerData_Bool");
             public static readonly FlagDef maskmakerUnmasked1 = new FlagDef("maskmakerUnmasked1", null, false, "PlayerData_Bool");
             public static readonly FlagDef maskmakerUnmasked2 = new FlagDef("maskmakerUnmasked2", null, false, "PlayerData_Bool");
-            public static readonly FlagDef matoConvoOro = new FlagDef("matoConvoOro", null, false, "PlayerData_Bool");
-            public static readonly FlagDef matoConvoSheo = new FlagDef("matoConvoSheo", null, false, "PlayerData_Bool");
             public static readonly FlagDef matoConvoSly = new FlagDef("matoConvoSly", null, false, "PlayerData_Bool");
             public static readonly FlagDef mawlekDefeated = new FlagDef("mawlekDefeated", null, false, "PlayerData_Bool");
             public static readonly FlagDef menderDoorOpened = new FlagDef("menderDoorOpened", null, false, "PlayerData_Bool");
             public static readonly FlagDef metEmilitia = new FlagDef("metEmilitia", null, false, "PlayerData_Bool");
             public static readonly FlagDef metJinn = new FlagDef("metJinn", null, false, "PlayerData_Bool");
-            public static readonly FlagDef metNailmasterOro = new FlagDef("metNailmasterOro", null, false, "PlayerData_Bool");
-            public static readonly FlagDef metNailmasterSheo = new FlagDef("metNailmasterSheo", null, false, "PlayerData_Bool");
-            public static readonly FlagDef metQueen = new FlagDef("metQueen", null, false, "PlayerData_Bool");
             public static readonly FlagDef metRelicDealer = new FlagDef("metRelicDealer", null, false, "PlayerData_Bool");
             public static readonly FlagDef midwifeConvo2 = new FlagDef("midwifeConvo2", null, false, "PlayerData_Bool");
             public static readonly FlagDef midwifeWeaverlingConvo = new FlagDef("midwifeWeaverlingConvo", null, false, "PlayerData_Bool");
@@ -2680,8 +3111,6 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef minerEarly = new FlagDef("minerEarly", null, false, "PlayerData_Int");
             public static readonly FlagDef monomonDefeated = new FlagDef("monomonDefeated", null, false, "PlayerData_Bool");
             public static readonly FlagDef mrMushroomState = new FlagDef("mrMushroomState", null, false, "PlayerData_Int");
-            public static readonly FlagDef mumCaterpillarDefeated = new FlagDef("mumCaterpillarDefeated", null, false, "PlayerData_Int");
-            public static readonly FlagDef mumCaterpillarPinned = new FlagDef("mumCaterpillarPinned", null, false, "PlayerData_Bool");
             public static readonly FlagDef nailRange = new FlagDef("nailRange", null, false, "PlayerData_Int");
             public static readonly FlagDef nailsmithConvoArt = new FlagDef("nailsmithConvoArt", null, false, "PlayerData_Bool");
             public static readonly FlagDef nailsmithCorpseAppeared = new FlagDef("nailsmithCorpseAppeared", null, false, "PlayerData_Bool");
@@ -2694,24 +3123,16 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef nymmInTown = new FlagDef("nymmInTown", null, false, "PlayerData_Bool");
             public static readonly FlagDef nymmMissedEggOpen = new FlagDef("nymmMissedEggOpen", null, false, "PlayerData_Bool");
             public static readonly FlagDef nymmSpoken = new FlagDef("nymmSpoken", null, false, "PlayerData_Bool");
-            public static readonly FlagDef oneWayArchive = new FlagDef("oneWayArchive", null, false, "PlayerData_Bool");
             public static readonly FlagDef openedBlackEggDoor = new FlagDef("openedBlackEggDoor", null, false, "PlayerData_Bool");
             public static readonly FlagDef openedBlackEggPath = new FlagDef("openedBlackEggPath", null, false, "PlayerData_Bool");
             public static readonly FlagDef openedGardensStagStation = new FlagDef("openedGardensStagStation", null, false, "PlayerData_Bool");
-            public static readonly FlagDef openedLoveDoor = new FlagDef("openedLoveDoor", null, false, "PlayerData_Bool");
             public static readonly FlagDef openedMageDoor = new FlagDef("openedMageDoor", null, false, "PlayerData_Bool");
-            public static readonly FlagDef openedMageDoor_v2 = new FlagDef("openedMageDoor_v2", null, false, "PlayerData_Bool");
             public static readonly FlagDef openedPalaceGrounds = new FlagDef("openedPalaceGrounds", null, false, "PlayerData_Bool");
             public static readonly FlagDef openedRestingGrounds02 = new FlagDef("openedRestingGrounds02", null, false, "PlayerData_Bool");
-            public static readonly FlagDef openedRoyalGardens = new FlagDef("openedRoyalGardens", null, false, "PlayerData_Bool");
             public static readonly FlagDef openedSlyShop = new FlagDef("openedSlyShop", null, false, "PlayerData_Bool");
-            public static readonly FlagDef openedStagNest = new FlagDef("openedStagNest", null, false, "PlayerData_Bool");
             public static readonly FlagDef openedTown = new FlagDef("openedTown", null, false, "PlayerData_Bool");
             public static readonly FlagDef openedTramRestingGrounds = new FlagDef("openedTramRestingGrounds", null, false, "PlayerData_Bool");
-            public static readonly FlagDef openedWaterwaysManhole = new FlagDef("openedWaterwaysManhole", null, false, "PlayerData_Bool");
             public static readonly FlagDef ordealAchieved = new FlagDef("ordealAchieved", null, false, "PlayerData_Bool");
-            public static readonly FlagDef oroConvoMato = new FlagDef("oroConvoMato", null, false, "PlayerData_Bool");
-            public static readonly FlagDef oroConvoSheo = new FlagDef("oroConvoSheo", null, false, "PlayerData_Bool");
             public static readonly FlagDef oroConvoSly = new FlagDef("oroConvoSly", null, false, "PlayerData_Bool");
             public static readonly FlagDef outskirtsWall = new FlagDef("outskirtsWall", null, false, "PlayerData_Bool");
             public static readonly FlagDef overcharmed = new FlagDef("overcharmed", null, false, "PlayerData_Bool");
@@ -2719,12 +3140,8 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef queenConvo_grimm2 = new FlagDef("queenConvo_grimm2", null, false, "PlayerData_Bool");
             public static readonly FlagDef queenDung1 = new FlagDef("queenDung1", null, false, "PlayerData_Bool");
             public static readonly FlagDef queenDung2 = new FlagDef("queenDung2", null, false, "PlayerData_Bool");
-            public static readonly FlagDef queenHornet = new FlagDef("queenHornet", null, false, "PlayerData_Bool");
-            public static readonly FlagDef queenTalk1 = new FlagDef("queenTalk1", null, false, "PlayerData_Bool");
-            public static readonly FlagDef queenTalk2 = new FlagDef("queenTalk2", null, false, "PlayerData_Bool");
             public static readonly FlagDef queenTalkExtra = new FlagDef("queenTalkExtra", null, false, "PlayerData_Bool");
             public static readonly FlagDef queuedGodfinderIcon = new FlagDef("queuedGodfinderIcon", null, false, "PlayerData_Bool");
-            public static readonly FlagDef quirrelArchiveEncountered = new FlagDef("quirrelArchiveEncountered", null, false, "PlayerData_Bool");
             public static readonly FlagDef quirrelEpilogueCompleted = new FlagDef("quirrelEpilogueCompleted", null, false, "PlayerData_Bool");
             public static readonly FlagDef quirrelMantisEncountered = new FlagDef("quirrelMantisEncountered", null, false, "PlayerData_Bool");
             public static readonly FlagDef quirrelMinesLeft = new FlagDef("quirrelMinesLeft", null, false, "PlayerData_Bool");
@@ -2734,11 +3151,9 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef salubraConvoCombo = new FlagDef("salubraConvoCombo", null, false, "PlayerData_Bool");
             public static readonly FlagDef salubraConvoOvercharm = new FlagDef("salubraConvoOvercharm", null, false, "PlayerData_Bool");
             public static readonly FlagDef salubraConvoTruth = new FlagDef("salubraConvoTruth", null, false, "PlayerData_Bool");
-            public static readonly FlagDef savedByHornet = new FlagDef("savedByHornet", null, false, "PlayerData_Bool");
             public static readonly FlagDef sawWoundedQuirrel = new FlagDef("sawWoundedQuirrel", null, false, "PlayerData_Bool");
             public static readonly FlagDef scaredFlukeHermitEncountered = new FlagDef("scaredFlukeHermitEncountered", null, false, "PlayerData_Bool");
             public static readonly FlagDef scaredFlukeHermitReturned = new FlagDef("scaredFlukeHermitReturned", null, false, "PlayerData_Bool");
-            public static readonly FlagDef seenColosseumTitle = new FlagDef("seenColosseumTitle", null, false, "PlayerData_Bool");
             public static readonly FlagDef seenDoor4Finale = new FlagDef("seenDoor4Finale", null, false, "PlayerData_Bool");
             public static readonly FlagDef seenGGWastes = new FlagDef("seenGGWastes", null, false, "PlayerData_Bool");
             public static readonly FlagDef shadeFireballLevel = new FlagDef("shadeFireballLevel", null, false, "PlayerData_Int");
@@ -2750,9 +3165,7 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef shamanFireball2Convo = new FlagDef("shamanFireball2Convo", null, false, "PlayerData_Bool");
             public static readonly FlagDef shamanQuake2Convo = new FlagDef("shamanQuake2Convo", null, false, "PlayerData_Bool");
             public static readonly FlagDef shamanScream2Convo = new FlagDef("shamanScream2Convo", null, false, "PlayerData_Bool");
-            public static readonly FlagDef sheoConvoMato = new FlagDef("sheoConvoMato", null, false, "PlayerData_Bool");
             public static readonly FlagDef sheoConvoNailsmith = new FlagDef("sheoConvoNailsmith", null, false, "PlayerData_Bool");
-            public static readonly FlagDef sheoConvoOro = new FlagDef("sheoConvoOro", null, false, "PlayerData_Bool");
             public static readonly FlagDef sheoConvoSly = new FlagDef("sheoConvoSly", null, false, "PlayerData_Bool");
             public static readonly FlagDef showGeoUI = new FlagDef("showGeoUI", null, false, "PlayerData_Bool");
             public static readonly FlagDef slugEncounterComplete = new FlagDef("slugEncounterComplete", null, false, "PlayerData_Bool");
@@ -2767,8 +3180,6 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef stagConvoTiso = new FlagDef("stagConvoTiso", null, false, "PlayerData_Bool");
             public static readonly FlagDef stagEggInspected = new FlagDef("stagEggInspected", null, false, "PlayerData_Bool");
             public static readonly FlagDef stagHopeConvo = new FlagDef("stagHopeConvo", null, false, "PlayerData_Bool");
-            public static readonly FlagDef stagRemember2 = new FlagDef("stagRemember2", null, false, "PlayerData_Bool");
-            public static readonly FlagDef stagRemember3 = new FlagDef("stagRemember3", null, false, "PlayerData_Bool");
             public static readonly FlagDef summonedMonomon = new FlagDef("summonedMonomon", null, false, "PlayerData_Bool");
             public static readonly FlagDef tisoDead = new FlagDef("tisoDead", null, false, "PlayerData_Bool");
             public static readonly FlagDef tisoEncounteredBench = new FlagDef("tisoEncounteredBench", null, false, "PlayerData_Bool");
@@ -2776,16 +3187,13 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef tisoEncounteredLake = new FlagDef("tisoEncounteredLake", null, false, "PlayerData_Bool");
             public static readonly FlagDef tisoShieldConvo = new FlagDef("tisoShieldConvo", null, false, "PlayerData_Bool");
             public static readonly FlagDef tollBenchAbyss = new FlagDef("tollBenchAbyss", null, false, "PlayerData_Bool");
-            public static readonly FlagDef tollBenchQueensGardens = new FlagDef("tollBenchQueensGardens", null, false, "PlayerData_Bool");
             public static readonly FlagDef tramOpenedCrossroads = new FlagDef("tramOpenedCrossroads", null, false, "PlayerData_Bool");
             public static readonly FlagDef tramOpenedDeepnest = new FlagDef("tramOpenedDeepnest", null, false, "PlayerData_Bool");
             public static readonly FlagDef tramRestingGroundsPosition = new FlagDef("tramRestingGroundsPosition", null, false, "PlayerData_Int");
             public static readonly FlagDef tukDungEgg = new FlagDef("tukDungEgg", null, false, "PlayerData_Bool");
-            public static readonly FlagDef tukEggPrice = new FlagDef("tukEggPrice", null, false, "PlayerData_Int");
-            public static readonly FlagDef tukMet = new FlagDef("tukMet", null, false, "PlayerData_Bool");
             public static readonly FlagDef unchainedHollowKnight = new FlagDef("unchainedHollowKnight", null, false, "PlayerData_Bool");
             public static readonly FlagDef unlockedNewBossStatue = new FlagDef("unlockedNewBossStatue", null, false, "PlayerData_Bool");
-            public static readonly FlagDef usedWhiteKey = new FlagDef("usedWhiteKey", null, false, "PlayerData_Bool");
+            
             public static readonly FlagDef vesselFragStagNest = new FlagDef("vesselFragStagNest", null, false, "PlayerData_Bool");
             public static readonly FlagDef vesselFragmentMax = new FlagDef("vesselFragmentMax", null, false, "PlayerData_Bool");
             public static readonly FlagDef watcherChandelier = new FlagDef("watcherChandelier", null, false, "PlayerData_Bool");
@@ -2799,14 +3207,12 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef whitePalaceOrb_1 = new FlagDef("whitePalaceOrb_1", null, false, "PlayerData_Bool");
             public static readonly FlagDef whitePalaceOrb_2 = new FlagDef("whitePalaceOrb_2", null, false, "PlayerData_Bool");
             public static readonly FlagDef whitePalaceOrb_3 = new FlagDef("whitePalaceOrb_3", null, false, "PlayerData_Bool");
-            public static readonly FlagDef whitePalaceSecretRoomVisited = new FlagDef("whitePalaceSecretRoomVisited", null, false, "PlayerData_Bool");
             public static readonly FlagDef xunFailedConvo1 = new FlagDef("xunFailedConvo1", null, false, "PlayerData_Bool");
             public static readonly FlagDef xunFailedConvo2 = new FlagDef("xunFailedConvo2", null, false, "PlayerData_Bool");
             public static readonly FlagDef xunFlowerGiven = new FlagDef("xunFlowerGiven", null, false, "PlayerData_Bool");
             public static readonly FlagDef xunRewardGiven = new FlagDef("xunRewardGiven", null, false, "PlayerData_Bool");
             public static readonly FlagDef zoteDead = new FlagDef("zoteDead", null, false, "PlayerData_Bool");
             public static readonly FlagDef zoteDeathPos = new FlagDef("zoteDeathPos", null, false, "PlayerData_Int");
-            public static readonly FlagDef zoteDefeated = new FlagDef("zoteDefeated", null, false, "PlayerData_Bool");
             public static readonly FlagDef zoteLeftCity = new FlagDef("zoteLeftCity", null, false, "PlayerData_Bool");
             public static readonly FlagDef zotePrecept = new FlagDef("zotePrecept", null, false, "PlayerData_Int");
             public static readonly FlagDef zoteSpokenCity = new FlagDef("zoteSpokenCity", null, false, "PlayerData_Bool");
@@ -2984,6 +3390,7 @@ namespace CabbyCodes.Flags
                 new FlagDef("respawnMarkerName", null, false, "PlayerData_String"),
                 new FlagDef("respawnScene", null, false, "PlayerData_String"),
                 new FlagDef("respawnType", null, false, "PlayerData_Int"),
+                new FlagDef("seenColosseumTitle", null, false, "PlayerData_Bool", "Seen Colosseum Title splash"),
                 new FlagDef("seenDreamNailPrompt", null, false, "PlayerData_Bool"),
                 new FlagDef("seenFocusTablet", null, false, "PlayerData_Bool", "Passed by Focus Tablet"),
                 new FlagDef("seenJournalMsg", null, false, "PlayerData_Bool", "Seen Journal message for new enemy"),
@@ -3022,6 +3429,12 @@ namespace CabbyCodes.Flags
                     // Abyss_06
                     new FlagDef("Remasker", SceneInstances.Abyss_06_Core, false, "PersistentBoolData"),
                     new FlagDef("Remasker (1)", SceneInstances.Abyss_06_Core, false, "PersistentBoolData"),
+
+                    // Abyss_09
+                    new FlagDef("Remasker", SceneInstances.Abyss_09, false, "PersistentBoolData"),
+
+                    // Abyss_10
+                    new FlagDef("Secret Sound Region", SceneInstances.Abyss_10, false, "PersistentBoolData"),
 
                     // Abyss_17
                     new FlagDef("Ceiling Dropper", SceneInstances.Abyss_17, false, "PersistentBoolData"),
@@ -3399,11 +3812,18 @@ namespace CabbyCodes.Flags
                     new FlagDef("Secret Mask", SceneInstances.Deepnest_42, false, "PersistentBoolData"),
                     new FlagDef("Soul Totem mini_two_horned", SceneInstances.Deepnest_42, false, "PersistentIntData"),
 
+                    // Deepnest_43
+                    new FlagDef("Garden Zombie", SceneInstances.Deepnest_43, false, "PersistentBoolData"),
+                    new FlagDef("Garden Zombie (1)", SceneInstances.Deepnest_43, false, "PersistentBoolData"),
+                    new FlagDef("Mantis Heavy Flyer", SceneInstances.Deepnest_43, false, "PersistentBoolData"),
+                    new FlagDef("Remasker", SceneInstances.Deepnest_43, false, "PersistentBoolData"),
+
                     // Deepnest_44
                     new FlagDef("Inverse Remasker", SceneInstances.Deepnest_44, false, "PersistentBoolData"),
                     new FlagDef("Remasker", SceneInstances.Deepnest_44, false, "PersistentBoolData"),
                     new FlagDef("Secret Mask", SceneInstances.Deepnest_44, false, "PersistentBoolData"),
                     new FlagDef("Secret Sound Region", SceneInstances.Deepnest_44, false, "PersistentBoolData"),
+                    new FlagDef("Shiny Item Stand", SceneInstances.Deepnest_44, false, "PersistentBoolData"),
 
                     // Deepnest_Spider_Town
                     new FlagDef("hack jump secret remask", SceneInstances.Deepnest_Spider_Town, false, "PersistentBoolData"),
@@ -3437,6 +3857,69 @@ namespace CabbyCodes.Flags
                     new FlagDef("Secret Mask", SceneInstances.Deepnest_East_01, false, "PersistentBoolData"),
                     new FlagDef("Soul Totem mini_two_horned", SceneInstances.Deepnest_East_01, false, "PersistentIntData"),
 
+                    // Deepnest_East_02
+                    new FlagDef("Soul Totem mini_horned", SceneInstances.Deepnest_East_02, false, "PersistentIntData"),
+
+                    // Deepnest_East_03
+                    new FlagDef("Blow Fly", SceneInstances.Deepnest_East_03, false, "PersistentBoolData"),
+                    new FlagDef("Blow Fly (1)", SceneInstances.Deepnest_East_03, false, "PersistentBoolData"),
+                    new FlagDef("Blow Fly (2)", SceneInstances.Deepnest_East_03, false, "PersistentBoolData"),
+                    new FlagDef("Blow Fly (3)", SceneInstances.Deepnest_East_03, false, "PersistentBoolData"),
+                    new FlagDef("Blow Fly (4)", SceneInstances.Deepnest_East_03, false, "PersistentBoolData"),
+                    new FlagDef("Blow Fly (5)", SceneInstances.Deepnest_East_03, false, "PersistentBoolData"),
+                    new FlagDef("Inverse Remasker", SceneInstances.Deepnest_East_03, false, "PersistentBoolData"),
+                    new FlagDef("Secret Mask", SceneInstances.Deepnest_East_03, false, "PersistentBoolData"),
+
+                    // Deepnest_East_04
+                    new FlagDef("Blow Fly", SceneInstances.Deepnest_East_04, false, "PersistentBoolData"),
+                    new FlagDef("Blow Fly (2)", SceneInstances.Deepnest_East_04, false, "PersistentBoolData"),
+                    new FlagDef("Blow Fly (3)", SceneInstances.Deepnest_East_04, false, "PersistentBoolData"),
+                    new FlagDef("Remasker", SceneInstances.Deepnest_East_04, false, "PersistentBoolData"),
+                    new FlagDef("Secret Sound Region", SceneInstances.Deepnest_East_04, false, "PersistentBoolData"),
+                    new FlagDef("Super Spitter", SceneInstances.Deepnest_East_04, false, "PersistentBoolData"),
+                    new FlagDef("Super Spitter (1)", SceneInstances.Deepnest_East_04, false, "PersistentBoolData"),
+                    new FlagDef("Super Spitter (2)", SceneInstances.Deepnest_East_04, false, "PersistentBoolData"),
+                    new FlagDef("Super Spitter (3)", SceneInstances.Deepnest_East_04, false, "PersistentBoolData"),
+                    new FlagDef("Super Spitter (4)", SceneInstances.Deepnest_East_04, false, "PersistentBoolData"),
+                    new FlagDef("Super Spitter(Clone)", SceneInstances.Deepnest_East_04, false, "PersistentBoolData"),
+
+                    // Deepnest_East_06
+                    new FlagDef("Giant Hopper (1)", SceneInstances.Deepnest_East_06, false, "PersistentBoolData"),
+                    new FlagDef("Giant Hopper (2)", SceneInstances.Deepnest_East_06, false, "PersistentBoolData"),
+                    new FlagDef("Secret Mask", SceneInstances.Deepnest_East_06, false, "PersistentBoolData"),
+                    new FlagDef("Super Spitter", SceneInstances.Deepnest_East_06, false, "PersistentBoolData"),
+                    new FlagDef("Super Spitter (1)", SceneInstances.Deepnest_East_06, false, "PersistentBoolData"),
+                    new FlagDef("Super Spitter (2)", SceneInstances.Deepnest_East_06, false, "PersistentBoolData"),
+                    new FlagDef("Giant Hopper", SceneInstances.Deepnest_East_06, false, "PersistentBoolData"),
+
+                    // Deepnest_East_07
+                    new FlagDef("Blow Fly", SceneInstances.Deepnest_East_07, false, "PersistentBoolData"),
+                    new FlagDef("Blow Fly (1)", SceneInstances.Deepnest_East_07, false, "PersistentBoolData"),
+                    new FlagDef("Blow Fly (2)", SceneInstances.Deepnest_East_07, false, "PersistentBoolData"),
+                    new FlagDef("Ceiling Dropper", SceneInstances.Deepnest_East_07, false, "PersistentBoolData"),
+                    new FlagDef("Ceiling Dropper (1)", SceneInstances.Deepnest_East_07, false, "PersistentBoolData"),
+                    new FlagDef("Ceiling Dropper (2)", SceneInstances.Deepnest_East_07, false, "PersistentBoolData"),
+                    new FlagDef("Ceiling Dropper (4)", SceneInstances.Deepnest_East_07, false, "PersistentBoolData"),
+                    new FlagDef("Ceiling Dropper (5)", SceneInstances.Deepnest_East_07, false, "PersistentBoolData"),
+                    new FlagDef("Ceiling Dropper (6)", SceneInstances.Deepnest_East_07, false, "PersistentBoolData"),
+                    new FlagDef("Ceiling Dropper (7)", SceneInstances.Deepnest_East_07, false, "PersistentBoolData"),
+                    new FlagDef("Remasker", SceneInstances.Deepnest_East_07, false, "PersistentBoolData"),
+                    new FlagDef("Secret Mask", SceneInstances.Deepnest_East_07, false, "PersistentBoolData"),
+                    new FlagDef("Secret Mask (1)", SceneInstances.Deepnest_East_07, false, "PersistentBoolData"),
+                    new FlagDef("Soul Totem mini_two_horned", SceneInstances.Deepnest_East_07, false, "PersistentIntData"),
+                    new FlagDef("Super Spitter", SceneInstances.Deepnest_East_07, false, "PersistentBoolData"),
+                    new FlagDef("Super Spitter (1)", SceneInstances.Deepnest_East_07, false, "PersistentBoolData"),
+                    new FlagDef("Super Spitter (2)", SceneInstances.Deepnest_East_07, false, "PersistentBoolData"),
+                    new FlagDef("Super Spitter (4)", SceneInstances.Deepnest_East_07, false, "PersistentBoolData"),
+                    new FlagDef("Super Spitter (5)", SceneInstances.Deepnest_East_07, false, "PersistentBoolData"),
+
+                    // Deepnest_East_08
+                    new FlagDef("Ceiling Dropper", SceneInstances.Deepnest_East_08, false, "PersistentBoolData"),
+                    new FlagDef("Ceiling Dropper (1)", SceneInstances.Deepnest_East_08, false, "PersistentBoolData"),
+                    new FlagDef("Ceiling Dropper (2)", SceneInstances.Deepnest_East_08, false, "PersistentBoolData"),
+                    new FlagDef("Ceiling Dropper (3)", SceneInstances.Deepnest_East_08, false, "PersistentBoolData"),
+                    new FlagDef("Giant Hopper", SceneInstances.Deepnest_East_08, false, "PersistentBoolData"),
+
                     // Deepnest_East_09
                     new FlagDef("Ceiling Dropper", SceneInstances.Deepnest_East_09, false, "PersistentBoolData"),
                     new FlagDef("Ceiling Dropper (1)", SceneInstances.Deepnest_East_09, false, "PersistentBoolData"),
@@ -3446,6 +3929,53 @@ namespace CabbyCodes.Flags
                     new FlagDef("Ceiling Dropper (5)", SceneInstances.Deepnest_East_09, false, "PersistentBoolData"),
                     new FlagDef("Ceiling Dropper (6)", SceneInstances.Deepnest_East_09, false, "PersistentBoolData"),
                     new FlagDef("Secret Mask", SceneInstances.Deepnest_East_09, false, "PersistentBoolData"),
+
+                    // Deepnest_East_11
+                    new FlagDef("Remasker", SceneInstances.Deepnest_East_11, false, "PersistentBoolData"),
+                    new FlagDef("Soul Totem 5", SceneInstances.Deepnest_East_11, false, "PersistentIntData"),
+                    new FlagDef("Super Spitter", SceneInstances.Deepnest_East_11, false, "PersistentBoolData"),
+                    new FlagDef("Super Spitter (1)", SceneInstances.Deepnest_East_11, false, "PersistentBoolData"),
+                    new FlagDef("Super Spitter (3)", SceneInstances.Deepnest_East_11, false, "PersistentBoolData"),
+                    new FlagDef("Super Spitter (4)", SceneInstances.Deepnest_East_11, false, "PersistentBoolData"),
+                    new FlagDef("Super Spitter(Clone)", SceneInstances.Deepnest_East_11, false, "PersistentBoolData"),
+
+                    // Deepnest_East_14
+                    new FlagDef("Hopper Spawn", SceneInstances.Deepnest_East_14, false, "PersistentBoolData"),
+                    new FlagDef("Secret Mask", SceneInstances.Deepnest_East_14, false, "PersistentBoolData"),
+                    new FlagDef("Soul Totem mini_horned", SceneInstances.Deepnest_East_14, false, "PersistentIntData"),
+                    new FlagDef("Soul Totem mini_two_horned", SceneInstances.Deepnest_East_14, false, "PersistentIntData"),
+                    new FlagDef("Super Spitter", SceneInstances.Deepnest_East_14, false, "PersistentBoolData"),
+                    new FlagDef("Super Spitter (1)", SceneInstances.Deepnest_East_14, false, "PersistentBoolData"),
+                    new FlagDef("Giant Hopper", SceneInstances.Deepnest_East_14, false, "PersistentBoolData"),
+
+                    // Deepnest_East_14b
+                    new FlagDef("Shiny Item", SceneInstances.Deepnest_East_14b, false, "PersistentBoolData"),
+                    new FlagDef("Giant Hopper", SceneInstances.Deepnest_East_14b, false, "PersistentBoolData"),
+                    new FlagDef("Inverse Remasker", SceneInstances.Deepnest_East_14b, false, "PersistentBoolData"),
+                    new FlagDef("remask corridor", SceneInstances.Deepnest_East_14b, false, "PersistentBoolData"),
+                    new FlagDef("Remasker", SceneInstances.Deepnest_East_14b, false, "PersistentBoolData"),
+                    new FlagDef("Secret Mask (1)", SceneInstances.Deepnest_East_14b, false, "PersistentBoolData"),
+                    new FlagDef("secret  sound", SceneInstances.Deepnest_East_14b, false, "PersistentBoolData"),
+                    new FlagDef("Super Spitter (2)", SceneInstances.Deepnest_East_14b, false, "PersistentBoolData"),
+                    new FlagDef("Super Spitter (3)", SceneInstances.Deepnest_East_14b, false, "PersistentBoolData"),
+                    new FlagDef("Super Spitter (4)", SceneInstances.Deepnest_East_14b, false, "PersistentBoolData"),
+                    new FlagDef("Super Spitter (5)", SceneInstances.Deepnest_East_14b, false, "PersistentBoolData"),
+
+                    // Deepnest_East_15
+                    new FlagDef("Health Cocoon", SceneInstances.Deepnest_East_15, false, "PersistentBoolData"),
+
+                    // Deepnest_East_16
+                    new FlagDef("Secret Mask", SceneInstances.Deepnest_East_16, false, "PersistentBoolData"),
+                    new FlagDef("Secret Sound Region", SceneInstances.Deepnest_East_16, false, "PersistentBoolData"),
+                    new FlagDef("Soul Totem 5", SceneInstances.Deepnest_East_16, false, "PersistentIntData"),
+
+                    // Deepnest_East_17
+                    new FlagDef("Secret Mask", SceneInstances.Deepnest_East_17, false, "PersistentBoolData"),
+                    new FlagDef("Shiny Item(Clone)", SceneInstances.Deepnest_East_14, false, "PersistentBoolData"),
+                    new FlagDef("Soul Totem mini_two_horned", SceneInstances.Deepnest_East_17, false, "PersistentIntData"),
+
+                    // Deepnest_East_18
+                    new FlagDef("Secret Mask", SceneInstances.Deepnest_East_18, false, "PersistentBoolData"),
                 #endregion
 
                 #region Dirtmouth
@@ -3731,6 +4261,10 @@ namespace CabbyCodes.Flags
                     new FlagDef("Remasker (2)", SceneInstances.Fungus2_31, false, "PersistentBoolData"),
                     new FlagDef("Shiny Item Charm", SceneInstances.Fungus2_31, false, "PersistentBoolData"),
 
+                    // Fungus2_33
+                    new FlagDef("Fungus Flyer", SceneInstances.Fungus2_33, false, "PersistentBoolData"),
+                    new FlagDef("Fungus Flyer (1)", SceneInstances.Fungus2_33, false, "PersistentBoolData"),
+
                     // Fungus2_34
                     new FlagDef("Remasker", SceneInstances.Fungus2_34, false, "PersistentBoolData"),
                     new FlagDef("Remasker (1)", SceneInstances.Fungus2_34, false, "PersistentBoolData"),
@@ -3753,6 +4287,39 @@ namespace CabbyCodes.Flags
                     new FlagDef("Jellyfish (3)", SceneInstances.Fungus3_02, false, "PersistentBoolData"),
                     new FlagDef("Jellyfish (4)", SceneInstances.Fungus3_02, false, "PersistentBoolData"),
 
+                    // Fungus3_04
+                    new FlagDef("Mantis Heavy Flyer", SceneInstances.Fungus3_04, false, "PersistentBoolData"),
+                    new FlagDef("Mantis Heavy Flyer (1)", SceneInstances.Fungus3_04, false, "PersistentBoolData"),
+
+                    // Fungus3_05
+                    new FlagDef("Mantis Heavy Flyer", SceneInstances.Fungus3_05, false, "PersistentBoolData"),
+                    new FlagDef("Plant Trap", SceneInstances.Fungus3_05, false, "PersistentBoolData"),
+                    new FlagDef("Plant Trap (1)", SceneInstances.Fungus3_05, false, "PersistentBoolData"),
+                    new FlagDef("Plant Trap (2)", SceneInstances.Fungus3_05, false, "PersistentBoolData"),
+                    new FlagDef("Secret Mask (1)", SceneInstances.Fungus3_05, false, "PersistentBoolData"),
+
+                    // Fungus3_08
+                    new FlagDef("Mantis Heavy Flyer", SceneInstances.Fungus3_08, false, "PersistentBoolData"),
+                    new FlagDef("Mantis Heavy Flyer (1)", SceneInstances.Fungus3_08, false, "PersistentBoolData"),
+                    new FlagDef("Mantis Heavy Flyer (2)", SceneInstances.Fungus3_08, false, "PersistentBoolData"),
+                    new FlagDef("Mantis Heavy Flyer (3)", SceneInstances.Fungus3_08, false, "PersistentBoolData"),
+
+                    // Fungus3_10
+                    new FlagDef("Garden Zombie", SceneInstances.Fungus3_10, false, "PersistentBoolData"),
+                    new FlagDef("Garden Zombie (1)", SceneInstances.Fungus3_10, false, "PersistentBoolData"),
+                    new FlagDef("Secret Mask", SceneInstances.Fungus3_10, false, "PersistentBoolData"),
+
+                    // Fungus3_21
+                    new FlagDef("Soul Totem mini_horned", SceneInstances.Fungus3_21, false, "PersistentIntData"),
+
+                    // Fungus3_22
+                    new FlagDef("Garden Zombie", SceneInstances.Fungus3_22, false, "PersistentBoolData"),
+                    new FlagDef("Garden Zombie (1)", SceneInstances.Fungus3_22, false, "PersistentBoolData"),
+                    new FlagDef("Garden Zombie (2)", SceneInstances.Fungus3_22, false, "PersistentBoolData"),
+                    new FlagDef("Mantis Heavy Flyer", SceneInstances.Fungus3_22, false, "PersistentBoolData"),
+                    new FlagDef("Mantis Heavy Flyer (1)", SceneInstances.Fungus3_22, false, "PersistentBoolData"),
+                    new FlagDef("ruind_dressing_light_01", SceneInstances.Fungus3_22, false, "PersistentBoolData"),
+
                     // Fungus3_25
                     new FlagDef("Jellyfish", SceneInstances.Fungus3_25, false, "PersistentBoolData"),
                     new FlagDef("Jellyfish (1)", SceneInstances.Fungus3_25, false, "PersistentBoolData"),
@@ -3760,9 +4327,42 @@ namespace CabbyCodes.Flags
                     new FlagDef("Jellyfish (3)", SceneInstances.Fungus3_25, false, "PersistentBoolData"),
                     new FlagDef("Jellyfish (4)", SceneInstances.Fungus3_25, false, "PersistentBoolData"),
                     new FlagDef("Jellyfish (5)", SceneInstances.Fungus3_25, false, "PersistentBoolData"),
+                    new FlagDef("Shiny", SceneInstances.Fungus3_25, false, "PersistentBoolData"),
+
+                    // Fungus3_25b
+                    new FlagDef("Jellyfish", SceneInstances.Fungus3_25b, false, "PersistentBoolData"),
+                    new FlagDef("Jellyfish (1)", SceneInstances.Fungus3_25b, false, "PersistentBoolData"),
+                    new FlagDef("Jellyfish (2)", SceneInstances.Fungus3_25b, false, "PersistentBoolData"),
+
+                    // Fungus3_26
+                    new FlagDef("Jellyfish", SceneInstances.Fungus3_26, false, "PersistentBoolData"),
+                    new FlagDef("Jellyfish (1)", SceneInstances.Fungus3_26, false, "PersistentBoolData"),
+                    new FlagDef("Jellyfish (2)", SceneInstances.Fungus3_26, false, "PersistentBoolData"),
+                    new FlagDef("Jellyfish (3)", SceneInstances.Fungus3_26, false, "PersistentBoolData"),
+                    new FlagDef("Jellyfish (4)", SceneInstances.Fungus3_26, false, "PersistentBoolData"),
+                    new FlagDef("Secret Mask", SceneInstances.Fungus3_26, false, "PersistentBoolData"),
+
+                    // Fungus3_27
+                    new FlagDef("Jellyfish", SceneInstances.Fungus3_27, false, "PersistentBoolData"),
+                    new FlagDef("Jellyfish (1)", SceneInstances.Fungus3_27, false, "PersistentBoolData"),
+                    new FlagDef("Jellyfish (2)", SceneInstances.Fungus3_27, false, "PersistentBoolData"),
+                    new FlagDef("Jellyfish (3)", SceneInstances.Fungus3_27, false, "PersistentBoolData"),
+
+                    // Fungus3_28
+                    new FlagDef("Jellyfish (1)", SceneInstances.Fungus3_28, false, "PersistentBoolData"),
+                    new FlagDef("Jellyfish (2)", SceneInstances.Fungus3_28, false, "PersistentBoolData"),
+                    new FlagDef("Jellyfish (3)", SceneInstances.Fungus3_28, false, "PersistentBoolData"),
+                    new FlagDef("Jellyfish (4)", SceneInstances.Fungus3_28, false, "PersistentBoolData"),
+                    new FlagDef("Jellyfish (5)", SceneInstances.Fungus3_28, false, "PersistentBoolData"),
 
                     // Fungus3_30
                     new FlagDef("Health Cocoon", SceneInstances.Fungus3_30, false, "PersistentBoolData"),
+
+                    // Fungus3_34
+                    new FlagDef("Garden Zombie", SceneInstances.Fungus3_34, false, "PersistentBoolData"),
+                    new FlagDef("Garden Zombie (1)", SceneInstances.Fungus3_34, false, "PersistentBoolData"),
+                    new FlagDef("Garden Zombie (2)", SceneInstances.Fungus3_34, false, "PersistentBoolData"),
+                    new FlagDef("Shiny Item(Clone)", SceneInstances.Fungus3_34, false, "PersistentBoolData"),
 
                     // Fungus3_39
                     new FlagDef("Acid Walker", SceneInstances.Fungus3_39, false, "PersistentBoolData"),
@@ -3771,9 +4371,94 @@ namespace CabbyCodes.Flags
                     new FlagDef("Moss Knight Fat", SceneInstances.Fungus3_39, false, "PersistentBoolData"),
                     new FlagDef("Moss Knight Fat (1)", SceneInstances.Fungus3_39, false, "PersistentBoolData"),
                     new FlagDef("Moss Knight Fat (2)", SceneInstances.Fungus3_39, false, "PersistentBoolData"),
+                    new FlagDef("Shiny Item Stand", SceneInstances.Fungus3_39, false, "PersistentBoolData"),
+                    new FlagDef("Mantis Heavy Spawn", SceneInstances.Fungus3_39, false, "PersistentBoolData"),
+
+                    // Fungus3_40
+                    new FlagDef("Mantis Heavy Flyer", SceneInstances.Fungus3_40, false, "PersistentBoolData"),
+                    new FlagDef("Mantis Heavy Flyer (1)", SceneInstances.Fungus3_40, false, "PersistentBoolData"),
+                    new FlagDef("Remasker", SceneInstances.Fungus3_40, false, "PersistentBoolData"),
+                    new FlagDef("secret sound", SceneInstances.Fungus3_40, false, "PersistentBoolData"),
+                    new FlagDef("Secret Sound Region", SceneInstances.Fungus3_40, false, "PersistentBoolData"),
+                    new FlagDef("Soul Totem mini_two_horned", SceneInstances.Fungus3_40, false, "PersistentIntData"),
 
                     // Fungus3_44
                     new FlagDef("Secret Mask", SceneInstances.Fungus3_44, false, "PersistentBoolData"),
+
+                    // Fungus3_47
+                    new FlagDef("Secret Mask", SceneInstances.Fungus3_47, false, "PersistentBoolData"),
+
+                    // Fungus3_48
+                    new FlagDef("Mantis Heavy Flyer", SceneInstances.Fungus3_48, false, "PersistentBoolData"),
+                    new FlagDef("Mantis Heavy Flyer (1)", SceneInstances.Fungus3_48, false, "PersistentBoolData"),
+                    new FlagDef("Plant Trap", SceneInstances.Fungus3_48, false, "PersistentBoolData"),
+                    new FlagDef("Plant Trap (1)", SceneInstances.Fungus3_48, false, "PersistentBoolData"),
+                    new FlagDef("Plant Trap (10)", SceneInstances.Fungus3_48, false, "PersistentBoolData"),
+                    new FlagDef("Plant Trap (11)", SceneInstances.Fungus3_48, false, "PersistentBoolData"),
+                    new FlagDef("Plant Trap (2)", SceneInstances.Fungus3_48, false, "PersistentBoolData"),
+                    new FlagDef("Plant Trap (3)", SceneInstances.Fungus3_48, false, "PersistentBoolData"),
+                    new FlagDef("Plant Trap (4)", SceneInstances.Fungus3_48, false, "PersistentBoolData"),
+                    new FlagDef("Plant Trap (5)", SceneInstances.Fungus3_48, false, "PersistentBoolData"),
+                    new FlagDef("Plant Trap (6)", SceneInstances.Fungus3_48, false, "PersistentBoolData"),
+                    new FlagDef("Plant Trap (7)", SceneInstances.Fungus3_48, false, "PersistentBoolData"),
+                    new FlagDef("Plant Trap (8)", SceneInstances.Fungus3_48, false, "PersistentBoolData"),
+                    new FlagDef("Plant Trap (9)", SceneInstances.Fungus3_48, false, "PersistentBoolData"),
+                    new FlagDef("Remasker", SceneInstances.Fungus3_48, false, "PersistentBoolData"),
+                    new FlagDef("secret sound", SceneInstances.Fungus3_48, false, "PersistentBoolData"),
+
+                    // Fungus3_50
+                    new FlagDef("Toll Machine Bench", SceneInstances.Fungus3_50, false, "PersistentBoolData"),
+
+                    // Fungus3_archive_02
+                    new FlagDef("Jellyfish", SceneInstances.Fungus3_archive_02, false, "PersistentBoolData"),
+                    new FlagDef("Jellyfish (1)", SceneInstances.Fungus3_archive_02, false, "PersistentBoolData"),
+                    new FlagDef("Jellyfish (2)", SceneInstances.Fungus3_archive_02, false, "PersistentBoolData"),
+                    new FlagDef("Jellyfish (3)", SceneInstances.Fungus3_archive_02, false, "PersistentBoolData"),
+                    new FlagDef("Jellyfish (4)", SceneInstances.Fungus3_archive_02, false, "PersistentBoolData"),
+                    new FlagDef("Jellyfish (5)", SceneInstances.Fungus3_archive_02, false, "PersistentBoolData"),
+                    new FlagDef("Jellyfish (6)", SceneInstances.Fungus3_archive_02, false, "PersistentBoolData"),
+                #endregion
+
+                #region Hive
+                    // Hive_01
+                    new FlagDef("Bee Stinger", SceneInstances.Hive_01, false, "PersistentBoolData"),
+                    new FlagDef("Zombie Hive", SceneInstances.Hive_01, false, "PersistentBoolData"),
+
+                    // Hive_02
+                    new FlagDef("Bee Stinger (1)", SceneInstances.Hive_02, false, "PersistentBoolData"),
+                    new FlagDef("Bee Stinger (2)", SceneInstances.Hive_02, false, "PersistentBoolData"),
+                    new FlagDef("Bee Stinger (3)", SceneInstances.Hive_02, false, "PersistentBoolData"),
+                    new FlagDef("Zombie Hive (1)", SceneInstances.Hive_02, false, "PersistentBoolData"),
+                    new FlagDef("Zombie Hive (2)", SceneInstances.Hive_02, false, "PersistentBoolData"),
+                    new FlagDef("Zombie Hive (3)", SceneInstances.Hive_02, false, "PersistentBoolData"),
+
+                    // Hive_03
+                    new FlagDef("Bee Stinger (7)", SceneInstances.Hive_03, false, "PersistentBoolData"),
+                    new FlagDef("Bee Stinger (8)", SceneInstances.Hive_03, false, "PersistentBoolData"),
+                    new FlagDef("Big Bee (2)", SceneInstances.Hive_03, false, "PersistentBoolData"),
+                    new FlagDef("Remasker", SceneInstances.Hive_03, false, "PersistentBoolData"),
+                    new FlagDef("Flamebearer Spawn", SceneInstances.Hive_03, false, "PersistentBoolData"),
+
+                    // Hive_03_c
+                    new FlagDef("Bee Stinger (4)", SceneInstances.Hive_03_c, false, "PersistentBoolData"),
+                    new FlagDef("Bee Stinger (5)", SceneInstances.Hive_03_c, false, "PersistentBoolData"),
+                    new FlagDef("Bee Stinger (6)", SceneInstances.Hive_03_c, false, "PersistentBoolData"),
+                    new FlagDef("Big Bee", SceneInstances.Hive_03_c, false, "PersistentBoolData"),
+                    new FlagDef("Big Bee (1)", SceneInstances.Hive_03_c, false, "PersistentBoolData"),
+                    new FlagDef("Secret Mask", SceneInstances.Hive_03_c, false, "PersistentBoolData"),
+
+                    // Hive_04
+                    new FlagDef("Bee Stinger (10)", SceneInstances.Hive_04, false, "PersistentBoolData"),
+                    new FlagDef("Bee Stinger (11)", SceneInstances.Hive_04, false, "PersistentBoolData"),
+                    new FlagDef("Bee Stinger (12)", SceneInstances.Hive_04, false, "PersistentBoolData"),
+                    new FlagDef("Bee Stinger (9)", SceneInstances.Hive_04, false, "PersistentBoolData"),
+                    new FlagDef("Big Bee (3)", SceneInstances.Hive_04, false, "PersistentBoolData"),
+                    new FlagDef("Big Bee (4)", SceneInstances.Hive_04, false, "PersistentBoolData"),
+                    new FlagDef("Zombie Hive (4)", SceneInstances.Hive_04, false, "PersistentBoolData"),
+                    new FlagDef("Zombie Hive (6)", SceneInstances.Hive_04, false, "PersistentBoolData"),
+
+                    // Hive_05
+                    new FlagDef("Shiny Item Stand", SceneInstances.Hive_05, false, "PersistentBoolData"),
                 #endregion
 
                 #region Mines
@@ -3963,8 +4648,37 @@ namespace CabbyCodes.Flags
                 #endregion
 
                 #region Rooms
+                    // Abyss_Lighthouse_room
+                    new FlagDef("Ruins Soul Vial", SceneInstances.Abyss_Lighthouse_room, false, "PersistentBoolData"),
+                    new FlagDef("Ruins Vial Empty", SceneInstances.Abyss_Lighthouse_room, false, "PersistentBoolData"),
+
                     // Dream_01_False_Knight
                     new FlagDef("Battle Scene", SceneInstances.Dream_01_False_Knight, false, "PersistentBoolData"),
+
+                    // GG_Atrium
+                    new FlagDef("Col_Glow_Remasker", SceneInstances.GG_Atrium, false, "PersistentBoolData"),
+
+                    // GG_Lurker
+                    new FlagDef("Secret Mask", SceneInstances.GG_Lurker, false, "PersistentBoolData"),
+                    new FlagDef("Secret Mask (1)", SceneInstances.GG_Lurker, false, "PersistentBoolData"),
+                    new FlagDef("Soul Totem 3", SceneInstances.GG_Lurker, false, "PersistentIntData"),
+
+                    // GG_Pipeway
+                    new FlagDef("Fat Fluke", SceneInstances.GG_Pipeway, false, "PersistentBoolData"),
+                    new FlagDef("Fat Fluke (1)", SceneInstances.GG_Pipeway, false, "PersistentBoolData"),
+                    new FlagDef("Fat Fluke (2)", SceneInstances.GG_Pipeway, false, "PersistentBoolData"),
+                    new FlagDef("Fat Fluke (3)", SceneInstances.GG_Pipeway, false, "PersistentBoolData"),
+                    new FlagDef("Flukeman", SceneInstances.GG_Pipeway, false, "PersistentBoolData"),
+                    new FlagDef("Flukeman (1)", SceneInstances.GG_Pipeway, false, "PersistentBoolData"),
+
+                    // GG_Waterways
+                    new FlagDef("Remasker", SceneInstances.GG_Waterways, false, "PersistentBoolData"),
+                    new FlagDef("Remasker (1)", SceneInstances.GG_Waterways, false, "PersistentBoolData"),
+                    new FlagDef("Shiny Item Godfinder", SceneInstances.GG_Waterways, false, "PersistentBoolData"),
+
+                    // GG_Workshop
+                    new FlagDef("Breakable Wall_Silhouette", SceneInstances.GG_Workshop, false, "PersistentBoolData"),
+                    new FlagDef("Col_Glow_Remasker", SceneInstances.GG_Workshop, false, "PersistentBoolData"),
 
                     // Grimm_Divine
                     new FlagDef("Poo Greed", SceneInstances.Grimm_Divine, false, "PersistentBoolData", "Divine pooed the greed charm"),
@@ -3975,6 +4689,28 @@ namespace CabbyCodes.Flags
                     new FlagDef("Remasker", SceneInstances.Grimm_Main_Tent, false, "PersistentBoolData"),
                     new FlagDef("Secret Mask", SceneInstances.Grimm_Main_Tent, false, "PersistentBoolData"),
 
+                    // Room_Colosseum_02
+                    new FlagDef("Inverse Remasker", SceneInstances.Room_Colosseum_02, false, "PersistentBoolData"),
+                    new FlagDef("Remasker", SceneInstances.Room_Colosseum_02, false, "PersistentBoolData"),
+
+                    // Room_Colosseum_Bronze
+                    new FlagDef("Bursting Bouncer(Clone)", SceneInstances.Room_Colosseum_Bronze, false, "PersistentBoolData"),
+                    new FlagDef("Col_Glow_Remasker", SceneInstances.Room_Colosseum_Bronze, false, "PersistentBoolData"),
+
+                    // Room_Colosseum_Gold
+                    new FlagDef("Col_Glow_Remasker", SceneInstances.Room_Colosseum_Gold, false, "PersistentBoolData"),
+                    new FlagDef("Mage (1)", SceneInstances.Room_Colosseum_Gold, false, "PersistentBoolData"),
+                    new FlagDef("Angry Buzzer(Clone)", SceneInstances.Room_Colosseum_Gold, false, "PersistentBoolData"),
+                    new FlagDef("Lesser Mawlek(Clone)", SceneInstances.Room_Colosseum_Gold, false, "PersistentBoolData"),
+                    new FlagDef("Mantis Heavy Flyer(Clone)", SceneInstances.Room_Colosseum_Gold, false, "PersistentBoolData"),
+                    new FlagDef("Mantis Heavy(Clone)", SceneInstances.Room_Colosseum_Gold, false, "PersistentBoolData"),
+
+                    // Room_Colosseum_Silver
+                    new FlagDef("Col_Glow_Remasker", SceneInstances.Room_Colosseum_Silver, false, "PersistentBoolData"),
+                    new FlagDef("Bursting Bouncer(Clone)", SceneInstances.Room_Colosseum_Silver, false, "PersistentBoolData"),
+                    new FlagDef("Giant Hopper(Clone)", SceneInstances.Room_Colosseum_Silver, false, "PersistentBoolData"),
+                    new FlagDef("Super Spitter(Clone)", SceneInstances.Room_Colosseum_Silver, false, "PersistentBoolData"),
+
                     // Room_Fungus_Shaman
                     new FlagDef("Secret Mask", SceneInstances.Room_Fungus_Shaman, false, "PersistentBoolData"),
 
@@ -3982,6 +4718,11 @@ namespace CabbyCodes.Flags
                     new FlagDef("Remasker", SceneInstances.Room_nailmaster, false, "PersistentBoolData"),
                     new FlagDef("Remasker (1)", SceneInstances.Room_nailmaster, false, "PersistentBoolData"),
                     new FlagDef("Remasker (2)", SceneInstances.Room_nailmaster, false, "PersistentBoolData"),
+
+                    // Room_Queen
+                    new FlagDef("Inverse Remasker", SceneInstances.Room_Queen, false, "PersistentBoolData"),
+                    new FlagDef("Remasker", SceneInstances.Room_Queen, false, "PersistentBoolData"),
+                    new FlagDef("Shiny Item RoyalCharm", SceneInstances.Room_Queen, false, "PersistentBoolData"),
 
                     // Room_temple
                     new FlagDef("Remasker", SceneInstances.Room_temple, false, "PersistentBoolData"),
@@ -4126,6 +4867,7 @@ namespace CabbyCodes.Flags
                     // Ruins1_31
                     new FlagDef("Ruins Lift", SceneInstances.Ruins1_31, false, "PersistentIntData"),
                     new FlagDef("Ruins Vial Empty", SceneInstances.Ruins1_31, false, "PersistentBoolData"),
+                    new FlagDef("Shiny", SceneInstances.Ruins1_31, false, "PersistentBoolData", "Cornifer's left note"),
 
                     // Ruins1_32
                     new FlagDef("Ruins Vial Empty (4)", SceneInstances.Ruins1_32, false, "PersistentBoolData"),
@@ -4252,12 +4994,131 @@ namespace CabbyCodes.Flags
                     new FlagDef("Royal Zombie Coward", SceneInstances.Ruins2_09, false, "PersistentBoolData"),
                     new FlagDef("Royal Zombie Fat", SceneInstances.Ruins2_09, false, "PersistentBoolData"),
 
+                    // Ruins2_11
+                    new FlagDef("Battle Scene", SceneInstances.Ruins2_11, false, "PersistentBoolData", "The Collector battle"),
+                    new FlagDef("Shiny Item CollectorMap", SceneInstances.Ruins2_11, false, "PersistentBoolData"),
+                    new FlagDef("Break Jar", SceneInstances.Ruins2_11_b, false, "PersistentBoolData", "Maybe grub 1"),
+                    new FlagDef("Break Jar (1)", SceneInstances.Ruins2_11_b, false, "PersistentBoolData", "maybe grub 2"),
+                    new FlagDef("Inverse Remasker", SceneInstances.Ruins2_11_b, false, "PersistentBoolData"),
+                    new FlagDef("Remasker (1)", SceneInstances.Ruins2_11_b, false, "PersistentBoolData"),
+                    new FlagDef("Remasker (2)", SceneInstances.Ruins2_11_b, false, "PersistentBoolData"),
+                    new FlagDef("Break Jar (2)", SceneInstances.Ruins2_11, false, "PersistentBoolData"),
+                    new FlagDef("Break Jar (3)", SceneInstances.Ruins2_11, false, "PersistentBoolData"),
+                    new FlagDef("Break Jar (4)", SceneInstances.Ruins2_11, false, "PersistentBoolData"),
+                    new FlagDef("Break Jar (5)", SceneInstances.Ruins2_11, false, "PersistentBoolData"),
+                    new FlagDef("Break Jar (6)", SceneInstances.Ruins2_11, false, "PersistentBoolData"),
+                    new FlagDef("Break Jar (7)", SceneInstances.Ruins2_11, false, "PersistentBoolData"),
+                    new FlagDef("Break Jar (8)", SceneInstances.Ruins2_11, false, "PersistentBoolData"),
+                    new FlagDef("inver remask_above boss encounter", SceneInstances.Ruins2_11, false, "PersistentBoolData"),
+                    new FlagDef("inver remask_above first corridor", SceneInstances.Ruins2_11, false, "PersistentBoolData"),
+                    new FlagDef("inver remask_below second corridor", SceneInstances.Ruins2_11, false, "PersistentBoolData"),
+                    new FlagDef("inver remask_below second corridor (1)", SceneInstances.Ruins2_11, false, "PersistentBoolData"),
+                    new FlagDef("inver remask_below second corridor (2)", SceneInstances.Ruins2_11, false, "PersistentBoolData"),
+                    new FlagDef("Secret Mask", SceneInstances.Ruins2_11, false, "PersistentBoolData"),
+                    new FlagDef("secret sound_grub room", SceneInstances.Ruins2_11, false, "PersistentBoolData"),
+
                     // Ruins2_Watcher_Room
                     new FlagDef("Inverse Remasker", SceneInstances.Ruins2_Watcher_Room, false, "PersistentBoolData"),
                     new FlagDef("Royal Zombie Coward", SceneInstances.Ruins2_Watcher_Room, false, "PersistentBoolData"),
                     new FlagDef("Ruins Lift", SceneInstances.Ruins2_Watcher_Room, false, "PersistentIntData"),
                     new FlagDef("Secret Mask", SceneInstances.Ruins2_Watcher_Room, false, "PersistentBoolData"),
                     new FlagDef("Secret sound", SceneInstances.Ruins2_Watcher_Room, false, "PersistentBoolData"),
+                #endregion
+
+                #region Waterways
+                    // Waterways_01
+                    new FlagDef("Ceiling Dropper", SceneInstances.Waterways_01, false, "PersistentBoolData"),
+                    new FlagDef("Ceiling Dropper (1)", SceneInstances.Waterways_01, false, "PersistentBoolData"),
+                    new FlagDef("Ceiling Dropper (2)", SceneInstances.Waterways_01, false, "PersistentBoolData"),
+                    new FlagDef("Ceiling Dropper (3)", SceneInstances.Waterways_01, false, "PersistentBoolData"),
+                    new FlagDef("Ceiling Dropper (4)", SceneInstances.Waterways_01, false, "PersistentBoolData"),
+                    new FlagDef("Soul Totem mini_horned", SceneInstances.Waterways_01, false, "PersistentIntData"),
+
+                    // Waterways_02
+                    new FlagDef("Ceiling Dropper", SceneInstances.Waterways_02, false, "PersistentBoolData"),
+                    new FlagDef("Flukeman", SceneInstances.Waterways_02, false, "PersistentBoolData"),
+                    new FlagDef("Flukeman (1)", SceneInstances.Waterways_02, false, "PersistentBoolData"),
+                    new FlagDef("Flukeman (2)", SceneInstances.Waterways_02, false, "PersistentBoolData"),
+                    new FlagDef("Flukeman (3)", SceneInstances.Waterways_02, false, "PersistentBoolData"),
+                    new FlagDef("Remasker", SceneInstances.Waterways_02, false, "PersistentBoolData"),
+                    new FlagDef("Remasker (1)", SceneInstances.Waterways_02, false, "PersistentBoolData"),
+                    new FlagDef("Secret Mask", SceneInstances.Waterways_02, false, "PersistentBoolData"),
+                    new FlagDef("Secret Mask (1)", SceneInstances.Waterways_02, false, "PersistentBoolData"),
+                    new FlagDef("Secret Sound Region", SceneInstances.Waterways_02, false, "PersistentBoolData"),
+                    new FlagDef("Shiny Item(Clone)", SceneInstances.Waterways_02, false, "PersistentBoolData"),
+
+                    // Waterways_04
+                    new FlagDef("Ceiling Dropper", SceneInstances.Waterways_04, false, "PersistentBoolData"),
+                    new FlagDef("Flukeman", SceneInstances.Waterways_04, false, "PersistentBoolData"),
+                    new FlagDef("Flukeman (1)", SceneInstances.Waterways_04, false, "PersistentBoolData"),
+                    new FlagDef("Secret Mask", SceneInstances.Waterways_04, false, "PersistentBoolData"),
+                    new FlagDef("Shiny Item(Clone)", SceneInstances.Waterways_04, false, "PersistentBoolData"),
+
+                    // Waterways_04b
+                    new FlagDef("Ceiling Dropper", SceneInstances.Waterways_04b, false, "PersistentBoolData"),
+                    new FlagDef("Ceiling Dropper (1)", SceneInstances.Waterways_04b, false, "PersistentBoolData"),
+                    new FlagDef("Flukeman", SceneInstances.Waterways_04b, false, "PersistentBoolData"),
+                    new FlagDef("Flukeman (1)", SceneInstances.Waterways_04b, false, "PersistentBoolData"),
+                    new FlagDef("Secret Mask", SceneInstances.Waterways_04b, false, "PersistentBoolData"),
+                    new FlagDef("Secret Sound Region", SceneInstances.Waterways_04b, false, "PersistentBoolData"),
+                    new FlagDef("Soul Totem mini_two_horned", SceneInstances.Waterways_04b, false, "PersistentIntData"),
+
+                    // Waterways_08
+                    new FlagDef("Ceiling Dropper", SceneInstances.Waterways_08, false, "PersistentBoolData"),
+                    new FlagDef("Ceiling Dropper (1)", SceneInstances.Waterways_08, false, "PersistentBoolData"),
+                    new FlagDef("Ceiling Dropper (2)", SceneInstances.Waterways_08, false, "PersistentBoolData"),
+                    new FlagDef("Ceiling Dropper (3)", SceneInstances.Waterways_08, false, "PersistentBoolData"),
+                    new FlagDef("Ceiling Dropper (4)", SceneInstances.Waterways_08, false, "PersistentBoolData"),
+                    new FlagDef("Flukeman", SceneInstances.Waterways_08, false, "PersistentBoolData"),
+                    new FlagDef("Flukeman (1)", SceneInstances.Waterways_08, false, "PersistentBoolData"),
+                    new FlagDef("Flukeman (13)", SceneInstances.Waterways_08, false, "PersistentBoolData"),
+                    new FlagDef("Flukeman (15)", SceneInstances.Waterways_08, false, "PersistentBoolData"),
+                    new FlagDef("Flukeman (16)", SceneInstances.Waterways_08, false, "PersistentBoolData"),
+                    new FlagDef("Flukeman (2)", SceneInstances.Waterways_08, false, "PersistentBoolData"),
+                    new FlagDef("Flukeman (3)", SceneInstances.Waterways_08, false, "PersistentBoolData"),
+                    new FlagDef("Flukeman (4)", SceneInstances.Waterways_08, false, "PersistentBoolData"),
+                    new FlagDef("Flukeman (5)", SceneInstances.Waterways_08, false, "PersistentBoolData"),
+                    new FlagDef("Inverse Remasker", SceneInstances.Waterways_08, false, "PersistentBoolData"),
+                    new FlagDef("Secret Mask", SceneInstances.Waterways_08, false, "PersistentBoolData"),
+                    new FlagDef("Soul Totem mini_two_horned", SceneInstances.Waterways_08, false, "PersistentIntData"),
+
+                    // Waterways_12
+                    new FlagDef("Shiny Item", SceneInstances.Waterways_12, false, "PersistentBoolData"),
+                #endregion
+
+                #region White Palace
+                    // White_Palace_02
+                    new FlagDef("Soul Totem white", SceneInstances.White_Palace_02, false, "PersistentIntData"),
+
+                    // White_Palace_03_hub
+                    new FlagDef("Soul Totem white", SceneInstances.White_Palace_03_hub, false, "PersistentIntData"),
+
+                    // White_Palace_04
+                    new FlagDef("Soul Totem white", SceneInstances.White_Palace_04, false, "PersistentIntData"),
+
+                    // White_Palace_06
+                    new FlagDef("Remasker", SceneInstances.White_Palace_18, false, "PersistentBoolData"),
+                    new FlagDef("Secret Sound Region", SceneInstances.White_Palace_18, false, "PersistentBoolData"),
+
+                    // White_Palace_09
+                    new FlagDef("Soul Totem white", SceneInstances.White_Palace_09, false, "PersistentIntData"),
+                    new FlagDef("Shiny Item RoyalCharm", SceneInstances.White_Palace_09, false, "PersistentBoolData"),
+
+                    // White_Palace_11
+                    new FlagDef("Royal Gaurd", SceneInstances.White_Palace_11, false, "PersistentBoolData"),
+
+                    // White_Palace_15
+                    new FlagDef("Soul Totem white", SceneInstances.White_Palace_15, false, "PersistentIntData"),
+
+                    // White_Palace_17
+                    new FlagDef("Secret Mask", SceneInstances.White_Palace_17, false, "PersistentBoolData"),
+
+                    // White_Palace_19
+                    new FlagDef("Inverse Remasker (1)", SceneInstances.White_Palace_19, false, "PersistentBoolData"),
+                    new FlagDef("Secret Sound Region", SceneInstances.White_Palace_19, false, "PersistentBoolData"),
+
+                    // White_Palace_20
+                    new FlagDef("Inverse Remasker", SceneInstances.White_Palace_20, false, "PersistentBoolData"),
                 #endregion
 
             #endregion

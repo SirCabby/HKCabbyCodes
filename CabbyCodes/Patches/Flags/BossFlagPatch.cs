@@ -33,12 +33,15 @@ namespace CabbyCodes.Patches.Flags
             Add(FlagInstances.elderHuDefeated, SceneInstances.Fungus2_32, new Vector2(46, 4));
             Add(FlagInstances.falseKnightDefeated, SceneInstances.Crossroads_10, new Vector2(57, 28));
             Add(FlagInstances.falseKnightDreamDefeated, SceneInstances.Crossroads_10, new Vector2(58, 48));
+            Add(FlagInstances.Fungus3_23__Battle_Scene, SceneInstances.Fungus3_23, new Vector2(46, 22));
             Add(FlagInstances.galienDefeated, SceneInstances.Cliffs_01, new Vector2(50, 34));
             Add(FlagInstances.hornet1Defeated, SceneInstances.Fungus1_04 , new Vector2(40, 36));
+            Add(FlagInstances.hornetOutskirtsDefeated, SceneInstances.Deepnest_East_Hornet, new Vector2(10, 29));
             Add(FlagInstances.infectedKnightDreamDefeated, SceneInstances.Abyss_20, new Vector2(28, 29));
             Add(FlagInstances.infectedKnightEncountered, SceneInstances.Abyss_19, new Vector2(44, 29));
             Add(FlagInstances.mageLordDefeated, SceneInstances.Ruins1_24 , new Vector2(41, 30));
             Add(FlagInstances.Mines_32__Battle_Scene, SceneInstances.Mines_32, new Vector2(44, 12));
+            Add(FlagInstances.mumCaterpillarDefeated, SceneInstances.Fungus3_40, new Vector2(63, 11));
             Add(FlagInstances.noEyesDefeated, SceneInstances.Fungus1_35, new Vector2(46, 4));
             Add(FlagInstances.xeroDefeated, SceneInstances.RestingGrounds_02, new Vector2(93, 12));
             
@@ -56,6 +59,10 @@ namespace CabbyCodes.Patches.Flags
                 FlagInstances.mageLordDefeated,
                 FlagInstances.infectedKnightEncountered,
                 FlagInstances.Mines_32__Battle_Scene,
+                FlagInstances.hornetOutskirtsDefeated,
+                FlagInstances.Fungus3_23__Battle_Scene,
+                FlagInstances.collectorDefeated,
+                FlagInstances.flukeMotherDefeated,
 
 
                 
@@ -69,6 +76,7 @@ namespace CabbyCodes.Patches.Flags
                 FlagInstances.elderHuDefeated,
                 FlagInstances.galienDefeated,
                 FlagInstances.aladarSlugDefeated,
+                FlagInstances.mumCaterpillarDefeated,
                 FlagInstances.noEyesDefeated,
                 FlagInstances.xeroDefeated
             };
@@ -87,12 +95,24 @@ namespace CabbyCodes.Patches.Flags
             {
                 if (flag == FlagInstances.mageLordDefeated)
                 {
-                    panels.Add(CreateMageLordPanel());
+                    panels.Add(CreateBossPanelWithDependentFlags(flag, new[] { 
+                        FlagInstances.mageLordEncountered, 
+                        FlagInstances.mageLordEncountered_2 
+                    }));
                     continue;
                 }
                 else if (flag == FlagInstances.infectedKnightDreamDefeated)
                 {
-                    panels.Add(CreateBrokenVesselPanel());
+                    panels.Add(CreateBossPanelWithDependentFlags(flag, new[] { 
+                        FlagInstances.infectedKnightOrbsCollected 
+                    }));
+                    continue;
+                }
+                else if (flag == FlagInstances.flukeMotherDefeated)
+                {
+                    panels.Add(CreateBossPanelWithDependentFlags(flag, new[] { 
+                        FlagInstances.flukeMotherEncountered 
+                    }));
                     continue;
                 }
 
@@ -139,9 +159,14 @@ namespace CabbyCodes.Patches.Flags
             return panels;
         }
 
-        private ToggleWithTeleportPanel CreateMageLordPanel()
+        /// <summary>
+        /// Creates a boss panel with teleport functionality and dependent flags that get set to the same value
+        /// </summary>
+        /// <param name="flag">The main boss flag</param>
+        /// <param name="dependentFlags">Additional flags that should be set to the same value</param>
+        /// <returns>ToggleWithTeleportPanel for the boss</returns>
+        private ToggleWithTeleportPanel CreateBossPanelWithDependentFlags(FlagDef flag, FlagDef[] dependentFlags)
         {
-            var flag = FlagInstances.mageLordDefeated;
             bossLocations.TryGetValue(flag, out var bossTeleportLocation);
 
             return new ToggleWithTeleportPanel(new DelegateReference<bool>(
@@ -149,23 +174,11 @@ namespace CabbyCodes.Patches.Flags
                 value =>
                 {
                     FlagManager.SetBoolFlag(flag, value);
-                    FlagManager.SetBoolFlag(FlagInstances.mageLordEncountered, value);
-                    FlagManager.SetBoolFlag(FlagInstances.mageLordEncountered_2, value);
-                }
-            ), () => TeleportService.DoTeleport(bossTeleportLocation), flag.ReadableName);
-        }
-
-        private ToggleWithTeleportPanel CreateBrokenVesselPanel()
-        {
-            var flag = FlagInstances.infectedKnightDreamDefeated;
-            bossLocations.TryGetValue(flag, out var bossTeleportLocation);
-
-            return new ToggleWithTeleportPanel(new DelegateReference<bool>(
-                () => FlagManager.GetBoolFlag(flag),
-                value =>
-                {
-                    FlagManager.SetBoolFlag(flag, value);
-                    FlagManager.SetBoolFlag(FlagInstances.infectedKnightOrbsCollected, value);
+                    // Set all dependent flags to the same value
+                    foreach (var dependentFlag in dependentFlags)
+                    {
+                        FlagManager.SetBoolFlag(dependentFlag, value);
+                    }
                 }
             ), () => TeleportService.DoTeleport(bossTeleportLocation), flag.ReadableName);
         }

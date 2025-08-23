@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using CabbyCodes.Flags;
 using CabbyCodes.Patches.BasePatches;
@@ -34,22 +35,33 @@ namespace CabbyCodes.Patches.Flags
                 FlagInstances.cityBridge2,
                 FlagInstances.cityGateClosed,
                 FlagInstances.openedCityGate,
+                FlagInstances.bathHouseOpened,
                 FlagInstances.restingGroundsCryptWall,
                 FlagInstances.dreamReward2,
                 FlagInstances.mageLordOrbsCollected,
                 FlagInstances.spaBugsEncountered,
                 FlagInstances.mineLiftOpened,
+                FlagInstances.blizzardEnded,
+                FlagInstances.abyssGateOpened,
+                FlagInstances.oneWayArchive,
+                FlagInstances.tollBenchQueensGardens,
+                FlagInstances.openedLoveDoor,
+                FlagInstances.usedWhiteKey,
+                FlagInstances.openedWaterwaysManhole,
+                FlagInstances.godseekerUnlocked,
 
                 
 
 
-
-
-                
-                FlagInstances.galienPinned,
-                FlagInstances.huPinned,
                 FlagInstances.nightmareLanternAppeared,
                 FlagInstances.nightmareLanternLit,
+
+                
+
+
+                FlagInstances.galienPinned,
+                FlagInstances.huPinned,
+                FlagInstances.markothPinned,
                 FlagInstances.noEyesPinned,
                 FlagInstances.xeroPinned
             };
@@ -68,7 +80,37 @@ namespace CabbyCodes.Patches.Flags
             {
                 if (flag == FlagInstances.openedCityGate)
                 {
-                    panels.Add(CreateCityGatePanel());
+                    panels.Add(CreateDoorPanel(flag, FlagInstances.hasCityKey, "Cannot open City Gate without City Crest\n\nGet or toggle the City Crest to toggle this gate"));
+                    continue;
+                }
+                else if (flag == FlagInstances.openedLoveDoor)
+                {
+                    panels.Add(CreateDoorPanel(flag, FlagInstances.hasLoveKey, "Cannot open Love Door without Love Key\n\nGet or toggle the Love Key to toggle this door"));
+                    continue;
+                }
+                else if (flag == FlagInstances.usedWhiteKey)
+                {
+                    panels.Add(CreateDoorPanel(flag, FlagInstances.hasWhiteKey, "Must have the Elegant Key to open this door", FlagInstances.openedMageDoor_v2));
+                    continue;
+                }
+                else if (flag == FlagInstances.openedWaterwaysManhole)
+                {
+                    panels.Add(CreateSimpleKeyDoorPanel(flag));
+                    continue;
+                }
+                else if (flag == FlagInstances.jijiDoorUnlocked)
+                {
+                    panels.Add(CreateSimpleKeyDoorPanel(flag));
+                    continue;
+                }
+                else if (flag == FlagInstances.bathHouseOpened)
+                {
+                    panels.Add(CreateSimpleKeyDoorPanel(flag));
+                    continue;
+                }
+                else if (flag == FlagInstances.godseekerUnlocked)
+                {
+                    panels.Add(CreateSimpleKeyDoorPanel(flag));
                     continue;
                 }
                 else if (flag == FlagInstances.dreamReward2)
@@ -84,20 +126,32 @@ namespace CabbyCodes.Patches.Flags
             return panels;
         }
 
-        private TogglePanel CreateCityGatePanel()
+        /// <summary>
+        /// Creates a door panel with key dependency logic
+        /// </summary>
+        /// <param name="doorFlag">The flag representing the door state</param>
+        /// <param name="keyFlag">The flag representing the key possession</param>
+        /// <param name="disabledMessage">Message to show when the door cannot be interacted with</param>
+        /// <param name="additionalFlag">Optional additional flag to update when door state changes</param>
+        /// <returns>A toggle panel for the door</returns>
+        private TogglePanel CreateDoorPanel(FlagDef doorFlag, FlagDef keyFlag, string disabledMessage, FlagDef additionalFlag = null)
         {
-            var flag = FlagInstances.openedCityGate;
-            var childFlag = FlagInstances.hasCityKey;
-            var shouldBeInteractable = FlagManager.GetBoolFlag(flag) || FlagManager.GetBoolFlag(childFlag);
+            var shouldBeInteractable = FlagManager.GetBoolFlag(doorFlag) || FlagManager.GetBoolFlag(keyFlag);
 
             var togglePanel = new TogglePanel(new DelegateReference<bool>(
-                () => FlagManager.GetBoolFlag(flag),
+                () => FlagManager.GetBoolFlag(doorFlag),
                 value =>
                 {
-                    FlagManager.SetBoolFlag(flag, value);
-                    FlagManager.SetBoolFlag(childFlag, !value);
+                    FlagManager.SetBoolFlag(doorFlag, value);
+                    FlagManager.SetBoolFlag(keyFlag, !value);
+                    
+                    // Update additional flag if provided
+                    if (additionalFlag != null)
+                    {
+                        FlagManager.SetBoolFlag(additionalFlag, value);
+                    }
                 }
-            ), flag.ReadableName);
+            ), doorFlag.ReadableName);
 
             var toggleButton = togglePanel.GetToggleButton();
             toggleButton.SetInteractable(shouldBeInteractable);
@@ -105,7 +159,7 @@ namespace CabbyCodes.Patches.Flags
             // Set disabled message for hover popup
             if (!shouldBeInteractable)
             {
-                toggleButton.SetDisabledMessage("Cannot open City Gate without City Crest\n\nGet or toggle the City Crest to toggle this gate");
+                toggleButton.SetDisabledMessage(disabledMessage);
             }
             else
             {
@@ -114,5 +168,57 @@ namespace CabbyCodes.Patches.Flags
 
             return togglePanel;
         }
+
+        /// <summary>
+        /// Creates a door panel that requires simple keys and manages the simple key count
+        /// </summary>
+        /// <param name="doorFlag">The flag representing the door state</param>
+        /// <returns>A toggle panel for the door</returns>
+        private TogglePanel CreateSimpleKeyDoorPanel(FlagDef doorFlag)
+        {
+            var currentSimpleKeys = FlagManager.GetIntFlag(FlagInstances.simpleKeys);
+            var isDoorOpen = FlagManager.GetBoolFlag(doorFlag);
+            
+            // Panel is disabled if the door is closed and there are no simple keys
+            var shouldBeInteractable = !(isDoorOpen == false && currentSimpleKeys == 0);
+
+            var togglePanel = new TogglePanel(new DelegateReference<bool>(
+                () => FlagManager.GetBoolFlag(doorFlag),
+                value =>
+                {
+                    var simpleKeys = FlagManager.GetIntFlag(FlagInstances.simpleKeys);
+                    
+                    if (value)
+                    {
+                        // Opening the door consumes a simple key
+                        FlagManager.SetIntFlag(FlagInstances.simpleKeys, Math.Max(0, simpleKeys - 1));
+                    }
+                    else
+                    {
+                        // Closing the door returns a simple key
+                        FlagManager.SetIntFlag(FlagInstances.simpleKeys, simpleKeys + 1);
+                    }
+                    
+                    FlagManager.SetBoolFlag(doorFlag, value);
+                }
+            ), doorFlag.ReadableName);
+
+            var toggleButton = togglePanel.GetToggleButton();
+            toggleButton.SetInteractable(shouldBeInteractable);
+            
+            // Set disabled message for hover popup
+            if (!shouldBeInteractable)
+            {
+                toggleButton.SetDisabledMessage("Cannot open door without Simple Keys");
+            }
+            else
+            {
+                toggleButton.SetDisabledMessage(""); // Clear message when enabled
+            }
+
+            return togglePanel;
+        }
+
+
     }
 } 

@@ -1227,7 +1227,7 @@ namespace CabbyCodes.Patches.Flags.Triage
             }
             else
             {
-                return $"<color=#FFFFFF><b>{notification}</b></color>"; // White for other notifications
+                return $"<color=#87CEEB><b>{notification}</b></color>"; // Light blue for other notifications
             }
         }
 
@@ -1236,7 +1236,7 @@ namespace CabbyCodes.Patches.Flags.Triage
             if (notificationPanel == null) return;
             
             int count = notificationQueue.Count;
-            string displayText = $"<color=#FFFFFF><b>Flag Monitor Active - Notifications: {count}/{MAX_NOTIFICATIONS}</b></color>\n\n";
+            string displayText = $"<color=#00BFFF><b>Flag Monitor Active - Notifications: {count}/{MAX_NOTIFICATIONS}</b></color>\n\n";
             
             foreach (string notification in notificationQueue)
             {
@@ -1287,7 +1287,7 @@ namespace CabbyCodes.Patches.Flags.Triage
             notificationQueue.Clear();
             if (notificationText != null)
             {
-                notificationText.text = $"<color=#FFFFFF><b>Flag Monitor Active - Notifications: 0/{MAX_NOTIFICATIONS}</b></color>\n\n<color=#CCCCCC>Notifications cleared.</color>";
+                notificationText.text = $"<color=#00BFFF><b>Flag Monitor Active - Notifications: 0/{MAX_NOTIFICATIONS}</b></color>\n\n<color=#CCCCCC>Notifications cleared.</color>";
                 
                 LayoutRebuilder.ForceRebuildLayoutImmediate(notificationText.GetComponent<RectTransform>());
                 LayoutRebuilder.ForceRebuildLayoutImmediate(notificationText.transform.parent.GetComponent<RectTransform>());
@@ -1541,6 +1541,16 @@ namespace CabbyCodes.Patches.Flags.Triage
         private static void PollPlayerDataFields()
         {
             if (PlayerData.instance == null) return;
+            
+            // Increment test counter to track polling calls
+            testCounter++;
+            
+            // Minimal debug logging to verify polling is running
+            if (testCounter % 100 == 0) // Only log every 100th call to avoid spam
+            {
+                Debug.Log($"[Flag Monitor] Polling PlayerData fields... (testCounter: {testCounter})");
+                Debug.Log($"[Flag Monitor] Current state - Tracked: {trackedPlayerDataFields.Count}, Discovered: {discoveredPlayerDataFlags.Count}");
+            }
 
             // Check for instance change
             if (PlayerData.instance != lastKnownInstance)
@@ -1569,22 +1579,60 @@ namespace CabbyCodes.Patches.Flags.Triage
                     // Check if this is a newly discovered flag (not in current tracking AND not previously discovered)
                     bool isNewFlag = !trackedPlayerDataFields.Contains(fieldName) && !discoveredPlayerDataFlags.Contains(fieldName);
                     
+                    // Log all fields being checked (but only occasionally to avoid spam)
+                    if (testCounter % 200 == 0)
+                    {
+                        Debug.Log($"[Flag Monitor] Checking field: {fieldName} (Type: {field.FieldType.Name}) - New: {isNewFlag}, Tracked: {trackedPlayerDataFields.Contains(fieldName)}, Discovered: {discoveredPlayerDataFlags.Contains(fieldName)}");
+                    }
+                    
                     if (isNewFlag)
                     {
-                        discoveredPlayerDataFlags.Add(fieldName);
+                        Debug.Log($"[Flag Monitor] NEW FLAG DISCOVERED: {fieldName} (Type: {field.FieldType.Name})");
+                        
+                        // Check if this complex type should be treated as a special flag type BEFORE regular discovery
                         string flagType = field.FieldType.Name;
-                        string notification = $"[NEW PLAYERDATA FLAG]: {fieldName} ({flagType}) = {currentValue}";
-                        AddNotification(notification);
+                        string fullTypeName = field.FieldType.FullName;
                         
-                        // Log to console with copy-paste ready format
-                        string codeFormat = $"public static readonly FlagDef {fieldName} = new FlagDef(\"{fieldName}\", null, false, \"PlayerData_{flagType}\");";
+                        // Special handling for BossStatue types
+                        bool isBossStatueType = !IsSimpleType(field.FieldType) && 
+                                              (flagType == "BossStatue" || 
+                                               flagType.EndsWith("BossStatue") ||
+                                               (flagType == "Completion" && fullTypeName != null && fullTypeName.Contains("BossStatue")));
                         
-                        // Log to file
-                        fileLoggingReference.LogMessage($"[DISCOVERY] New PlayerData flag: {codeFormat}");
-                        
-                        // Store for later reference (both new and historical)
-                        newFlagDiscoveries[fieldName] = ("Global", $"PlayerData_{flagType}", currentValue);
-                        historicalDiscoveries[fieldName] = ("Global", $"PlayerData_{flagType}", currentValue);
+                        if (isBossStatueType)
+                        {
+                            // Handle as BossStatue flag
+                            discoveredPlayerDataFlags.Add(fieldName);
+                            string notification = $"[NEW BOSSSTATUE FLAG]: {fieldName} (BossStatue) = {currentValue}";
+                            AddNotification(notification);
+                            
+                            // Log to console with copy-paste ready format for BossStatue
+                            string codeFormat = $"public static readonly FlagDef {fieldName} = new FlagDef(\"{fieldName}\", null, false, \"PlayerData_BossStatue\");";
+                            
+                            // Log to file
+                            fileLoggingReference.LogMessage($"[DISCOVERY] New BossStatue flag: {codeFormat}");
+                            
+                            // Store for later reference (both new and historical)
+                            newFlagDiscoveries[fieldName] = ("Global", "PlayerData_BossStatue", currentValue);
+                            historicalDiscoveries[fieldName] = ("Global", "PlayerData_BossStatue", currentValue);
+                        }
+                        else
+                        {
+                            // Handle as regular flag
+                            discoveredPlayerDataFlags.Add(fieldName);
+                            string notification = $"[NEW PLAYERDATA FLAG]: {fieldName} ({flagType}) = {currentValue}";
+                            AddNotification(notification);
+                            
+                            // Log to console with copy-paste ready format
+                            string codeFormat = $"public static readonly FlagDef {fieldName} = new FlagDef(\"{fieldName}\", null, false, \"PlayerData_{flagType}\");";
+                            
+                            // Log to file
+                            fileLoggingReference.LogMessage($"[DISCOVERY] New PlayerData flag: {codeFormat}");
+                            
+                            // Store for later reference (both new and historical)
+                            newFlagDiscoveries[fieldName] = ("Global", $"PlayerData_{flagType}", currentValue);
+                            historicalDiscoveries[fieldName] = ("Global", $"PlayerData_{flagType}", currentValue);
+                        }
                         
                         // Auto-add to tracking sets for immediate monitoring
                         trackedPlayerDataFields.Add(fieldName);
@@ -1739,6 +1787,30 @@ namespace CabbyCodes.Patches.Flags.Triage
                     var vector = (Vector3)value;
                     details.Add($"X: {vector.x:F2}, Y: {vector.y:F2}, Z: {vector.z:F2}");
                 }
+                else if (valueType.Name == "BossStatue" || valueType.Name.EndsWith("BossStatue") || 
+                        (valueType.Name == "Completion" && valueType.FullName != null && valueType.FullName.Contains("BossStatue")))
+                {
+                    // Handle BossStatue types specifically for better display
+                    try
+                    {
+                        var hasBeenSeenField = valueType.GetField("hasBeenSeen");
+                        var isUnlockedField = valueType.GetField("isUnlocked");
+                        var completedTier1Field = valueType.GetField("completedTier1");
+                        var completedTier2Field = valueType.GetField("completedTier2");
+                        var completedTier3Field = valueType.GetField("completedTier3");
+                        
+                        if (hasBeenSeenField != null) details.Add($"Seen: {hasBeenSeenField.GetValue(value)}");
+                        if (isUnlockedField != null) details.Add($"Unlocked: {isUnlockedField.GetValue(value)}");
+                        if (completedTier1Field != null) details.Add($"Tier1: {completedTier1Field.GetValue(value)}");
+                        if (completedTier2Field != null) details.Add($"Tier2: {completedTier2Field.GetValue(value)}");
+                        if (completedTier3Field != null) details.Add($"Tier3: {completedTier3Field.GetValue(value)}");
+                    }
+                    catch
+                    {
+                        // Fallback to generic reflection if specific fields fail
+                        details.Add($"BossStatue: {value}");
+                    }
+                }
                 else
                 {
                     // Use reflection to get all public fields and properties
@@ -1877,6 +1949,77 @@ namespace CabbyCodes.Patches.Flags.Triage
                         !Mathf.Approximately(previousVector.z, currentVector.z))
                     {
                         changes.Add($"[PlayerData]: {fieldName} = {FormatComplexValue(currentValue, valueType)}");
+                    }
+                }
+                else if (valueType.Name == "BossStatue" || valueType.Name.EndsWith("BossStatue") || 
+                        (valueType.Name == "Completion" && valueType.FullName != null && valueType.FullName.Contains("BossStatue")))
+                {
+                    // Handle BossStatue types specifically for better change detection
+                    try
+                    {
+                        var hasBeenSeenField = valueType.GetField("hasBeenSeen");
+                        var isUnlockedField = valueType.GetField("isUnlocked");
+                        var completedTier1Field = valueType.GetField("completedTier1");
+                        var completedTier2Field = valueType.GetField("completedTier2");
+                        var completedTier3Field = valueType.GetField("completedTier3");
+                        
+                        if (hasBeenSeenField != null)
+                        {
+                            var prevSeen = hasBeenSeenField.GetValue(previousValue);
+                            var currSeen = hasBeenSeenField.GetValue(currentValue);
+                            if (!Equals(prevSeen, currSeen))
+                            {
+                                changes.Add($"[PlayerData]: {fieldName}.hasBeenSeen = {currSeen}");
+                            }
+                        }
+                        
+                        if (isUnlockedField != null)
+                        {
+                            var prevUnlocked = isUnlockedField.GetValue(previousValue);
+                            var currUnlocked = isUnlockedField.GetValue(currentValue);
+                            if (!Equals(prevUnlocked, currUnlocked))
+                            {
+                                changes.Add($"[PlayerData]: {fieldName}.isUnlocked = {currUnlocked}");
+                            }
+                        }
+                        
+                        if (completedTier1Field != null)
+                        {
+                            var prevTier1 = completedTier1Field.GetValue(previousValue);
+                            var currTier1 = completedTier1Field.GetValue(currentValue);
+                            if (!Equals(prevTier1, currTier1))
+                            {
+                                changes.Add($"[PlayerData]: {fieldName}.completedTier1 = {currTier1}");
+                            }
+                        }
+                        
+                        if (completedTier2Field != null)
+                        {
+                            var prevTier2 = completedTier2Field.GetValue(previousValue);
+                            var currTier2 = completedTier2Field.GetValue(currentValue);
+                            if (!Equals(prevTier2, currTier2))
+                            {
+                                changes.Add($"[PlayerData]: {fieldName}.completedTier2 = {currTier2}");
+                            }
+                        }
+                        
+                        if (completedTier3Field != null)
+                        {
+                            var prevTier3 = completedTier3Field.GetValue(previousValue);
+                            var currTier3 = completedTier3Field.GetValue(currentValue);
+                            if (!Equals(prevTier3, currTier3))
+                            {
+                                changes.Add($"[PlayerData]: {fieldName}.completedTier3 = {currTier3}");
+                            }
+                        }
+                    }
+                    catch
+                    {
+                        // Fallback to generic comparison if specific fields fail
+                        if (!Equals(previousValue, currentValue))
+                        {
+                            changes.Add($"[PlayerData]: {fieldName} = {FormatComplexValue(currentValue, valueType)}");
+                        }
                     }
                 }
                 else

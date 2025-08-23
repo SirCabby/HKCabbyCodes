@@ -61,7 +61,7 @@ namespace CabbyCodes.Flags.FlagData
                 FlagInstances.gaveFragileStrength, FlagInstances.pooedFragileStrength);
             
             // Charm 26-40: Standard charms
-            Add(26, FlagInstances.gotCharm_26, FlagInstances.charmCost_26);
+            Add(26, FlagInstances.gotCharm_26, FlagInstances.charmCost_26, null, null, null, null, new List<FlagDef>() { FlagInstances.gotSlyCharm });
             Add(27, FlagInstances.gotCharm_27, FlagInstances.charmCost_27);
             Add(28, FlagInstances.gotCharm_28, FlagInstances.charmCost_28);
             Add(29, FlagInstances.gotCharm_29, FlagInstances.charmCost_29);

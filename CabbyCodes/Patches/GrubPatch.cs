@@ -44,8 +44,8 @@ namespace CabbyCodes.Patches
             Add(FlagInstances.Deepnest_31__Grub_Bottle);
             Add(FlagInstances.Deepnest_36__Grub_Bottle, new Vector2(62, 5));
             Add(FlagInstances.Deepnest_39__Grub_Bottle, new Vector2(128, 47));
-            Add(FlagInstances.Deepnest_East_11__Grub_Bottle);
-            Add(FlagInstances.Deepnest_East_14__Grub_Bottle);
+            Add(FlagInstances.Deepnest_East_11__Grub_Bottle, new Vector2(67, 64));
+            Add(FlagInstances.Deepnest_East_14__Grub_Bottle, new Vector2(150, 23));
             Add(FlagInstances.Deepnest_Spider_Town__Grub_Bottle, new Vector2(96, 120));
             
             // Fungal Wastes
@@ -57,13 +57,13 @@ namespace CabbyCodes.Patches
             Add(FlagInstances.Fungus2_18__Grub_Bottle, new Vector2(138, 53));
             Add(FlagInstances.Fungus2_20__Grub_Bottle, new Vector2(11, 43));
             Add(FlagInstances.Fungus3_10__Grub_Bottle);
-            Add(FlagInstances.Fungus3_22__Grub_Bottle);
+            Add(FlagInstances.Fungus3_22__Grub_Bottle, new Vector2(15, 135));
             Add(FlagInstances.Fungus3_47__Grub_Bottle);
-            Add(FlagInstances.Fungus3_48__Grub_Bottle);
+            Add(FlagInstances.Fungus3_48__Grub_Bottle, new Vector2(13, 95));
 
             // Hive
-            Add(FlagInstances.Hive_03__Grub_Bottle);
-            Add(FlagInstances.Hive_04__Grub_Bottle);
+            Add(FlagInstances.Hive_03__Grub_Bottle, new Vector2(24, 140));
+            Add(FlagInstances.Hive_04__Grub_Bottle, new Vector2(207, 132));
             
             // Mines
             Add(FlagInstances.Mines_03__Grub_Bottle, new Vector2(28, 76));
@@ -83,11 +83,11 @@ namespace CabbyCodes.Patches
             Add(FlagInstances.Ruins1_05__Grub_Bottle_1, new Vector2(54, 143));
             Add(FlagInstances.Ruins1_32__Grub_Bottle, new Vector2(9, 25));
             Add(FlagInstances.Ruins2_03__Grub_Bottle, new Vector2(29, 51));
-            Add(FlagInstances.Ruins2_07__Grub_Bottle);
-            Add(FlagInstances.Ruins2_11__Grub_Bottle);
+            Add(FlagInstances.Ruins2_07__Grub_Bottle, new Vector2(73, 6));
+            Add(FlagInstances.Ruins2_11__Grub_Bottle, new Vector2(69, 116));
             
             // Waterways
-            Add(FlagInstances.Waterways_04__Grub_Bottle);
+            Add(FlagInstances.Waterways_04__Grub_Bottle, new Vector2(122, 9));
             Add(FlagInstances.Waterways_13__Grub_Bottle);
             Add(FlagInstances.Waterways_14__Grub_Bottle);
             

@@ -24,9 +24,6 @@ namespace CabbyCodes.Patches
         {
             var panels = new List<CheatPanel>
             {
-                // Notch count panel
-                new IntPatch(FlagInstances.charmSlots).CreatePanel(),
-
                 // Charm cost removal panel
                 new TogglePanel(new DelegateReference<bool>(
                     () => charmCostValue.Get(),
@@ -53,10 +50,7 @@ namespace CabbyCodes.Patches
                 ), "Remove Charm Notch Cost"),
 
                 // Grimm Child level dropdown
-                new DropdownPatch(FlagInstances.grimmChildLevel, new List<string> { "1", "2", "3", "4", "CM" }, "Grimm Child Level (1-4) or Carefree Melody").CreatePanel(),
-
-                // Royal Charm state dropdown
-                new DropdownPatch(FlagInstances.royalCharmState, new List<string> { "NONE", "Kingsoul", "Void Heart" }, "Kingsoul / Void Heart").CreatePanel()
+                new DropdownPatch(FlagInstances.grimmChildLevel, new List<string> { "1", "2", "3", "4", "CM" }, "Grimm Child Level (1-4) or Carefree Melody").CreatePanel()
             };
             
             // Fragile charm panels (replacing separate broken and upgraded panels)
@@ -158,9 +152,89 @@ namespace CabbyCodes.Patches
             FlagManager.SetBoolFlag(charm.PooedFlag, shouldBePooed);
         }
 
+        private static CheatPanel CreateKingsoulCombinedPanel(CharmInfo charm, int index)
+        {
+            // Create dropdown panel with 5 states for Kingsoul/Void Heart
+            var dropdownPanel = new DropdownPanel(new DelegateValueList(
+                // Getter: Get current royal charm state
+                () => PlayerData.instance.royalCharmState,
+                // Setter: Handle the complex logic for setting both charm state and royal charm state
+                value =>
+                {
+                    // Get current charm count before changing anything
+                    int currentCharmsOwned = FlagManager.GetIntFlag(FlagInstances.charmsOwned);
+                    bool wasCharmOwned = FlagManager.GetBoolFlag(charm.GotFlag);
+                    
+                    // Determine if charm should be owned based on state
+                    bool shouldOwnCharm = value > 0;
+                    
+                    // Set the charm flag
+                    FlagManager.SetBoolFlag(charm.GotFlag, shouldOwnCharm);
+                    
+                    // Set the royal charm state
+                    PlayerData.instance.royalCharmState = value;
+                    FlagManager.SetBoolFlag(FlagInstances.gotQueenFragment, value == 1 || value > 2);
+                    FlagManager.SetBoolFlag(FlagInstances.gotKingFragment, value > 1);
+
+                    // Update charmsOwned count
+                    if (shouldOwnCharm && !wasCharmOwned)
+                    {
+                        // Charm is being turned on - increment count
+                        FlagManager.SetIntFlag(FlagInstances.charmsOwned, currentCharmsOwned + 1);
+                        
+                        // If this is the first charm, set hasCharm to true
+                        if (currentCharmsOwned == 0)
+                        {
+                            FlagManager.SetBoolFlag(FlagInstances.hasCharm, true);
+                        }
+                    }
+                    else if (!shouldOwnCharm && wasCharmOwned)
+                    {
+                        // Charm is being turned off - decrement count
+                        FlagManager.SetIntFlag(FlagInstances.charmsOwned, currentCharmsOwned - 1);
+                        
+                        // If this was the last charm, set hasCharm to false
+                        if (currentCharmsOwned == 1)
+                        {
+                            FlagManager.SetBoolFlag(FlagInstances.hasCharm, false);
+                        }
+                    }
+                },
+                // Value list: 5 states for Kingsoul/Void Heart
+                () => new List<string> { "NONE", "Queen's fragment", "King's Fragment", "Kingsoul", "Void Heart" }
+            ), index + ": " + charm.Name + " State", CabbyMenu.Constants.DEFAULT_PANEL_HEIGHT);
+            
+            // Add sprite to the panel
+            (_, ImageMod spriteImageMod) = PanelAdder.AddSprite(dropdownPanel, CharmIconList.Instance.GetSprite(charm.Id), 1);
+
+            // Add update actions for sprite and color
+            dropdownPanel.updateActions.Add(() =>
+            {
+                spriteImageMod.SetSprite(GetCharmIcon(charm.Id));
+                int currentState = PlayerData.instance.royalCharmState;
+                if (currentState > 0) // Queen's fragment, King's Fragment, Kingsoul or Void Heart
+                {
+                    spriteImageMod.SetColor(Color.white);
+                }
+                else // NONE
+                {
+                    spriteImageMod.SetColor(unearnedColor);
+                }
+            });
+            
+            return dropdownPanel;
+        }
+
         public static CheatPanel CreateCharmTogglePanel(CharmInfo charm)
         {
             int index = charms.IndexOf(charm) + 1;
+            
+            // Special handling for charm 36 (Kingsoul) - create combined dropdown panel
+            if (charm.Id == 36)
+            {
+                return CreateKingsoulCombinedPanel(charm, index);
+            }
+            
             TogglePanel togglePanel = new TogglePanel(
                 new DelegateReference<bool>(
                     () => FlagManager.GetBoolFlag(charm.GotFlag),
@@ -215,18 +289,10 @@ namespace CabbyCodes.Patches
                 spriteImageMod.SetSprite(GetCharmIcon(charm.Id));
                 if (FlagManager.GetBoolFlag(charm.GotFlag))
                 {
-                    if (charm.Id == 40 && PlayerData.instance.royalCharmState < 3)
-                    {
-                        PlayerData.instance.royalCharmState = 3;
-                    }
                     spriteImageMod.SetColor(Color.white);
                 }
                 else
                 {
-                    if (charm.Id == 40 && PlayerData.instance.royalCharmState > 0)
-                    {
-                        PlayerData.instance.royalCharmState = 0;
-                    }
                     spriteImageMod.SetColor(unearnedColor);
                 }
             });

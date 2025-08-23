@@ -132,7 +132,7 @@ namespace CabbyCodes.Patches.Settings
                         // No file exists - just save
                         SavedGameManager.SaveCustomGame(customName);
                     }
-                }, "Save", new UnityEngine.Vector2(CabbyMenu.Constants.MIN_PANEL_WIDTH, CabbyMenu.Constants.DEFAULT_PANEL_HEIGHT));
+                }, "Save", new Vector2(CabbyMenu.Constants.MIN_PANEL_WIDTH, CabbyMenu.Constants.DEFAULT_PANEL_HEIGHT));
 
                 panels.Add(buttonPanel);
             }

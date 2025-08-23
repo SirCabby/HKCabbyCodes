@@ -1,3 +1,5 @@
+using UnityEngine.UIElements;
+
 namespace CabbyCodes.Scenes
 {
     /// <summary>
@@ -74,7 +76,7 @@ namespace CabbyCodes.Scenes
         public static readonly SceneMapData Ruins2_10_b = new SceneMapData("Ruins2_10_b", "City");
         public static readonly SceneMapData Ruins2_10b = new SceneMapData("Ruins2_10b", "City");
         public static readonly SceneMapData Ruins2_11 = new SceneMapData("Ruins2_11", "City");
-        public static readonly SceneMapData Ruins2_11_b = new SceneMapData("Ruins2_11_b", "City");
+        public static readonly SceneMapData Ruins2_11_b = new SceneMapData("Ruins2_11_b", "City", "Tower of Love");
         public static readonly SceneMapData Ruins2_Watcher_Room = new SceneMapData("Ruins2_Watcher_Room", "City");
         public static readonly SceneMapData Ruins_Bathhouse = new SceneMapData("Ruins_Bathhouse", "City", "Pleasure House");
         public static readonly SceneMapData Ruins_Elevator = new SceneMapData("Ruins_Elevator", "City");
@@ -185,7 +187,7 @@ namespace CabbyCodes.Scenes
         public static readonly SceneMapData Fungus3_30 = new SceneMapData("Fungus3_30", "FogCanyon");
         public static readonly SceneMapData Fungus3_35 = new SceneMapData("Fungus3_35", "FogCanyon", "Banker room");
         public static readonly SceneMapData Fungus3_44 = new SceneMapData("Fungus3_44", "FogCanyon");
-        public static readonly SceneMapData Fungus3_47 = new SceneMapData("Fungus3_47", "FogCanyon");
+        public static readonly SceneMapData Fungus3_47 = new SceneMapData("Fungus3_47", "FogCanyon", "Teacher's Archives");
 
         // FungalWastes
         public static readonly SceneMapData Deepnest_01 = new SceneMapData("Deepnest_01", "FungalWastes");
@@ -306,8 +308,10 @@ namespace CabbyCodes.Scenes
         public static readonly SceneMapData Deepnest_East_12 = new SceneMapData("Deepnest_East_12", "Outskirts");
         public static readonly SceneMapData Deepnest_East_13 = new SceneMapData("Deepnest_East_13", "Outskirts");
         public static readonly SceneMapData Deepnest_East_14 = new SceneMapData("Deepnest_East_14", "Outskirts");
-        public static readonly SceneMapData Deepnest_East_15 = new SceneMapData("Deepnest_East_15", "Outskirts");
+        public static readonly SceneMapData Deepnest_East_14b = new SceneMapData("Deepnest_East_14b", "Outskirts");
+        public static readonly SceneMapData Deepnest_East_15 = new SceneMapData("Deepnest_East_15", "Outskirts", "Hidden Blue Cocoon room");
         public static readonly SceneMapData Deepnest_East_16 = new SceneMapData("Deepnest_East_16", "Outskirts");
+        public static readonly SceneMapData Deepnest_East_17 = new SceneMapData("Deepnest_East_17", "Outskirts");
         public static readonly SceneMapData Deepnest_East_18 = new SceneMapData("Deepnest_East_18", "Outskirts");
         public static readonly SceneMapData Deepnest_East_Hornet = new SceneMapData("Deepnest_East_Hornet", "Outskirts");
         public static readonly SceneMapData Deepnest_East_Hornet_b = new SceneMapData("Deepnest_East_Hornet_b", "Outskirts");
@@ -384,41 +388,85 @@ namespace CabbyCodes.Scenes
         public static readonly SceneMapData Waterways_14 = new SceneMapData("Waterways_14", "Waterways");
         public static readonly SceneMapData Waterways_15 = new SceneMapData("Waterways_15", "Waterways");
 
+        // White Palace
+        public static readonly SceneMapData White_Palace_01 = new SceneMapData("White_Palace_01");
+        public static readonly SceneMapData White_Palace_02 = new SceneMapData("White_Palace_02");
+        public static readonly SceneMapData White_Palace_03_hub = new SceneMapData("White_Palace_03_hub");
+        public static readonly SceneMapData White_Palace_04 = new SceneMapData("White_Palace_04");
+        public static readonly SceneMapData White_Palace_05 = new SceneMapData("White_Palace_05");
+        public static readonly SceneMapData White_Palace_06 = new SceneMapData("White_Palace_06");
+        public static readonly SceneMapData White_Palace_07 = new SceneMapData("White_Palace_07");
+        public static readonly SceneMapData White_Palace_08 = new SceneMapData("White_Palace_08");
+        public static readonly SceneMapData White_Palace_09 = new SceneMapData("White_Palace_09");
+        public static readonly SceneMapData White_Palace_11 = new SceneMapData("White_Palace_11");
+        public static readonly SceneMapData White_Palace_12 = new SceneMapData("White_Palace_12");
+        public static readonly SceneMapData White_Palace_13 = new SceneMapData("White_Palace_13");
+        public static readonly SceneMapData White_Palace_14 = new SceneMapData("White_Palace_14");
+        public static readonly SceneMapData White_Palace_15 = new SceneMapData("White_Palace_15");
+        public static readonly SceneMapData White_Palace_16 = new SceneMapData("White_Palace_16");
+        public static readonly SceneMapData White_Palace_17 = new SceneMapData("White_Palace_17");
+        public static readonly SceneMapData White_Palace_18 = new SceneMapData("White_Palace_18", null, "Path of Pain entrance");
+        public static readonly SceneMapData White_Palace_19 = new SceneMapData("White_Palace_19");
+        public static readonly SceneMapData White_Palace_20 = new SceneMapData("White_Palace_20");
+
         // Rooms
+        public static readonly SceneMapData Abyss_Lighthouse_room = new SceneMapData("Abyss_Lighthouse_room", null, "Abyss Lighthouse");
         public static readonly SceneMapData Crossroads_ShamanTemple = new SceneMapData("Crossroads_ShamanTemple", null, "Ancestral Mound");
         public static readonly SceneMapData Cutscene_Boss_Door = new SceneMapData("Cutscene_Boss_Door");
-        public static readonly SceneMapData Dream_01_False_Knight = new SceneMapData("Dream_01_False_Knight");
+        public static readonly SceneMapData Dream_01_False_Knight = new SceneMapData("Dream_01_False_Knight", null, "False Knight's dream room");
         public static readonly SceneMapData Dream_03_Infected_Knight = new SceneMapData("Dream_03_Infected_Knight", null, "Lost Kin's dream room");
-        public static readonly SceneMapData Dream_Guardian_Hegemol = new SceneMapData("Dream_Guardian_Hegemol");
+        public static readonly SceneMapData Dream_Guardian_Hegemol = new SceneMapData("Dream_Guardian_Hegemol", null, "Dreamer Herrah's dream room");
         public static readonly SceneMapData Dream_Guardian_Lurien = new SceneMapData("Dream_Guardian_Lurien", null, "Dreamer Lurien's dream room");
         public static readonly SceneMapData Fungus1_35 = new SceneMapData("Fungus1_35", null, "Stone Sanctuary");
         public static readonly SceneMapData Fungus1_36 = new SceneMapData("Fungus1_36", null, "Stone Sanctuary Mask Room");
+        public static readonly SceneMapData Fungus3_archive = new SceneMapData("Fungus3_archive", null, "Teacher's Archives room");
+        public static readonly SceneMapData Fungus3_archive_02 = new SceneMapData("Fungus3_archive_02");
+        public static readonly SceneMapData GG_Atrium = new SceneMapData("GG_Atrium");
+        public static readonly SceneMapData GG_Entrance_Cutscene = new SceneMapData("GG_Entrance_Cutscene");
+        public static readonly SceneMapData GG_Lurker = new SceneMapData("GG_Lurker", null, "Pale Lurker's room");
+        public static readonly SceneMapData GG_Pipeway = new SceneMapData("GG_Pipeway");
+        public static readonly SceneMapData GG_Waterways = new SceneMapData("GG_Waterways");
+        public static readonly SceneMapData GG_Workshop = new SceneMapData("GG_Workshop");
         public static readonly SceneMapData Grimm_Divine = new SceneMapData("Grimm_Divine", null, "Divine's room");
         public static readonly SceneMapData Grimm_Main_Tent = new SceneMapData("Grimm_Main_Tent", null, "Grimm's Tent");
-        public static readonly SceneMapData Room_Bretta = new SceneMapData("Room_Bretta", "Dirtmouth", "Bretta's room");
+        public static readonly SceneMapData Room_Bretta = new SceneMapData("Room_Bretta", null, "Bretta's room");
         public static readonly SceneMapData Room_Charm_Shop = new SceneMapData("Room_Charm_Shop", null, "Salubra's Charm Shop");
+        public static readonly SceneMapData Room_Colosseum_01 = new SceneMapData("Room_Colosseum_01", null, "Colosseum entrance");
+        public static readonly SceneMapData Room_Colosseum_02 = new SceneMapData("Room_Colosseum_02", null, "Colosseum main room");
+        public static readonly SceneMapData Room_Colosseum_Bronze = new SceneMapData("Room_Colosseum_Bronze", null, "Colosseum Trial of the Warrior");
+        public static readonly SceneMapData Room_Colosseum_Gold = new SceneMapData("Room_Colosseum_Gold", null, "Colosseum Trial of the Fool");
+        public static readonly SceneMapData Room_Colosseum_Silver = new SceneMapData("Room_Colosseum_Silver", null, "Colosseum Trial of the Conqueror");
+        public static readonly SceneMapData Room_Colosseum_Spectate = new SceneMapData("Room_Colosseum_Spectate", null, "Colosseum spectator");
         public static readonly SceneMapData Room_Fungus_Shaman = new SceneMapData("Room_Fungus_Shaman", null, "Overgrown Mound");
-        public static readonly SceneMapData Room_Mansion = new SceneMapData("Room_Mansion", "RestingGrounds", "Grey Mourner room");
+        public static readonly SceneMapData Room_Mansion = new SceneMapData("Room_Mansion", null, "Grey Mourner room");
         public static readonly SceneMapData Room_mapper = new SceneMapData("Room_mapper", null, "Map Shop");
         public static readonly SceneMapData Room_Mask_Maker = new SceneMapData("Room_Mask_Maker", null, "Mask Maker's room");
         public static readonly SceneMapData Room_nailmaster = new SceneMapData("Room_nailmaster", null, "Nailmaster Mato's room");
+        public static readonly SceneMapData Room_nailmaster_02 = new SceneMapData("Room_nailmaster_02", null, "Nailmaster Sheo's room");
+        public static readonly SceneMapData Room_nailmaster_03 = new SceneMapData("Room_nailmaster_03", null, "Nailmaster Oro's room");
+        public static readonly SceneMapData Room_Queen = new SceneMapData("Room_Queen", null, "Queen's room");
         public static readonly SceneMapData Room_ruinhouse = new SceneMapData("Room_ruinhouse", null, "Sly's rescue room");
         public static readonly SceneMapData Room_shop = new SceneMapData("Room_shop", null, "Sly Shop");
         public static readonly SceneMapData Room_Slug_Shrine = new SceneMapData("Room_Slug_Shrine", null, "Slug Shrine");
         public static readonly SceneMapData Room_spider_small = new SceneMapData("Room_spider_small");
+        public static readonly SceneMapData Room_Sly_Storeroom = new SceneMapData("Room_Sly_Storeroom", null, "Sly's Storeroom");
         public static readonly SceneMapData Room_temple = new SceneMapData("Room_temple", null, "Temple of the Black Egg");
         public static readonly SceneMapData Room_Town_Stag_Station = new SceneMapData("Room_Town_Stag_Station", null, "Dirtmouth Stag Station");
         public static readonly SceneMapData Room_Tram = new SceneMapData("Room_Tram");
+        public static readonly SceneMapData Room_Wyrm = new SceneMapData("Room_Wyrm", null, "Cast-Off Shell");
 
         // Boss rooms
         public static readonly SceneMapData Crossroads_10_boss_defeated = new SceneMapData("Crossroads_10_boss_defeated");
+        public static readonly SceneMapData Deepnest_East_Hornet_boss = new SceneMapData("Deepnest_East_Hornet_boss");
         public static readonly SceneMapData Dream_02_Mage_Lord = new SceneMapData("Dream_02_Mage_Lord");
         public static readonly SceneMapData RestingGrounds_02_boss = new SceneMapData("RestingGrounds_02_boss");
         public static readonly SceneMapData Fungus1_04_boss = new SceneMapData("Fungus1_04_boss");
         public static readonly SceneMapData Fungus2_15_boss = new SceneMapData("Fungus2_15_boss");
         public static readonly SceneMapData Fungus2_15_boss_defeated = new SceneMapData("Fungus2_15_boss_defeated");
+        public static readonly SceneMapData Fungus3_archive_02_boss = new SceneMapData("Fungus3_archive_02_boss");
         public static readonly SceneMapData Ruins1_24_boss = new SceneMapData("Ruins1_24_boss");
         public static readonly SceneMapData Ruins1_24_boss_defeated = new SceneMapData("Ruins1_24_boss_defeated");
+        public static readonly SceneMapData Waterways_12_boss = new SceneMapData("Waterways_12_boss");
 
         // Internal
         public static readonly SceneMapData Cinematic_Stag_travel = new SceneMapData("Cinematic_Stag_travel");

@@ -48,9 +48,14 @@ namespace CabbyCodes.Patches.Teleport
             new TeleportLocation(SceneInstances.Crossroads_04, "Salubra's Charm Shop", new Vector2(141, 12)),
             new TeleportLocation(SceneInstances.Fungus2_26, "Leg Eater's Shop", new Vector2(35, 6)),
             new TeleportLocation(SceneInstances.Room_nailmaster, "Nailmaster Mato", new Vector2(57, 5)),
+            new TeleportLocation(SceneInstances.Abyss_05, "Nailmaster Oro", new Vector2(124, 18)),
+            new TeleportLocation(SceneInstances.Room_nailmaster_02, "Nailmaster Sheo", new Vector2(26, 5)),
             new TeleportLocation(SceneInstances.Room_Mask_Maker, "Mask Maker", new Vector2(26, 7)),
             new TeleportLocation(SceneInstances.Ruins1_04, "Nailsmith", new Vector2(34, 37)),
             new TeleportLocation(SceneInstances.Room_Mansion, "Grey Mourner", new Vector2(16, 7)),
+            new TeleportLocation(SceneInstances.Abyss_05, "White Castle", new Vector2(124, 18)),
+            new TeleportLocation(SceneInstances.Waterways_03, "Tuk", new Vector2(89, 5)),
+            new TeleportLocation(SceneInstances.GG_Waterways, "Godfinder", new Vector2(50, 16)),
         };
 
         /// <summary>

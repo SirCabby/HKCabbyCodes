@@ -381,14 +381,15 @@ namespace CabbyCodes.Patches
         {
             var panels = new List<CheatPanel>
             {
-                new BoolPatch(FlagInstances.hasWhiteKey).CreatePanel(),
-                new BoolPatch(FlagInstances.hasLoveKey).CreatePanel(),
+                CreateWhiteKeyPanel(),
+                CreateLoveKeyPanel(),
                 CreateSlyKeyPanel(),
                 CreateCityKeyPanel(),
                 new BoolPatch(FlagInstances.hasKingsBrand).CreatePanel(),
                 CreateSimpleKeyPanel(FlagInstances.slySimpleKey),
                 CreateSimpleKeyPanel(FlagInstances.Ruins1_17__Shiny_Item),
                 CreateSimpleKeyPanel(FlagInstances.Abyss_20__Shiny_Item_Stand),
+                CreateSimpleKeyPanel(FlagInstances.gotLurkerKey)
             };
 
             return panels;
@@ -598,6 +599,12 @@ namespace CabbyCodes.Patches
 
             // Set aggregate hasNailArt flag based on individual Nail Arts
             FlagManager.SetBoolFlag(FlagInstances.hasNailArt, anyNailArtEnabled);
+
+            bool allNailArtEnabled = FlagManager.GetBoolFlag(FlagInstances.hasCyclone) &&
+                                     FlagManager.GetBoolFlag(FlagInstances.hasUpwardSlash) &&
+                                     FlagManager.GetBoolFlag(FlagInstances.hasDashSlash);
+
+            FlagManager.SetBoolFlag(FlagInstances.hasAllNailArts, allNailArtEnabled);
         }
 
         private List<CheatPanel> CreateMaskShardPanels()
@@ -618,6 +625,8 @@ namespace CabbyCodes.Patches
                 CreateHeartPiecePanel(FlagInstances.Mines_32__Heart_Piece),
                 CreateHeartPiecePanel(FlagInstances.dreamReward7),
                 CreateHeartPiecePanel(FlagInstances.Room_Bretta__Heart_Piece),
+                CreateHeartPiecePanel(FlagInstances.Hive_04__Heart_Piece),
+                CreateHeartPiecePanel(FlagInstances.Waterways_04b__Heart_Piece),
             };
             
             return panels;
@@ -766,7 +775,9 @@ namespace CabbyCodes.Patches
 
         private TogglePanel CreateSimpleKeyPanel(FlagDef simpleKeyFlag)
         {
-            return new TogglePanel(new DelegateReference<bool>(
+            TogglePanel panel = null;
+            
+            panel = new TogglePanel(new DelegateReference<bool>(
                 () => FlagManager.GetBoolFlag(simpleKeyFlag),
                 value =>
                 {
@@ -784,8 +795,38 @@ namespace CabbyCodes.Patches
                     }
                     
                     FlagManager.SetBoolFlag(simpleKeyFlag, value);
+                    
+                    // Update the panel's interactable state after changing the key value
+                    UpdateSimpleKeyPanelInteractable(panel);
                 }
             ), simpleKeyFlag.ReadableName);
+
+            // Set initial interactable state
+            UpdateSimpleKeyPanelInteractable(panel);
+
+            return panel;
+        }
+
+        private void UpdateSimpleKeyPanelInteractable(TogglePanel panel)
+        {
+            var currentSimpleKeys = FlagManager.GetIntFlag(FlagInstances.simpleKeys);
+            
+            // Panel is disabled if there are no simple keys available
+            // This prevents disabling keys when they are in use
+            bool shouldBeInteractable = currentSimpleKeys > 0;
+            
+            var toggleButton = panel.GetToggleButton();
+            toggleButton.SetInteractable(shouldBeInteractable);
+            
+            // Set disabled message for hover popup
+            if (!shouldBeInteractable)
+            {
+                toggleButton.SetDisabledMessage("Cannot disable keys while they are in use\n\nSimple key count cannot go below 0");
+            }
+            else
+            {
+                toggleButton.SetDisabledMessage(""); // Clear message when enabled
+            }
         }
 
         private TogglePanel CreateCityKeyPanel()
@@ -829,6 +870,88 @@ namespace CabbyCodes.Patches
             }
         }
 
+        private TogglePanel CreateLoveKeyPanel()
+        {
+            TogglePanel panel = null;
+            
+            panel = new TogglePanel(new DelegateReference<bool>(
+                () => FlagManager.GetBoolFlag(FlagInstances.hasLoveKey),
+                value =>
+                {
+                    FlagManager.SetBoolFlag(FlagInstances.hasLoveKey, value);
+                    // Update the panel's interactable state after changing the key value
+                    UpdateLoveKeyPanelInteractable(panel);
+                }
+            ), FlagInstances.hasLoveKey.ReadableName);
+
+            // Set initial interactable state
+            UpdateLoveKeyPanelInteractable(panel);
+
+            return panel;
+        }
+
+        private void UpdateLoveKeyPanelInteractable(TogglePanel panel)
+        {
+            var openedLoveDoor = FlagManager.GetBoolFlag(FlagInstances.openedLoveDoor);
+            
+            // Disable the panel if the key has been used to open the door
+            bool shouldBeInteractable = !openedLoveDoor;
+            
+            var toggleButton = panel.GetToggleButton();
+            toggleButton.SetInteractable(shouldBeInteractable);
+            
+            // Set disabled message for hover popup
+            if (!shouldBeInteractable)
+            {
+                toggleButton.SetDisabledMessage("Key has been used to open the Love Door");
+            }
+            else
+            {
+                toggleButton.SetDisabledMessage(""); // Clear message when enabled
+            }
+        }
+
+        private TogglePanel CreateWhiteKeyPanel()
+        {
+            TogglePanel panel = null;
+            
+            panel = new TogglePanel(new DelegateReference<bool>(
+                () => FlagManager.GetBoolFlag(FlagInstances.hasWhiteKey),
+                value =>
+                {
+                    FlagManager.SetBoolFlag(FlagInstances.hasWhiteKey, value);
+                    // Update the panel's interactable state after changing the key value
+                    UpdateWhiteKeyPanelInteractable(panel);
+                }
+            ), FlagInstances.hasWhiteKey.ReadableName);
+
+            // Set initial interactable state
+            UpdateWhiteKeyPanelInteractable(panel);
+
+            return panel;
+        }
+
+        private void UpdateWhiteKeyPanelInteractable(TogglePanel panel)
+        {
+            var usedWhiteKey = FlagManager.GetBoolFlag(FlagInstances.usedWhiteKey);
+            
+            // Disable the panel if the key has been used to open the door
+            bool shouldBeInteractable = !usedWhiteKey;
+            
+            var toggleButton = panel.GetToggleButton();
+            toggleButton.SetInteractable(shouldBeInteractable);
+            
+            // Set disabled message for hover popup
+            if (!shouldBeInteractable)
+            {
+                toggleButton.SetDisabledMessage("Key has been used to open the door to Shade Soul");
+            }
+            else
+            {
+                toggleButton.SetDisabledMessage(""); // Clear message when enabled
+            }
+        }
+
         private List<CheatPanel> CreateNotchPanels()
         {
             var panels = new List<CheatPanel>
@@ -838,6 +961,8 @@ namespace CabbyCodes.Patches
                 CreateNotchPanel(FlagInstances.salubraNotch3),
                 CreateNotchPanel(FlagInstances.salubraNotch4),
                 CreateNotchPanel(FlagInstances.notchShroomOgres),
+                CreateNotchPanel(FlagInstances.Room_Colosseum_Bronze__Shiny_Item),
+                CreateNotchPanel(FlagInstances.Fungus3_28__Shiny_Item),
             };
 
             return panels;
@@ -874,6 +999,7 @@ namespace CabbyCodes.Patches
                 CreatePaleOrePanel(FlagInstances.Abyss_17__Shiny_Item_Stand),
                 CreatePaleOrePanel(FlagInstances.dreamReward3),
                 CreatePaleOrePanel(FlagInstances.Mines_34__Shiny_Item_Stand),
+                CreatePaleOrePanel(FlagInstances.Room_Colosseum_Silver__Shiny_Item),
             };
 
             return panels;
@@ -970,6 +1096,8 @@ namespace CabbyCodes.Patches
                 CreateWanderersJournalPanel(FlagInstances.Ruins1_28__Shiny_Item),
                 CreateWanderersJournalPanel(FlagInstances.RestingGrounds_10__Shiny_Item),
                 CreateWanderersJournalPanel(FlagInstances.Mines_20__Shiny_Item_1),
+                CreateWanderersJournalPanel(FlagInstances.Deepnest_East_18__Shiny_Item),
+                CreateWanderersJournalPanel(FlagInstances.Deepnest_East_13__Shiny_Item),
             };
 
             return panels;
@@ -1006,6 +1134,7 @@ namespace CabbyCodes.Patches
                 CreateHallownestSealPanel(FlagInstances.RestingGrounds_10__Shiny_Item_1),
                 CreateHallownestSealPanel(FlagInstances.dreamReward1),
                 CreateHallownestSealPanel(FlagInstances.Ruins2_03__Shiny_Item),
+                CreateHallownestSealPanel(FlagInstances.Fungus3_48__Shiny_Item),
             };
 
             return panels;
@@ -1046,7 +1175,9 @@ namespace CabbyCodes.Patches
                 CreateKingsIdolPanel(FlagInstances.Deepnest_33__Shiny_Item),
                 CreateKingsIdolPanel(FlagInstances.Ruins1_32__Shiny_Item),
                 CreateKingsIdolPanel(FlagInstances.RestingGrounds_08__Shiny_Item),
-                CreateKingsIdolPanel(FlagInstances.Mines_30__Shiny_Item_Stand)
+                CreateKingsIdolPanel(FlagInstances.Mines_30__Shiny_Item_Stand),
+                CreateKingsIdolPanel(FlagInstances.Deepnest_East_08__Shiny_Item),
+                CreateKingsIdolPanel(FlagInstances.GG_Lurker__Shiny_Item),
             };
 
             return panels;
@@ -1074,6 +1205,7 @@ namespace CabbyCodes.Patches
             var panels = new List<CheatPanel>
             {
                 CreateArcaneEggPanel(FlagInstances.dreamReward6),
+                CreateArcaneEggPanel(FlagInstances.Abyss_10__Shiny_Item),
             };
 
             return panels;

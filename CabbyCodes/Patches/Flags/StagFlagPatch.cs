@@ -21,6 +21,8 @@ namespace CabbyCodes.Patches.Flags
                 FlagInstances.openedDeepnest,
                 FlagInstances.openedRuins2,
                 FlagInstances.openedHiddenStation,
+                FlagInstances.openedRoyalGardens,
+                FlagInstances.openedStagNest,
             }));
             
             return panels;
