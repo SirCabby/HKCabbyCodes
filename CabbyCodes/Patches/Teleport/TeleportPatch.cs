@@ -55,7 +55,7 @@ namespace CabbyCodes.Patches.Teleport
             new TeleportLocation(SceneInstances.Room_Mansion, "Grey Mourner", new Vector2(16, 7)),
             new TeleportLocation(SceneInstances.Abyss_05, "White Castle", new Vector2(124, 18)),
             new TeleportLocation(SceneInstances.Waterways_03, "Tuk", new Vector2(89, 5)),
-            new TeleportLocation(SceneInstances.GG_Waterways, "Godfinder", new Vector2(50, 16)),
+            new TeleportLocation(SceneInstances.GG_Atrium, "Godhome", new Vector2(114, 62)),
         };
 
         /// <summary>

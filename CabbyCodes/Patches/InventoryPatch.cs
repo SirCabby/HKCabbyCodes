@@ -1000,6 +1000,7 @@ namespace CabbyCodes.Patches
                 CreatePaleOrePanel(FlagInstances.dreamReward3),
                 CreatePaleOrePanel(FlagInstances.Mines_34__Shiny_Item_Stand),
                 CreatePaleOrePanel(FlagInstances.Room_Colosseum_Silver__Shiny_Item),
+                CreatePaleOrePanel(FlagInstances.Crossroads_38__Shiny_Item_Ore),
             };
 
             return panels;
@@ -1135,6 +1136,7 @@ namespace CabbyCodes.Patches
                 CreateHallownestSealPanel(FlagInstances.dreamReward1),
                 CreateHallownestSealPanel(FlagInstances.Ruins2_03__Shiny_Item),
                 CreateHallownestSealPanel(FlagInstances.Fungus3_48__Shiny_Item),
+                CreateHallownestSealPanel(FlagInstances.Crossroads_38__Shiny_Item_Relic2),
             };
 
             return panels;
@@ -1178,6 +1180,8 @@ namespace CabbyCodes.Patches
                 CreateKingsIdolPanel(FlagInstances.Mines_30__Shiny_Item_Stand),
                 CreateKingsIdolPanel(FlagInstances.Deepnest_East_08__Shiny_Item),
                 CreateKingsIdolPanel(FlagInstances.GG_Lurker__Shiny_Item),
+                CreateKingsIdolPanel(FlagInstances.Waterways_15__Shiny_Item_Stand),
+                CreateKingsIdolPanel(FlagInstances.Crossroads_38__Shiny_Item_Relic3),
             };
 
             return panels;

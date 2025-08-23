@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Reflection;
 
 namespace CabbyCodes.Flags
 {
@@ -194,15 +195,10 @@ namespace CabbyCodes.Flags
 
             if (IsGlobalFlag(flagDef))
             {
-                // Get the list from PlayerData using reflection
-                var listProperty = typeof(PlayerData).GetField(flagDef.Id);
-                if (listProperty != null && listProperty.FieldType == typeof(List<string>))
+                var list = GetPlayerDataListField(flagDef.Id);
+                if (list != null && !list.Contains(item))
                 {
-                    var list = (List<string>)listProperty.GetValue(PlayerData.instance);
-                    if (list != null && !list.Contains(item))
-                    {
-                        list.Add(item);
-                    }
+                    list.Add(item);
                 }
             }
         }
@@ -220,15 +216,10 @@ namespace CabbyCodes.Flags
 
             if (sceneName == "Global")
             {
-                // Get the list from PlayerData using reflection
-                var listProperty = typeof(PlayerData).GetField(id);
-                if (listProperty != null && listProperty.FieldType == typeof(List<string>))
+                var list = GetPlayerDataListField(id);
+                if (list != null && !list.Contains(item))
                 {
-                    var list = (List<string>)listProperty.GetValue(PlayerData.instance);
-                    if (list != null && !list.Contains(item))
-                    {
-                        list.Add(item);
-                    }
+                    list.Add(item);
                 }
             }
         }
@@ -245,15 +236,10 @@ namespace CabbyCodes.Flags
 
             if (IsGlobalFlag(flagDef))
             {
-                // Get the list from PlayerData using reflection
-                var listProperty = typeof(PlayerData).GetField(flagDef.Id);
-                if (listProperty != null && listProperty.FieldType == typeof(List<string>))
+                var list = GetPlayerDataListField(flagDef.Id);
+                if (list != null && list.Contains(item))
                 {
-                    var list = (List<string>)listProperty.GetValue(PlayerData.instance);
-                    if (list != null && list.Contains(item))
-                    {
-                        list.Remove(item);
-                    }
+                    list.Remove(item);
                 }
             }
         }
@@ -271,15 +257,10 @@ namespace CabbyCodes.Flags
 
             if (sceneName == "Global")
             {
-                // Get the list from PlayerData using reflection
-                var listProperty = typeof(PlayerData).GetField(id);
-                if (listProperty != null && listProperty.FieldType == typeof(List<string>))
+                var list = GetPlayerDataListField(id);
+                if (list != null && list.Contains(item))
                 {
-                    var list = (List<string>)listProperty.GetValue(PlayerData.instance);
-                    if (list != null && list.Contains(item))
-                    {
-                        list.Remove(item);
-                    }
+                    list.Remove(item);
                 }
             }
         }
@@ -288,22 +269,17 @@ namespace CabbyCodes.Flags
         /// Checks if an item exists in a list flag. Automatically handles global list flags.
         /// </summary>
         /// <param name="flagDef">The flag definition containing the flag information.</param>
-        /// <param name="item">The item to check for in the list.</param>
+        /// <param name="item">The item to check for.</param>
         /// <returns>True if the item exists in the list, false otherwise.</returns>
-        public static bool ListFlagContains(FlagDef flagDef, string item)
+        public static bool ContainsInListFlag(FlagDef flagDef, string item)
         {
             if (flagDef == null || string.IsNullOrEmpty(item))
                 return false;
 
             if (IsGlobalFlag(flagDef))
             {
-                // Get the list from PlayerData using reflection
-                var listProperty = typeof(PlayerData).GetField(flagDef.Id);
-                if (listProperty != null && listProperty.FieldType == typeof(List<string>))
-                {
-                    var list = (List<string>)listProperty.GetValue(PlayerData.instance);
-                    return list?.Contains(item) ?? false;
-                }
+                var list = GetPlayerDataListField(flagDef.Id);
+                return list != null && list.Contains(item);
             }
             
             return false;
@@ -314,22 +290,17 @@ namespace CabbyCodes.Flags
         /// </summary>
         /// <param name="id">The flag identifier.</param>
         /// <param name="sceneName">The scene name, or "Global" for global flags.</param>
-        /// <param name="item">The item to check for in the list.</param>
+        /// <param name="item">The item to check for.</param>
         /// <returns>True if the item exists in the list, false otherwise.</returns>
-        public static bool ListFlagContains(string id, string sceneName, string item)
+        public static bool ContainsInListFlag(string id, string sceneName, string item)
         {
             if (string.IsNullOrEmpty(id) || string.IsNullOrEmpty(item))
                 return false;
 
             if (sceneName == "Global")
             {
-                // Get the list from PlayerData using reflection
-                var listProperty = typeof(PlayerData).GetField(id);
-                if (listProperty != null && listProperty.FieldType == typeof(List<string>))
-                {
-                    var list = (List<string>)listProperty.GetValue(PlayerData.instance);
-                    return list?.Contains(item) ?? false;
-                }
+                var list = GetPlayerDataListField(id);
+                return list != null && list.Contains(item);
             }
             
             return false;
@@ -417,22 +388,172 @@ namespace CabbyCodes.Flags
         /// <returns>A PersistentBoolData object that can be used to track state.</returns>
         private static PersistentBoolData GetPbd(string id, string sceneName, bool semiPersistent = false)
         {
-            PersistentBoolData pbd = new PersistentBoolData
+            // First, build a template object to search for existing state
+            var template = new PersistentBoolData
             {
                 id = id,
                 sceneName = sceneName,
-                activated = false,
-                semiPersistent = semiPersistent
+                semiPersistent = semiPersistent,
+                activated = false // default value; will be overwritten if existing state is found
             };
 
-            PersistentBoolData result = SceneData.instance.FindMyState(pbd);
-            if (result == null)
+            // Attempt to retrieve an existing state for this flag from SceneData
+            var existing = SceneData.instance.FindMyState(template);
+
+            if (existing != null)
             {
-                SceneData.instance.SaveMyState(pbd);
-                result = SceneData.instance.FindMyState(pbd);
+                // Return the existing state so we reflect the actual stored value
+                return existing;
             }
 
-            return result;
+            // If no existing state was found, persist and return the new template
+            SceneData.instance.SaveMyState(template);
+            return template;
+        }
+
+        /// <summary>
+        /// Helper method to get a field value from PlayerData using reflection
+        /// </summary>
+        /// <param name="fieldName">The name of the field to get</param>
+        /// <returns>The field value, or null if the field doesn't exist</returns>
+        private static object GetPlayerDataField(string fieldName)
+        {
+            if (PlayerData.instance == null) return null;
+            
+            var field = typeof(PlayerData).GetField(fieldName);
+            if (field != null)
+            {
+                return field.GetValue(PlayerData.instance);
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Helper method to set a field value in PlayerData using reflection
+        /// </summary>
+        /// <param name="fieldName">The name of the field to set</param>
+        /// <param name="value">The value to set</param>
+        /// <returns>True if the field was set successfully, false otherwise</returns>
+        private static bool SetPlayerDataField(string fieldName, object value)
+        {
+            if (PlayerData.instance == null) return false;
+            
+            var field = typeof(PlayerData).GetField(fieldName);
+            if (field != null)
+            {
+                field.SetValue(PlayerData.instance, value);
+                return true;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Helper method to get a List<string> field from PlayerData using reflection
+        /// </summary>
+        /// <param name="fieldName">The name of the field to get</param>
+        /// <returns>The list, or null if the field doesn't exist or isn't a List<string></returns>
+        private static List<string> GetPlayerDataListField(string fieldName)
+        {
+            if (PlayerData.instance == null) return null;
+            
+            var field = typeof(PlayerData).GetField(fieldName);
+            if (field != null && field.FieldType == typeof(List<string>))
+            {
+                return (List<string>)field.GetValue(PlayerData.instance);
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Gets the current BossStatue value of a Completion flag. Automatically handles global Completion flags.
+        /// </summary>
+        /// <param name="flagDef">The flag definition containing the flag information.</param>
+        /// <returns>The current BossStatue value of the flag, or null if not found.</returns>
+        public static object GetCompletionFlag(FlagDef flagDef)
+        {
+            if (flagDef == null)
+                return null;
+
+            if (IsGlobalFlag(flagDef))
+            {
+                return GetPlayerDataField(flagDef.Id);
+            }
+            
+            // For non-global flags, use PBD system (though most boss statues are global)
+            var pbd = GetPbd(flagDef.Id, flagDef.SceneName);
+            return pbd?.activated;
+        }
+
+        /// <summary>
+        /// Gets the current BossStatue value of a Completion flag using direct parameters. Automatically handles global Completion flags.
+        /// </summary>
+        /// <param name="id">The flag identifier.</param>
+        /// <param name="sceneName">The scene name, or "Global" for global flags.</param>
+        /// <returns>The current BossStatue value of the flag, or null if not found.</returns>
+        public static object GetCompletionFlag(string id, string sceneName)
+        {
+            if (string.IsNullOrEmpty(id))
+                return null;
+
+            if (sceneName == "Global")
+            {
+                return GetPlayerDataField(id);
+            }
+            
+            // For non-global flags, use PBD system
+            var pbd = GetPbd(id, sceneName);
+            return pbd?.activated;
+        }
+
+        /// <summary>
+        /// Sets the value of a Completion flag. Automatically handles global Completion flags.
+        /// </summary>
+        /// <param name="flagDef">The flag definition containing the flag information.</param>
+        /// <param name="value">The new value to set.</param>
+        public static void SetCompletionFlag(FlagDef flagDef, object value)
+        {
+            if (flagDef == null)
+                return;
+
+            if (IsGlobalFlag(flagDef))
+            {
+                SetPlayerDataField(flagDef.Id, value);
+            }
+            else
+            {
+                // For non-global flags, use PBD system
+                var pbd = GetPbd(flagDef.Id, flagDef.SceneName);
+                if (pbd != null)
+                {
+                    pbd.activated = (bool)value;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Sets the value of a Completion flag using direct parameters. Automatically handles global Completion flags.
+        /// </summary>
+        /// <param name="id">The flag identifier.</param>
+        /// <param name="sceneName">The scene name, or "Global" for global flags.</param>
+        /// <param name="value">The new value to set.</param>
+        public static void SetCompletionFlag(string id, string sceneName, object value)
+        {
+            if (string.IsNullOrEmpty(id))
+                return;
+
+            if (sceneName == "Global")
+            {
+                SetPlayerDataField(id, value);
+            }
+            else
+            {
+                // For non-global flags, use PBD system
+                var pbd = GetPbd(id, sceneName);
+                if (pbd != null)
+                {
+                    pbd.activated = (bool)value;
+                }
+            }
         }
     }
 }

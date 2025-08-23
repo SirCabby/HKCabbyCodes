@@ -30,6 +30,7 @@ namespace CabbyCodes.Patches.Flags
             Add(FlagInstances.aladarSlugDefeated, SceneInstances.Cliffs_02, new Vector2(50, 34));
             Add(FlagInstances.Crossroads_09__Mawlek_Body, SceneInstances.Crossroads_09, new Vector2(39, 5));
             Add(FlagInstances.defeatedMantisLords, SceneInstances.Fungus2_15, new Vector2(36, 8));
+            Add(FlagInstances.defeatedDungDefender, SceneInstances.Waterways_05, new Vector2(57, 12));
             Add(FlagInstances.elderHuDefeated, SceneInstances.Fungus2_32, new Vector2(46, 4));
             Add(FlagInstances.falseKnightDefeated, SceneInstances.Crossroads_10, new Vector2(57, 28));
             Add(FlagInstances.falseKnightDreamDefeated, SceneInstances.Crossroads_10, new Vector2(58, 48));
@@ -40,6 +41,7 @@ namespace CabbyCodes.Patches.Flags
             Add(FlagInstances.infectedKnightDreamDefeated, SceneInstances.Abyss_20, new Vector2(28, 29));
             Add(FlagInstances.infectedKnightEncountered, SceneInstances.Abyss_19, new Vector2(44, 29));
             Add(FlagInstances.mageLordDefeated, SceneInstances.Ruins1_24 , new Vector2(41, 30));
+            Add(FlagInstances.defeatedMegaJelly, SceneInstances.Fungus3_archive_02, new Vector2(54, 111));
             Add(FlagInstances.Mines_32__Battle_Scene, SceneInstances.Mines_32, new Vector2(44, 12));
             Add(FlagInstances.mumCaterpillarDefeated, SceneInstances.Fungus3_40, new Vector2(63, 11));
             Add(FlagInstances.noEyesDefeated, SceneInstances.Fungus1_35, new Vector2(46, 4));
@@ -63,6 +65,8 @@ namespace CabbyCodes.Patches.Flags
                 FlagInstances.Fungus3_23__Battle_Scene,
                 FlagInstances.collectorDefeated,
                 FlagInstances.flukeMotherDefeated,
+                FlagInstances.defeatedDungDefender,
+                FlagInstances.defeatedMegaJelly,
 
 
                 

@@ -20,7 +20,7 @@ namespace CabbyCodes.Patches.Maps
 
         public bool Get()
         {
-            return FlagManager.ListFlagContains(FlagInstances.scenesMapped, roomName);
+            return FlagManager.ContainsInListFlag(FlagInstances.scenesMapped, roomName);
         }
 
         public void Set(bool value)

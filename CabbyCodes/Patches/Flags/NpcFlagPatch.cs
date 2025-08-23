@@ -97,6 +97,12 @@ namespace CabbyCodes.Patches.Flags
                 FlagInstances.elderbugConvoGrimm
             }));
 
+            panels.Add(new InfoPanel("Emilitia").SetColor(CheatPanel.subHeaderColor));
+            panels.AddRange(CreateNpcPanels(new[] {
+                FlagInstances.metEmilitia,
+                FlagInstances.emilitiaKingsBrandConvo
+            }));
+
             panels.Add(new InfoPanel("Gorb").SetColor(CheatPanel.subHeaderColor));
             panels.AddRange(CreateNpcPanels(new[] {
                 FlagInstances.ALADAR_encountered
@@ -278,6 +284,8 @@ namespace CabbyCodes.Patches.Flags
                 FlagInstances.stagConvoTram,
                 FlagInstances.stagRemember2,
                 FlagInstances.stagRemember3,
+                FlagInstances.stagEggInspected,
+                FlagInstances.stagHopeConvo,
             }));
 
             panels.Add(new InfoPanel("Tiso").SetColor(CheatPanel.subHeaderColor));
@@ -289,6 +297,11 @@ namespace CabbyCodes.Patches.Flags
             panels.AddRange(CreateNpcPanels(new[] {
                 FlagInstances.tukMet,
                 FlagInstances.tukEggPrice
+            }));
+
+            panels.Add(new InfoPanel("Tiso").SetColor(CheatPanel.subHeaderColor));
+            panels.AddRange(CreateNpcPanels(new[] {
+                FlagInstances.slugEncounterComplete
             }));
 
             panels.Add(new InfoPanel("Warriors' Graves").SetColor(CheatPanel.subHeaderColor));
@@ -321,6 +334,7 @@ namespace CabbyCodes.Patches.Flags
                 FlagInstances.zoteTownConvo,
                 FlagInstances.zoteRescuedDeepnest,
                 FlagInstances.zoteDefeated,
+                FlagInstances.zotePrecept,
             }));
             
             return panels;

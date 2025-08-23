@@ -411,12 +411,14 @@ namespace CabbyCodes.Scenes
 
         // Rooms
         public static readonly SceneMapData Abyss_Lighthouse_room = new SceneMapData("Abyss_Lighthouse_room", null, "Abyss Lighthouse");
+        public static readonly SceneMapData Cliffs_03 = new SceneMapData("Cliffs_03", null, "Stag Nest");
         public static readonly SceneMapData Crossroads_ShamanTemple = new SceneMapData("Crossroads_ShamanTemple", null, "Ancestral Mound");
         public static readonly SceneMapData Cutscene_Boss_Door = new SceneMapData("Cutscene_Boss_Door");
         public static readonly SceneMapData Dream_01_False_Knight = new SceneMapData("Dream_01_False_Knight", null, "False Knight's dream room");
         public static readonly SceneMapData Dream_03_Infected_Knight = new SceneMapData("Dream_03_Infected_Knight", null, "Lost Kin's dream room");
         public static readonly SceneMapData Dream_Guardian_Hegemol = new SceneMapData("Dream_Guardian_Hegemol", null, "Dreamer Herrah's dream room");
         public static readonly SceneMapData Dream_Guardian_Lurien = new SceneMapData("Dream_Guardian_Lurien", null, "Dreamer Lurien's dream room");
+        public static readonly SceneMapData Dream_Guardian_Monomon = new SceneMapData("Dream_Guardian_Monomon", null, "Dreamer Monomon's dream room");
         public static readonly SceneMapData Fungus1_35 = new SceneMapData("Fungus1_35", null, "Stone Sanctuary");
         public static readonly SceneMapData Fungus1_36 = new SceneMapData("Fungus1_36", null, "Stone Sanctuary Mask Room");
         public static readonly SceneMapData Fungus3_archive = new SceneMapData("Fungus3_archive", null, "Teacher's Archives room");
@@ -438,6 +440,7 @@ namespace CabbyCodes.Scenes
         public static readonly SceneMapData Room_Colosseum_Silver = new SceneMapData("Room_Colosseum_Silver", null, "Colosseum Trial of the Conqueror");
         public static readonly SceneMapData Room_Colosseum_Spectate = new SceneMapData("Room_Colosseum_Spectate", null, "Colosseum spectator");
         public static readonly SceneMapData Room_Fungus_Shaman = new SceneMapData("Room_Fungus_Shaman", null, "Overgrown Mound");
+        public static readonly SceneMapData Room_GG_Shortcut = new SceneMapData("Room_GG_Shortcut");
         public static readonly SceneMapData Room_Mansion = new SceneMapData("Room_Mansion", null, "Grey Mourner room");
         public static readonly SceneMapData Room_mapper = new SceneMapData("Room_mapper", null, "Map Shop");
         public static readonly SceneMapData Room_Mask_Maker = new SceneMapData("Room_Mask_Maker", null, "Mask Maker's room");
@@ -454,6 +457,7 @@ namespace CabbyCodes.Scenes
         public static readonly SceneMapData Room_Town_Stag_Station = new SceneMapData("Room_Town_Stag_Station", null, "Dirtmouth Stag Station");
         public static readonly SceneMapData Room_Tram = new SceneMapData("Room_Tram");
         public static readonly SceneMapData Room_Wyrm = new SceneMapData("Room_Wyrm", null, "Cast-Off Shell");
+        public static readonly SceneMapData Ruins_House_03 = new SceneMapData("Ruins_House_03");
 
         // Boss rooms
         public static readonly SceneMapData Crossroads_10_boss_defeated = new SceneMapData("Crossroads_10_boss_defeated");
@@ -466,6 +470,7 @@ namespace CabbyCodes.Scenes
         public static readonly SceneMapData Fungus3_archive_02_boss = new SceneMapData("Fungus3_archive_02_boss");
         public static readonly SceneMapData Ruins1_24_boss = new SceneMapData("Ruins1_24_boss");
         public static readonly SceneMapData Ruins1_24_boss_defeated = new SceneMapData("Ruins1_24_boss_defeated");
+        public static readonly SceneMapData Waterways_05_boss = new SceneMapData("Waterways_05_boss");
         public static readonly SceneMapData Waterways_12_boss = new SceneMapData("Waterways_12_boss");
 
         // Internal

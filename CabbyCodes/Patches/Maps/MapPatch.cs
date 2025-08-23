@@ -206,13 +206,13 @@ namespace CabbyCodes.Patches.Maps
         {
             foreach (string roomName in MapRoomPatch.roomsInMaps[mapName])
             {
-                if (setToOn && !FlagManager.ListFlagContains(FlagInstances.scenesMapped, roomName))
+                if (setToOn && !FlagManager.ContainsInListFlag(FlagInstances.scenesMapped, roomName))
                 {
                     FlagManager.AddToListFlag(FlagInstances.scenesMapped, roomName);
                     // Cancel reload request since we're adding the room back
                     GameReloadManager.CancelReload($"MapRoom_{roomName}");
                 }
-                else if (!setToOn && FlagManager.ListFlagContains(FlagInstances.scenesMapped, roomName))
+                else if (!setToOn && FlagManager.ContainsInListFlag(FlagInstances.scenesMapped, roomName))
                 {
                     FlagManager.RemoveFromListFlag(FlagInstances.scenesMapped, roomName);
                     // Request reload for this room

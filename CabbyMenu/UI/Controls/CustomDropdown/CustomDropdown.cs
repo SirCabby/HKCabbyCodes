@@ -1320,14 +1320,18 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
             if (IsOptionDisabled(index))
             {
                 // Mouse Enter event
-                EventTrigger.Entry enterEntry = new EventTrigger.Entry();
-                enterEntry.eventID = EventTriggerType.PointerEnter;
+                EventTrigger.Entry enterEntry = new EventTrigger.Entry
+                {
+                    eventID = EventTriggerType.PointerEnter
+                };
                 enterEntry.callback.AddListener((data) => OnOptionButtonEnter(capturedIndex));
                 eventTrigger.triggers.Add(enterEntry);
 
                 // Mouse Exit event
-                EventTrigger.Entry exitEntry = new EventTrigger.Entry();
-                exitEntry.eventID = EventTriggerType.PointerExit;
+                EventTrigger.Entry exitEntry = new EventTrigger.Entry
+                {
+                    eventID = EventTriggerType.PointerExit
+                };
                 exitEntry.callback.AddListener((data) => OnOptionButtonExit());
                 eventTrigger.triggers.Add(exitEntry);
             }

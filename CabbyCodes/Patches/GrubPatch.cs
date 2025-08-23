@@ -88,8 +88,8 @@ namespace CabbyCodes.Patches
             
             // Waterways
             Add(FlagInstances.Waterways_04__Grub_Bottle, new Vector2(122, 9));
-            Add(FlagInstances.Waterways_13__Grub_Bottle);
-            Add(FlagInstances.Waterways_14__Grub_Bottle);
+            Add(FlagInstances.Waterways_13__Grub_Bottle, new Vector2(113, 54));
+            Add(FlagInstances.Waterways_14__Grub_Bottle, new Vector2(193, 38));
             
             return locations;
         }
@@ -131,7 +131,7 @@ namespace CabbyCodes.Patches
             {
                 FlagManager.SetBoolFlag(grubFlag, true);
 
-                if (!FlagManager.ListFlagContains(FlagInstances.scenesGrubRescued, sceneName))
+                if (!FlagManager.ContainsInListFlag(FlagInstances.scenesGrubRescued, sceneName))
                 {
                     FlagManager.AddToListFlag(FlagInstances.scenesGrubRescued, sceneName);
                     FlagManager.SetIntFlag(FlagInstances.grubsCollected, PlayerData.instance.grubsCollected + 1);
@@ -141,7 +141,7 @@ namespace CabbyCodes.Patches
             {
                 FlagManager.SetBoolFlag(grubFlag, false);
 
-                if (FlagManager.ListFlagContains(FlagInstances.scenesGrubRescued, sceneName))
+                if (FlagManager.ContainsInListFlag(FlagInstances.scenesGrubRescued, sceneName))
                 {
                     FlagManager.RemoveFromListFlag(FlagInstances.scenesGrubRescued, sceneName);
                     FlagManager.SetIntFlag(FlagInstances.grubsCollected, PlayerData.instance.grubsCollected - 1);

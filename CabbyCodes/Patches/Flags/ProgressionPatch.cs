@@ -46,6 +46,9 @@ namespace CabbyCodes.Patches.Flags
             panels.Add(new InfoPanel("Colosseum").SetColor(CheatPanel.subHeaderColor));
             panels.Add(new DropdownPanel(CreateColosseumValueList(), "Colosseum Status", Constants.DEFAULT_PANEL_HEIGHT));
 
+            panels.Add(new InfoPanel("Godhome").SetColor(CheatPanel.headerColor));
+            panels.AddRange(CreateBossStatuePanels());
+
             return panels;
         }
 
@@ -149,6 +152,231 @@ namespace CabbyCodes.Patches.Flags
                     "Gold Completed"
                 }
             );
+        }
+
+        /// <summary>
+        /// Creates panels for managing boss statue states
+        /// </summary>
+        private List<CheatPanel> CreateBossStatuePanels()
+        {
+            var panels = new List<CheatPanel>();
+            
+            // Group boss statues by category for better organization
+            var bossGroups = new[]
+            {
+                // Main Story Bosses
+                new[] { 
+                    FlagInstances.statueStateFalseKnight, 
+                    FlagInstances.statueStateHornet1, 
+                    FlagInstances.statueStateHornet2,
+                    FlagInstances.statueStateSoulMaster,
+                    FlagInstances.statueStateSoulTyrant,
+                    FlagInstances.statueStateMantisLords,
+                    FlagInstances.statueStateMantisLordsExtra,
+                    FlagInstances.statueStateWatcherKnights,
+                    FlagInstances.statueStateUumuu,
+                    FlagInstances.statueStateDungDefender,
+                    FlagInstances.statueStateWhiteDefender,
+                    FlagInstances.statueStateHollowKnight,
+                    FlagInstances.statueStateRadiance
+                },
+                // Optional Bosses
+                new[] { 
+                    FlagInstances.statueStateBroodingMawlek,
+                    FlagInstances.statueStateGruzMother,
+                    FlagInstances.statueStateMegaMossCharger,
+                    FlagInstances.statueStateVengefly,
+                    FlagInstances.statueStateBrokenVessel,
+                    FlagInstances.statueStateLostKin,
+                    FlagInstances.statueStateNosk,
+                    FlagInstances.statueStateNoskHornet,
+                    FlagInstances.statueStateFlukemarm,
+                    FlagInstances.statueStateCollector,
+                    FlagInstances.statueStateHiveKnight,
+                    FlagInstances.statueStateTraitorLord
+                },
+                // Dream Bosses
+                new[] { 
+                    FlagInstances.statueStateGorb,
+                    FlagInstances.statueStateElderHu,
+                    FlagInstances.statueStateGalien,
+                    FlagInstances.statueStateMarkoth,
+                    FlagInstances.statueStateMarmu,
+                    FlagInstances.statueStateNoEyes,
+                    FlagInstances.statueStateXero
+                },
+                // DLC Bosses
+                new[] { 
+                    FlagInstances.statueStateGrimm,
+                    FlagInstances.statueStateNightmareGrimm,
+                    FlagInstances.statueStateGreyPrince,
+                    FlagInstances.statueStateGodTamer
+                },
+                // Other
+                new[] { 
+                    FlagInstances.statueStateSly,
+                    FlagInstances.statueStateNailmasters,
+                    FlagInstances.statueStateMageKnight,
+                    FlagInstances.statueStatePaintmaster,
+                    FlagInstances.statueStateZote
+                }
+            };
+
+            var groupNames = new[] { "Main Story", "Optional", "Dream Warriors", "DLC", "Other" };
+
+            for (int i = 0; i < bossGroups.Length; i++)
+            {
+                panels.Add(new InfoPanel(groupNames[i]).SetColor(CheatPanel.subHeaderColor));
+                panels.AddRange(CreateBossStatueGroupPanels(bossGroups[i]));
+            }
+
+            return panels;
+        }
+
+        /// <summary>
+        /// Creates panels for a group of boss statues
+        /// </summary>
+        private List<CheatPanel> CreateBossStatueGroupPanels(FlagDef[] bossFlags)
+        {
+            var panels = new List<CheatPanel>();
+            
+            foreach (var bossFlag in bossFlags)
+            {
+                var bossName = bossFlag.ReadableName.Replace("statueState", "");
+                panels.Add(new DropdownPanel(CreateBossStatueValueList(bossFlag), bossName, Constants.DEFAULT_PANEL_HEIGHT));
+            }
+            
+            return panels;
+        }
+
+        /// <summary>
+        /// Creates a DelegateValueList for managing a boss statue's completion state
+        /// </summary>
+        private DelegateValueList CreateBossStatueValueList(FlagDef bossFlag)
+        {
+            return new DelegateValueList(
+                // Getter: returns the current boss statue state as an integer
+                () =>
+                {
+                    var bossData = FlagManager.GetCompletionFlag(bossFlag);
+                    if (bossData == null) return 0;
+                    
+                    // Use reflection to get the actual field values from the game's BossStatue+Completion class
+                    var bossType = bossData.GetType();
+                    
+                    // Get the completion tier fields using the actual field names we discovered
+                    var completedTier3 = GetBoolField(bossData, "completedTier3");
+                    var completedTier2 = GetBoolField(bossData, "completedTier2");
+                    var completedTier1 = GetBoolField(bossData, "completedTier1");
+                    var isUnlocked = GetBoolField(bossData, "isUnlocked");
+                    var hasBeenSeen = GetBoolField(bossData, "hasBeenSeen");
+                    
+                    // Return the highest completion level achieved
+                    if (completedTier3) return 5; // Tier 3 completed
+                    if (completedTier2) return 4; // Tier 2 completed
+                    if (completedTier1) return 3; // Tier 1 completed
+                    if (isUnlocked) return 2; // Unlocked
+                    if (hasBeenSeen) return 1; // Seen
+                    return 0; // Not seen
+                },
+                // Setter: sets the boss statue flags based on the selected completion level
+                (value) =>
+                {
+                    var bossData = FlagManager.GetCompletionFlag(bossFlag);
+                    if (bossData == null) return;
+                    
+                    // Set all fields based on the selected level
+                    switch (value)
+                    {
+                        case 0: // Not seen
+                            SetBoolField(bossData, "hasBeenSeen", false);
+                            SetBoolField(bossData, "isUnlocked", false);
+                            SetBoolField(bossData, "completedTier1", false);
+                            SetBoolField(bossData, "completedTier2", false);
+                            SetBoolField(bossData, "completedTier3", false);
+                            break;
+                        case 1: // Seen
+                            SetBoolField(bossData, "hasBeenSeen", true);
+                            SetBoolField(bossData, "isUnlocked", false);
+                            SetBoolField(bossData, "completedTier1", false);
+                            SetBoolField(bossData, "completedTier2", false);
+                            SetBoolField(bossData, "completedTier3", false);
+                            break;
+                        case 2: // Unlocked
+                            SetBoolField(bossData, "hasBeenSeen", true);
+                            SetBoolField(bossData, "isUnlocked", true);
+                            SetBoolField(bossData, "completedTier1", false);
+                            SetBoolField(bossData, "completedTier2", false);
+                            SetBoolField(bossData, "completedTier3", false);
+                            break;
+                        case 3: // Tier 1 completed
+                            SetBoolField(bossData, "hasBeenSeen", true);
+                            SetBoolField(bossData, "isUnlocked", true);
+                            SetBoolField(bossData, "completedTier1", true);
+                            SetBoolField(bossData, "completedTier2", false);
+                            SetBoolField(bossData, "completedTier3", false);
+                            break;
+                        case 4: // Tier 2 completed
+                            SetBoolField(bossData, "hasBeenSeen", true);
+                            SetBoolField(bossData, "isUnlocked", true);
+                            SetBoolField(bossData, "completedTier1", true);
+                            SetBoolField(bossData, "completedTier2", true);
+                            SetBoolField(bossData, "completedTier3", false);
+                            break;
+                        case 5: // Tier 3 completed
+                            SetBoolField(bossData, "hasBeenSeen", true);
+                            SetBoolField(bossData, "isUnlocked", true);
+                            SetBoolField(bossData, "completedTier1", true);
+                            SetBoolField(bossData, "completedTier2", true);
+                            SetBoolField(bossData, "completedTier3", true);
+                            break;
+                    }
+                    
+                    // Update the PlayerData field with the modified boss data
+                    FlagManager.SetCompletionFlag(bossFlag, bossData);
+                },
+                // Options for the dropdown
+                () => new List<string> { "Not Seen", "Seen", "Unlocked", "Tier 1 Completed", "Tier 2 Completed", "Tier 3 Completed" }
+            );
+        }
+        
+        /// <summary>
+        /// Helper method to safely get a boolean field value using reflection
+        /// </summary>
+        private bool GetBoolField(object obj, string fieldName)
+        {
+            try
+            {
+                var field = obj.GetType().GetField(fieldName);
+                if (field != null && field.FieldType == typeof(bool))
+                {
+                    return (bool)field.GetValue(obj);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"[Boss Statue] Failed to get field {fieldName}: {ex.Message}");
+            }
+            return false;
+        }
+        
+        /// <summary>
+        /// Helper method to safely set a boolean field value using reflection
+        /// </summary>
+        private void SetBoolField(object obj, string fieldName, bool value)
+        {
+            try
+            {
+                var field = obj.GetType().GetField(fieldName);
+                if (field != null && field.FieldType == typeof(bool))
+                {
+                    field.SetValue(obj, value);
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"[Boss Statue] Failed to set field {fieldName}: {ex.Message}");
+            }
         }
 
         private List<CheatPanel> CreateDreamerPanels(FlagDef[][] flagGroups)

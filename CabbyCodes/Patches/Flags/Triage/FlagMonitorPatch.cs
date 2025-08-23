@@ -1544,13 +1544,6 @@ namespace CabbyCodes.Patches.Flags.Triage
             
             // Increment test counter to track polling calls
             testCounter++;
-            
-            // Minimal debug logging to verify polling is running
-            if (testCounter % 100 == 0) // Only log every 100th call to avoid spam
-            {
-                Debug.Log($"[Flag Monitor] Polling PlayerData fields... (testCounter: {testCounter})");
-                Debug.Log($"[Flag Monitor] Current state - Tracked: {trackedPlayerDataFields.Count}, Discovered: {discoveredPlayerDataFlags.Count}");
-            }
 
             // Check for instance change
             if (PlayerData.instance != lastKnownInstance)
@@ -1578,12 +1571,6 @@ namespace CabbyCodes.Patches.Flags.Triage
 
                     // Check if this is a newly discovered flag (not in current tracking AND not previously discovered)
                     bool isNewFlag = !trackedPlayerDataFields.Contains(fieldName) && !discoveredPlayerDataFlags.Contains(fieldName);
-                    
-                    // Log all fields being checked (but only occasionally to avoid spam)
-                    if (testCounter % 200 == 0)
-                    {
-                        Debug.Log($"[Flag Monitor] Checking field: {fieldName} (Type: {field.FieldType.Name}) - New: {isNewFlag}, Tracked: {trackedPlayerDataFields.Contains(fieldName)}, Discovered: {discoveredPlayerDataFlags.Contains(fieldName)}");
-                    }
                     
                     if (isNewFlag)
                     {

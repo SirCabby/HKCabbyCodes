@@ -4,11 +4,43 @@ using CabbyCodes.Flags;
 using CabbyCodes.Patches.BasePatches;
 using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
+using CabbyCodes.Scenes;
 
 namespace CabbyCodes.Patches.Flags
 {
     public class EnvironmentFlagPatch : BasePatch
     {
+        /// <summary>
+        /// Mapping of door flags to the scenes where they should be disabled.
+        /// These doors cannot be interacted with when the player is in these specific scenes.
+        /// </summary>
+        private static readonly Dictionary<FlagDef, SceneMapData> DoorSceneRestrictions = new Dictionary<FlagDef, SceneMapData>
+        {
+            { FlagInstances.openedCityGate, SceneInstances.Fungus2_21 },
+            { FlagInstances.openedLoveDoor, SceneInstances.Ruins2_11_b },
+            { FlagInstances.usedWhiteKey, SceneInstances.Ruins1_31 },
+            { FlagInstances.openedWaterwaysManhole, SceneInstances.Ruins1_05b },
+            { FlagInstances.jijiDoorUnlocked, SceneInstances.Town },
+            { FlagInstances.bathHouseOpened, SceneInstances.Ruins2_04 },
+            { FlagInstances.godseekerUnlocked, SceneInstances.GG_Waterways }
+        };
+
+        /// <summary>
+        /// Checks if a door flag should be disabled based on the current scene.
+        /// </summary>
+        /// <param name="doorFlag">The door flag to check</param>
+        /// <returns>True if the door should be disabled in the current scene</returns>
+        private static bool IsDoorDisabledInCurrentScene(FlagDef doorFlag)
+        {
+            if (!DoorSceneRestrictions.TryGetValue(doorFlag, out var restrictedScene))
+            {
+                return false; // No restrictions for this door
+            }
+
+            string currentScene = GameStateProvider.GetCurrentSceneName();
+            return restrictedScene.SceneName == currentScene;
+        }
+
         protected override FlagDef[] GetFlags()
         {
             return new FlagDef[]
@@ -49,6 +81,7 @@ namespace CabbyCodes.Patches.Flags
                 FlagInstances.usedWhiteKey,
                 FlagInstances.openedWaterwaysManhole,
                 FlagInstances.godseekerUnlocked,
+                FlagInstances.summonedMonomon,
 
                 
 
@@ -136,7 +169,9 @@ namespace CabbyCodes.Patches.Flags
         /// <returns>A toggle panel for the door</returns>
         private TogglePanel CreateDoorPanel(FlagDef doorFlag, FlagDef keyFlag, string disabledMessage, FlagDef additionalFlag = null)
         {
-            var shouldBeInteractable = FlagManager.GetBoolFlag(doorFlag) || FlagManager.GetBoolFlag(keyFlag);
+            var hasKeyOrDoorOpen = FlagManager.GetBoolFlag(doorFlag) || FlagManager.GetBoolFlag(keyFlag);
+            var isInRestrictedScene = IsDoorDisabledInCurrentScene(doorFlag);
+            var shouldBeInteractable = hasKeyOrDoorOpen && !isInRestrictedScene;
 
             var togglePanel = new TogglePanel(new DelegateReference<bool>(
                 () => FlagManager.GetBoolFlag(doorFlag),
@@ -159,7 +194,12 @@ namespace CabbyCodes.Patches.Flags
             // Set disabled message for hover popup
             if (!shouldBeInteractable)
             {
-                toggleButton.SetDisabledMessage(disabledMessage);
+                string finalMessage = disabledMessage;
+                if (isInRestrictedScene)
+                {
+                    finalMessage = $"Cannot change this flag while in the flag's scene.\n\n{disabledMessage}";
+                }
+                toggleButton.SetDisabledMessage(finalMessage);
             }
             else
             {
@@ -178,9 +218,10 @@ namespace CabbyCodes.Patches.Flags
         {
             var currentSimpleKeys = FlagManager.GetIntFlag(FlagInstances.simpleKeys);
             var isDoorOpen = FlagManager.GetBoolFlag(doorFlag);
+            var isInRestrictedScene = IsDoorDisabledInCurrentScene(doorFlag);
             
-            // Panel is disabled if the door is closed and there are no simple keys
-            var shouldBeInteractable = !(isDoorOpen == false && currentSimpleKeys == 0);
+            // Panel is disabled if the door is closed and there are no simple keys, OR if in restricted scene
+            var shouldBeInteractable = !(isDoorOpen == false && currentSimpleKeys == 0) && !isInRestrictedScene;
 
             var togglePanel = new TogglePanel(new DelegateReference<bool>(
                 () => FlagManager.GetBoolFlag(doorFlag),
@@ -209,7 +250,12 @@ namespace CabbyCodes.Patches.Flags
             // Set disabled message for hover popup
             if (!shouldBeInteractable)
             {
-                toggleButton.SetDisabledMessage("Cannot open door without Simple Keys");
+                string message = "Cannot open door without Simple Keys";
+                if (isInRestrictedScene)
+                {
+                    message = $"Cannot interact with flag while in flag's scene\n\n{message}";
+                }
+                toggleButton.SetDisabledMessage(message);
             }
             else
             {
@@ -218,7 +264,5 @@ namespace CabbyCodes.Patches.Flags
 
             return togglePanel;
         }
-
-
     }
 } 
