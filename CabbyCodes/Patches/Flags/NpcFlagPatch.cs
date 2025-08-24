@@ -75,6 +75,7 @@ namespace CabbyCodes.Patches.Flags
             panels.AddRange(CreateNpcPanels(new[] {
                 FlagInstances.divineInTown,
                 FlagInstances.metDivine,
+                FlagInstances.divineFinalConvo,
             }));
 
             panels.Add(new InfoPanel("Elderbug").SetColor(CheatPanel.subHeaderColor));
@@ -148,7 +149,16 @@ namespace CabbyCodes.Patches.Flags
             panels.Add(new InfoPanel("Leg Eater").SetColor(CheatPanel.subHeaderColor));
             panels.AddRange(CreateNpcPanels(new[] {
                 FlagInstances.metLegEater,
-                FlagInstances.paidLegEater
+                FlagInstances.paidLegEater,
+                FlagInstances.legEaterBoughtConvo,
+                FlagInstances.legEaterBrokenConvo,
+                FlagInstances.legEaterConvo1,
+                FlagInstances.legEaterConvo2,
+                FlagInstances.legEaterConvo3,
+                FlagInstances.legEaterDungConvo,
+                FlagInstances.legEaterGoldConvo,
+                FlagInstances.legEaterInfectedCrossroadConvo,
+                FlagInstances.legEaterLeft,
             }));
 
             panels.Add(new InfoPanel("Leg Eater").SetColor(CheatPanel.subHeaderColor));

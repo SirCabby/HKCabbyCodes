@@ -7,6 +7,9 @@ using System;
 using System.Collections.Generic;
 using CabbyCodes.Scenes;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using CabbyMenu.UI.Controls; // for HoverPopup
+using CabbyMenu.UI.Controls.CustomDropdown; // for CustomDropdown
 
 namespace CabbyCodes.Patches.Flags
 {
@@ -47,6 +50,8 @@ namespace CabbyCodes.Patches.Flags
             panels.Add(new DropdownPanel(CreateColosseumValueList(), "Colosseum Status", Constants.DEFAULT_PANEL_HEIGHT));
 
             panels.Add(new InfoPanel("Godhome").SetColor(CheatPanel.headerColor));
+            // Add Boss Door panels before the boss statue panels
+            panels.AddRange(CreateBossDoorPanels());
             panels.AddRange(CreateBossStatuePanels());
 
             return panels;
@@ -164,70 +169,69 @@ namespace CabbyCodes.Patches.Flags
             // Group boss statues by category for better organization
             var bossGroups = new[]
             {
-                // Main Story Bosses
-                new[] { 
-                    FlagInstances.statueStateFalseKnight, 
-                    FlagInstances.statueStateHornet1, 
-                    FlagInstances.statueStateHornet2,
-                    FlagInstances.statueStateSoulMaster,
-                    FlagInstances.statueStateSoulTyrant,
-                    FlagInstances.statueStateMantisLords,
-                    FlagInstances.statueStateMantisLordsExtra,
-                    FlagInstances.statueStateWatcherKnights,
-                    FlagInstances.statueStateUumuu,
-                    FlagInstances.statueStateDungDefender,
-                    FlagInstances.statueStateWhiteDefender,
-                    FlagInstances.statueStateHollowKnight,
-                    FlagInstances.statueStateRadiance
-                },
-                // Optional Bosses
-                new[] { 
-                    FlagInstances.statueStateBroodingMawlek,
+                // Floor 1
+                new[] {
                     FlagInstances.statueStateGruzMother,
-                    FlagInstances.statueStateMegaMossCharger,
                     FlagInstances.statueStateVengefly,
+                    FlagInstances.statueStateBroodingMawlek,
+                    FlagInstances.statueStateFalseKnight,
+                    FlagInstances.statueStateFailedChampion,
+                    FlagInstances.statueStateHornet1,
+                    FlagInstances.statueStateHornet2,
+                    FlagInstances.statueStateMegaMossCharger,
+                    FlagInstances.statueStateFlukemarm,
+                    FlagInstances.statueStateMantisLords,
+                    FlagInstances.statueStateOblobbles,
+                    FlagInstances.statueStateHiveKnight,
                     FlagInstances.statueStateBrokenVessel,
                     FlagInstances.statueStateLostKin,
-                    FlagInstances.statueStateNosk,
-                    FlagInstances.statueStateNoskHornet,
-                    FlagInstances.statueStateFlukemarm,
+                    // missed boss
                     FlagInstances.statueStateCollector,
-                    FlagInstances.statueStateHiveKnight,
-                    FlagInstances.statueStateTraitorLord
+                    FlagInstances.statueStateGodTamer,
+                    FlagInstances.statueStateCrystalGuardian1,
+                    FlagInstances.statueStateCrystalGuardian2,
+                    FlagInstances.statueStateUumuu,
+                    FlagInstances.statueStateTraitorLord,
+                    // missed boss
                 },
-                // Dream Bosses
-                new[] { 
+                // Floor 2
+                new [] {
+                    FlagInstances.statueStateMageKnight,
+                    FlagInstances.statueStateSoulMaster,
+                    FlagInstances.statueStateSoulTyrant,
+                    FlagInstances.statueStateDungDefender,
+                    FlagInstances.statueStateWhiteDefender,
+                    FlagInstances.statueStateWatcherKnights,
+                    FlagInstances.statueStateNoEyes,
+                    FlagInstances.statueStateMarmu,
+                    FlagInstances.statueStateXero,
+                    FlagInstances.statueStateMarkoth,
+                    FlagInstances.statueStateGalien,
                     FlagInstances.statueStateGorb,
                     FlagInstances.statueStateElderHu,
-                    FlagInstances.statueStateGalien,
-                    FlagInstances.statueStateMarkoth,
-                    FlagInstances.statueStateMarmu,
-                    FlagInstances.statueStateNoEyes,
-                    FlagInstances.statueStateXero
-                },
-                // DLC Bosses
-                new[] { 
-                    FlagInstances.statueStateGrimm,
-                    FlagInstances.statueStateNightmareGrimm,
-                    FlagInstances.statueStateGreyPrince,
-                    FlagInstances.statueStateGodTamer
-                },
-                // Other
-                new[] { 
-                    FlagInstances.statueStateSly,
                     FlagInstances.statueStateNailmasters,
-                    FlagInstances.statueStateMageKnight,
-                    FlagInstances.statueStatePaintmaster,
-                    FlagInstances.statueStateZote
                 }
+
+                    // FlagInstances.statueStateNosk,
+                    // FlagInstances.statueStateNoskHornet,
+                //     FlagInstances.statueStateMantisLordsExtra,
+                //     FlagInstances.statueStateHollowKnight,
+                //     FlagInstances.statueStateRadiance,
+                //     FlagInstances.statueStateGrimm,
+                //     FlagInstances.statueStateNightmareGrimm,
+                //     FlagInstances.statueStateGreyPrince,
+                //     FlagInstances.statueStateSly,
+                //     FlagInstances.statueStatePaintmaster,
+                //     FlagInstances.statueStateZote
             };
 
-            var groupNames = new[] { "Main Story", "Optional", "Dream Warriors", "DLC", "Other" };
+            var groupNames = new[] { "Floor 1", "Optional", "Dream Warriors", "DLC", "Other" };
 
             for (int i = 0; i < bossGroups.Length; i++)
             {
                 panels.Add(new InfoPanel(groupNames[i]).SetColor(CheatPanel.subHeaderColor));
                 panels.AddRange(CreateBossStatueGroupPanels(bossGroups[i]));
+                // After adding, mark disable logic on last added panels maybe done in CreateBossStatueGroupPanels
             }
 
             return panels;
@@ -242,102 +246,75 @@ namespace CabbyCodes.Patches.Flags
             
             foreach (var bossFlag in bossFlags)
             {
+                // Add a subheader for each statue
                 var bossName = bossFlag.ReadableName.Replace("statueState", "");
-                panels.Add(new DropdownPanel(CreateBossStatueValueList(bossFlag), bossName, Constants.DEFAULT_PANEL_HEIGHT));
+                panels.Add(new InfoPanel(bossName).SetColor(CheatPanel.subHeaderColor));
+
+                // Add individual toggles for each boolean field we care about
+                panels.AddRange(CreateBossStatueTogglePanels(bossFlag));
             }
             
             return panels;
         }
 
         /// <summary>
-        /// Creates a DelegateValueList for managing a boss statue's completion state
+        /// Creates individual toggle panels for the different boolean fields of a boss statue
         /// </summary>
-        private DelegateValueList CreateBossStatueValueList(FlagDef bossFlag)
+        private List<CheatPanel> CreateBossStatueTogglePanels(FlagDef bossFlag)
         {
-            return new DelegateValueList(
-                // Getter: returns the current boss statue state as an integer
-                () =>
-                {
-                    var bossData = FlagManager.GetCompletionFlag(bossFlag);
-                    if (bossData == null) return 0;
-                    
-                    // Use reflection to get the actual field values from the game's BossStatue+Completion class
-                    var bossType = bossData.GetType();
-                    
-                    // Get the completion tier fields using the actual field names we discovered
-                    var completedTier3 = GetBoolField(bossData, "completedTier3");
-                    var completedTier2 = GetBoolField(bossData, "completedTier2");
-                    var completedTier1 = GetBoolField(bossData, "completedTier1");
-                    var isUnlocked = GetBoolField(bossData, "isUnlocked");
-                    var hasBeenSeen = GetBoolField(bossData, "hasBeenSeen");
-                    
-                    // Return the highest completion level achieved
-                    if (completedTier3) return 5; // Tier 3 completed
-                    if (completedTier2) return 4; // Tier 2 completed
-                    if (completedTier1) return 3; // Tier 1 completed
-                    if (isUnlocked) return 2; // Unlocked
-                    if (hasBeenSeen) return 1; // Seen
-                    return 0; // Not seen
-                },
-                // Setter: sets the boss statue flags based on the selected completion level
-                (value) =>
-                {
-                    var bossData = FlagManager.GetCompletionFlag(bossFlag);
-                    if (bossData == null) return;
-                    
-                    // Set all fields based on the selected level
-                    switch (value)
+            var panels = new List<CheatPanel>();
+
+            // Ordered so they appear logically: Seen -> Unlocked -> Tier1 -> Tier2 -> Tier3
+            var fieldInfo = new (string fieldName, string label)[]
+            {
+                ("hasBeenSeen", "Seen"),
+                ("isUnlocked", "Unlocked"),
+                ("completedTier1", "Tier 1 Completed"),
+                ("completedTier2", "Tier 2 Completed"),
+                ("completedTier3", "Tier 3 Completed")
+            };
+
+            foreach (var (fieldName, label) in fieldInfo)
+            {
+                var toggleReference = new DelegateReference<bool>(
+                    () =>
                     {
-                        case 0: // Not seen
-                            SetBoolField(bossData, "hasBeenSeen", false);
-                            SetBoolField(bossData, "isUnlocked", false);
-                            SetBoolField(bossData, "completedTier1", false);
-                            SetBoolField(bossData, "completedTier2", false);
-                            SetBoolField(bossData, "completedTier3", false);
-                            break;
-                        case 1: // Seen
-                            SetBoolField(bossData, "hasBeenSeen", true);
-                            SetBoolField(bossData, "isUnlocked", false);
-                            SetBoolField(bossData, "completedTier1", false);
-                            SetBoolField(bossData, "completedTier2", false);
-                            SetBoolField(bossData, "completedTier3", false);
-                            break;
-                        case 2: // Unlocked
-                            SetBoolField(bossData, "hasBeenSeen", true);
-                            SetBoolField(bossData, "isUnlocked", true);
-                            SetBoolField(bossData, "completedTier1", false);
-                            SetBoolField(bossData, "completedTier2", false);
-                            SetBoolField(bossData, "completedTier3", false);
-                            break;
-                        case 3: // Tier 1 completed
-                            SetBoolField(bossData, "hasBeenSeen", true);
-                            SetBoolField(bossData, "isUnlocked", true);
-                            SetBoolField(bossData, "completedTier1", true);
-                            SetBoolField(bossData, "completedTier2", false);
-                            SetBoolField(bossData, "completedTier3", false);
-                            break;
-                        case 4: // Tier 2 completed
-                            SetBoolField(bossData, "hasBeenSeen", true);
-                            SetBoolField(bossData, "isUnlocked", true);
-                            SetBoolField(bossData, "completedTier1", true);
-                            SetBoolField(bossData, "completedTier2", true);
-                            SetBoolField(bossData, "completedTier3", false);
-                            break;
-                        case 5: // Tier 3 completed
-                            SetBoolField(bossData, "hasBeenSeen", true);
-                            SetBoolField(bossData, "isUnlocked", true);
-                            SetBoolField(bossData, "completedTier1", true);
-                            SetBoolField(bossData, "completedTier2", true);
-                            SetBoolField(bossData, "completedTier3", true);
-                            break;
+                        var data = FlagManager.GetCompletionFlag(bossFlag);
+                        return data != null && GetBoolField(data, fieldName);
+                    },
+                    value =>
+                    {
+                        var data = FlagManager.GetCompletionFlag(bossFlag);
+                        if (data == null) return;
+                        SetBoolField(data, fieldName, value);
+                        FlagManager.SetCompletionFlag(bossFlag, data);
+                    });
+
+                var togglePanel = new TogglePanel(toggleReference, label);
+
+                // Disable interaction inside GG_Workshop
+                togglePanel.updateActions.Add(() =>
+                {
+                    bool interactable = GameStateProvider.GetCurrentSceneName() != "GG_Workshop";
+                    var toggleButton = togglePanel.GetToggleButton();
+                    toggleButton.SetInteractable(interactable);
+                    if (!interactable)
+                    {
+                        toggleButton.SetDisabledMessage("Cannot edit boss statue flags while inside Godhome Workshop");
                     }
-                    
-                    // Update the PlayerData field with the modified boss data
-                    FlagManager.SetCompletionFlag(bossFlag, bossData);
-                },
-                // Options for the dropdown
-                () => new List<string> { "Not Seen", "Seen", "Unlocked", "Tier 1 Completed", "Tier 2 Completed", "Tier 3 Completed" }
-            );
+                    else
+                    {
+                        toggleButton.SetDisabledMessage("");
+                    }
+                });
+
+                // Execute once to set initial state
+                togglePanel.updateActions[togglePanel.updateActions.Count - 1]();
+
+                panels.Add(togglePanel);
+            }
+
+            return panels;
         }
         
         /// <summary>
@@ -377,6 +354,186 @@ namespace CabbyCodes.Patches.Flags
             {
                 Debug.LogError($"[Boss Statue] Failed to set field {fieldName}: {ex.Message}");
             }
+        }
+
+        /// <summary>
+        /// Ensures a HoverPopup on the dropdown button, wiring enter/exit triggers, and sets message.
+        /// </summary>
+        private void ConfigureDropdownHover(CustomDropdown dropdown, string message)
+        {
+            if (dropdown == null) return;
+            var go = dropdown.gameObject;
+
+            // Add or get HoverPopup component
+            var hover = go.GetComponent<HoverPopup>();
+            if (hover == null)
+            {
+                hover = go.AddComponent<HoverPopup>();
+            }
+
+            // Add EventTrigger for pointer enter/exit if not present
+            var trigger = go.GetComponent<EventTrigger>();
+            if (trigger == null)
+            {
+                trigger = go.AddComponent<EventTrigger>();
+            }
+
+            // Local functions to add entries only once
+            void AddEntry(EventTriggerType type, UnityEngine.Events.UnityAction<BaseEventData> action)
+            {
+                bool exists = false;
+                foreach (var e in trigger.triggers)
+                {
+                    if (e.eventID == type)
+                    {
+                        exists = true;
+                        break;
+                    }
+                }
+                if (!exists)
+                {
+                    var entry = new EventTrigger.Entry { eventID = type };
+                    entry.callback.AddListener(action);
+                    trigger.triggers.Add(entry);
+                }
+            }
+
+            AddEntry(EventTriggerType.PointerEnter, (data) => { if (!go.GetComponent<UnityEngine.UI.Button>().interactable) hover.ShowPopup(message); });
+            AddEntry(EventTriggerType.PointerExit, (data) => { hover.HidePopup(); });
+        }
+
+        private List<CheatPanel> CreateBossDoorPanels()
+        {
+            var panels = new List<CheatPanel>();
+
+            var bossDoorFlags = new[]
+            {
+                FlagInstances.bossDoorStateTier1,
+                FlagInstances.bossDoorStateTier2,
+                FlagInstances.bossDoorStateTier3,
+                FlagInstances.bossDoorStateTier4,
+                FlagInstances.bossDoorStateTier5
+            };
+
+            for (int i = 0; i < bossDoorFlags.Length; i++)
+            {
+                var doorFlag = bossDoorFlags[i];
+
+                // Subheader for each door
+                panels.Add(new InfoPanel(doorFlag.ReadableName).SetColor(CheatPanel.subHeaderColor));
+
+                // Dropdown for main status (canUnlock, unlocked, completed)
+                var doorDropdownPanel = new DropdownPanel(CreateBossDoorValueList(doorFlag), "Door Status", Constants.DEFAULT_PANEL_HEIGHT);
+                // Disable when in GG_Atrium
+                doorDropdownPanel.updateActions.Add(() =>
+                {
+                    bool interactable = GameStateProvider.GetCurrentSceneName() != "GG_Atrium";
+                    doorDropdownPanel.GetDropDownSync().GetCustomDropdown().SetInteractable(interactable);
+                });
+                // Execute to set initial state
+                doorDropdownPanel.updateActions[doorDropdownPanel.updateActions.Count - 1]();
+                ConfigureDropdownHover(doorDropdownPanel.GetDropDownSync().GetCustomDropdown(), "Cannot edit boss door flags while inside Godhome Atrium");
+                panels.Add(doorDropdownPanel);
+
+                // Toggles for additional fields
+                var extraFields = new[] { "allBindings", "noHits", "boundNail", "boundShell", "boundCharms", "boundSoul" };
+                foreach (var fieldName in extraFields)
+                {
+                    var toggleReference = new DelegateReference<bool>(
+                        () =>
+                        {
+                            var data = FlagManager.GetCompletionFlag(doorFlag);
+                            return data != null && GetBoolField(data, fieldName);
+                        },
+                        value =>
+                        {
+                            var data = FlagManager.GetCompletionFlag(doorFlag);
+                            if (data == null) return;
+                            SetBoolField(data, fieldName, value);
+                            FlagManager.SetCompletionFlag(doorFlag, data);
+                        }
+                    );
+
+                    // Convert field name to a nicer label, e.g. "boundNail" -> "Bound Nail"
+                    var label = System.Text.RegularExpressions.Regex.Replace(fieldName, "([a-z])([A-Z])", "$1 $2");
+                    label = char.ToUpper(label[0]) + label.Substring(1);
+
+                    var togglePanel = new TogglePanel(toggleReference, label);
+                    togglePanel.updateActions.Add(() =>
+                    {
+                        bool interactable = GameStateProvider.GetCurrentSceneName() != "GG_Atrium";
+                        var toggleButton = togglePanel.GetToggleButton();
+                        toggleButton.SetInteractable(interactable);
+                        if (!interactable)
+                        {
+                            toggleButton.SetDisabledMessage("Cannot edit boss door flags while inside Godhome Atrium");
+                        }
+                        else
+                        {
+                            toggleButton.SetDisabledMessage("");
+                        }
+                    });
+                    // Execute once immediately to set initial state
+                    togglePanel.updateActions[togglePanel.updateActions.Count - 1]();
+                    panels.Add(togglePanel);
+                }
+            }
+
+            return panels;
+        }
+
+        /// <summary>
+        /// Creates a DelegateValueList for managing boss door state (canUnlock/unlocked/completed)
+        /// </summary>
+        private DelegateValueList CreateBossDoorValueList(FlagDef doorFlag)
+        {
+            return new DelegateValueList(
+                // Getter
+                () =>
+                {
+                    var data = FlagManager.GetCompletionFlag(doorFlag);
+                    if (data == null) return 0;
+
+                    if (GetBoolField(data, "completed")) return 3;
+                    if (GetBoolField(data, "unlocked")) return 2;
+                    if (GetBoolField(data, "canUnlock")) return 1;
+                    return 0;
+                },
+                // Setter
+                value =>
+                {
+                    var data = FlagManager.GetCompletionFlag(doorFlag);
+                    if (data == null) return;
+
+                    switch (value)
+                    {
+                        case 0: // Locked
+                            SetBoolField(data, "canUnlock", false);
+                            SetBoolField(data, "unlocked", false);
+                            SetBoolField(data, "completed", false);
+                            break;
+                        case 1: // Can Unlock
+                            SetBoolField(data, "canUnlock", true);
+                            SetBoolField(data, "unlocked", false);
+                            SetBoolField(data, "completed", false);
+                            break;
+                        case 2: // Unlocked
+                            SetBoolField(data, "canUnlock", true);
+                            SetBoolField(data, "unlocked", true);
+                            SetBoolField(data, "completed", false);
+                            break;
+                        case 3: // Completed
+                            SetBoolField(data, "canUnlock", true);
+                            SetBoolField(data, "unlocked", true);
+                            SetBoolField(data, "completed", true);
+                            break;
+                    }
+
+                    FlagManager.SetCompletionFlag(doorFlag, data);
+                },
+                // Options
+                () => new List<string> { "Locked", "Can Unlock", "Unlocked", "Completed" }
+            );
         }
 
         private List<CheatPanel> CreateDreamerPanels(FlagDef[][] flagGroups)

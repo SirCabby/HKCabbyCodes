@@ -89,7 +89,7 @@ namespace CabbyCodes.Patches.Settings
         /// <param name="slot">The save slot number (1-4).</param>
         public static void SetSaveSlot(int slot)
         {
-            slot = ValidationUtils.ValidateRange(slot, 1, 4, nameof(slot));
+            slot = ValidationUtils.ValidateRange(slot, 1, 4);
             saveSlot.Value = slot;
         }
 

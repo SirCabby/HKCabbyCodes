@@ -14,8 +14,22 @@ namespace CabbyCodes.Patches.Flags.Triage
     {
         public static void AddPanel()
         {
-            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Flag Extraction").SetColor(CheatPanel.headerColor));
-            
+            foreach (var panel in CreatePanels())
+            {
+                CabbyCodesPlugin.cabbyMenu.AddCheatPanel(panel);
+            }
+        }
+
+        /// <summary>
+        /// Creates the panels for the Flag Extraction utility without directly adding them to the menu.
+        /// This is used by the FlagsPatch dropdown so the panels can be managed dynamically.
+        /// </summary>
+        public static List<CheatPanel> CreatePanels()
+        {
+            var panels = new List<CheatPanel>();
+
+            panels.Add(new InfoPanel("Flag Extraction").SetColor(CheatPanel.headerColor));
+
             var extractButton = new ButtonPanel(() =>
             {
                 try
@@ -28,8 +42,10 @@ namespace CabbyCodes.Patches.Flags.Triage
                     Debug.LogError($"Flag extraction failed: {ex.Message}");
                 }
             }, "Extract All Flags", "Extract all game flags to a comprehensive report file");
-            
-            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(extractButton);
+
+            panels.Add(extractButton);
+
+            return panels;
         }
 
         public static void ExtractAllFlags()

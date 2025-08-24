@@ -114,8 +114,13 @@ namespace CabbyCodes.Flags
                 case "quirrelMines":
                     return new IntFlagValidationMetadata(-2147483647, 2147483647, KeyCodeMap.ValidChars.Numeric);
 
+                case "maxHealthBase":
+                    return new IntFlagValidationMetadata(5, 9, KeyCodeMap.ValidChars.Numeric);
+
+                case "healthBlue":
+                    return new IntFlagValidationMetadata(0, 16, KeyCodeMap.ValidChars.Numeric);
+
                 // Needs corrected
-                case "currentArea":
                 case "stationsOpened":
                     return new IntFlagValidationMetadata(0, 999, KeyCodeMap.ValidChars.Numeric);
 

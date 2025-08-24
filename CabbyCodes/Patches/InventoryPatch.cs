@@ -1137,6 +1137,7 @@ namespace CabbyCodes.Patches
                 CreateHallownestSealPanel(FlagInstances.Ruins2_03__Shiny_Item),
                 CreateHallownestSealPanel(FlagInstances.Fungus3_48__Shiny_Item),
                 CreateHallownestSealPanel(FlagInstances.Crossroads_38__Shiny_Item_Relic2),
+                CreateHallownestSealPanel(FlagInstances.Crossroads_01__Shiny_Item),
             };
 
             return panels;
@@ -1210,6 +1211,7 @@ namespace CabbyCodes.Patches
             {
                 CreateArcaneEggPanel(FlagInstances.dreamReward6),
                 CreateArcaneEggPanel(FlagInstances.Abyss_10__Shiny_Item),
+                CreateArcaneEggPanel(FlagInstances.Abyss_08__Shiny_Item_1),
             };
 
             return panels;

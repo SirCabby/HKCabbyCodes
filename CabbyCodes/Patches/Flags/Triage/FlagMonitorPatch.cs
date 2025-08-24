@@ -1446,26 +1446,41 @@ namespace CabbyCodes.Patches.Flags.Triage
 
         public static void AddPanel()
         {
-            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Flag Monitor").SetColor(CheatPanel.headerColor));
-            
+            foreach (var panel in CreatePanels())
+            {
+                CabbyCodesPlugin.cabbyMenu.AddCheatPanel(panel);
+            }
+        }
+
+        /// <summary>
+        /// Creates the panels for the Flag Monitor utility without directly adding them to the menu.
+        /// This method mirrors the old AddPanel logic but allows dynamic use in dropdown sections.
+        /// </summary>
+        public static List<CheatPanel> CreatePanels()
+        {
+            var panels = new List<CheatPanel>();
+
+            panels.Add(new InfoPanel("Flag Monitor").SetColor(CheatPanel.headerColor));
+
             var monitorToggle = new TogglePanel(monitorReference, "Enable real-time flag change notifications on screen");
-            
+            panels.Add(monitorToggle);
+
             var clearButton = new ButtonPanel(() =>
             {
                 ClearNotifications();
             }, "Clear Notifications", "Clear all current flag change notifications");
-            
+            panels.Add(clearButton);
+
             var fileLogToggle = new TogglePanel(fileLoggingReference, "Enable logging flag changes to a file in CabbySaves folder");
-            
+            panels.Add(fileLogToggle);
+
             var testButton = new ButtonPanel(() =>
             {
                 TestFlagNotifications();
             }, "Test Flag Notifications", "Print example flag change messages to test the monitor display");
-            
-            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(monitorToggle);
-            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(clearButton);
-            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(fileLogToggle);
-            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(testButton);
+            panels.Add(testButton);
+
+            return panels;
         }
 
         private static int testCounter = 0;

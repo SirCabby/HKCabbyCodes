@@ -13,9 +13,8 @@ namespace CabbyMenu.Utilities
         /// <param name="value">The value to validate.</param>
         /// <param name="min">Minimum allowed value.</param>
         /// <param name="max">Maximum allowed value.</param>
-        /// <param name="paramName">Name of the parameter for error messages.</param>
         /// <returns>The validated value (capped to the range).</returns>
-        public static int ValidateRange(int value, int min, int max, string paramName)
+        public static int ValidateRange(int value, int min, int max)
         {
             return Math.Max(min, Math.Min(max, value));
         }
@@ -28,7 +27,7 @@ namespace CabbyMenu.Utilities
         /// <param name="max">Maximum allowed value.</param>
         /// <param name="paramName">Name of the parameter for error messages.</param>
         /// <returns>The validated value (capped to the range).</returns>
-        public static float ValidateRange(float value, float min, float max, string paramName)
+        public static float ValidateRange(float value, float min, float max)
         {
             return Math.Max(min, Math.Min(max, value));
         }
@@ -39,7 +38,7 @@ namespace CabbyMenu.Utilities
         /// <param name="value">The string to validate.</param>
         /// <param name="paramName">Name of the parameter for error messages.</param>
         /// <returns>The validated string or empty string if validation fails.</returns>
-        public static string ValidateNotNullOrEmpty(string value, string paramName)
+        public static string ValidateNotNullOrEmpty(string value)
         {
             if (string.IsNullOrEmpty(value))
             {
@@ -54,7 +53,7 @@ namespace CabbyMenu.Utilities
         /// <param name="value">The object to validate.</param>
         /// <param name="paramName">Name of the parameter for error messages.</param>
         /// <returns>The validated object or null if validation fails.</returns>
-        public static T ValidateNotNull<T>(T value, string paramName) where T : class
+        public static T ValidateNotNull<T>(T value) where T : class
         {
             if (value == null)
             {

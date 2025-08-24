@@ -82,6 +82,7 @@ namespace CabbyCodes.Patches.Flags
                 FlagInstances.openedWaterwaysManhole,
                 FlagInstances.godseekerUnlocked,
                 FlagInstances.summonedMonomon,
+                FlagInstances.blueVineDoor,
 
                 
 

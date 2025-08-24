@@ -15,13 +15,10 @@ namespace CabbyCodes.Patches.Flags
 
             var flagTypeSection = new CategorizedPanelSection(
                 "Flag Type", 
-                new List<string> { "Environment", "NPC", "Boss", "Progression", "Shop", "Stag", "Room", "Geo Rocks", "Whispering Roots" },
+                new List<string> { "Environment", "NPC", "Boss", "Progression", "Shop", "Stag", "Room", "Geo Rocks", "Whispering Roots", "Flag Monitor" },
                 CreateFlagTypePanels
             );
             flagTypeSection.AddToMenu(CabbyCodesPlugin.cabbyMenu);
-
-            FlagExtractionPatch.AddPanel();
-            FlagMonitorPatch.AddPanel();
         }
 
         private static List<CheatPanel> CreateFlagTypePanels(int flagTypeIndex)
@@ -75,6 +72,11 @@ namespace CabbyCodes.Patches.Flags
                 case 8: // Whispering Roots
                     var whisperingPatch = new WhisperingRootsPatch();
                     panels.AddRange(whisperingPatch.CreatePanels());
+                    break;
+
+                case 9: // Flag Monitor
+                    panels.AddRange(FlagMonitorPatch.CreatePanels());
+                    panels.AddRange(FlagExtractionPatch.CreatePanels());
                     break;
             }
             
