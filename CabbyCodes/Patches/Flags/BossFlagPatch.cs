@@ -30,10 +30,12 @@ namespace CabbyCodes.Patches.Flags
             // Boss Flags
             Add(FlagInstances.aladarSlugDefeated, SceneInstances.Cliffs_02, new Vector2(50, 34));
             Add(FlagInstances.collectorDefeated, SceneInstances.Ruins2_11, new Vector2(36, 96));
+            Add(FlagInstances.Crossroads_04__Battle_Scene, SceneInstances.Crossroads_04, new Vector2(81, 18));
             Add(FlagInstances.Crossroads_09__Mawlek_Body, SceneInstances.Crossroads_09, new Vector2(39, 5));
             Add(FlagInstances.Deepnest_32__Battle_Scene, SceneInstances.Deepnest_32, new Vector2(59, 5));
-            Add(FlagInstances.defeatedMantisLords, SceneInstances.Fungus2_15, new Vector2(36, 8));
             Add(FlagInstances.defeatedDungDefender, SceneInstances.Waterways_05, new Vector2(57, 12));
+            Add(FlagInstances.defeatedMantisLords, SceneInstances.Fungus2_15, new Vector2(36, 8));
+            Add(FlagInstances.defeatedMegaJelly, SceneInstances.Fungus3_archive_02, new Vector2(54, 111));
             Add(FlagInstances.elderHuDefeated, SceneInstances.Fungus2_32, new Vector2(46, 4));
             Add(FlagInstances.falseKnightDefeated, SceneInstances.Crossroads_10, new Vector2(57, 28));
             Add(FlagInstances.falseKnightDreamDefeated, SceneInstances.Crossroads_10, new Vector2(58, 48));
@@ -43,12 +45,16 @@ namespace CabbyCodes.Patches.Flags
             Add(FlagInstances.hornetOutskirtsDefeated, SceneInstances.Deepnest_East_Hornet, new Vector2(10, 29));
             Add(FlagInstances.infectedKnightDreamDefeated, SceneInstances.Abyss_20, new Vector2(28, 29));
             Add(FlagInstances.infectedKnightEncountered, SceneInstances.Abyss_19, new Vector2(44, 29));
+            Add(FlagInstances.killedHiveKnight, SceneInstances.Hive_05, new Vector2(49, 28));
             Add(FlagInstances.mageLordDefeated, SceneInstances.Ruins1_24 , new Vector2(41, 30));
             Add(FlagInstances.mageLordDreamDefeated, SceneInstances.Ruins1_24, new Vector2(32, 11));
-            Add(FlagInstances.defeatedMegaJelly, SceneInstances.Fungus3_archive_02, new Vector2(54, 111));
+            Add(FlagInstances.megaMossChargerDefeated, SceneInstances.Fungus1_29, new Vector2(74, 15));
+            Add(FlagInstances.Mines_18__Mega_Zombie_Beam_Miner_1, SceneInstances.Mines_18, new Vector2(5, 12));
             Add(FlagInstances.Mines_32__Battle_Scene, SceneInstances.Mines_32, new Vector2(44, 12));
             Add(FlagInstances.mumCaterpillarDefeated, SceneInstances.Fungus3_40, new Vector2(63, 11));
             Add(FlagInstances.noEyesDefeated, SceneInstances.Fungus1_35, new Vector2(46, 4));
+            Add(FlagInstances.Ruins2_03__Great_Shield_Zombie, SceneInstances.Ruins2_03, new Vector2(17, 71));
+            Add(FlagInstances.whiteDefenderDefeats, SceneInstances.Waterways_15, new Vector2(19, 5));
             Add(FlagInstances.xeroDefeated, SceneInstances.RestingGrounds_02, new Vector2(93, 12));
             
             // Flamebearer Flags
@@ -69,18 +75,23 @@ namespace CabbyCodes.Patches.Flags
         {
             return new FlagDef[]
             {
+                FlagInstances.Crossroads_04__Battle_Scene,
                 FlagInstances.falseKnightDefeated,
                 FlagInstances.Crossroads_09__Mawlek_Body,
                 FlagInstances.hornet1Defeated,
+                FlagInstances.megaMossChargerDefeated,
                 FlagInstances.defeatedMantisLords,
                 FlagInstances.mageLordDefeated,
                 FlagInstances.infectedKnightEncountered,
+                FlagInstances.Mines_18__Mega_Zombie_Beam_Miner_1,
                 FlagInstances.Mines_32__Battle_Scene,
                 FlagInstances.hornetOutskirtsDefeated,
+                FlagInstances.killedHiveKnight,
                 FlagInstances.Fungus3_23__Battle_Scene,
                 FlagInstances.collectorDefeated,
                 FlagInstances.flukeMotherDefeated,
                 FlagInstances.defeatedDungDefender,
+                FlagInstances.whiteDefenderDefeats,
                 FlagInstances.defeatedMegaJelly,
                 FlagInstances.Deepnest_32__Battle_Scene,
 
