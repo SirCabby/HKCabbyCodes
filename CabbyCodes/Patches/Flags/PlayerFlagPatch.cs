@@ -309,6 +309,27 @@ namespace CabbyCodes.Patches.Flags
         /// </summary>
         public static void ResetState()
         {
+            // Remove panels from UI if they exist
+            if (navigationPanel != null || currentFlagPanels.Count > 0)
+            {
+                var container = new MainMenuPanelContainer(CabbyCodesPlugin.cabbyMenu);
+                
+                if (navigationPanel != null)
+                {
+                    container.RemovePanel(navigationPanel);
+                    CabbyCodesPlugin.BLogger.LogInfo("[PlayerFlagPatch] Removed navigation panel from UI");
+                }
+                
+                foreach (var panel in currentFlagPanels)
+                {
+                    container.RemovePanel(panel);
+                }
+                if (currentFlagPanels.Count > 0)
+                {
+                    CabbyCodesPlugin.BLogger.LogInfo(string.Format("[PlayerFlagPatch] Removed {0} flag panels from UI", currentFlagPanels.Count));
+                }
+            }
+
             currentPage = 0;
             navigationPanel = null;
             currentFlagPanels.Clear();
