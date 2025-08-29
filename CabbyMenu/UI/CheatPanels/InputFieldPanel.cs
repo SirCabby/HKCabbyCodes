@@ -52,6 +52,25 @@ namespace CabbyMenu.UI.CheatPanels
             updateActions.Add(inputFieldSync.Update);
         }
 
+        /// <summary>
+        /// Creates an input field panel with a custom input field sync instance.
+        /// </summary>
+        /// <param name="customInputFieldSync">The custom input field sync instance to use.</param>
+        /// <param name="description">The description text for the panel.</param>
+        public InputFieldPanel(BaseInputFieldSync<T> customInputFieldSync, string description) : base(description)
+        {
+            inputFieldSync = customInputFieldSync;
+            new Fitter(inputFieldSync.GetGameObject()).Attach(cheatPanel);
+            inputFieldSync.GetGameObject().transform.SetAsFirstSibling();
+            
+            // Add LayoutElement to set the width as preferred width (not flexible)
+            LayoutElement inputFieldLayout = inputFieldSync.GetGameObject().AddComponent<LayoutElement>();
+            inputFieldLayout.preferredWidth = inputFieldSync.GetGameObject().GetComponent<RectTransform>().sizeDelta.x;
+            inputFieldLayout.minWidth = inputFieldLayout.preferredWidth;
+            
+            updateActions.Add(inputFieldSync.Update);
+        }
+
         public InputField GetInputField()
         {
             return inputFieldSync.GetGameObject().GetComponent<InputField>();

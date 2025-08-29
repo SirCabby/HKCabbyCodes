@@ -5,6 +5,7 @@ using UnityEngine;
 using CabbyMenu.Utilities;
 using GlobalEnums;
 using CabbyCodes.SavedGames;
+using CabbyMenu.UI.Controls.InputField;
 
 namespace CabbyCodes.Patches.Settings
 {
@@ -26,7 +27,16 @@ namespace CabbyCodes.Patches.Settings
         {
             // Calculate width for 35 characters but allow 50 characters
             int widthFor35Chars = CalculatePanelWidth(35);
-            var panel = new InputFieldPanel<string>(customSaveNameRef, KeyCodeMap.ValidChars.AlphaNumericWithSpaces, 60, widthFor35Chars, "(Optional) Save game name");
+            
+            // Create custom input field sync that triggers save on Enter
+            var customInputFieldSync = new StringInputFieldSync(
+                customSaveNameRef, 
+                KeyCodeMap.ValidChars.AlphaNumericWithSpaces, 
+                new Vector2(widthFor35Chars, CabbyMenu.Constants.DEFAULT_PANEL_HEIGHT), 
+                60, 
+                AttemptSaveCustomGame);
+            
+            var panel = new InputFieldPanel<string>(customInputFieldSync, "(Optional) Save game name");
             customSaveNameInputPanel = panel;
             return panel;
         }

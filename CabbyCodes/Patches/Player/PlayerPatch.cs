@@ -32,6 +32,7 @@ namespace CabbyCodes.Patches.Player
             {
                 new InfoPanel("Player Codes").SetColor(CheatPanel.headerColor),
                 new TogglePanel(new InvulPatch(), FlagInstances.isInvincible.ReadableName),
+                new InfoPanel("WARNING: Do not use OHKO on False Knight, Failed Champion, or Nailmasters").SetColor(CheatPanel.warningColor),
                 new TogglePanel(new DamagePatch(), "One Hit Kills (Enemies can't block)"),
                 new TogglePanel(new JumpPatch(), FlagInstances.infiniteAirJump.ReadableName),
                 new RangeInputFieldPanel<int>(

@@ -69,5 +69,11 @@ namespace CabbyMenu.UI.Controls.InputField
                 InputValue.Set(convertedValue);
             }
         }
+
+        protected override bool CanSubmitText(string text)
+        {
+            // Numeric types cannot submit empty text
+            return !string.IsNullOrEmpty(text);
+        }
     }
 } 

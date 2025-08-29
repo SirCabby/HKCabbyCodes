@@ -1,14 +1,11 @@
 using CabbyCodes.Flags;
 using CabbyMenu.UI.CheatPanels;
 using CabbyMenu.UI.DynamicPanels;
-using CabbyMenu.UI.Controls;
 using CabbyMenu.UI.Popups;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
-using UnityEngine.EventSystems;
-using UnityEngine.UI;
 
 namespace CabbyCodes.Patches.Flags
 {

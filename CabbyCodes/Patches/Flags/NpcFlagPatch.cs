@@ -87,6 +87,7 @@ namespace CabbyCodes.Patches.Flags
             panels.AddRange(CreateNpcPanels(new[] {
                 FlagInstances.dungDefenderAwoken,
                 FlagInstances.dungDefenderAwakeConvo,
+                FlagInstances.divineFinalConvo,
             }));
 
             panels.Add(new InfoPanel("Elderbug").SetColor(CheatPanel.subHeaderColor));

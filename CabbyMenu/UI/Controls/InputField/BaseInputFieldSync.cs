@@ -22,16 +22,29 @@ namespace CabbyMenu.UI.Controls.InputField
         protected readonly ISyncedReference<T> InputValue;
         protected readonly InputFieldStatusBase inputFieldStatus;
         protected readonly ITextProcessor<T> textProcessor;
+        
+        /// <summary>
+        /// Optional callback actions for submit and cancel events.
+        /// </summary>
+        protected readonly Action onSubmitCallback;
+        protected readonly Action onCancelCallback;
 
         /// <summary>
         /// Action for registering input field sync. Can be set by the consuming project.
         /// </summary>
         public static Action<InputFieldStatusBase> RegisterInputFieldSync { get; set; } = null;
 
-        protected BaseInputFieldSync(ISyncedReference<T> inputValue, KeyCodeMap.ValidChars validChars, Vector2 size, int characterLimit)
+        protected BaseInputFieldSync(ISyncedReference<T> inputValue, KeyCodeMap.ValidChars validChars, Vector2 size, int characterLimit) 
+            : this(inputValue, validChars, size, characterLimit, null, null)
+        {
+        }
+
+        protected BaseInputFieldSync(ISyncedReference<T> inputValue, KeyCodeMap.ValidChars validChars, Vector2 size, int characterLimit, Action onSubmitCallback, Action onCancelCallback)
         {
             InputValue = inputValue;
             textProcessor = TextProcessor.Create<T>(validChars);
+            this.onSubmitCallback = onSubmitCallback;
+            this.onCancelCallback = onCancelCallback;
 
             inputFieldGo = DefaultControls.CreateInputField(new DefaultControls.Resources());
             inputFieldGo.name = "InputFieldSync";
@@ -86,7 +99,17 @@ namespace CabbyMenu.UI.Controls.InputField
         {
             if (typeof(T) == typeof(string))
             {
-                return new TextInputFieldStatus(inputFieldGo, SetSelected, Submit, Cancel, maxVisibleCharacters, (StringTextProcessor)textProcessor);
+                // Create custom submit and cancel actions that call both the base behavior and callbacks
+                Action submitAction = () => {
+                    Submit();
+                    onSubmitCallback?.Invoke();
+                };
+                Action cancelAction = () => {
+                    Cancel();
+                    onCancelCallback?.Invoke();
+                };
+                
+                return new TextInputFieldStatus(inputFieldGo, SetSelected, submitAction, cancelAction, maxVisibleCharacters, (StringTextProcessor)textProcessor);
             }
             
             // Fallback to text for any other non-numeric types
@@ -114,6 +137,13 @@ namespace CabbyMenu.UI.Controls.InputField
         /// <param name="text">The text to submit.</param>
         protected abstract void HandleSubmit(string text);
 
+        /// <summary>
+        /// Determines if the given text can be submitted for this input field type.
+        /// </summary>
+        /// <param name="text">The text to validate.</param>
+        /// <returns>True if the text can be submitted, false otherwise.</returns>
+        protected abstract bool CanSubmitText(string text);
+
         public GameObject GetGameObject()
         {
             return inputFieldGo;
@@ -129,7 +159,7 @@ namespace CabbyMenu.UI.Controls.InputField
                 // Update the full text in InputFieldStatus, which will handle Unity InputField synchronization
                 inputFieldStatus.SetFullText(fullText);
                 
-                // Reset horizontal offset when not selected to show the beginning of the text
+                // Reset horizontal offset when not selected to show the beginning of text
                 if (inputFieldStatus != null)
                 {
                     inputFieldStatus.ResetHorizontalOffset();
@@ -157,8 +187,8 @@ namespace CabbyMenu.UI.Controls.InputField
         {
             string text = inputFieldStatus.GetFullText();
             
-            // If the text is empty, don't try to convert it - keep the current value
-            if (string.IsNullOrEmpty(text))
+            // Let each type handle its own validation
+            if (!CanSubmitText(text))
             {
                 // Get the current value and update the display to show it
                 T currentValue = InputValue.Get();

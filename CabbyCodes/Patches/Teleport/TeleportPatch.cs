@@ -6,6 +6,8 @@ using UnityEngine;
 using BepInEx.Configuration;
 using System.Linq;
 using CabbyCodes.Scenes;
+using CabbyMenu.UI.Controls.InputField;
+using CabbyMenu.Utilities;
 
 namespace CabbyCodes.Patches.Teleport
 {
@@ -279,7 +281,17 @@ namespace CabbyCodes.Patches.Teleport
         {
             // Calculate width for 35 characters but allow 50 characters
             int widthFor35Chars = CalculatePanelWidth(35);
-            customNameInputPanel = new InputFieldPanel<string>(customTeleportNameRef, CabbyMenu.Utilities.KeyCodeMap.ValidChars.AlphaNumeric, 60, widthFor35Chars, "(Optional) Custom teleport name");
+            
+            // Create custom input field sync that triggers save on Enter
+            var customInputFieldSync = new StringInputFieldSync(
+                customTeleportNameRef, 
+                CabbyMenu.Utilities.KeyCodeMap.ValidChars.AlphaNumeric, 
+                new Vector2(widthFor35Chars, CabbyMenu.Constants.DEFAULT_PANEL_HEIGHT), 
+                60, 
+                SaveTeleportLocation,
+                SaveTeleportLocation); // Added onEnterPressed callback
+            
+            customNameInputPanel = new InputFieldPanel<string>(customInputFieldSync, "(Optional) Custom teleport name");
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(customNameInputPanel);
         }
 
