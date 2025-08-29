@@ -62,7 +62,7 @@ namespace CabbyCodes.Patches.Flags
                 }
                 catch (System.Exception ex)
                 {
-                    UnityEngine.Debug.LogError($"[PlayerFlagPatch] Error accessing field {field.Name}: {ex.Message}");
+                    Debug.LogError($"[PlayerFlagPatch] Error accessing field {field.Name}: {ex.Message}");
                 }
             }
 
@@ -81,7 +81,7 @@ namespace CabbyCodes.Patches.Flags
             }
             catch (System.Exception ex)
             {
-                UnityEngine.Debug.LogError($"[PlayerFlagPatch] UnusedFlags access failed: {ex.Message}");
+                Debug.LogError($"[PlayerFlagPatch] UnusedFlags access failed: {ex.Message}");
             }
 
             // Sort by readable name for better organization
@@ -95,20 +95,15 @@ namespace CabbyCodes.Patches.Flags
             var startIndex = currentPage * FLAGS_PER_PAGE + 1;
             var endIndex = Mathf.Min((currentPage + 1) * FLAGS_PER_PAGE, totalFlags);
 
-            CabbyCodesPlugin.BLogger.LogInfo(string.Format("[PlayerFlagPatch] CreateNavigationPanel: totalFlags={0}, totalPages={1}, currentPage={2}, startIndex={3}, endIndex={4}", 
-                totalFlags, totalPages, currentPage, startIndex, endIndex));
-
-            var navText = $"Player Flags {startIndex} - {endIndex} of {totalFlags}";
+            var navText = $"Flags {startIndex} - {endIndex} of {totalFlags}";
             var nav = new InfoPanel(navText).SetColor(CheatPanel.subHeaderColor);
 
             // Always create both buttons for consistent layout
-            CabbyCodesPlugin.BLogger.LogInfo("[PlayerFlagPatch] Adding Previous button");
             var prevButton = PanelAdder.AddButton(nav, 0, () => NavigateToPage(currentPage - 1), "Previous",
-                new UnityEngine.Vector2(CabbyMenu.Constants.MIN_PANEL_WIDTH * 1.5f, CabbyMenu.Constants.DEFAULT_PANEL_HEIGHT));
+                new Vector2(CabbyMenu.Constants.MIN_PANEL_WIDTH * 1.5f, CabbyMenu.Constants.DEFAULT_PANEL_HEIGHT));
             
-            CabbyCodesPlugin.BLogger.LogInfo("[PlayerFlagPatch] Adding Next button");
             var nextButton = PanelAdder.AddButton(nav, 1, () => NavigateToPage(currentPage + 1), "Next",
-                new UnityEngine.Vector2(CabbyMenu.Constants.MIN_PANEL_WIDTH * 1.5f, CabbyMenu.Constants.DEFAULT_PANEL_HEIGHT));
+                new Vector2(CabbyMenu.Constants.MIN_PANEL_WIDTH * 1.5f, CabbyMenu.Constants.DEFAULT_PANEL_HEIGHT));
             
             // Disable buttons when they shouldn't be used
             if (currentPage <= 0)
@@ -127,7 +122,7 @@ namespace CabbyCodes.Patches.Flags
                     nextButtonComponent.interactable = false;
                 }
             }
-            CabbyCodesPlugin.BLogger.LogInfo("[PlayerFlagPatch] Navigation panel created successfully");
+
             return nav;
         }
 
@@ -135,10 +130,8 @@ namespace CabbyCodes.Patches.Flags
 
                 private static void NavigateToPage(int newPage)
         {
-            CabbyCodesPlugin.BLogger.LogInfo(string.Format("[PlayerFlagPatch] NavigateToPage called: currentPage={0}, newPage={1}", currentPage, newPage));
             if (newPage == currentPage)
             {
-                CabbyCodesPlugin.BLogger.LogInfo("[PlayerFlagPatch] newPage equals currentPage; aborting navigation");
                 return;
             }
             if (newPage < 0) return;
@@ -147,19 +140,14 @@ namespace CabbyCodes.Patches.Flags
             // Show loading popup immediately
             loadingPopup = new PopupBase(CabbyCodesPlugin.cabbyMenu, "Loading", "Loading . . .", 400f, 200f);
             // Customize the popup appearance to match DynamicPanelManager styling
-            loadingPopup.SetPanelBackgroundColor(new UnityEngine.Color(0.2f, 0.4f, 0.8f, 1f)); // Blue background
+            loadingPopup.SetPanelBackgroundColor(new Color(0.2f, 0.4f, 0.8f, 1f)); // Blue background
             loadingPopup.SetMessageBold(); // Make message text bold
             loadingPopup.Show();
-            UnityEngine.Canvas.ForceUpdateCanvases();
-            CabbyCodesPlugin.BLogger.LogInfo("[PlayerFlagPatch] Loading popup shown");
+            Canvas.ForceUpdateCanvases();
 
-            CabbyCodesPlugin.BLogger.LogInfo(string.Format("[PlayerFlagPatch] Total flags={0}; FLAGS_PER_PAGE={1}", allPlayerFlags.Count, FLAGS_PER_PAGE));
- 
             // Container proxying to the main menu
             var container = new MainMenuPanelContainer(CabbyCodesPlugin.cabbyMenu);
  
-            CabbyCodesPlugin.BLogger.LogInfo("[PlayerFlagPatch] Got container, starting panel removal");
-
             // Delay panel destruction by one frame to give UI time to render popup
             CabbyMenu.Utilities.CoroutineRunner.RunNextFrame(() => {
                 NavigateToPageInternal(newPage, container, loadingPopup);
@@ -172,32 +160,24 @@ namespace CabbyCodes.Patches.Flags
             {
                 // Remove current panels
                 container.RemovePanel(navigationPanel);
-                CabbyCodesPlugin.BLogger.LogInfo("[PlayerFlagPatch] Attempting to remove navigation panel");
                 foreach (var panel in currentFlagPanels)
                 {
                     container.RemovePanel(panel);
                 }
-                CabbyCodesPlugin.BLogger.LogInfo(string.Format("[PlayerFlagPatch] Removed {0} flag panels", currentFlagPanels.Count));
                 currentFlagPanels.Clear();
 
                 // Update page index
                 currentPage = newPage;
-                CabbyCodesPlugin.BLogger.LogInfo(string.Format("[PlayerFlagPatch] Updated currentPage to {0}", currentPage));
 
                 // Recreate navigation panel and flag panels
                 navigationPanel = CreateNavigationPanel();
-                CabbyCodesPlugin.BLogger.LogInfo("[PlayerFlagPatch] Created new navigation panel");
                 container.AddPanel(navigationPanel);
-                CabbyCodesPlugin.BLogger.LogInfo("[PlayerFlagPatch] Added navigation panel to container");
 
                 currentFlagPanels = CreateFlagPanelsForCurrentPage();
-                CabbyCodesPlugin.BLogger.LogInfo(string.Format("[PlayerFlagPatch] Created {0} panels for page {1}", currentFlagPanels.Count, currentPage));
                 foreach (var panel in currentFlagPanels)
                 {
                     container.AddPanel(panel);
                 }
-                CabbyCodesPlugin.BLogger.LogInfo("[PlayerFlagPatch] Added all flag panels to container");
-                CabbyCodesPlugin.BLogger.LogInfo("[PlayerFlagPatch] NavigateToPage completed successfully");
             }
             finally
             {
@@ -207,7 +187,6 @@ namespace CabbyCodes.Patches.Flags
                     {
                         popup.Hide();
                         popup.Destroy();
-                        CabbyCodesPlugin.BLogger.LogInfo("[PlayerFlagPatch] Loading popup hidden and destroyed");
                     }
                 });
             }
@@ -314,16 +293,11 @@ namespace CabbyCodes.Patches.Flags
                 if (navigationPanel != null)
                 {
                     container.RemovePanel(navigationPanel);
-                    CabbyCodesPlugin.BLogger.LogInfo("[PlayerFlagPatch] Removed navigation panel from UI");
                 }
                 
                 foreach (var panel in currentFlagPanels)
                 {
                     container.RemovePanel(panel);
-                }
-                if (currentFlagPanels.Count > 0)
-                {
-                    CabbyCodesPlugin.BLogger.LogInfo(string.Format("[PlayerFlagPatch] Removed {0} flag panels from UI", currentFlagPanels.Count));
                 }
             }
 
@@ -336,7 +310,6 @@ namespace CabbyCodes.Patches.Flags
                 loadingPopup.Destroy();
                 loadingPopup = null;
             }
-            CabbyCodesPlugin.BLogger.LogInfo("[PlayerFlagPatch] Navigation state reset - returning to page 1");
         }
     }
 } 
