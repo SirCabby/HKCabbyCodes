@@ -11,6 +11,12 @@ namespace CabbyMenu.UI.CheatPanels
     /// </summary>
     public class CheatPanel
     {
+        public enum LayoutDirection
+        {
+            Horizontal,
+            Vertical
+        }
+
         /// <summary>
         /// Tracks whether the current panel should use the odd or even color pattern.
         /// </summary>
@@ -49,7 +55,7 @@ namespace CabbyMenu.UI.CheatPanels
         /// <summary>
         /// The GameObject containing the description text.
         /// </summary>
-        protected readonly GameObject cheatTextObj;
+        public readonly GameObject cheatTextObj;
 
         /// <summary>
         /// The description text for this panel.
@@ -65,7 +71,11 @@ namespace CabbyMenu.UI.CheatPanels
         /// Initializes a new instance of the CheatPanel class.
         /// </summary>
         /// <param name="description">The description text to display on the panel.</param>
-        public CheatPanel(string description)
+        public CheatPanel(string description) : this(description, LayoutDirection.Horizontal)
+        {
+        }
+
+        public CheatPanel(string description, LayoutDirection direction)
         {
             this.description = description;
             cheatPanel = DefaultControls.CreatePanel(new DefaultControls.Resources());
@@ -75,14 +85,25 @@ namespace CabbyMenu.UI.CheatPanels
             new ImageMod(cheatPanel.GetComponent<Image>()).SetColor(thisColor);
             isOdd = !isOdd;
 
-            HorizontalLayoutGroup cheatLayoutGroup = cheatPanel.AddComponent<HorizontalLayoutGroup>();
-            cheatLayoutGroup.padding = new RectOffset(Constants.CHEAT_PANEL_PADDING, Constants.CHEAT_PANEL_PADDING, Constants.CHEAT_PANEL_PADDING, Constants.CHEAT_PANEL_PADDING);
-            cheatLayoutGroup.spacing = Constants.CHEAT_PANEL_SPACING;
-            cheatLayoutGroup.childForceExpandHeight = false;
-            cheatLayoutGroup.childForceExpandWidth = false;
-            cheatLayoutGroup.childControlHeight = true;
-            cheatLayoutGroup.childControlWidth = true;
-            cheatLayoutGroup.childAlignment = TextAnchor.UpperLeft; // Ensure left alignment
+            if (direction == LayoutDirection.Horizontal)
+            {
+                HorizontalLayoutGroup cheatLayoutGroup = cheatPanel.AddComponent<HorizontalLayoutGroup>();
+                cheatLayoutGroup.padding = new RectOffset(Constants.CHEAT_PANEL_PADDING, Constants.CHEAT_PANEL_PADDING, Constants.CHEAT_PANEL_PADDING, Constants.CHEAT_PANEL_PADDING);
+                cheatLayoutGroup.spacing = Constants.CHEAT_PANEL_SPACING;
+                cheatLayoutGroup.childForceExpandHeight = false;
+                cheatLayoutGroup.childForceExpandWidth = false;
+                cheatLayoutGroup.childControlHeight = true;
+                cheatLayoutGroup.childControlWidth = true;
+                cheatLayoutGroup.childAlignment = TextAnchor.UpperLeft;
+            }
+            else
+            {
+                VerticalLayoutGroup cheatLayoutGroup = cheatPanel.AddComponent<VerticalLayoutGroup>();
+                cheatLayoutGroup.padding = new RectOffset(Constants.CHEAT_PANEL_PADDING, Constants.CHEAT_PANEL_PADDING, Constants.CHEAT_PANEL_PADDING, Constants.CHEAT_PANEL_PADDING);
+                cheatLayoutGroup.spacing = 2;
+                cheatLayoutGroup.childControlWidth = true;
+                cheatLayoutGroup.childForceExpandHeight = false;
+            }
 
             ContentSizeFitter panelContentSizeFitter = cheatPanel.AddComponent<ContentSizeFitter>();
             panelContentSizeFitter.verticalFit = ContentSizeFitter.FitMode.PreferredSize;

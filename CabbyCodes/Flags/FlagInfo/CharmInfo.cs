@@ -18,14 +18,16 @@ namespace CabbyCodes.Flags.FlagInfo
         public bool CanBeBroken { get; }
         public bool CanBeUpgraded { get; }
         public List<FlagDef> AssociatedFlags { get; }
+        public int DefaultCost { get; }
 
-        public CharmInfo(int id, FlagDef gotFlag, FlagDef costFlag, 
+        public CharmInfo(int id, FlagDef gotFlag, FlagDef costFlag, int defaultCost,
                        FlagDef brokenFlag = null, FlagDef upgradeFlag = null,
                        FlagDef gaveFlag = null, FlagDef pooedFlag = null, List<FlagDef> associatedFlags = null)
         {
             Id = id;
             GotFlag = gotFlag;
             CostFlag = costFlag;
+            DefaultCost = defaultCost;
             BrokenFlag = brokenFlag;
             UpgradeFlag = upgradeFlag;
             GaveFlag = gaveFlag;

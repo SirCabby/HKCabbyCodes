@@ -47,6 +47,18 @@ namespace CabbyCodes.Patches.Teleport
         }
 
         /// <summary>
+        /// Updates both the scene and location coordinates, then saves to config.
+        /// </summary>
+        /// <param name="newSceneName">The new scene name.</param>
+        /// <param name="newLocation">The new location coordinates.</param>
+        public void UpdateLocation(string newSceneName, Vector2 newLocation)
+        {
+            scene = SceneManagement.GetSceneData(newSceneName) ?? new SceneMapData(newSceneName);
+            location = newLocation;
+            SaveToConfig();
+        }
+
+        /// <summary>
         /// Initializes a new instance of the CustomTeleportLocation class.
         /// </summary>
         /// <param name="configDef">The configuration definition for this location.</param>

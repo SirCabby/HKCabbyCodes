@@ -6,17 +6,17 @@ using CabbyMenu.UI.Modders;
 namespace CabbyMenu.UI.Popups
 {
     /// <summary>
-    /// Abstract base class for popups displayed above all other UI elements.
+    /// Base class for popups displayed above all other UI elements.
     /// Provides a header and message area but no buttons.
     /// </summary>
-    public abstract class PopupBase
+    public class PopupBase
     {
         protected readonly GameObject popupRoot;
         protected readonly GameObject popupPanel;
         protected readonly TextMod headerTextMod;
         protected readonly TextMod messageTextMod;
 
-        protected PopupBase(CabbyMainMenu menu, string headerText, string messageText, float width = 600f, float height = 400f)
+        public PopupBase(CabbyMainMenu menu, string headerText, string messageText, float width = 600f, float height = 400f)
         {
             if (menu == null) throw new ArgumentNullException(nameof(menu));
             GameObject parent = menu.GetRootGameObject();
@@ -97,6 +97,56 @@ namespace CabbyMenu.UI.Popups
         public virtual void Hide() => popupRoot.SetActive(false);
 
         public void Destroy() => UnityEngine.Object.Destroy(popupRoot);
+
+        /// <summary>
+        /// Sets the background color of the main popup panel
+        /// </summary>
+        /// <param name="color">The color to set for the popup panel background</param>
+        public void SetPanelBackgroundColor(Color color)
+        {
+            if (popupPanel != null)
+            {
+                var image = popupPanel.GetComponent<Image>();
+                if (image != null)
+                {
+                    image.color = color;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Sets the message text to bold
+        /// </summary>
+        public void SetMessageBold()
+        {
+            messageTextMod?.SetFontStyle(FontStyle.Bold);
+        }
+
+        /// <summary>
+        /// Sets the message text to normal (not bold)
+        /// </summary>
+        public void SetMessageNormal()
+        {
+            messageTextMod?.SetFontStyle(FontStyle.Normal);
+        }
+
+        /// <summary>
+        /// Sets the message text color
+        /// </summary>
+        /// <param name="color">The color to set for the message text</param>
+        public void SetMessageColor(Color color)
+        {
+            messageTextMod?.SetColor(color);
+        }
+
+        /// <summary>
+        /// Sets the header text color
+        /// </summary>
+        /// <param name="color">The color to set for the header text</param>
+        public void SetHeaderColor(Color color)
+        {
+            headerTextMod?.SetColor(color);
+        }
 
         /// <summary>
         /// Calculates button width based on text length similar to ButtonPanel logic.

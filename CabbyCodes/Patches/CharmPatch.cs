@@ -7,7 +7,6 @@ using CabbyCodes.Flags.FlagInfo;
 using CabbyCodes.Flags.FlagData;
 using CabbyCodes.Flags;
 using CabbyCodes.Patches.BasePatches;
-using CabbyMenu;
 
 namespace CabbyCodes.Patches
 {
@@ -18,7 +17,6 @@ namespace CabbyCodes.Patches
 
         // Charm cost removal functionality
         public const string key = "CharmCost_Patch";
-        private static readonly BoxedReference<bool> charmCostValue = CodeState.Get(key, false);
 
         public List<CheatPanel> CreatePanels()
         {
@@ -26,7 +24,15 @@ namespace CabbyCodes.Patches
             {
                 // Charm cost removal panel
                 new TogglePanel(new DelegateReference<bool>(
-                    () => charmCostValue.Get(),
+                    () => 
+                    {
+                        // Check if charm costs are removed by looking at the first charm's cost
+                        if (charms.Count > 0)
+                        {
+                            return FlagManager.GetIntFlag(charms[0].CostFlag) == 0;
+                        }
+                        return false;
+                    },
                     (value) =>
                     {
                         if (value)
@@ -40,17 +46,29 @@ namespace CabbyCodes.Patches
                         {
                             foreach (var charm in charms)
                             {
-                                // Get the default cost from the game data
-                                int defaultCost = FlagManager.GetIntFlag(charm.CostFlag);
-                                FlagManager.SetIntFlag(charm.CostFlag, defaultCost);
+                                int costToRestore = charm.DefaultCost;
+
+                                // Special handling for charm 36 (Kingsoul) - cost 0 if upgraded to Void Heart
+                                if (charm.Id == 36 && PlayerData.instance.royalCharmState == 4)
+                                {
+                                    costToRestore = 0;
+                                }
+                                // Special handling for charm 40 (Grimm Child) - cost 3 if upgraded to Carefree Melody
+                                else if (charm.Id == 40 && PlayerData.instance.grimmChildLevel == 5)
+                                {
+                                    costToRestore = 3;
+                                }
+
+                                // Restore the appropriate cost
+                                FlagManager.SetIntFlag(charm.CostFlag, costToRestore);
                             }
                         }
-                        charmCostValue.Set(value);
                     }
                 ), "Remove Charm Notch Cost"),
 
-                // Grimm Child level dropdown
-                new DropdownPatch(FlagInstances.grimmChildLevel, new List<string> { "1", "2", "3", "4", "CM" }, "Grimm Child Level (1-4) or Carefree Melody").CreatePanel()
+                new BoolPatch(FlagInstances.canOvercharm).CreatePanel(),
+                //new IntPatch(FlagInstances.charmSlots).CreatePanel(),
+                CreateGrimmChildLevelPanel(),
             };
             
             // Fragile charm panels (replacing separate broken and upgraded panels)
@@ -152,6 +170,29 @@ namespace CabbyCodes.Patches
             FlagManager.SetBoolFlag(charm.PooedFlag, shouldBePooed);
         }
 
+        private static CheatPanel CreateGrimmChildLevelPanel()
+        {
+            // Create dropdown panel for Grimm Child level with grimmchildAwoken handling
+            var dropdownPanel = new DropdownPanel(new DelegateValueList(
+                // Getter: Get current Grimm Child level
+                () => FlagManager.GetIntFlag(FlagInstances.grimmChildLevel),
+                // Setter: Handle both grimmChildLevel and grimmchildAwoken
+                value =>
+                {
+                    // Set the Grimm Child level
+                    FlagManager.SetIntFlag(FlagInstances.grimmChildLevel, value);
+                    
+                    // Set grimmchildAwoken to true if level is 4, false otherwise
+                    bool shouldBeAwoken = value == 4;
+                    FlagManager.SetBoolFlag(FlagInstances.grimmchildAwoken, shouldBeAwoken);
+                },
+                // Value list: 0 = None, 1-4 = Levels, 5 = Carefree Melody
+                () => new List<string> { "0", "1", "2", "3", "4", "CM" }
+            ), "Grimm Child Level (1-4) or Carefree Melody", CabbyMenu.Constants.DEFAULT_PANEL_HEIGHT);
+            
+            return dropdownPanel;
+        }
+
         private static CheatPanel CreateKingsoulCombinedPanel(CharmInfo charm, int index)
         {
             // Create dropdown panel with 5 states for Kingsoul/Void Heart
@@ -202,7 +243,7 @@ namespace CabbyCodes.Patches
                 },
                 // Value list: 5 states for Kingsoul/Void Heart
                 () => new List<string> { "NONE", "Queen's fragment", "King's Fragment", "Kingsoul", "Void Heart" }
-            ), index + ": " + charm.Name + " State", CabbyMenu.Constants.DEFAULT_PANEL_HEIGHT);
+            ), index + ": " + charm.Name, CabbyMenu.Constants.DEFAULT_PANEL_HEIGHT);
             
             // Add sprite to the panel
             (_, ImageMod spriteImageMod) = PanelAdder.AddSprite(dropdownPanel, CharmIconList.Instance.GetSprite(charm.Id), 1);

@@ -13,9 +13,10 @@ namespace CabbyCodes.Patches.Flags
         public override List<CheatPanel> CreatePanels()
         {
             
-            var panels = new List<CheatPanel>();
-
-            panels.Add(new InfoPanel("Bardoon").SetColor(CheatPanel.subHeaderColor));
+            var panels = new List<CheatPanel>
+            {
+                new InfoPanel("Bardoon").SetColor(CheatPanel.subHeaderColor)
+            };
             panels.AddRange(CreateNpcPanels(new[] {
                 FlagInstances.bigCatMeet,
                 FlagInstances.bigCatHitTail,
@@ -32,11 +33,15 @@ namespace CabbyCodes.Patches.Flags
                 FlagInstances.brettaPosition,
                 FlagInstances.brettaSeenBench,
                 FlagInstances.brettaSeenBenchDiary,
+                FlagInstances.brettaLeftTown,
+                FlagInstances.brettaSeenBed
             }));
 
             panels.Add(new InfoPanel("Brumm").SetColor(CheatPanel.subHeaderColor));
             panels.AddRange(CreateNpcPanels(new[] {
-                FlagInstances.metBrum
+                FlagInstances.metBrum,
+                FlagInstances.gotBrummsFlame,
+                FlagInstances.brummBrokeBrazier
             }));
 
             panels.Add(new InfoPanel("Cloth").SetColor(CheatPanel.subHeaderColor));
@@ -92,16 +97,30 @@ namespace CabbyCodes.Patches.Flags
                 FlagInstances.elderbugSpeechKingsPass,
                 FlagInstances.elderbugSpeechBretta,
                 FlagInstances.elderbugSpeechMinesLift,
+                FlagInstances.elderbugRequestedFlower,
+                FlagInstances.elderbugGaveFlower,
 
+                FlagInstances.elderbugConvoGrimm,
+                FlagInstances.elderbugTroupeLeftConvo,
 
-
-                FlagInstances.elderbugConvoGrimm
+                FlagInstances.elderbugSpeechFinalBossDoor,
             }));
 
             panels.Add(new InfoPanel("Emilitia").SetColor(CheatPanel.subHeaderColor));
             panels.AddRange(CreateNpcPanels(new[] {
                 FlagInstances.metEmilitia,
-                FlagInstances.emilitiaKingsBrandConvo
+                FlagInstances.emilitiaKingsBrandConvo,
+                FlagInstances.givenEmilitiaFlower
+            }));
+            
+            panels.Add(new InfoPanel("Godseeker").SetColor(CheatPanel.subHeaderColor));
+            panels.AddRange(CreateNpcPanels(new[] {
+                FlagInstances.godseekerWaterwaysSeenState,
+                FlagInstances.godseekerSpokenAwake,
+                FlagInstances.godseekerWaterwaysSpoken1,
+                FlagInstances.godseekerWaterwaysSpoken2,
+                FlagInstances.godseekerWaterwaysSpoken3,
+                FlagInstances.givenGodseekerFlower
             }));
 
             panels.Add(new InfoPanel("Gorb").SetColor(CheatPanel.subHeaderColor));
@@ -112,11 +131,20 @@ namespace CabbyCodes.Patches.Flags
             panels.Add(new InfoPanel("Grey Mourner").SetColor(CheatPanel.subHeaderColor));
             panels.AddRange(CreateNpcPanels(new[] {
                 FlagInstances.metXun,
+                FlagInstances.xunFailedConvo1,
+                FlagInstances.xunFailedConvo2,
+                FlagInstances.xunFlowerBrokeTimes,
+                FlagInstances.xunFlowerGiven,
             }));
 
             panels.Add(new InfoPanel("Grimm").SetColor(CheatPanel.subHeaderColor));
             panels.AddRange(CreateNpcPanels(new[] {
                 FlagInstances.metGrimm
+            }));
+
+            panels.Add(new InfoPanel("Grubfather").SetColor(CheatPanel.subHeaderColor));
+            panels.AddRange(CreateNpcPanels(new[] {
+                FlagInstances.fatGrubKing
             }));
             
             panels.Add(new InfoPanel("Hornet").SetColor(CheatPanel.subHeaderColor));
@@ -133,7 +161,8 @@ namespace CabbyCodes.Patches.Flags
             
             panels.Add(new InfoPanel("Hunter").SetColor(CheatPanel.subHeaderColor));
             panels.AddRange(CreateNpcPanels(new[] {
-                FlagInstances.metHunter 
+                FlagInstances.metHunter,
+                FlagInstances.hunterRewardOffered
             }));
             
             panels.Add(new InfoPanel("Iselda").SetColor(CheatPanel.subHeaderColor));
@@ -200,33 +229,45 @@ namespace CabbyCodes.Patches.Flags
             panels.AddRange(CreateNpcPanels(new[] {
                 FlagInstances.metNailmasterMato,
                 FlagInstances.matoConvoOro,
-                FlagInstances.matoConvoSheo
+                FlagInstances.matoConvoSheo,
+                FlagInstances.matoConvoSly
             }));
 
             panels.Add(new InfoPanel("Nailmaster Oro").SetColor(CheatPanel.subHeaderColor));
             panels.AddRange(CreateNpcPanels(new[] {
                 FlagInstances.metNailmasterOro,
                 FlagInstances.oroConvoMato,
-                FlagInstances.oroConvoSheo
+                FlagInstances.oroConvoSheo,
+                FlagInstances.oroConvoSly,
+                FlagInstances.givenOroFlower,
             }));
 
             panels.Add(new InfoPanel("Nailmaster Sheo").SetColor(CheatPanel.subHeaderColor));
             panels.AddRange(CreateNpcPanels(new[] {
                 FlagInstances.metNailmasterSheo,
                 FlagInstances.sheoConvoMato,
-                FlagInstances.sheoConvoOro
+                FlagInstances.sheoConvoOro,
+                FlagInstances.sheoConvoSly,
+                FlagInstances.sheoConvoNailsmith,
             }));
 
             panels.Add(new InfoPanel("Nailsmith").SetColor(CheatPanel.subHeaderColor));
             panels.AddRange(CreateNpcPanels(new[] {
                 FlagInstances.nailsmithCliff,
                 FlagInstances.nailsmithKillSpeech,
-                FlagInstances.nailsmithKilled
+                FlagInstances.nailsmithKilled,
+                FlagInstances.nailsmithSpared,
+                FlagInstances.nailsmithSheo,
+                FlagInstances.nailsmithConvoArt,
             }));
-            
-            panels.Add(new InfoPanel("Nightmare Troupe").SetColor(CheatPanel.subHeaderColor));
+
+            panels.Add(new InfoPanel("Nymm").SetColor(CheatPanel.subHeaderColor));
             panels.AddRange(CreateNpcPanels(new[] {
-                FlagInstances.troupeInTown 
+                FlagInstances.nymmInTown,
+                FlagInstances.nymmMissedEggOpen,
+                FlagInstances.nymmSpoken,
+                FlagInstances.nymmCharmConvo,
+                FlagInstances.nymmFinalConvo
             }));
             
             panels.Add(new InfoPanel("Quirrel").SetColor(CheatPanel.subHeaderColor));
@@ -284,7 +325,8 @@ namespace CabbyCodes.Patches.Flags
             panels.AddRange(CreateNpcPanels(new[] {
                 FlagInstances.slyRescued,
                 FlagInstances.metSlyShop,
-                FlagInstances.gaveSlykey
+                FlagInstances.slyRancidEgg,
+                FlagInstances.gaveSlykey,
             }));
 
             panels.Add(new InfoPanel("Stag").SetColor(CheatPanel.subHeaderColor));
@@ -330,6 +372,9 @@ namespace CabbyCodes.Patches.Flags
                 FlagInstances.queenHornet,
                 FlagInstances.queenTalk1,
                 FlagInstances.queenTalk2,
+                FlagInstances.queenDung1,
+                FlagInstances.queenDung2,
+                FlagInstances.givenWhiteLadyFlower,
             }));
 
             panels.Add(new InfoPanel("Willoh").SetColor(CheatPanel.subHeaderColor));

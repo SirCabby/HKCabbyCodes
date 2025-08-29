@@ -44,7 +44,7 @@ namespace CabbyMenu.UI.DynamicPanels
             dropdownPanel.GetDropDownSync().SelectedValue.Set(defaultSelection);
 
             var container = new MainMenuPanelContainer(menu);
-            var panelManager = new DynamicPanelManager(dropdownPanel, panelFactory, container, insertionIndex);
+            var panelManager = new DynamicPanelManager(dropdownPanel, panelFactory, container, insertionIndex, null, null, menu);
             panelManager.RecreateDynamicPanels();
 
             // update on change

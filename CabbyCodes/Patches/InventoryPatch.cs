@@ -611,7 +611,6 @@ namespace CabbyCodes.Patches
         {
             var panels = new List<CheatPanel>
             {
-                CreateHeartPiecePanel(FlagInstances.Crossroads_38__Heart_Piece),
                 CreateHeartPiecePanel(FlagInstances.Crossroads_09__Heart_Piece),
                 CreateHeartPiecePanel(FlagInstances.Crossroads_13__Heart_Piece),
                 CreateHeartPiecePanel(FlagInstances.Fungus1_36__Heart_Piece),
@@ -627,6 +626,7 @@ namespace CabbyCodes.Patches
                 CreateHeartPiecePanel(FlagInstances.Room_Bretta__Heart_Piece),
                 CreateHeartPiecePanel(FlagInstances.Hive_04__Heart_Piece),
                 CreateHeartPiecePanel(FlagInstances.Waterways_04b__Heart_Piece),
+                CreateHeartPiecePanel(FlagInstances.xunRewardGiven)
             };
             
             return panels;
@@ -696,6 +696,9 @@ namespace CabbyCodes.Patches
                     var finalMaxHealth = FlagManager.GetIntFlag(FlagInstances.maxHealth);
                     var finalMaxHealthBase = FlagManager.GetIntFlag(FlagInstances.maxHealthBase);
                     
+                    // Set heartPieceMax flag based on whether max health is 9
+                    FlagManager.SetBoolFlag(FlagInstances.heartPieceMax, finalMaxHealth >= 9);
+                    
                     bool healthDiffersFromStart = finalMaxHealth != startingMaxHealth || finalMaxHealthBase != startingMaxHealthBase;
                     
                     if (healthDiffersFromStart)
@@ -718,13 +721,13 @@ namespace CabbyCodes.Patches
             {
                 CreateVesselFragmentPanel(FlagInstances.slyVesselFrag1),
                 CreateVesselFragmentPanel(FlagInstances.slyVesselFrag2),
-                CreateVesselFragmentPanel(FlagInstances.slyVesselFrag3),
-                CreateVesselFragmentPanel(FlagInstances.slyVesselFrag4),
                 CreateVesselFragmentPanel(FlagInstances.Fungus1_13__Vessel_Fragment),
                 CreateVesselFragmentPanel(FlagInstances.Deepnest_38__Vessel_Fragment),
                 CreateVesselFragmentPanel(FlagInstances.Ruins2_09__Vessel_Fragment),
                 CreateVesselFragmentPanel(FlagInstances.Crossroads_37__Vessel_Fragment),
                 CreateVesselFragmentPanel(FlagInstances.dreamReward5),
+                CreateVesselFragmentPanel(FlagInstances.Abyss_04__Vessel_Fragment),
+                CreateVesselFragmentPanel(FlagInstances.vesselFragStagNest),
             };
             
             return panels;
@@ -769,6 +772,10 @@ namespace CabbyCodes.Patches
                     }
                     
                     FlagManager.SetIntFlag(FlagInstances.vesselFragments, newVesselFragments);
+                    
+                    // Update vesselFragmentMax flag based on MPReserveMax
+                    var finalMpReserveMax = FlagManager.GetIntFlag(FlagInstances.MPReserveMax);
+                    FlagManager.SetBoolFlag(FlagInstances.vesselFragmentMax, finalMpReserveMax >= 99);
                 }
             ), vesselFragmentFlag.ReadableName);
         }
@@ -963,6 +970,7 @@ namespace CabbyCodes.Patches
                 CreateNotchPanel(FlagInstances.notchShroomOgres),
                 CreateNotchPanel(FlagInstances.Room_Colosseum_Bronze__Shiny_Item),
                 CreateNotchPanel(FlagInstances.Fungus3_28__Shiny_Item),
+                CreateNotchPanel(FlagInstances.Grimm_Main_Tent__Shiny_Item)
             };
 
             return panels;
@@ -1001,6 +1009,7 @@ namespace CabbyCodes.Patches
                 CreatePaleOrePanel(FlagInstances.Mines_34__Shiny_Item_Stand),
                 CreatePaleOrePanel(FlagInstances.Room_Colosseum_Silver__Shiny_Item),
                 CreatePaleOrePanel(FlagInstances.Crossroads_38__Shiny_Item_Ore),
+                CreatePaleOrePanel(FlagInstances.Deepnest_32__Shiny_Item_Stand)
             };
 
             return panels;
@@ -1088,6 +1097,7 @@ namespace CabbyCodes.Patches
             var panels = new List<CheatPanel>
             {
                 CreateWanderersJournalPanel(FlagInstances.Fungus1_22__Shiny_Item),
+                CreateWanderersJournalPanel(FlagInstances.Fungus1_11__Shiny_Item),
                 CreateWanderersJournalPanel(FlagInstances.Fungus2_17__Shiny_Item),
                 CreateWanderersJournalPanel(FlagInstances.Cliffs_01__Shiny_Item_1),
                 CreateWanderersJournalPanel(FlagInstances.Fungus2_04__Shiny_Item),
@@ -1099,6 +1109,7 @@ namespace CabbyCodes.Patches
                 CreateWanderersJournalPanel(FlagInstances.Mines_20__Shiny_Item_1),
                 CreateWanderersJournalPanel(FlagInstances.Deepnest_East_18__Shiny_Item),
                 CreateWanderersJournalPanel(FlagInstances.Deepnest_East_13__Shiny_Item),
+                CreateWanderersJournalPanel(FlagInstances.Deepnest_East_07__Shiny_Item),
             };
 
             return panels;
@@ -1138,6 +1149,10 @@ namespace CabbyCodes.Patches
                 CreateHallownestSealPanel(FlagInstances.Fungus3_48__Shiny_Item),
                 CreateHallownestSealPanel(FlagInstances.Crossroads_38__Shiny_Item_Relic2),
                 CreateHallownestSealPanel(FlagInstances.Crossroads_01__Shiny_Item),
+                CreateHallownestSealPanel(FlagInstances.Fungus1_10__Shiny_Item),
+                CreateHallownestSealPanel(FlagInstances.Fungus3_26__Shiny_Item),
+                CreateHallownestSealPanel(FlagInstances.Fungus2_34__Shiny_Item),
+                CreateHallownestSealPanel(FlagInstances.Deepnest_16__Shiny_Item)
             };
 
             return panels;
@@ -1212,6 +1227,7 @@ namespace CabbyCodes.Patches
                 CreateArcaneEggPanel(FlagInstances.dreamReward6),
                 CreateArcaneEggPanel(FlagInstances.Abyss_10__Shiny_Item),
                 CreateArcaneEggPanel(FlagInstances.Abyss_08__Shiny_Item_1),
+                CreateArcaneEggPanel(FlagInstances.Abyss_15__Shiny_Item)
             };
 
             return panels;

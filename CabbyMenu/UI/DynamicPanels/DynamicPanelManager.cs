@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using CabbyMenu.UI.CheatPanels;
+using CabbyMenu.UI.Popups;
+using CabbyMenu.Utilities;
 
 namespace CabbyMenu.UI.DynamicPanels
 {
@@ -25,6 +27,9 @@ namespace CabbyMenu.UI.DynamicPanels
         private readonly List<DynamicPanelManager> childManagers = new List<DynamicPanelManager>();
         private readonly IHierarchicalPanelContainer container;
         private readonly Action onPanelsChanged;
+        
+        // Menu reference for popup creation
+        private readonly CabbyMainMenu menu;
 
         /// <summary>
         /// Creates a new DynamicPanelManager for hierarchical operation.
@@ -35,7 +40,8 @@ namespace CabbyMenu.UI.DynamicPanels
             IHierarchicalPanelContainer container,
             int insertionIndex = 1,
             DynamicPanelManager parentManager = null,
-            Action onPanelsChanged = null)
+            Action onPanelsChanged = null,
+            CabbyMainMenu menu = null)
         {
             this.dropdownPanel = dropdownPanel;
             this.panelFactory = panelFactory;
@@ -43,6 +49,7 @@ namespace CabbyMenu.UI.DynamicPanels
             this.insertionIndex = insertionIndex;
             this.parentManager = parentManager;
             this.onPanelsChanged = onPanelsChanged;
+            this.menu = menu;
 
             // Register with parent if we have one
             parentManager?.AddChildManager(this);
@@ -76,33 +83,94 @@ namespace CabbyMenu.UI.DynamicPanels
             if (isSuspended) return;
             int currentIndex = GetCurrentSelection();
             if (currentIndex == lastSelectedIndex) return;
+            
+            // Show loading popup for any dynamic panel manager if we have menu access
+            PopupBase loadingPopup = null;
+            if (menu != null)
+            {
+                loadingPopup = CreateLoadingPopup();
+                if (loadingPopup != null)
+                {
+                    loadingPopup.Show();
+                    UnityEngine.Canvas.ForceUpdateCanvases();
+                    
+                    // Delay panel destruction by one frame to give UI time to render popup
+                    CoroutineRunner.RunNextFrame(() => {
+                        RecreateDynamicPanelsInternal(currentIndex, loadingPopup);
+                    });
+                    return;
+                }
+            }
+            
+            // No popup needed, proceed immediately
+            RecreateDynamicPanelsInternal(currentIndex, null);
+        }
+        
+        private void RecreateDynamicPanelsInternal(int currentIndex, PopupBase loadingPopup)
+        {
             DynamicPanelCoordinator.SuspendOtherManagers(this);
 
-            int dropdownIndex = container.GetPanelIndex(dropdownPanel);
-            if (dropdownIndex == -1)
+            try
             {
-                RemoveDynamicPanels();
-                AddNewDynamicPanels(currentIndex);
+                int dropdownIndex = container.GetPanelIndex(dropdownPanel);
+                if (dropdownIndex == -1)
+                {
+                    RemoveDynamicPanels();
+                    AddNewDynamicPanels(currentIndex);
+                    DynamicPanelCoordinator.ResumeAllManagers();
+                    lastSelectedIndex = currentIndex;
+                    return;
+                }
+
+                int insertionPoint = dropdownIndex + insertionIndex;
+                if (dynamicPanels.Count > 0)
+                {
+                    RemoveDynamicPanels();
+                    DetachPanelsAfterDynamic(insertionPoint);
+                }
+                else
+                {
+                    DetachPanelsAfterDynamic(insertionPoint);
+                }
+                AddNewDynamicPanelsAtPosition(currentIndex, insertionPoint);
+                if (panelsDetached) ReattachDetachedPanels();
                 DynamicPanelCoordinator.ResumeAllManagers();
                 lastSelectedIndex = currentIndex;
-                return;
             }
-
-            int insertionPoint = dropdownIndex + insertionIndex;
-            if (dynamicPanels.Count > 0)
+            finally
             {
-                RemoveDynamicPanels();
-                DetachPanelsAfterDynamic(insertionPoint);
+                // Hide loading popup if it was created
+                if (loadingPopup != null)
+                {
+                    CoroutineRunner.RunNextFrame(() => {
+                        loadingPopup.Hide();
+                        loadingPopup.Destroy();
+                    });
+                }
             }
-            else
-            {
-                DetachPanelsAfterDynamic(insertionPoint);
-            }
-            AddNewDynamicPanelsAtPosition(currentIndex, insertionPoint);
-            if (panelsDetached) ReattachDetachedPanels();
-            DynamicPanelCoordinator.ResumeAllManagers();
-            lastSelectedIndex = currentIndex;
         }
+
+        /// <summary>
+        /// Creates a loading popup for dynamic panel changes
+        /// </summary>
+        private PopupBase CreateLoadingPopup()
+        {
+            if (menu != null)
+            {
+                var popup = new PopupBase(menu, "Loading", "Loading . . .", 400f, 200f);
+                
+                // Customize the popup appearance using the new styling methods
+                popup.SetPanelBackgroundColor(new UnityEngine.Color(0.2f, 0.4f, 0.8f, 1f)); // Blue background
+                popup.SetMessageBold(); // Make message text bold
+                
+                return popup;
+            }
+            return null;
+        }
+        
+
+
+
 
         protected virtual int GetCurrentSelection() => dropdownPanel.GetDropDownSync().SelectedValue.Get();
 

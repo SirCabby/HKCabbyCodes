@@ -8,8 +8,8 @@ using System.Collections.Generic;
 using CabbyCodes.Scenes;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using CabbyMenu.UI.Controls; // for HoverPopup
-using CabbyMenu.UI.Controls.CustomDropdown; // for CustomDropdown
+using CabbyMenu.UI.Controls;
+using CabbyMenu.UI.Controls.CustomDropdown;
 
 namespace CabbyCodes.Patches.Flags
 {
@@ -28,7 +28,8 @@ namespace CabbyCodes.Patches.Flags
             var locations = new Dictionary<string, TeleportLocation>
             {
                 [FlagInstances.hegemolDefeated.ReadableName] = new TeleportLocation(SceneInstances.Deepnest_Spider_Town, new Vector2(58, 153)),
-                [FlagInstances.lurienDefeated.ReadableName] = new TeleportLocation(SceneInstances.Ruins2_Watcher_Room, new Vector2(52, 136))
+                [FlagInstances.lurienDefeated.ReadableName] = new TeleportLocation(SceneInstances.Ruins2_Watcher_Room, new Vector2(52, 136)),
+                [FlagInstances.monomonDefeated.ReadableName] = new TeleportLocation(SceneInstances.Fungus3_archive_02, new Vector2(46, 85)),
             };
             
             return locations;
@@ -45,14 +46,23 @@ namespace CabbyCodes.Patches.Flags
                 new[] { FlagInstances.lurienDefeated, FlagInstances.maskBrokenLurien },
                 new[] { FlagInstances.monomonDefeated, FlagInstances.maskBrokenMonomon }
             }));
-
-            panels.Add(new InfoPanel("Colosseum").SetColor(CheatPanel.subHeaderColor));
             panels.Add(new DropdownPanel(CreateColosseumValueList(), "Colosseum Status", Constants.DEFAULT_PANEL_HEIGHT));
 
+            panels.Add(new InfoPanel("Grimm Troupe").SetColor(CheatPanel.headerColor));
+            panels.Add(new ToggleWithTeleportPanel(new BoolPatch(FlagInstances.gotBrummsFlame),
+                    () => {
+                        TeleportService.DoTeleport(new TeleportLocation(SceneInstances.Room_spider_small, new Vector2(19, 14)));
+                    }, $"{FlagInstances.gotBrummsFlame.ReadableName}"));
+
             panels.Add(new InfoPanel("Godhome").SetColor(CheatPanel.headerColor));
-            // Add Boss Door panels before the boss statue panels
-            panels.AddRange(CreateBossDoorPanels());
+            panels.Add(new TogglePanel(new BoolPatch(FlagInstances.bossDoorCageUnlocked), FlagInstances.bossDoorCageUnlocked.ReadableName));
+            panels.Add(new TogglePanel(new BoolPatch(FlagInstances.finalBossDoorUnlocked), FlagInstances.finalBossDoorUnlocked.ReadableName));
+            panels.Add(new TogglePanel(new BoolPatch(FlagInstances.blueRoomDoorUnlocked), FlagInstances.blueRoomDoorUnlocked.ReadableName));
+            panels.Add(new TogglePanel(new BoolPatch(FlagInstances.blueRoomActivated), FlagInstances.blueRoomActivated.ReadableName));
+            panels.Add(new TogglePanel(new BoolPatch(FlagInstances.zoteStatueWallBroken), FlagInstances.zoteStatueWallBroken.ReadableName));
+            panels.Add(new TogglePanel(new BoolPatch(FlagInstances.ordealAchieved), FlagInstances.ordealAchieved.ReadableName));
             panels.AddRange(CreateBossStatuePanels());
+            panels.AddRange(CreateBossDoorPanels());
 
             return panels;
         }
@@ -181,18 +191,20 @@ namespace CabbyCodes.Patches.Flags
                     FlagInstances.statueStateMegaMossCharger,
                     FlagInstances.statueStateFlukemarm,
                     FlagInstances.statueStateMantisLords,
+                    FlagInstances.statueStateMantisLordsExtra,
                     FlagInstances.statueStateOblobbles,
                     FlagInstances.statueStateHiveKnight,
                     FlagInstances.statueStateBrokenVessel,
                     FlagInstances.statueStateLostKin,
-                    // missed boss
+                    FlagInstances.statueStateNosk,
+                    FlagInstances.statueStateNoskHornet,
                     FlagInstances.statueStateCollector,
                     FlagInstances.statueStateGodTamer,
                     FlagInstances.statueStateCrystalGuardian1,
                     FlagInstances.statueStateCrystalGuardian2,
                     FlagInstances.statueStateUumuu,
                     FlagInstances.statueStateTraitorLord,
-                    // missed boss
+                    FlagInstances.statueStateGreyPrince
                 },
                 // Floor 2
                 new [] {
@@ -210,9 +222,12 @@ namespace CabbyCodes.Patches.Flags
                     FlagInstances.statueStateGorb,
                     FlagInstances.statueStateElderHu,
                     FlagInstances.statueStateNailmasters,
+                    FlagInstances.statueStatePaintmaster,
+                    FlagInstances.statueStateSly,
+                    FlagInstances.statueStateHollowKnight,
+                    FlagInstances.statueStateGrimm,
                 }
 
-                    // FlagInstances.statueStateNosk,
                     // FlagInstances.statueStateNoskHornet,
                 //     FlagInstances.statueStateMantisLordsExtra,
                 //     FlagInstances.statueStateHollowKnight,
@@ -225,7 +240,7 @@ namespace CabbyCodes.Patches.Flags
                 //     FlagInstances.statueStateZote
             };
 
-            var groupNames = new[] { "Floor 1", "Optional", "Dream Warriors", "DLC", "Other" };
+            var groupNames = new[] { "Floor 1", "Floor 2" };
 
             for (int i = 0; i < bossGroups.Length; i++)
             {
@@ -276,16 +291,27 @@ namespace CabbyCodes.Patches.Flags
 
             foreach (var (fieldName, label) in fieldInfo)
             {
+                
                 var toggleReference = new DelegateReference<bool>(
                     () =>
                     {
                         var data = FlagManager.GetCompletionFlag(bossFlag);
-                        return data != null && GetBoolField(data, fieldName);
+                        if (data == null)
+                        {
+                            Debug.LogWarning($"[Boss Statue] Data is null for {bossFlag?.ReadableName}");
+                            return false;
+                        }
+                        var result = GetBoolField(data, fieldName);
+                        return result;
                     },
                     value =>
                     {
                         var data = FlagManager.GetCompletionFlag(bossFlag);
-                        if (data == null) return;
+                        if (data == null) 
+                        {
+                            Debug.LogWarning($"[Boss Statue] Cannot set field {fieldName} - data is null");
+                            return;
+                        }
                         SetBoolField(data, fieldName, value);
                         FlagManager.SetCompletionFlag(bossFlag, data);
                     });
@@ -297,19 +323,33 @@ namespace CabbyCodes.Patches.Flags
                 {
                     bool interactable = GameStateProvider.GetCurrentSceneName() != "GG_Workshop";
                     var toggleButton = togglePanel.GetToggleButton();
-                    toggleButton.SetInteractable(interactable);
-                    if (!interactable)
+                    if (toggleButton != null)
                     {
-                        toggleButton.SetDisabledMessage("Cannot edit boss statue flags while inside Godhome Workshop");
+                        toggleButton.SetInteractable(interactable);
+                        if (!interactable)
+                        {
+                            toggleButton.SetDisabledMessage("Cannot edit boss statue flags while inside Godhome Workshop");
+                        }
+                        else
+                        {
+                            toggleButton.SetDisabledMessage("");
+                        }
                     }
                     else
                     {
-                        toggleButton.SetDisabledMessage("");
+                        Debug.LogError($"[Boss Statue] Toggle button is null for {bossFlag?.ReadableName}");
                     }
                 });
 
                 // Execute once to set initial state
-                togglePanel.updateActions[togglePanel.updateActions.Count - 1]();
+                if (togglePanel.updateActions.Count > 0)
+                {
+                    togglePanel.updateActions[togglePanel.updateActions.Count - 1]();
+                }
+                else
+                {
+                    Debug.LogWarning($"[Boss Statue] No update actions found for {bossFlag?.ReadableName}");
+                }
 
                 panels.Add(togglePanel);
             }
@@ -324,10 +364,21 @@ namespace CabbyCodes.Patches.Flags
         {
             try
             {
+                if (obj == null)
+                {
+                    Debug.LogError($"[Boss Statue] GetBoolField: obj is null");
+                    return false;
+                }
+                
                 var field = obj.GetType().GetField(fieldName);
                 if (field != null && field.FieldType == typeof(bool))
                 {
-                    return (bool)field.GetValue(obj);
+                    var value = (bool)field.GetValue(obj);
+                    return value;
+                }
+                else
+                {
+                    Debug.LogWarning($"[Boss Statue] GetBoolField: field {fieldName} not found or not bool type");
                 }
             }
             catch (Exception ex)
@@ -344,10 +395,20 @@ namespace CabbyCodes.Patches.Flags
         {
             try
             {
+                if (obj == null)
+                {
+                    Debug.LogError($"[Boss Statue] SetBoolField: obj is null");
+                    return;
+                }
+                
                 var field = obj.GetType().GetField(fieldName);
                 if (field != null && field.FieldType == typeof(bool))
                 {
                     field.SetValue(obj, value);
+                }
+                else
+                {
+                    Debug.LogWarning($"[Boss Statue] SetBoolField: field {fieldName} not found or not bool type");
                 }
             }
             catch (Exception ex)
@@ -428,11 +489,18 @@ namespace CabbyCodes.Patches.Flags
                 doorDropdownPanel.updateActions.Add(() =>
                 {
                     bool interactable = GameStateProvider.GetCurrentSceneName() != "GG_Atrium";
-                    doorDropdownPanel.GetDropDownSync().GetCustomDropdown().SetInteractable(interactable);
+                    var dropdown = doorDropdownPanel.GetDropDownSync()?.GetCustomDropdown();
+                    if (dropdown != null)
+                    {
+                        dropdown.SetInteractable(interactable);
+                    }
                 });
                 // Execute to set initial state
-                doorDropdownPanel.updateActions[doorDropdownPanel.updateActions.Count - 1]();
-                ConfigureDropdownHover(doorDropdownPanel.GetDropDownSync().GetCustomDropdown(), "Cannot edit boss door flags while inside Godhome Atrium");
+                if (doorDropdownPanel.updateActions.Count > 0)
+                {
+                    doorDropdownPanel.updateActions[doorDropdownPanel.updateActions.Count - 1]();
+                }
+                ConfigureDropdownHover(doorDropdownPanel.GetDropDownSync()?.GetCustomDropdown(), "Cannot edit boss door flags while inside Godhome Atrium");
                 panels.Add(doorDropdownPanel);
 
                 // Toggles for additional fields
@@ -443,12 +511,17 @@ namespace CabbyCodes.Patches.Flags
                         () =>
                         {
                             var data = FlagManager.GetCompletionFlag(doorFlag);
-                            return data != null && GetBoolField(data, fieldName);
+                            if (data == null) return false;
+                            var result = GetBoolField(data, fieldName);
+                            return result;
                         },
                         value =>
                         {
                             var data = FlagManager.GetCompletionFlag(doorFlag);
-                            if (data == null) return;
+                            if (data == null) 
+                            {
+                                return;
+                            }
                             SetBoolField(data, fieldName, value);
                             FlagManager.SetCompletionFlag(doorFlag, data);
                         }
@@ -463,18 +536,24 @@ namespace CabbyCodes.Patches.Flags
                     {
                         bool interactable = GameStateProvider.GetCurrentSceneName() != "GG_Atrium";
                         var toggleButton = togglePanel.GetToggleButton();
-                        toggleButton.SetInteractable(interactable);
-                        if (!interactable)
+                        if (toggleButton != null)
                         {
-                            toggleButton.SetDisabledMessage("Cannot edit boss door flags while inside Godhome Atrium");
-                        }
-                        else
-                        {
-                            toggleButton.SetDisabledMessage("");
+                            toggleButton.SetInteractable(interactable);
+                            if (!interactable)
+                            {
+                                toggleButton.SetDisabledMessage("Cannot edit boss door flags while inside Godhome Atrium");
+                            }
+                            else
+                            {
+                                toggleButton.SetDisabledMessage("");
+                            }
                         }
                     });
                     // Execute once immediately to set initial state
-                    togglePanel.updateActions[togglePanel.updateActions.Count - 1]();
+                    if (togglePanel.updateActions.Count > 0)
+                    {
+                        togglePanel.updateActions[togglePanel.updateActions.Count - 1]();
+                    }
                     panels.Add(togglePanel);
                 }
             }

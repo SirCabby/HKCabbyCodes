@@ -44,17 +44,19 @@ namespace CabbyCodes.Patches.Teleport
             new TeleportLocation(SceneInstances.Crossroads_02, SceneInstances.Room_temple.ReadableName, new Vector2(41, 5)),
             new TeleportLocation(SceneInstances.Crossroads_38, "The Grubfather", new Vector2(64, 4)),
             new TeleportLocation(SceneInstances.RestingGrounds_07, "The Seer", new Vector2(30, 10)),
-            new TeleportLocation(SceneInstances.Fungus1_08, "The Hunter", new Vector2(43, 39)),
+            new TeleportLocation(SceneInstances.Fungus1_08, "The Hunter", new Vector2(31, 39)),
             new TeleportLocation(SceneInstances.Crossroads_04, "Salubra's Charm Shop", new Vector2(141, 12)),
             new TeleportLocation(SceneInstances.Fungus2_26, "Leg Eater's Shop", new Vector2(35, 6)),
             new TeleportLocation(SceneInstances.Room_nailmaster, "Nailmaster Mato", new Vector2(57, 5)),
-            new TeleportLocation(SceneInstances.Abyss_05, "Nailmaster Oro", new Vector2(124, 18)),
+            new TeleportLocation(SceneInstances.Room_nailmaster_03, "Nailmaster Oro", new Vector2(24, 5)),
             new TeleportLocation(SceneInstances.Room_nailmaster_02, "Nailmaster Sheo", new Vector2(26, 5)),
             new TeleportLocation(SceneInstances.Room_Mask_Maker, "Mask Maker", new Vector2(26, 7)),
             new TeleportLocation(SceneInstances.Ruins1_04, "Nailsmith", new Vector2(34, 37)),
             new TeleportLocation(SceneInstances.Room_Mansion, "Grey Mourner", new Vector2(16, 7)),
-            new TeleportLocation(SceneInstances.Abyss_05, "White Castle", new Vector2(124, 18)),
             new TeleportLocation(SceneInstances.Waterways_03, "Tuk", new Vector2(89, 5)),
+            new TeleportLocation(SceneInstances.Fungus3_49, "Traitor's Child's Grave", new Vector2(18, 7)),
+            new TeleportLocation(SceneInstances.Room_Colosseum_01, "Colosseum of Fools", new Vector2(26, 7)),
+            new TeleportLocation(SceneInstances.Abyss_05, "White Castle", new Vector2(124, 18)),
             new TeleportLocation(SceneInstances.GG_Atrium, "Godhome", new Vector2(114, 62)),
         };
 
@@ -178,7 +180,7 @@ namespace CabbyCodes.Patches.Teleport
                     {
                         // Ask for confirmation before overwrite
                         var menu = CabbyCodesPlugin.cabbyMenu;
-                        Action doOverwrite = () => { ctl.Location = teleportLocation; };
+                        Action doOverwrite = () => { ctl.UpdateLocation(sceneName, teleportLocation); };
                         if (menu != null)
                         {
                             string msg = string.Format("Overwrite teleport '{0}' with current position?", displayName);
@@ -364,11 +366,11 @@ namespace CabbyCodes.Patches.Teleport
                 var menu = CabbyCodesPlugin.cabbyMenu;
                 Action performSave = () =>
                 {
-                    Vector2 newLoc = TeleportService.GetCurrentPlayerPosition().position;
+                    var (sceneName, newLoc) = TeleportService.GetCurrentPlayerPosition();
                     if (location is CustomTeleportLocation ctl)
                     {
-                        ctl.Location = newLoc;
-                        CabbyCodesPlugin.BLogger.LogDebug(string.Format("Overwrote teleport location {0} to new coords {1}", location.DisplayName, newLoc));
+                        ctl.UpdateLocation(sceneName, newLoc);
+                        CabbyCodesPlugin.BLogger.LogDebug(string.Format("Overwrote teleport location {0} to new scene {1} at coords {2}", location.DisplayName, sceneName, newLoc));
                     }
                 };
 

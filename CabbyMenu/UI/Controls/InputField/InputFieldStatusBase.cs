@@ -21,6 +21,8 @@ namespace CabbyMenu.UI.Controls.InputField
         public Action Cancel { get; protected set; }
         public abstract KeyCodeMap.ValidChars ValidChars { get; }
 
+        public GameObject GetGameObject() => InputFieldGo;
+
         protected InputFieldStatusBase(GameObject inputFieldGo, Action<bool> onSelected, Action submit, Action cancel, int maxVisibleCharacters)
         {
             InputFieldGo = inputFieldGo;

@@ -83,21 +83,23 @@ namespace CabbyCodes.Patches.Flags
                 FlagInstances.godseekerUnlocked,
                 FlagInstances.summonedMonomon,
                 FlagInstances.blueVineDoor,
+                FlagInstances.openedBlackEggPath,
 
-                
 
-
-                FlagInstances.nightmareLanternAppeared,
-                FlagInstances.nightmareLanternLit,
-
-                
-
+                FlagInstances.openedBlackEggDoor,
 
                 FlagInstances.galienPinned,
                 FlagInstances.huPinned,
                 FlagInstances.markothPinned,
                 FlagInstances.noEyesPinned,
-                FlagInstances.xeroPinned
+                FlagInstances.xeroPinned,
+
+                FlagInstances.nightmareLanternAppeared,
+                FlagInstances.nightmareLanternLit,
+                FlagInstances.troupeInTown,
+                FlagInstances.destroyedNightmareLantern,
+
+                FlagInstances.greyPrinceDefeats,
             };
         }
 

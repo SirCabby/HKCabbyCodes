@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using System.Reflection;
 
 namespace CabbyCodes.Flags
 {
@@ -29,7 +28,14 @@ namespace CabbyCodes.Flags
             if (IsGlobalFlag(flagDef))
             {
                 // Use PlayerData's built-in SetBool method
-                PlayerData.instance.SetBool(flagDef.Id, value);
+                try
+                {
+                    PlayerData.instance.SetBool(flagDef.Id, value);
+                }
+                catch (System.Exception)
+                {
+                    // If the flag doesn't exist in PlayerData, ignore the operation
+                }
             }
             else if (!string.IsNullOrEmpty(flagDef.SceneName))
             {
@@ -55,7 +61,14 @@ namespace CabbyCodes.Flags
             if (sceneName == "Global")
             {
                 // Use PlayerData's built-in SetBool method
-                PlayerData.instance.SetBool(id, value);
+                try
+                {
+                    PlayerData.instance.SetBool(id, value);
+                }
+                catch (System.Exception)
+                {
+                    // If the flag doesn't exist in PlayerData, ignore the operation
+                }
             }
             else if (!string.IsNullOrEmpty(sceneName))
             {
@@ -78,7 +91,14 @@ namespace CabbyCodes.Flags
 
             if (IsGlobalFlag(flagDef))
             {
-                PlayerData.instance.SetInt(flagDef.Id, value);
+                try
+                {
+                    PlayerData.instance.SetInt(flagDef.Id, value);
+                }
+                catch (System.Exception)
+                {
+                    // If the flag doesn't exist in PlayerData, ignore the operation
+                }
             }
             else if (!string.IsNullOrEmpty(flagDef.SceneName))
             {
@@ -116,7 +136,15 @@ namespace CabbyCodes.Flags
 
             if (IsGlobalFlag(flagDef))
             {
-                return PlayerData.instance.GetBool(flagDef.Id);
+                try
+                {
+                    return PlayerData.instance.GetBool(flagDef.Id);
+                }
+                catch (System.Exception)
+                {
+                    // If the flag doesn't exist in PlayerData, return false
+                    return false;
+                }
             }
             else if (!string.IsNullOrEmpty(flagDef.SceneName))
             {
@@ -141,7 +169,15 @@ namespace CabbyCodes.Flags
 
             if (sceneName == "Global")
             {
-                return PlayerData.instance.GetBool(id);
+                try
+                {
+                    return PlayerData.instance.GetBool(id);
+                }
+                catch (System.Exception)
+                {
+                    // If the flag doesn't exist in PlayerData, return false
+                    return false;
+                }
             }
             else if (!string.IsNullOrEmpty(sceneName))
             {
@@ -164,7 +200,15 @@ namespace CabbyCodes.Flags
 
             if (IsGlobalFlag(flagDef))
             {
-                return PlayerData.instance.GetInt(flagDef.Id);
+                try
+                {
+                    return PlayerData.instance.GetInt(flagDef.Id);
+                }
+                catch (System.Exception)
+                {
+                    // If the flag doesn't exist in PlayerData, return -1
+                    return -1;
+                }
             }
             else if (!string.IsNullOrEmpty(flagDef.SceneName))
             {
@@ -318,7 +362,14 @@ namespace CabbyCodes.Flags
 
             if (IsGlobalFlag(flagDef))
             {
-                PlayerData.instance.SetFloat(flagDef.Id, value);
+                try
+                {
+                    PlayerData.instance.SetFloat(flagDef.Id, value);
+                }
+                catch (System.Exception)
+                {
+                    // If the flag doesn't exist in PlayerData, ignore the operation
+                }
             }
             // Note: Unity doesn't have PersistentFloatData, so scene-specific float flags are not supported
         }
@@ -336,7 +387,14 @@ namespace CabbyCodes.Flags
 
             if (sceneName == "Global")
             {
-                PlayerData.instance.SetFloat(id, value);
+                try
+                {
+                    PlayerData.instance.SetFloat(id, value);
+                }
+                catch (System.Exception)
+                {
+                    // If the flag doesn't exist in PlayerData, ignore the operation
+                }
             }
             // Note: Unity doesn't have PersistentFloatData, so scene-specific float flags are not supported
         }
@@ -353,7 +411,15 @@ namespace CabbyCodes.Flags
 
             if (IsGlobalFlag(flagDef))
             {
-                return PlayerData.instance.GetFloat(flagDef.Id);
+                try
+                {
+                    return PlayerData.instance.GetFloat(flagDef.Id);
+                }
+                catch (System.Exception)
+                {
+                    // If the flag doesn't exist in PlayerData, return 0f
+                    return 0f;
+                }
             }
             
             return 0f;
@@ -372,7 +438,15 @@ namespace CabbyCodes.Flags
 
             if (sceneName == "Global")
             {
-                return PlayerData.instance.GetFloat(id);
+                try
+                {
+                    return PlayerData.instance.GetFloat(id);
+                }
+                catch (System.Exception)
+                {
+                    // If the flag doesn't exist in PlayerData, return 0f
+                    return 0f;
+                }
             }
             
             return 0f;

@@ -84,6 +84,9 @@ namespace CabbyCodes.Flags
                 case "trinket3":
                     return new IntFlagValidationMetadata(0, 8, KeyCodeMap.ValidChars.Numeric);
 
+                case "stationsOpened":
+                    return new IntFlagValidationMetadata(0, 9, KeyCodeMap.ValidChars.Numeric);
+
                 case "trinket1":
                     return new IntFlagValidationMetadata(0, 14, KeyCodeMap.ValidChars.Numeric);
                 
@@ -119,10 +122,6 @@ namespace CabbyCodes.Flags
 
                 case "healthBlue":
                     return new IntFlagValidationMetadata(0, 16, KeyCodeMap.ValidChars.Numeric);
-
-                // Needs corrected
-                case "stationsOpened":
-                    return new IntFlagValidationMetadata(0, 999, KeyCodeMap.ValidChars.Numeric);
 
                 default:
                     // For unknown integer flags, provide reasonable defaults

@@ -26,9 +26,10 @@ namespace CabbyCodes.Patches.Flags.Triage
         /// </summary>
         public static List<CheatPanel> CreatePanels()
         {
-            var panels = new List<CheatPanel>();
-
-            panels.Add(new InfoPanel("Flag Extraction").SetColor(CheatPanel.headerColor));
+            var panels = new List<CheatPanel>
+            {
+                new InfoPanel("Flag Extraction").SetColor(CheatPanel.headerColor)
+            };
 
             var extractButton = new ButtonPanel(() =>
             {

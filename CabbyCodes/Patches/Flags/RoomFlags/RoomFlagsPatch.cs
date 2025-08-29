@@ -29,7 +29,10 @@ namespace CabbyCodes.Patches.Flags.RoomFlags
                 dropdownPanel,
                 CreateRoomFlagsPanels,
                 container,
-                insertionIndex: 1  // insert directly after the dropdown
+                insertionIndex: 1,  // insert directly after the dropdown
+                parentManager: null,
+                onPanelsChanged: null,
+                menu: CabbyCodesPlugin.cabbyMenu
             );
 
             // Selection change listener will rebuild panels; no per-frame update needed

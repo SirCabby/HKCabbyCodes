@@ -1345,6 +1345,14 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
 
             // Store the parent panel reference (which contains the button)
             optionButtons.Add(parentPanel);
+
+            // Attach scroll proxy so mouse wheel over this button scrolls the dropdown
+            ScrollRect parentScrollRect = scrollView != null ? scrollView.GetComponent<ScrollRect>() : null;
+            if (parentScrollRect != null)
+            {
+                var proxy = optionObj.AddComponent<OptionScrollProxy>();
+                proxy.Initialize(parentScrollRect);
+            }
         }
 
         /// <summary>

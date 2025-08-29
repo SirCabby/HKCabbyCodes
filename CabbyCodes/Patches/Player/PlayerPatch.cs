@@ -3,7 +3,6 @@ using CabbyCodes.Flags;
 using CabbyMenu.UI.CheatPanels;
 using CabbyMenu.Utilities;
 using CabbyMenu.SyncedReferences;
-using CabbyCodes.SavedGames;
 using System.Collections.Generic;
 
 namespace CabbyCodes.Patches.Player
@@ -35,36 +34,6 @@ namespace CabbyCodes.Patches.Player
                 new TogglePanel(new InvulPatch(), FlagInstances.isInvincible.ReadableName),
                 new TogglePanel(new DamagePatch(), "One Hit Kills (Enemies can't block)"),
                 new TogglePanel(new JumpPatch(), FlagInstances.infiniteAirJump.ReadableName),
-                new RangeInputFieldPanel<int>(
-                    new DelegateReference<int>(
-                        () => FlagManager.GetIntFlag(FlagInstances.maxHealthBase),
-                        value =>
-                        {
-                            var validation = FlagValidationData.GetIntValidationData(FlagInstances.maxHealthBase);
-                            value = ValidationUtils.ValidateRange(value, validation.MinValue, validation.MaxValue);
-                            FlagManager.SetIntFlag(FlagInstances.maxHealthBase, value);
-                            FlagManager.SetIntFlag(FlagInstances.maxHealth, value);
-
-                            // Check if current max health differs from starting max health
-                            var finalMaxHealth = FlagManager.GetIntFlag(FlagInstances.maxHealth);
-                            
-                            bool maxHealthDiffersFromStart = finalMaxHealth != startingMaxHealth;
-                            
-                            if (maxHealthDiffersFromStart)
-                            {
-                                // Max health has changed from starting state, request reload
-                                GameReloadManager.RequestReload($"MaxHealth");
-                            }
-                            else
-                            {
-                                // Max health matches starting state, cancel reload request
-                                GameReloadManager.CancelReload($"MaxHealth");
-                            }
-                        }),
-                    FlagValidationData.GetIntValidationData(FlagInstances.maxHealthBase).ValidChars, 
-                    FlagValidationData.GetIntValidationData(FlagInstances.maxHealthBase).MinValue, 
-                    FlagValidationData.GetIntValidationData(FlagInstances.maxHealthBase).MaxValue, 
-                    FlagInstances.maxHealthBase.ReadableName),
                 new RangeInputFieldPanel<int>(
                     new DelegateReference<int>(
                         () => FlagManager.GetIntFlag(FlagInstances.healthBlue),

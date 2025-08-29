@@ -15,7 +15,7 @@ namespace CabbyCodes.Patches.Flags
 
             var flagTypeSection = new CategorizedPanelSection(
                 "Flag Type", 
-                new List<string> { "Environment", "NPC", "Boss", "Progression", "Shop", "Stag", "Room", "Geo Rocks", "Whispering Roots", "Flag Monitor" },
+                new List<string> { "Environment", "NPC", "Boss", "Progression", "Stag", "Room", "Geo Rocks", "Whispering Roots", "Flag Monitor" },
                 CreateFlagTypePanels
             );
             flagTypeSection.AddToMenu(CabbyCodesPlugin.cabbyMenu);
@@ -49,32 +49,27 @@ namespace CabbyCodes.Patches.Flags
                     var progressionPatch = new ProgressionPatch();
                     panels.AddRange(progressionPatch.CreatePanels());
                     break;
-                
-                case 4: // Shop
-                    var shopPatch = new ShopFlagPatch();
-                    panels.AddRange(shopPatch.CreatePanels());
-                    break;
                     
-                case 5: // Stag
+                case 4: // Stag
                     var stagPatch = new StagFlagPatch();
                     panels.AddRange(stagPatch.CreatePanels());
                     break;
                     
-                case 6: // Room
+                case 5: // Room
                     panels.AddRange(RoomFlagsPatch.CreatePanels());
                     break;
                     
-                case 7: // Geo Rocks
+                case 6: // Geo Rocks
                     var geoPatch = new GeoRocksFlagPatch();
                     panels.AddRange(geoPatch.CreatePanels());
                     break;
                     
-                case 8: // Whispering Roots
+                case 7: // Whispering Roots
                     var whisperingPatch = new WhisperingRootsPatch();
                     panels.AddRange(whisperingPatch.CreatePanels());
                     break;
 
-                case 9: // Flag Monitor
+                case 8: // Flag Monitor
                     panels.AddRange(FlagMonitorPatch.CreatePanels());
                     panels.AddRange(FlagExtractionPatch.CreatePanels());
                     break;

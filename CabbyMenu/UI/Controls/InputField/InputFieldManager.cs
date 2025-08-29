@@ -60,6 +60,9 @@ namespace CabbyMenu.UI.Controls.InputField
         /// </summary>
         public void Update()
         {
+            // Clean up any destroyed input fields to prevent NullReferenceExceptions
+            registeredInputs.RemoveAll(field => field == null || field.GetGameObject() == null);
+
             // Handle mouse clicks for input field selection
             if (Input.GetMouseButtonDown(0))
             {

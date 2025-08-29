@@ -29,7 +29,7 @@ namespace CabbyCodes.Patches
             void Add(FlagDef flag, Vector2? teleportCoords = null) => locations[flag] = teleportCoords.HasValue ? new TeleportLocation(flag.Scene, teleportCoords.Value) : null;
             
             // Abyss
-            Add(FlagInstances.Abyss_17__Grub_Bottle);
+            Add(FlagInstances.Abyss_17__Grub_Bottle, new Vector2(116, 4));
             Add(FlagInstances.Abyss_19__Grub_Bottle, new Vector2(87, 86));
             
             // Crossroads
@@ -41,7 +41,7 @@ namespace CabbyCodes.Patches
             
             // Deepnest
             Add(FlagInstances.Deepnest_03__Grub_Bottle, new Vector2(9, 104));
-            Add(FlagInstances.Deepnest_31__Grub_Bottle);
+            Add(FlagInstances.Deepnest_31__Grub_Bottle, new Vector2(104, 37));
             Add(FlagInstances.Deepnest_36__Grub_Bottle, new Vector2(62, 5));
             Add(FlagInstances.Deepnest_39__Grub_Bottle, new Vector2(128, 47));
             Add(FlagInstances.Deepnest_East_11__Grub_Bottle, new Vector2(67, 64));
@@ -56,9 +56,9 @@ namespace CabbyCodes.Patches
             Add(FlagInstances.Fungus1_28__Grub_Bottle, new Vector2(82, 53));
             Add(FlagInstances.Fungus2_18__Grub_Bottle, new Vector2(138, 53));
             Add(FlagInstances.Fungus2_20__Grub_Bottle, new Vector2(11, 43));
-            Add(FlagInstances.Fungus3_10__Grub_Bottle);
-            Add(FlagInstances.Fungus3_22__Grub_Bottle, new Vector2(15, 135));
-            Add(FlagInstances.Fungus3_47__Grub_Bottle);
+            Add(FlagInstances.Fungus3_10__Grub_Bottle, new Vector2(15, 36));
+            Add(FlagInstances.Fungus3_22__Grub_Bottle, new Vector2(23, 135));
+            Add(FlagInstances.Fungus3_47__Grub_Bottle, new Vector2(9, 23));
             Add(FlagInstances.Fungus3_48__Grub_Bottle, new Vector2(13, 95));
 
             // Hive
@@ -78,9 +78,8 @@ namespace CabbyCodes.Patches
             Add(FlagInstances.RestingGrounds_10__Grub_Bottle, new Vector2(114, 18));
             
             // City of Tears
-            Add(FlagInstances.Ruins_House_01__Grub_Bottle);
-            Add(FlagInstances.Ruins1_05__Grub_Bottle);
-            Add(FlagInstances.Ruins1_05__Grub_Bottle_1, new Vector2(54, 143));
+            Add(FlagInstances.Ruins_House_01__Grub_Bottle, new Vector2(13, 7));
+            Add(FlagInstances.Ruins1_05__Grub_Bottle, new Vector2(54, 143));
             Add(FlagInstances.Ruins1_32__Grub_Bottle, new Vector2(9, 25));
             Add(FlagInstances.Ruins2_03__Grub_Bottle, new Vector2(29, 51));
             Add(FlagInstances.Ruins2_07__Grub_Bottle, new Vector2(73, 6));
@@ -199,6 +198,12 @@ namespace CabbyCodes.Patches
                 {
                     string displayName = grubFlag.Scene.ReadableName;
                     
+                    // Special case for Ruins2_11 to add manual note
+                    if (grubFlag == FlagInstances.Ruins2_11__Grub_Bottle)
+                    {
+                        displayName += " (+2 more, get manually)";
+                    }
+                    
                     // Check if this grub has teleport coordinates defined
                     if (grubLocations.TryGetValue(grubFlag, out var grubTeleportLocation) && grubTeleportLocation != null)
                     {
@@ -207,7 +212,7 @@ namespace CabbyCodes.Patches
                         CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new ToggleWithTeleportPanel(
                             grubPatch, 
                             () => TeleportService.DoTeleport(grubTeleportLocation), 
-                            grubFlag.Scene.ReadableName));
+                            displayName));
                     }
                     else
                     {
