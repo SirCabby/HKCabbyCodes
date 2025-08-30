@@ -167,7 +167,6 @@ namespace CabbyCodes.Scenes
         public static readonly SceneMapData Deepnest_44_b = new SceneMapData("Deepnest_44_b", "Deepnest");
         public static readonly SceneMapData Fungus2_25 = new SceneMapData("Fungus2_25", "Deepnest");
         public static readonly SceneMapData Room_Mask_maker = new SceneMapData("Room_Mask_maker", "Deepnest");
-        public static readonly SceneMapData Deepnest_Spider_Town = new SceneMapData("Deepnest_Spider_Town", "Deepnest");
 
         // Dirtmouth
         public static readonly SceneMapData Town = new SceneMapData(        "Town",         "Dirtmouth",    "Dirtmouth");
@@ -310,7 +309,6 @@ namespace CabbyCodes.Scenes
         public static readonly SceneMapData Deepnest_East_14b = new SceneMapData("Deepnest_East_14b", "Outskirts");
         public static readonly SceneMapData Deepnest_East_15 = new SceneMapData("Deepnest_East_15", "Outskirts", "Hidden Blue Cocoon room");
         public static readonly SceneMapData Deepnest_East_16 = new SceneMapData("Deepnest_East_16", "Outskirts");
-        public static readonly SceneMapData Deepnest_East_17 = new SceneMapData("Deepnest_East_17", "Outskirts");
         public static readonly SceneMapData Deepnest_East_18 = new SceneMapData("Deepnest_East_18", "Outskirts");
         public static readonly SceneMapData Deepnest_East_Hornet = new SceneMapData("Deepnest_East_Hornet", "Outskirts");
         public static readonly SceneMapData Deepnest_East_Hornet_b = new SceneMapData("Deepnest_East_Hornet_b", "Outskirts");
@@ -330,7 +328,6 @@ namespace CabbyCodes.Scenes
         public static readonly SceneMapData RestingGrounds_04 = new SceneMapData("RestingGrounds_04", "RestingGrounds");
         public static readonly SceneMapData RestingGrounds_05 = new SceneMapData("RestingGrounds_05", "RestingGrounds");
         public static readonly SceneMapData RestingGrounds_06 = new SceneMapData("RestingGrounds_06", "RestingGrounds");
-        public static readonly SceneMapData RestingGrounds_07 = new SceneMapData("RestingGrounds_07", "RestingGrounds");
         public static readonly SceneMapData RestingGrounds_08 = new SceneMapData("RestingGrounds_08", "RestingGrounds", "Spirits' Glade");
         public static readonly SceneMapData RestingGrounds_09 = new SceneMapData("RestingGrounds_09", "RestingGrounds");
         public static readonly SceneMapData RestingGrounds_10_b = new SceneMapData("RestingGrounds_10_b", "RestingGrounds");
@@ -414,6 +411,8 @@ namespace CabbyCodes.Scenes
         public static readonly SceneMapData Crossroads_ShamanTemple = new SceneMapData("Crossroads_ShamanTemple", null, "Ancestral Mound");
         public static readonly SceneMapData Cutscene_Boss_Door = new SceneMapData("Cutscene_Boss_Door");
         public static readonly SceneMapData Deepnest_45_v02 = new SceneMapData("Deepnest_45_v02", null, "Weaver's Den");
+        public static readonly SceneMapData Deepnest_East_17 = new SceneMapData("Deepnest_East_17");
+        public static readonly SceneMapData Deepnest_Spider_Town = new SceneMapData("Deepnest_Spider_Town");
         public static readonly SceneMapData Dream_01_False_Knight = new SceneMapData("Dream_01_False_Knight", null, "False Knight's dream room");
         public static readonly SceneMapData Dream_03_Infected_Knight = new SceneMapData("Dream_03_Infected_Knight", null, "Lost Kin's dream room");
         public static readonly SceneMapData Dream_04_White_Defender = new SceneMapData("Dream_04_White_Defender");
@@ -507,6 +506,7 @@ namespace CabbyCodes.Scenes
         public static readonly SceneMapData Grimm_Divine = new SceneMapData("Grimm_Divine", null, "Divine's room");
         public static readonly SceneMapData Grimm_Main_Tent = new SceneMapData("Grimm_Main_Tent", null, "Grimm's Tent");
         public static readonly SceneMapData Grimm_Nightmare = new SceneMapData("Grimm_Nightmare");
+        public static readonly SceneMapData RestingGrounds_07 = new SceneMapData("RestingGrounds_07");
         public static readonly SceneMapData Room_Bretta = new SceneMapData("Room_Bretta", null, "Bretta's room");
         public static readonly SceneMapData Room_Bretta_Basement = new SceneMapData("Room_Bretta_Basement");
         public static readonly SceneMapData Room_Charm_Shop = new SceneMapData("Room_Charm_Shop", null, "Salubra's Charm Shop");
