@@ -1,7 +1,6 @@
 using CabbyMenu.SyncedReferences;
 using System.Reflection;
 using HarmonyLib;
-using CabbyMenu;
 using BepInEx.Configuration;
 
 namespace CabbyCodes.Patches.Player

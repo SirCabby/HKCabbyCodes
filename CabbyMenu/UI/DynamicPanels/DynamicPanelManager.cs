@@ -151,13 +151,13 @@ namespace CabbyMenu.UI.DynamicPanels
         }
 
         /// <summary>
-        /// Creates a loading popup for dynamic panel changes
+        /// Creates a loading popup with consistent styling
         /// </summary>
         private PopupBase CreateLoadingPopup()
         {
             if (menu != null)
             {
-                var popup = new PopupBase(menu, "Loading", "Loading . . .", 400f, 200f);
+                var popup = new PopupBase(menu, "Loading", "Loading . . .", 250f, 100f, false);
                 
                 // Customize the popup appearance using the new styling methods
                 popup.SetPanelBackgroundColor(new UnityEngine.Color(0.2f, 0.4f, 0.8f, 1f)); // Blue background

@@ -1,14 +1,11 @@
 using CabbyMenu.UI.CheatPanels;
 using CabbyMenu.UI.DynamicPanels;
 using CabbyMenu.UI.Controls;
-using CabbyMenu.UI.Popups;
 using CabbyMenu.SyncedReferences;
 using System.Collections.Generic;
 using System.Linq;
 using System;
-using UnityEngine;
 using UnityEngine.EventSystems;
-using CabbyCodes.Patches.Settings;
 using BepInEx.Configuration;
 
 namespace CabbyCodes.Patches.Flags.RoomFlags
@@ -79,11 +76,7 @@ namespace CabbyCodes.Patches.Flags.RoomFlags
                         showAllFlagsConfig.Value = showAll;
                         
                         // Show loading popup immediately
-                        var loadingPopup = new PopupBase(CabbyCodesPlugin.cabbyMenu, "Loading", "Loading . . .", 400f, 200f);
-                        loadingPopup.SetPanelBackgroundColor(new Color(0.2f, 0.4f, 0.8f, 1f)); // Blue background
-                        loadingPopup.SetMessageBold(); // Make message text bold
-                        loadingPopup.Show();
-                        Canvas.ForceUpdateCanvases();
+                        var loadingPopup = Teleport.TeleportService.ShowLoadingPopup(CabbyCodesPlugin.cabbyMenu);
                         
                         // Defer panel operations to the next frame to ensure loading popup renders first
                         CabbyMenu.Utilities.CoroutineRunner.RunNextFrame(() => {
@@ -200,11 +193,7 @@ namespace CabbyCodes.Patches.Flags.RoomFlags
             dropdownPanel.GetDropDownSync().GetCustomDropdown().onValueChanged.AddListener((areaIndex) => {
                 
                 // Show loading popup immediately
-                var loadingPopup = new PopupBase(CabbyCodesPlugin.cabbyMenu, "Loading", "Loading . . .", 400f, 200f);
-                loadingPopup.SetPanelBackgroundColor(new Color(0.2f, 0.4f, 0.8f, 1f)); // Blue background
-                loadingPopup.SetMessageBold(); // Make message text bold
-                loadingPopup.Show();
-                Canvas.ForceUpdateCanvases();
+                var loadingPopup = Teleport.TeleportService.ShowLoadingPopup(CabbyCodesPlugin.cabbyMenu);
                 
                 // Defer panel operations to the next frame to ensure loading popup renders first
                 CabbyMenu.Utilities.CoroutineRunner.RunNextFrame(() => {

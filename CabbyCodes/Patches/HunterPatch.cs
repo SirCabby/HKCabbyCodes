@@ -27,48 +27,68 @@ namespace CabbyCodes.Patches
             };
 
             // Unlock All toggle
-            ButtonPanel buttonPanel = new ButtonPanel(() =>
-            {
-                foreach (HunterInfo hunterInfo in HunterData.AllHunterTargets)
-                {
-                    PlayerData.instance.SetBool(hunterInfo.KilledFlag.Id, true);
-                }
-
-                CabbyCodesPlugin.cabbyMenu.UpdateCheatPanels();
+            ButtonPanel buttonPanel = new ButtonPanel(() => {
+                Teleport.TeleportService.ShowConfirmationDialog(
+                    "Confirm Action",
+                    "This will unlock ALL Hunter's Journal entries.\n\nAre you sure you want to proceed?",
+                    "Unlock All",
+                    "Cancel",
+                    () => {
+                        foreach (HunterInfo hunterInfo in HunterData.AllHunterTargets)
+                        {
+                            PlayerData.instance.SetBool(hunterInfo.KilledFlag.Id, true);
+                        }
+                        CabbyCodesPlugin.cabbyMenu.UpdateCheatPanels();
+                    });
             }, "Unlock All", "Update all entries");
 
             // Lock all toggle
-            PanelAdder.AddButton(buttonPanel, 1, () =>
-            {
-                foreach (HunterInfo hunterInfo in HunterData.AllHunterTargets)
-                {
-                    PlayerData.instance.SetBool(hunterInfo.KilledFlag.Id, false);
-                }
-
-                CabbyCodesPlugin.cabbyMenu.UpdateCheatPanels();
+            PanelAdder.AddButton(buttonPanel, 1, () => {
+                Teleport.TeleportService.ShowConfirmationDialog(
+                    "Confirm Action",
+                    "This will lock ALL Hunter's Journal entries.\n\nAre you sure you want to proceed?",
+                    "Lock All",
+                    "Cancel",
+                    () => {
+                        foreach (HunterInfo hunterInfo in HunterData.AllHunterTargets)
+                        {
+                            PlayerData.instance.SetBool(hunterInfo.KilledFlag.Id, false);
+                        }
+                        CabbyCodesPlugin.cabbyMenu.UpdateCheatPanels();
+                    });
             }, "Lock All", new Vector2(Constants.HUNTER_LOCK_BUTTON_WIDTH, Constants.DEFAULT_PANEL_HEIGHT));
             panels.Add(buttonPanel);
 
             // Set kills remaining 0
-            ButtonPanel setPanel = new ButtonPanel(() =>
-            {
-                foreach (HunterInfo hunterInfo in HunterData.AllHunterTargets)
-                {
-                    PlayerData.instance.SetInt(hunterInfo.KillsFlag.Id, 0);
-                }
-
-                CabbyCodesPlugin.cabbyMenu.UpdateCheatPanels();
+            ButtonPanel setPanel = new ButtonPanel(() => {
+                Teleport.TeleportService.ShowConfirmationDialog(
+                    "Confirm Action",
+                    "This will set ALL Hunter's Journal entries to 0 kills remaining (fully unlocked).\n\nAre you sure you want to proceed?",
+                    "Set to 0",
+                    "Cancel",
+                    () => {
+                        foreach (HunterInfo hunterInfo in HunterData.AllHunterTargets)
+                        {
+                            PlayerData.instance.SetInt(hunterInfo.KillsFlag.Id, 0);
+                        }
+                        CabbyCodesPlugin.cabbyMenu.UpdateCheatPanels();
+                    });
             }, "0", "All Entries: Set kills remaining");
 
             // Set kills remaining 1
-            PanelAdder.AddButton(setPanel, 1, () =>
-            {
-                foreach (HunterInfo hunterInfo in HunterData.AllHunterTargets)
-                {
-                    PlayerData.instance.SetInt(hunterInfo.KillsFlag.Id, 1);
-                }
-
-                CabbyCodesPlugin.cabbyMenu.UpdateCheatPanels();
+            PanelAdder.AddButton(setPanel, 1, () => {
+                Teleport.TeleportService.ShowConfirmationDialog(
+                    "Confirm Action",
+                    "This will set ALL Hunter's Journal entries to 1 kill remaining.\n\nAre you sure you want to proceed?",
+                    "Set to 1",
+                    "Cancel",
+                    () => {
+                        foreach (HunterInfo hunterInfo in HunterData.AllHunterTargets)
+                        {
+                            PlayerData.instance.SetInt(hunterInfo.KillsFlag.Id, 1);
+                        }
+                        CabbyCodesPlugin.cabbyMenu.UpdateCheatPanels();
+                    });
             }, "1", new Vector2(Constants.HUNTER_ONE_BUTTON_WIDTH, Constants.DEFAULT_PANEL_HEIGHT));
             panels.Add(setPanel);
 

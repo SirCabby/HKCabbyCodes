@@ -211,7 +211,7 @@ namespace CabbyCodes.Patches
                         var grubPatch = new GrubPatch(grubFlag);
                         CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new ToggleWithTeleportPanel(
                             grubPatch, 
-                            () => TeleportService.DoTeleport(grubTeleportLocation), 
+                            () => TeleportService.DoTeleportWithConfirmation(grubTeleportLocation, displayName), 
                             displayName));
                     }
                     else

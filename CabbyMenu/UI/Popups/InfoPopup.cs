@@ -15,7 +15,7 @@ namespace CabbyMenu.UI.Popups
         private readonly Button okButton;
 
         public InfoPopup(CabbyMainMenu menu, string headerText, string messageText, string okText = "OK", Action onOk = null)
-            : base(menu, headerText, messageText)
+            : base(menu, headerText, messageText, 600f, 400f)
         {
             (GameObject okButtonObj, _, TextMod textMod) = ButtonBuilder.BuildDefault(okText);
             okButtonObj.name = "OK Button";

@@ -180,7 +180,7 @@ namespace CabbyCodes.Patches.Flags
                     {
                         panels.Add(new ToggleWithTeleportPanel(
                             boolPatch,
-                            () => TeleportService.DoTeleport(bossTeleportLocation),
+                            () => TeleportService.DoTeleportWithConfirmation(bossTeleportLocation, GetDescription(flag)),
                             GetDescription(flag)));
                     }
                     else if (flagPatch is IntPatch intPatch)
@@ -193,7 +193,7 @@ namespace CabbyCodes.Patches.Flags
                         
                         panels.Add(new IntWithTeleportPanel(
                             intPatch,
-                            () => TeleportService.DoTeleport(bossTeleportLocation),
+                            () => TeleportService.DoTeleportWithConfirmation(bossTeleportLocation, GetDescription(flag)),
                             GetDescription(flag),
                             minValue, maxValue));
                     }
@@ -261,7 +261,7 @@ namespace CabbyCodes.Patches.Flags
                         FlagManager.SetIntFlag(FlagInstances.flamesCollected, Math.Max(0, currentFlames - 1));
                     }
                 }
-            ), () => TeleportService.DoTeleport(teleportLocation), $"{flag.ReadableName} {flag.Scene.ReadableName}");
+            ), () => TeleportService.DoTeleportWithConfirmation(teleportLocation, $"{flag.ReadableName} {flag.Scene.ReadableName}"), $"{flag.ReadableName} {flag.Scene.ReadableName}");
         }
 
         /// <summary>
@@ -285,7 +285,7 @@ namespace CabbyCodes.Patches.Flags
                         FlagManager.SetBoolFlag(dependentFlag, value);
                     }
                 }
-            ), () => TeleportService.DoTeleport(bossTeleportLocation), flag.ReadableName);
+            ), () => TeleportService.DoTeleportWithConfirmation(bossTeleportLocation, flag.ReadableName), flag.ReadableName);
         }
     }
 } 

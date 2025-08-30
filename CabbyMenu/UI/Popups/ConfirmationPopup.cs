@@ -16,15 +16,12 @@ namespace CabbyMenu.UI.Popups
         private readonly Button confirmButton;
         private readonly Button cancelButton;
 
-        public ConfirmationPopup(
-            CabbyMainMenu menu,
-            string headerText,
-            string messageText,
+        public ConfirmationPopup(CabbyMainMenu menu, string headerText, string messageText,
             string confirmText = "Confirm",
             string cancelText = "Cancel",
             Action onConfirm = null,
             Action onCancel = null)
-            : base(menu, headerText, messageText)
+            : base(menu, headerText, messageText, 600f, 400f)
         {
             // Container for buttons
             GameObject buttonContainer = DefaultControls.CreatePanel(new DefaultControls.Resources());
@@ -87,6 +84,25 @@ namespace CabbyMenu.UI.Popups
         {
             cancelButton.onClick.RemoveAllListeners();
             cancelButton.onClick.AddListener(() => { action?.Invoke(); Destroy(); });
+        }
+
+        /// <summary>
+        /// Auto-resizes the popup to fit its content
+        /// </summary>
+        public new void AutoResizeToContent()
+        {
+            // Call the base class method to resize based on message text
+            base.AutoResizeToContent();
+        }
+
+        /// <summary>
+        /// Sets the message text and automatically resizes the popup
+        /// </summary>
+        /// <param name="text">The new message text</param>
+        public void SetMessageTextAndResize(string text)
+        {
+            SetMessageText(text);
+            AutoResizeToContent();
         }
     }
 } 

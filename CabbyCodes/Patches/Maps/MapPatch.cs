@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using static CabbyCodes.Scenes.SceneManagement;
+using static CabbyCodes.Scenes.Areas;
 using CabbyMenu.UI.DynamicPanels;
 using CabbyCodes.Flags;
 using CabbyCodes.SavedGames;
@@ -188,8 +189,26 @@ namespace CabbyCodes.Patches.Maps
                     List<string> roomNames = MapRoomPatch.roomsInMaps[selectedArea];
                     
                     // Add toggle all panel for this area
-                    ButtonPanel toggleAllPanel = new ButtonPanel(() => ToggleAllRooms(selectedArea, true), "ON", "Toggle All Rooms");
-                    PanelAdder.AddButton(toggleAllPanel, 1, () => ToggleAllRooms(selectedArea, false), "OFF", new Vector2(120, 60));
+                    ButtonPanel toggleAllPanel = new ButtonPanel(() => {
+                        var areaData = GetAreaData(selectedArea);
+                        string readableAreaName = areaData?.ReadableName ?? selectedArea;
+                        Teleport.TeleportService.ShowConfirmationDialog(
+                            "Confirm Action",
+                            $"This will map ALL rooms in {readableAreaName}.\n\nAre you sure you want to proceed?",
+                            "Map All",
+                            "Cancel",
+                            () => ToggleAllRooms(selectedArea, true));
+                    }, "ON", "Toggle All Rooms");
+                    PanelAdder.AddButton(toggleAllPanel, 1, () => {
+                        var areaData = GetAreaData(selectedArea);
+                        string readableAreaName = areaData?.ReadableName ?? selectedArea;
+                        Teleport.TeleportService.ShowConfirmationDialog(
+                            "Confirm Action",
+                            $"This will unmap ALL rooms in {readableAreaName}.\n\nWarning: This requires a save and reload.\n\nAre you sure you want to proceed?",
+                            "Unmap All",
+                            "Cancel",
+                            () => ToggleAllRooms(selectedArea, false));
+                    }, "OFF", new Vector2(120, 60));
                     panels.Add(toggleAllPanel);
 
                     // Add individual room panels for this area

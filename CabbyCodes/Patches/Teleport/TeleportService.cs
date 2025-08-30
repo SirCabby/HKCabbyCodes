@@ -3,6 +3,7 @@ using System.Collections;
 using System.Reflection;
 using UnityEngine;
 using GlobalEnums;
+using CabbyMenu.UI.Popups;
 
 namespace CabbyCodes.Patches.Teleport
 {
@@ -197,6 +198,97 @@ namespace CabbyCodes.Patches.Teleport
             Vector2 teleportLocation = new Vector2((int)Math.Round(heroPos.x), (int)Math.Ceiling(heroPos.y));
             
             return (sceneName, teleportLocation);
+        }
+
+        /// <summary>
+        /// Shows a confirmation dialog before teleporting to the specified location.
+        /// </summary>
+        /// <param name="teleportLocation">The location to teleport to.</param>
+        /// <param name="destinationName">A human-readable name for the destination.</param>
+        /// <param name="onConfirmed">Optional callback to execute after confirmation.</param>
+        public static void DoTeleportWithConfirmation(TeleportLocation teleportLocation, string destinationName, Action onConfirmed = null)
+        {
+            var menu = CabbyCodesPlugin.cabbyMenu;
+            if (menu == null) 
+            { 
+                DoTeleport(teleportLocation);
+                onConfirmed?.Invoke();
+                return; 
+            }
+            
+            string msg = string.Format("Teleport to '{0}'?", destinationName);
+            var popup = new ConfirmationPopup(
+                menu,
+                "Are you sure?",
+                msg,
+                "Teleport",
+                "Cancel",
+                () => { 
+                    DoTeleport(teleportLocation);
+                    onConfirmed?.Invoke();
+                },
+                null);
+            popup.Show();
+        }
+
+        /// <summary>
+        /// Shows a generic confirmation dialog for any action.
+        /// </summary>
+        /// <param name="title">The title of the confirmation dialog.</param>
+        /// <param name="message">The message to display.</param>
+        /// <param name="confirmText">Text for the confirm button.</param>
+        /// <param name="cancelText">Text for the cancel button.</param>
+        /// <param name="onConfirmed">Action to execute when confirmed.</param>
+        /// <param name="onCancelled">Optional action to execute when cancelled.</param>
+        public static void ShowConfirmationDialog(string title, string message, string confirmText, string cancelText, Action onConfirmed, Action onCancelled = null)
+        {
+            var menu = CabbyCodesPlugin.cabbyMenu;
+            if (menu == null) 
+            { 
+                onConfirmed?.Invoke();
+                return; 
+            }
+            
+            var popup = new ConfirmationPopup(
+                menu,
+                title,
+                message,
+                confirmText,
+                cancelText,
+                onConfirmed,
+                onCancelled);
+            popup.Show();
+        }
+
+        /// <summary>
+        /// Creates a loading popup with consistent styling
+        /// </summary>
+        /// <param name="menu">The menu to attach the popup to</param>
+        /// <returns>A configured loading popup</returns>
+        public static PopupBase CreateLoadingPopup(CabbyMenu.UI.CabbyMainMenu menu)
+        {
+            if (menu == null) return null;
+            
+            var popup = new PopupBase(menu, "Loading", "Loading . . .", 800f, 100f, false);
+            popup.SetPanelBackgroundColor(new Color(0.2f, 0.4f, 0.8f, 1f)); // Blue background
+            popup.SetMessageBold(); // Make message text bold
+            return popup;
+        }
+
+        /// <summary>
+        /// Shows a loading popup and returns it for later hiding/destroying
+        /// </summary>
+        /// <param name="menu">The menu to attach the popup to</param>
+        /// <returns>The created and shown loading popup</returns>
+        public static PopupBase ShowLoadingPopup(CabbyMenu.UI.CabbyMainMenu menu)
+        {
+            var popup = CreateLoadingPopup(menu);
+            if (popup != null)
+            {
+                popup.Show();
+                Canvas.ForceUpdateCanvases();
+            }
+            return popup;
         }
     }
 } 

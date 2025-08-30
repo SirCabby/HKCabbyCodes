@@ -7,7 +7,6 @@ using BepInEx.Configuration;
 using System.Linq;
 using CabbyCodes.Scenes;
 using CabbyMenu.UI.Controls.InputField;
-using CabbyMenu.Utilities;
 
 namespace CabbyCodes.Patches.Teleport
 {

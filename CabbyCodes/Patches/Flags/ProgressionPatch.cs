@@ -655,7 +655,7 @@ namespace CabbyCodes.Patches.Flags
                         // Create panel with toggle and teleport button
                         panels.Add(new ToggleWithTeleportPanel(
                             syncedReference, 
-                            () => TeleportService.DoTeleport(teleportLocation), 
+                            () => TeleportService.DoTeleportWithConfirmation(teleportLocation, dreamerName), 
                             dreamerName));
                     }
                     else

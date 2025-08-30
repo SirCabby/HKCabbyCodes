@@ -13,8 +13,6 @@ using CabbyCodes.Patches.SpriteViewer;
 using CabbyCodes.Patches.Teleport;
 using CabbyMenu.UI;
 using CabbyMenu.UI.Controls.InputField;
-using CabbyCodes.Patches.Flags.RoomFlags;
-using CabbyCodes.SavedGames;
 using UnityEngine;
 
 namespace CabbyCodes

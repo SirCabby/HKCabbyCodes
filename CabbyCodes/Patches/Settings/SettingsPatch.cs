@@ -1,8 +1,6 @@
 using CabbyMenu.UI.CheatPanels;
 using CabbyMenu.UI.DynamicPanels;
-using CabbyMenu.SyncedReferences;
 using System.Collections.Generic;
-using System.Linq;
 using CabbyCodes.Patches.SpriteViewer;
 using BepInEx.Configuration;
 

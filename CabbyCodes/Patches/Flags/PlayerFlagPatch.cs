@@ -70,11 +70,7 @@ namespace CabbyCodes.Patches.Flags
                             showAllFlagsConfig.Value = showAll;
                             
                             // Show loading popup immediately
-                            var loadingPopup = new PopupBase(CabbyCodesPlugin.cabbyMenu, "Loading", "Loading . . .", 400f, 200f);
-                            loadingPopup.SetPanelBackgroundColor(new Color(0.2f, 0.4f, 0.8f, 1f)); // Blue background
-                            loadingPopup.SetMessageBold(); // Make message text bold
-                            loadingPopup.Show();
-                            Canvas.ForceUpdateCanvases();
+                            loadingPopup = Teleport.TeleportService.ShowLoadingPopup(CabbyCodesPlugin.cabbyMenu);
                             
                             // Defer panel operations to the next frame to ensure loading popup renders first
                             CabbyMenu.Utilities.CoroutineRunner.RunNextFrame(() => {
@@ -275,12 +271,7 @@ namespace CabbyCodes.Patches.Flags
             if (newPage * FLAGS_PER_PAGE >= allPlayerFlags.Count) return;
 
             // Show loading popup immediately
-            loadingPopup = new PopupBase(CabbyCodesPlugin.cabbyMenu, "Loading", "Loading . . .", 400f, 200f);
-            // Customize the popup appearance to match DynamicPanelManager styling
-            loadingPopup.SetPanelBackgroundColor(new Color(0.2f, 0.4f, 0.8f, 1f)); // Blue background
-            loadingPopup.SetMessageBold(); // Make message text bold
-            loadingPopup.Show();
-            Canvas.ForceUpdateCanvases();
+            loadingPopup = Teleport.TeleportService.ShowLoadingPopup(CabbyCodesPlugin.cabbyMenu);
 
             // Container proxying to the main menu
             var container = new MainMenuPanelContainer(CabbyCodesPlugin.cabbyMenu);
