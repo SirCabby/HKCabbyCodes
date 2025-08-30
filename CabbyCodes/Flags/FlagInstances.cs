@@ -272,6 +272,7 @@ namespace CabbyCodes.Flags
                 public static readonly FlagDef tollBenchCity = new FlagDef("tollBenchCity", null, false, "PlayerData_Bool", "City toll machine bench unlocked");
                 public static readonly FlagDef tollBenchQueensGardens = new FlagDef("tollBenchQueensGardens", null, false, "PlayerData_Bool", "Queen's Gardens toll machine bench unlocked");
                 public static readonly FlagDef troupeInTown = new FlagDef("troupeInTown", null, false, "PlayerData_Bool", "Nightmare Troupe in Dirtmouth");
+                public static readonly FlagDef unchainedHollowKnight = new FlagDef("unchainedHollowKnight", null, false, "PlayerData_Bool", "Unchained Hollow Knight");
                 public static readonly FlagDef usedWhiteKey = new FlagDef("usedWhiteKey", null, false, "PlayerData_Bool", "Used Elegant Key to open door to Shade Soul");
                 public static readonly FlagDef xeroPinned = new FlagDef("xeroPinned", null, false, "PlayerData_Bool", "Warrior Xero pinned on map");
             #endregion
@@ -3332,7 +3333,6 @@ namespace CabbyCodes.Flags
             public static readonly FlagDef tramOpenedDeepnest = new FlagDef("tramOpenedDeepnest", null, false, "PlayerData_Bool");
             public static readonly FlagDef tramRestingGroundsPosition = new FlagDef("tramRestingGroundsPosition", null, false, "PlayerData_Int");
             public static readonly FlagDef tukDungEgg = new FlagDef("tukDungEgg", null, false, "PlayerData_Bool");
-            public static readonly FlagDef unchainedHollowKnight = new FlagDef("unchainedHollowKnight", null, false, "PlayerData_Bool");
             public static readonly FlagDef unlockedNewBossStatue = new FlagDef("unlockedNewBossStatue", null, false, "PlayerData_Bool");
             public static readonly FlagDef vesselFragmentMax = new FlagDef("vesselFragmentMax", null, false, "PlayerData_Bool");
             public static readonly FlagDef watcherChandelier = new FlagDef("watcherChandelier", null, false, "PlayerData_Bool");

@@ -36,7 +36,7 @@ namespace CabbyCodes.Patches.Player
             InitializeConfig();
             configValue.Value = value;
 
-            if (Get())
+            if (value)
             {
                 harmony.Patch(mOriginal1, prefix: new HarmonyMethod(typeof(DamagePatch).GetMethod(nameof(Hit_Override), BindingFlags.Static | BindingFlags.Public)));
             }

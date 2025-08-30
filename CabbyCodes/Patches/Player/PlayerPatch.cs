@@ -54,12 +54,36 @@ namespace CabbyCodes.Patches.Player
         {
             startingMaxHealth = FlagManager.GetIntFlag(FlagInstances.maxHealth);
 
+            // Create patch instances and check if they should be initially active
+            var invulPatch = new InvulPatch();
+            var damagePatch = new DamagePatch();
+            var soulPatch = new SoulPatch();
+            var geoPatch = new GeoPatch();
+
+            // Activate patches if they were enabled in config
+            if (invulnerabilityEnabled.Value)
+            {
+                invulPatch.Set(true);
+            }
+            if (oneHitKillsEnabled.Value)
+            {
+                damagePatch.Set(true);
+            }
+            if (infiniteSoulEnabled.Value)
+            {
+                soulPatch.Set(true);
+            }
+            if (infiniteGeoEnabled.Value)
+            {
+                geoPatch.Set(true);
+            }
+
             var panels = new List<CheatPanel>
             {
                 new InfoPanel("Player Codes").SetColor(CheatPanel.headerColor),
-                new TogglePanel(new InvulPatch(), FlagInstances.isInvincible.ReadableName),
+                new TogglePanel(invulPatch, FlagInstances.isInvincible.ReadableName),
                 new InfoPanel("WARNING: Do not use OHKO on False Knight, Failed Champion, or Nailmasters").SetColor(CheatPanel.warningColor),
-                new TogglePanel(new DamagePatch(), "One Hit Kills (Enemies can't block)"),
+                new TogglePanel(damagePatch, "One Hit Kills (Enemies can't block)"),
                 new TogglePanel(new JumpPatch(), FlagInstances.infiniteAirJump.ReadableName),
                 new RangeInputFieldPanel<int>(
                     new DelegateReference<int>(
@@ -74,8 +98,8 @@ namespace CabbyCodes.Patches.Player
                     FlagValidationData.GetIntValidationData(FlagInstances.healthBlue).MinValue, 
                     FlagValidationData.GetIntValidationData(FlagInstances.healthBlue).MaxValue, 
                     FlagInstances.healthBlue.ReadableName),
-                new TogglePanel(new SoulPatch(), "Infinite Soul"),
-                new TogglePanel(new GeoPatch(), "Infinite Geo"),
+                new TogglePanel(soulPatch, "Infinite Soul"),
+                new TogglePanel(geoPatch, "Infinite Geo"),
                 new TogglePanel(new PermadeathPatch(), FlagInstances.permadeathMode.ReadableName),
                 new RangeInputFieldPanel<float>(
                     new DelegateReference<float>(

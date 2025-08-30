@@ -38,7 +38,7 @@ namespace CabbyCodes.Patches.Player
             InitializeConfig();
             configValue.Value = value;
 
-            if (Get())
+            if (value)
             {
                 harmony.Patch(mOriginal, prefix: new HarmonyMethod(typeof(CommonPatches).GetMethod("Prefix_SkipOriginal")));
                 harmony.Patch(mOriginal2, prefix: new HarmonyMethod(typeof(CommonPatches).GetMethod("Prefix_SkipOriginal")));

@@ -410,7 +410,6 @@ namespace CabbyCodes.Scenes
 
         // Rooms
         public static readonly SceneMapData Abyss_Lighthouse_room = new SceneMapData("Abyss_Lighthouse_room", null, "Abyss Lighthouse");
-        public static readonly SceneMapData Cinematic_Ending_D = new SceneMapData("Cinematic_Ending_D");
         public static readonly SceneMapData Cliffs_03 = new SceneMapData("Cliffs_03", null, "Stag Nest");
         public static readonly SceneMapData Crossroads_ShamanTemple = new SceneMapData("Crossroads_ShamanTemple", null, "Ancestral Mound");
         public static readonly SceneMapData Cutscene_Boss_Door = new SceneMapData("Cutscene_Boss_Door");
@@ -518,6 +517,7 @@ namespace CabbyCodes.Scenes
         public static readonly SceneMapData Room_Colosseum_Silver = new SceneMapData("Room_Colosseum_Silver", null, "Colosseum Trial of the Conqueror");
         public static readonly SceneMapData Room_Colosseum_Spectate = new SceneMapData("Room_Colosseum_Spectate", null, "Colosseum spectator");
         public static readonly SceneMapData Room_Final_Boss_Atrium = new SceneMapData("Room_Final_Boss_Atrium");
+        public static readonly SceneMapData Room_Final_Boss_Core = new SceneMapData("Room_Final_Boss_Core");
         public static readonly SceneMapData Room_Fungus_Shaman = new SceneMapData("Room_Fungus_Shaman", null, "Overgrown Mound");
         public static readonly SceneMapData Room_GG_Shortcut = new SceneMapData("Room_GG_Shortcut");
         public static readonly SceneMapData Room_Mansion = new SceneMapData("Room_Mansion", null, "Grey Mourner room");
@@ -556,6 +556,8 @@ namespace CabbyCodes.Scenes
         public static readonly SceneMapData Waterways_12_boss = new SceneMapData("Waterways_12_boss");
 
         // Internal
+        public static readonly SceneMapData Cinematic_Ending_B = new SceneMapData("Cinematic_Ending_B");
+        public static readonly SceneMapData Cinematic_Ending_D = new SceneMapData("Cinematic_Ending_D");
         public static readonly SceneMapData Cinematic_Stag_travel = new SceneMapData("Cinematic_Stag_travel");
         public static readonly SceneMapData Quit_To_Menu = new SceneMapData("Quit_To_Menu");
     }
