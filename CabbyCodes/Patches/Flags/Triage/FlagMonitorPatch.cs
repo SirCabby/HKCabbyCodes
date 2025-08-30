@@ -404,6 +404,7 @@ namespace CabbyCodes.Patches.Flags.Triage
         private static readonly Dictionary<string, object> previousPlayerDataValues = new Dictionary<string, object>();
         private static bool pollingStarted = false;
         private static bool hasLeftTitleScreen = false;
+        private static bool isInMenuScene = false;
 
         // --- Scene data polling state ---
         private static readonly Dictionary<string, object> previousSceneDataValues = new Dictionary<string, object>();
@@ -1087,6 +1088,31 @@ namespace CabbyCodes.Patches.Flags.Triage
                 hasLeftTitleScreen = true;
             }
             
+            // Track when we return to main menu to pause monitoring temporarily
+            if (newScene.name == SceneInstances.Quit_To_Menu.SceneName || newScene.name == SceneInstances.Menu_Title.SceneName)
+            {
+                // We're entering a critical menu scene, clear previous values to prevent false change notifications
+                // when we return to gameplay (flags will be re-initialized)
+                previousPlayerDataValues.Clear();
+                previousSceneDataValues.Clear();
+                
+                // Mark that we're in a menu scene
+                isInMenuScene = true;
+                
+                // We're in a critical menu scene, pause monitoring to avoid processing flag resets
+                // The polling will resume when we leave the menu again
+                return;
+            }
+            
+            // We're leaving a menu scene, resume monitoring
+            if (isInMenuScene)
+            {
+                isInMenuScene = false;
+                // Clear values again when leaving menu to ensure fresh baseline
+                previousPlayerDataValues.Clear();
+                previousSceneDataValues.Clear();
+            }
+            
             if (!monitorReference.IsEnabled) return;
             
             // Update the last known scene area before checking for new scenes
@@ -1534,6 +1560,36 @@ namespace CabbyCodes.Patches.Flags.Triage
                     hasLeftTitleScreen && 
                     UnityEngine.SceneManagement.SceneManager.GetActiveScene().name != "Menu_Title")
                 {
+                    // Check for critical menu scenes that should completely disable polling
+                    string currentScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
+                    if (currentScene == SceneInstances.Menu_Title.SceneName || currentScene == SceneInstances.Quit_To_Menu.SceneName)
+                    {
+                        // We're in a critical menu scene, completely disable polling and clear caches
+                        previousPlayerDataValues.Clear();
+                        previousSceneDataValues.Clear();
+                        isInMenuScene = true;
+                        
+                        // Skip polling to avoid processing flag resets
+                        yield return new WaitForSeconds(0.25f);
+                        continue;
+                    }
+
+                    // Quick check for time scale (game pause) before doing more expensive checks
+                    if (Time.timeScale == 0f)
+                    {
+                        // Game is paused, skip polling to avoid processing flag resets
+                        yield return new WaitForSeconds(0.25f);
+                        continue;
+                    }
+
+                    // Comprehensive check for whether we should pause flag monitoring
+                    if (ShouldPauseFlagMonitoring())
+                    {
+                        // We're in a state where monitoring should be paused, skip polling
+                        yield return new WaitForSeconds(0.25f);
+                        continue;
+                    }
+
                     // Save scene data before polling to ensure we see the latest updates immediately
                     GameManager._instance?.SaveLevelState();
 
@@ -1557,6 +1613,19 @@ namespace CabbyCodes.Patches.Flags.Triage
         private static void PollPlayerDataFields()
         {
             if (PlayerData.instance == null) return;
+            
+            // Check for critical menu scenes that should completely disable polling
+            string currentScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
+            if (currentScene == SceneInstances.Menu_Title.SceneName || currentScene == SceneInstances.Quit_To_Menu.SceneName)
+            {
+                return;
+            }
+            
+            // Comprehensive check for whether we should pause flag monitoring
+            if (ShouldPauseFlagMonitoring())
+            {
+                return;
+            }
             
             // Increment test counter to track polling calls
             testCounter++;
@@ -2114,9 +2183,100 @@ namespace CabbyCodes.Patches.Flags.Triage
                    type.IsEnum;
         }
 
+        /// <summary>
+        /// Checks if the game is currently in a state where flag monitoring should be paused
+        /// </summary>
+        private static bool ShouldPauseFlagMonitoring()
+        {
+            try
+            {
+                // Check only against the specific critical menu scenes from SceneInstances
+                string currentScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
+                if (currentScene == SceneInstances.Quit_To_Menu.SceneName || currentScene == SceneInstances.Menu_Title.SceneName)
+                {
+                    return true;
+                }
+
+                // Check if the game is paused
+                if (Time.timeScale == 0f)
+                {
+                    return true;
+                }
+
+                // Check if GameManager exists and is in a paused state
+                if (GameManager._instance != null)
+                {
+                    // Check various pause-related fields in GameManager
+                    var gameManagerType = typeof(GameManager);
+                    
+                    // Check if game is paused
+                    var isPausedField = gameManagerType.GetField("isPaused");
+                    if (isPausedField != null && isPausedField.FieldType == typeof(bool))
+                    {
+                        bool isPaused = (bool)isPausedField.GetValue(GameManager._instance);
+                        if (isPaused) return true;
+                    }
+
+                    // Check if in menu
+                    var inMenuField = gameManagerType.GetField("inMenu");
+                    if (inMenuField != null && inMenuField.FieldType == typeof(bool))
+                    {
+                        bool inMenu = (bool)inMenuField.GetValue(GameManager._instance);
+                        if (inMenu) return true;
+                    }
+
+                    // Check if game state is menu
+                    var gameStateField = gameManagerType.GetField("gameState");
+                    if (gameStateField != null)
+                    {
+                        var gameState = gameStateField.GetValue(GameManager._instance);
+                        if (gameState != null && gameState.ToString().Contains("MENU"))
+                        {
+                            return true;
+                        }
+                    }
+                }
+
+                // Check if PlayerData is in a menu state
+                if (PlayerData.instance != null)
+                {
+                    var playerDataType = typeof(PlayerData);
+                    
+                    // Check if player is in a menu
+                    var inMenuField = playerDataType.GetField("inMenu");
+                    if (inMenuField != null && inMenuField.FieldType == typeof(bool))
+                    {
+                        bool inMenu = (bool)inMenuField.GetValue(PlayerData.instance);
+                        if (inMenu) return true;
+                    }
+                }
+
+                return false;
+            }
+            catch (Exception ex)
+            {
+                // If any reflection fails, assume we should pause monitoring to be safe
+                Debug.LogWarning($"[Flag Monitor] Error checking pause state: {ex.Message}");
+                return true;
+            }
+        }
+
         private static void PollSceneDataFields()
         {
             if (SceneData.instance == null) return;
+
+            // Check for critical menu scenes that should completely disable polling
+            string currentScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
+            if (currentScene == SceneInstances.Menu_Title.SceneName || currentScene == SceneInstances.Quit_To_Menu.SceneName)
+            {
+                return;
+            }
+
+            // Comprehensive check for whether we should pause flag monitoring
+            if (ShouldPauseFlagMonitoring())
+            {
+                return;
+            }
 
             // Check for instance change
             if (SceneData.instance != lastKnownSceneDataInstance)
@@ -2134,6 +2294,19 @@ namespace CabbyCodes.Patches.Flags.Triage
         /// </summary>
         private static void PollAllSceneFlags()
         {
+            // Check for critical menu scenes that should completely disable polling
+            string currentScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
+            if (currentScene == SceneInstances.Menu_Title.SceneName || currentScene == SceneInstances.Quit_To_Menu.SceneName)
+            {
+                return;
+            }
+            
+            // Comprehensive check for whether we should pause flag monitoring
+            if (ShouldPauseFlagMonitoring())
+            {
+                return;
+            }
+            
             // Poll all PersistentBoolData entries
             if (SceneData.instance.persistentBoolItems != null)
             {

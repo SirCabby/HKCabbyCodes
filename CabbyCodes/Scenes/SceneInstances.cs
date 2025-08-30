@@ -559,6 +559,7 @@ namespace CabbyCodes.Scenes
         public static readonly SceneMapData Cinematic_Ending_B = new SceneMapData("Cinematic_Ending_B");
         public static readonly SceneMapData Cinematic_Ending_D = new SceneMapData("Cinematic_Ending_D");
         public static readonly SceneMapData Cinematic_Stag_travel = new SceneMapData("Cinematic_Stag_travel");
+        public static readonly SceneMapData Menu_Title = new SceneMapData("Menu_Title");
         public static readonly SceneMapData Quit_To_Menu = new SceneMapData("Quit_To_Menu");
     }
 } 
