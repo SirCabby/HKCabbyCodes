@@ -607,7 +607,7 @@ namespace CabbyMenu.UI
                 inputFieldManager.SubmitAndDeselect();
                 
                 rootGoMod.SetActive(false);
-                if (categoryDropdown != null)
+                if (categoryDropdown != null && !deferredRestorationApplied)
                 {
                     categoryDropdown.SetValue(0);
                     OnCategorySelected(0);
@@ -640,6 +640,12 @@ namespace CabbyMenu.UI
         /// <param name="arg0">The index of the selected category.</param>
         private void OnCategorySelected(int arg0)
         {
+            // Save the selected category if a save callback is provided
+            if (onCategorySelectedCallback != null)
+            {
+                onCategorySelectedCallback(arg0);
+            }
+            
             // Clear current cheat panels
             foreach (Transform child in cheatContent.transform)
             {
@@ -673,6 +679,61 @@ namespace CabbyMenu.UI
             {
                 cheatScrollRect.normalizedPosition = new Vector2(0, 1);
             }
+        }
+        
+        /// <summary>
+        /// Callback for when a category is selected. Used to save the selection.
+        /// </summary>
+        private System.Action<int> onCategorySelectedCallback;
+        
+        /// <summary>
+        /// Deferred category restoration index to apply when dropdown is ready.
+        /// </summary>
+        private int? deferredCategoryRestoration = null;
+        
+        /// <summary>
+        /// Flag to track if deferred restoration has been applied to prevent automatic resets.
+        /// </summary>
+        private bool deferredRestorationApplied = false;
+        
+        /// <summary>
+        /// Sets the callback for when a category is selected.
+        /// </summary>
+        /// <param name="callback">The callback to invoke when a category is selected</param>
+        public void SetCategorySelectedCallback(System.Action<int> callback)
+        {
+            onCategorySelectedCallback = callback;
+        }
+        
+        /// <summary>
+        /// Gets the count of registered categories.
+        /// </summary>
+        /// <returns>The number of registered categories</returns>
+        public int GetRegisteredCategories()
+        {
+            return registeredCategories.Count;
+        }
+        
+        /// <summary>
+        /// Sets the category dropdown to a specific value and triggers the category selection.
+        /// </summary>
+        /// <param name="categoryIndex">The index of the category to select</param>
+        public void SetCategoryDropdownValue(int categoryIndex)
+        {
+            if (categoryDropdown != null && categoryIndex >= 0 && categoryIndex < categoryDropdown.Options.Count)
+            {
+                categoryDropdown.SetValue(categoryIndex);
+                OnCategorySelected(categoryIndex);
+            }
+        }
+        
+        /// <summary>
+        /// Sets a deferred category restoration that will be applied when the dropdown is ready.
+        /// </summary>
+        /// <param name="categoryIndex">The index of the category to restore to</param>
+        public void SetDeferredCategoryRestoration(int categoryIndex)
+        {
+            deferredCategoryRestoration = categoryIndex;
         }
 
         /// <summary>
@@ -787,7 +848,27 @@ namespace CabbyMenu.UI
             versionTextMod.SetFontStyle(FontStyle.BoldAndItalic).SetColor(Color.white);
             new Fitter(versionTextObj).Attach(menuPanel).Anchor(new Vector2(Constants.VERSION_TEXT_X, Constants.VERSION_TEXT_MIN_Y), new Vector2(Constants.VERSION_TEXT_X, Constants.VERSION_TEXT_MAX_Y)).Size(new Vector2(Constants.VERSION_TEXT_WIDTH, Constants.VERSION_TEXT_HEIGHT));
 
-            OnCategorySelected(0);
+            // Check for deferred category restoration now that dropdown is ready
+            if (deferredCategoryRestoration.HasValue)
+            {
+                int restoreIndex = deferredCategoryRestoration.Value;
+                deferredCategoryRestoration = null; // Clear the deferred value
+                
+                if (restoreIndex >= 0 && restoreIndex < categoryDropdown.Options.Count)
+                {
+                    categoryDropdown.SetValue(restoreIndex);
+                    OnCategorySelected(restoreIndex);
+                    deferredRestorationApplied = true; // Mark that restoration was applied
+                }
+                else
+                {
+                    OnCategorySelected(0);
+                }
+            }
+            else
+            {
+                OnCategorySelected(0);
+            }
         }
 
         /// <summary>

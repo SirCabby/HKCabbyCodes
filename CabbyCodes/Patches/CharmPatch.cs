@@ -7,6 +7,7 @@ using CabbyCodes.Flags.FlagInfo;
 using CabbyCodes.Flags.FlagData;
 using CabbyCodes.Flags;
 using CabbyCodes.Patches.BasePatches;
+using BepInEx.Configuration;
 
 namespace CabbyCodes.Patches
 {
@@ -17,24 +18,41 @@ namespace CabbyCodes.Patches
 
         // Charm cost removal functionality
         public const string key = "CharmCost_Patch";
+        
+        // Configuration entry for charm cost removal
+        private static ConfigEntry<bool> charmCostRemovalEnabled;
+
+        /// <summary>
+        /// Initializes the configuration entry.
+        /// </summary>
+        private static void InitializeConfig()
+        {
+            if (charmCostRemovalEnabled == null)
+            {
+                charmCostRemovalEnabled = CabbyCodesPlugin.configFile.Bind("Charms", "RemoveCharmNotchCost", false, 
+                    "Remove charm notch costs");
+            }
+        }
 
         public List<CheatPanel> CreatePanels()
         {
+            // Initialize configuration
+            InitializeConfig();
+            
             var panels = new List<CheatPanel>
             {
                 // Charm cost removal panel
                 new TogglePanel(new DelegateReference<bool>(
                     () => 
                     {
-                        // Check if charm costs are removed by looking at the first charm's cost
-                        if (charms.Count > 0)
-                        {
-                            return FlagManager.GetIntFlag(charms[0].CostFlag) == 0;
-                        }
-                        return false;
+                        InitializeConfig();
+                        return charmCostRemovalEnabled.Value;
                     },
                     (value) =>
                     {
+                        InitializeConfig();
+                        charmCostRemovalEnabled.Value = value;
+                        
                         if (value)
                         {
                             foreach (var charm in charms)

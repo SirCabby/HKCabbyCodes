@@ -4,6 +4,7 @@ using CabbyMenu.SyncedReferences;
 using System.Collections.Generic;
 using System.Linq;
 using CabbyCodes.Patches.SpriteViewer;
+using BepInEx.Configuration;
 
 namespace CabbyCodes.Patches.Settings
 {
@@ -21,14 +22,26 @@ namespace CabbyCodes.Patches.Settings
         private static readonly List<CheatPanel> saveGameAnalyzerPanels = new List<CheatPanel>();
         private static bool saveGameAnalyzerPanelsLoaded = false;
         
-        // Public static field for dev options state
-        public static readonly BoxedReference<bool> DevOptionsEnabled = new BoxedReference<bool>(Constants.DEFAULT_DEV_OPTIONS_ENABLED);
+        // Configuration entry for dev options state
+        private static ConfigEntry<bool> devOptionsEnabled;
+
+        /// <summary>
+        /// Initializes the configuration entries.
+        /// </summary>
+        private static void InitializeConfig()
+        {
+            devOptionsEnabled = CabbyCodesPlugin.configFile.Bind("Settings", "EnableDevOptions", Constants.DEFAULT_DEV_OPTIONS_ENABLED, 
+                "Enable developer options and advanced features");
+        }
 
         /// <summary>
         /// Adds all settings-related cheat panels to the mod menu.
         /// </summary>
         public static void AddPanels()
         {
+            // Initialize configuration
+            InitializeConfig();
+            
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Settings").SetColor(CheatPanel.headerColor));
             QuickStartPatch.AddPanel();
             
@@ -41,7 +54,7 @@ namespace CabbyCodes.Patches.Settings
             AddCustomSaveLoadPanels();
             
             // Only show Save Game Analyzer panels when dev options are enabled
-            if (DevOptionsEnabled.Get())
+            if (devOptionsEnabled.Value)
             {
                 AddSaveGameAnalyzerPanels();
             }
@@ -54,10 +67,10 @@ namespace CabbyCodes.Patches.Settings
         {
             var devOptionsPanel = new TogglePanel(
                 new CabbyMenu.SyncedReferences.DelegateReference<bool>(
-                    () => DevOptionsEnabled.Get(),
+                    () => devOptionsEnabled.Value,
                     (enabled) => {
-                        // Store the dev options state in the BoxedReference
-                        DevOptionsEnabled.Set(enabled);
+                        // Store the dev options state in the config
+                        devOptionsEnabled.Value = enabled;
                         
                         // Refresh the dev options dependent panels when the dev options setting changes.
                         RefreshDevOptionsDependentPanels();
@@ -76,12 +89,12 @@ namespace CabbyCodes.Patches.Settings
         {
             if (CabbyCodesPlugin.cabbyMenu != null)
             {
-                bool devOptionsEnabled = DevOptionsEnabled.Get();
+                bool devOptionsEnabledValue = devOptionsEnabled.Value;
                 
                 // Refresh the sprite viewer category to show/hide based on new setting
                 try
                 {
-                    CabbyCodesPlugin.cabbyMenu.UpdateCategoryRegistration("Sprite Viewer", devOptionsEnabled, SpriteViewerPatch.AddPanels);
+                    CabbyCodesPlugin.cabbyMenu.UpdateCategoryRegistration("Sprite Viewer", devOptionsEnabledValue, SpriteViewerPatch.AddPanels);
                 }
                 catch
                 {
@@ -89,7 +102,7 @@ namespace CabbyCodes.Patches.Settings
                 }
                 
                 // Refresh the Save Game Analyzer panels
-                RefreshSaveGameAnalyzerPanels(devOptionsEnabled);
+                RefreshSaveGameAnalyzerPanels(devOptionsEnabledValue);
             }
         }
         

@@ -4,6 +4,7 @@ using CabbyMenu.UI.CheatPanels;
 using CabbyMenu.Utilities;
 using CabbyMenu.SyncedReferences;
 using System.Collections.Generic;
+using BepInEx.Configuration;
 
 namespace CabbyCodes.Patches.Player
 {
@@ -14,8 +15,33 @@ namespace CabbyCodes.Patches.Player
     {
         // Static state tracking for max health changes that require save/reload
         private static int startingMaxHealth = -1;
+        
+        // Configuration entries for player cheat settings
+        private static ConfigEntry<bool> invulnerabilityEnabled;
+        private static ConfigEntry<bool> oneHitKillsEnabled;
+        private static ConfigEntry<bool> infiniteSoulEnabled;
+        private static ConfigEntry<bool> infiniteGeoEnabled;
+        
+        /// <summary>
+        /// Initializes the configuration entries.
+        /// </summary>
+        private static void InitializeConfig()
+        {
+            invulnerabilityEnabled = CabbyCodesPlugin.configFile.Bind("Player", "Invulnerability", false, 
+                "Enable player invulnerability");
+            oneHitKillsEnabled = CabbyCodesPlugin.configFile.Bind("Player", "OneHitKills", false, 
+                "Enable one-hit kills for enemies");
+            infiniteSoulEnabled = CabbyCodesPlugin.configFile.Bind("Player", "InfiniteSoul", false, 
+                "Enable infinite soul");
+            infiniteGeoEnabled = CabbyCodesPlugin.configFile.Bind("Player", "InfiniteGeo", false, 
+                "Enable infinite geo");
+        }
+        
         public static void AddPanels()
         {
+            // Initialize configuration
+            InitializeConfig();
+            
             var playerPatch = new PlayerPatch();
             var panels = playerPatch.CreatePanels();
             foreach (var panel in panels)

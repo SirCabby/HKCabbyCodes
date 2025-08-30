@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using UnityEngine;
+using BepInEx.Configuration;
 
 namespace CabbyCodes.Patches.Flags
 {
@@ -20,25 +21,54 @@ namespace CabbyCodes.Patches.Flags
         private static PopupBase loadingPopup; // Loading popup shown during navigation
         private static BoxedReference<bool> showAllFlagsState; // Store the toggle state
         private static TogglePanel showAllFlagsPanel; // Store reference to toggle panel
+        
+        // Configuration entries for persistent state
+        private static ConfigEntry<bool> showAllFlagsConfig;
+        private static ConfigEntry<int> currentPageConfig;
+        
+        /// <summary>
+        /// Initializes the configuration entries.
+        /// </summary>
+        private static void InitializeConfig()
+        {
+            if (showAllFlagsConfig == null)
+            {
+                showAllFlagsConfig = CabbyCodesPlugin.configFile.Bind("PlayerFlags", "ShowAllFlags", false, 
+                    "Show all player flags including unused ones");
+            }
+            if (currentPageConfig == null)
+            {
+                currentPageConfig = CabbyCodesPlugin.configFile.Bind("PlayerFlags", "CurrentPage", 0, 
+                    "Current page in player flags (0-based)");
+            }
+        }
 
         public static List<CheatPanel> CreatePanels()
         {
+            // Initialize configuration
+            InitializeConfig();
+            
             var panels = new List<CheatPanel>();
 
-            // Initialize the show all flags state if not already done
+            // Initialize the show all flags state from config
             if (showAllFlagsState == null)
             {
-                showAllFlagsState = new BoxedReference<bool>(false); // Start with filtered flags
+                InitializeConfig(); // Ensure config is initialized
+                showAllFlagsState = new BoxedReference<bool>(showAllFlagsConfig.Value);
             }
 
             // Only show the "show all flags" toggle when dev options are enabled
-            if (CabbyCodes.Patches.Settings.SettingsPatch.DevOptionsEnabled.Get())
+            if (CabbyCodesPlugin.configFile.Bind("Settings", "EnableDevOptions", Constants.DEFAULT_DEV_OPTIONS_ENABLED, 
+                "Enable developer options and advanced features").Value)
             {
                 // Create the toggle panel for showing all flags
                 showAllFlagsPanel = new TogglePanel(
                     new DelegateReference<bool>(
                         () => showAllFlagsState.Get(),
                         (showAll) => {
+                            // Save to config immediately
+                            showAllFlagsConfig.Value = showAll;
+                            
                             // Show loading popup immediately
                             var loadingPopup = new PopupBase(CabbyCodesPlugin.cabbyMenu, "Loading", "Loading . . .", 400f, 200f);
                             loadingPopup.SetPanelBackgroundColor(new Color(0.2f, 0.4f, 0.8f, 1f)); // Blue background
@@ -68,6 +98,7 @@ namespace CabbyCodes.Patches.Flags
                                     
                                     // Reset to first page when toggling
                                     currentPage = 0;
+                                    currentPageConfig.Value = 0;
                                     
                                     // Container proxying to the main menu
                                     var container = new MainMenuPanelContainer(CabbyCodesPlugin.cabbyMenu);
@@ -129,6 +160,9 @@ namespace CabbyCodes.Patches.Flags
             {
                 allPlayerFlags = GetAllPlayerFlags(showAllFlagsState.Get());
             }
+            
+            // Restore current page from config
+            currentPage = currentPageConfig.Value;
 
             // Create navigation panel
             navigationPanel = CreateNavigationPanel();
@@ -269,8 +303,9 @@ namespace CabbyCodes.Patches.Flags
                 }
                 currentFlagPanels.Clear();
 
-                // Update page index
+                // Update page index and save to config
                 currentPage = newPage;
+                currentPageConfig.Value = currentPage;
 
                 // Recreate navigation panel and flag panels
                 navigationPanel = CreateNavigationPanel();
@@ -388,8 +423,8 @@ namespace CabbyCodes.Patches.Flags
         /// </summary>
         public static void ResetState()
         {
-            // Remove panels from UI if they exist
-            if (navigationPanel != null || currentFlagPanels.Count > 0)
+            // Only attempt to remove panels if the menu is available
+            if (CabbyCodesPlugin.cabbyMenu != null && (navigationPanel != null || currentFlagPanels.Count > 0))
             {
                 var container = new MainMenuPanelContainer(CabbyCodesPlugin.cabbyMenu);
                 
@@ -405,6 +440,19 @@ namespace CabbyCodes.Patches.Flags
             }
 
             currentPage = 0;
+            if (currentPageConfig != null)
+            {
+                currentPageConfig.Value = 0;
+            }
+            else
+            {
+                // Ensure config is initialized if it wasn't already
+                InitializeConfig();
+                if (currentPageConfig != null)
+                {
+                    currentPageConfig.Value = 0;
+                }
+            }
             navigationPanel = null;
             currentFlagPanels.Clear();
             // Reset the show all flags state

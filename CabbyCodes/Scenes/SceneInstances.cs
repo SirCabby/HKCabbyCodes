@@ -417,6 +417,7 @@ namespace CabbyCodes.Scenes
         public static readonly SceneMapData Deepnest_45_v02 = new SceneMapData("Deepnest_45_v02", null, "Weaver's Den");
         public static readonly SceneMapData Dream_01_False_Knight = new SceneMapData("Dream_01_False_Knight", null, "False Knight's dream room");
         public static readonly SceneMapData Dream_03_Infected_Knight = new SceneMapData("Dream_03_Infected_Knight", null, "Lost Kin's dream room");
+        public static readonly SceneMapData Dream_04_White_Defender = new SceneMapData("Dream_04_White_Defender");
         public static readonly SceneMapData Dream_Abyss = new SceneMapData("Dream_Abyss");
         public static readonly SceneMapData Dream_Guardian_Hegemol = new SceneMapData("Dream_Guardian_Hegemol", null, "Dreamer Herrah's dream room");
         public static readonly SceneMapData Dream_Guardian_Lurien = new SceneMapData("Dream_Guardian_Lurien", null, "Dreamer Lurien's dream room");

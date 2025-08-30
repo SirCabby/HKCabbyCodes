@@ -9,13 +9,32 @@ using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using CabbyCodes.Patches.Settings;
+using BepInEx.Configuration;
 
 namespace CabbyCodes.Patches.Flags.RoomFlags
 {
     public class RoomFlagsPatch
     {
+        // Configuration entry for show all flags state
+        private static ConfigEntry<bool> showAllFlagsConfig;
+        
+        /// <summary>
+        /// Initializes the configuration entry.
+        /// </summary>
+        private static void InitializeConfig()
+        {
+            if (showAllFlagsConfig == null)
+            {
+                showAllFlagsConfig = CabbyCodesPlugin.configFile.Bind("RoomFlags", "ShowAllFlags", false, 
+                    "Show all room flags including unused ones");
+            }
+        }
+        
         public static List<CheatPanel> CreatePanels()
         {
+            // Initialize configuration
+            InitializeConfig();
+            
             var panels = new List<CheatPanel>();
 
             // Determine the default area selection based on the player's current position
@@ -28,8 +47,9 @@ namespace CabbyCodes.Patches.Flags.RoomFlags
             // Container proxying to the main menu
             var container = new MainMenuPanelContainer(CabbyCodesPlugin.cabbyMenu);
 
-            // Create a BoxedReference to store the actual toggle state
-            var toggleState = new BoxedReference<bool>(false);
+            // Create a BoxedReference to store the actual toggle state, initialized from config
+            InitializeConfig(); // Ensure config is initialized
+            var toggleState = new BoxedReference<bool>(showAllFlagsConfig.Value);
 
             // Create a DelegateReference that will be updated after panelManager is created
             DelegateReference<bool> showAllFlagsReference = null;
@@ -55,6 +75,9 @@ namespace CabbyCodes.Patches.Flags.RoomFlags
                 (showAll) => {
                     try
                     {
+                        // Save to config immediately
+                        showAllFlagsConfig.Value = showAll;
+                        
                         // Show loading popup immediately
                         var loadingPopup = new PopupBase(CabbyCodesPlugin.cabbyMenu, "Loading", "Loading . . .", 400f, 200f);
                         loadingPopup.SetPanelBackgroundColor(new Color(0.2f, 0.4f, 0.8f, 1f)); // Blue background
@@ -106,7 +129,8 @@ namespace CabbyCodes.Patches.Flags.RoomFlags
                                     
                                     // Determine what to preserve based on whether dev options are enabled
                                     int preserveCount;
-                                    if (foundTogglePanel != null && CabbyCodes.Patches.Settings.SettingsPatch.DevOptionsEnabled.Get())
+                                    if (foundTogglePanel != null && CabbyCodesPlugin.configFile.Bind("Settings", "EnableDevOptions", Constants.DEFAULT_DEV_OPTIONS_ENABLED, 
+                                        "Enable developer options and advanced features").Value)
                                     {
                                         // Dev options are on - preserve both toggle and dropdown
                                         int toggleIndex = container.GetPanelIndex(foundTogglePanel);
@@ -164,7 +188,8 @@ namespace CabbyCodes.Patches.Flags.RoomFlags
             );
             
             // Only show the "show all flags" toggle when dev options are enabled
-            if (CabbyCodes.Patches.Settings.SettingsPatch.DevOptionsEnabled.Get())
+            if (CabbyCodesPlugin.configFile.Bind("Settings", "EnableDevOptions", Constants.DEFAULT_DEV_OPTIONS_ENABLED, 
+                "Enable developer options and advanced features").Value)
             {
                 // Add panels in the correct order: toggle first, then dropdown
                 panels.Add(showAllFlagsPanel);
@@ -203,7 +228,8 @@ namespace CabbyCodes.Patches.Flags.RoomFlags
                                     
                                     // Determine what to preserve based on whether dev options are enabled
                                     int preserveCount;
-                                    if (foundTogglePanel != null && CabbyCodes.Patches.Settings.SettingsPatch.DevOptionsEnabled.Get())
+                                    if (foundTogglePanel != null && CabbyCodesPlugin.configFile.Bind("Settings", "EnableDevOptions", Constants.DEFAULT_DEV_OPTIONS_ENABLED, 
+                                        "Enable developer options and advanced features").Value)
                                     {
                                         // Dev options are on - preserve both toggle and dropdown
                                         int toggleIndex = container.GetPanelIndex(foundTogglePanel);

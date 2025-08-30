@@ -4,27 +4,42 @@ using HarmonyLib;
 using CabbyMenu;
 using CabbyCodes.Flags;
 using CabbyCodes.CheatState;
+using BepInEx.Configuration;
 
 namespace CabbyCodes.Patches.Player
 {
     public class InvulPatch : ISyncedReference<bool>, ICheatStateRestorable
     {
         public const string key = "Invul_Patch";
-        private static readonly BoxedReference<bool> value = CodeState.Get(key, false);
+        private static ConfigEntry<bool> configValue;
         private static readonly Harmony harmony = new Harmony(key);
         private static readonly MethodInfo mOriginal = AccessTools.Method(typeof(PlayerData), nameof(PlayerData.TakeHealth));
         private static readonly MethodInfo mOriginal2 = AccessTools.Method(typeof(PlayerData), nameof(PlayerData.WouldDie));
         private static readonly MethodInfo mOriginal3 = AccessTools.Method(typeof(HeroController), nameof(HeroController.TakeDamage));
         private static readonly FlagDef flag = FlagInstances.isInvincible;
 
+        /// <summary>
+        /// Initializes the configuration entry.
+        /// </summary>
+        private static void InitializeConfig()
+        {
+            if (configValue == null)
+            {
+                configValue = CabbyCodesPlugin.configFile.Bind("Player", "Invulnerability", false, 
+                    "Enable player invulnerability");
+            }
+        }
+
         public bool Get()
         {
-            return value.Get();
+            InitializeConfig();
+            return configValue.Value;
         }
 
         public void Set(bool value)
         {
-            InvulPatch.value.Set(value);
+            InitializeConfig();
+            configValue.Value = value;
             CheatStateManager.RegisterCheatState(key, value);
             
             if (value)
@@ -47,7 +62,7 @@ namespace CabbyCodes.Patches.Player
         public void RestoreState()
         {
             // This method is called by CheatStateManager after scene transitions
-            if (value.Get())
+            if (Get())
             {
                 ApplyInvulnerabilityState();
             }

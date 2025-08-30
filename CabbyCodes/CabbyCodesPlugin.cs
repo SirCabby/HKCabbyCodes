@@ -109,7 +109,8 @@ namespace CabbyCodes
             cabbyMenu.RegisterCategory("Flags", FlagsPatch.AddPanels);
             
             // Only register Sprite Viewer category when dev options are enabled
-            bool initialDevOptionsState = CabbyCodes.Patches.Settings.SettingsPatch.DevOptionsEnabled.Get();
+            bool initialDevOptionsState = configFile.Bind("Settings", "EnableDevOptions", Constants.DEFAULT_DEV_OPTIONS_ENABLED, 
+                "Enable developer options and advanced features").Value;
             
             if (initialDevOptionsState)
             {
@@ -118,6 +119,24 @@ namespace CabbyCodes
             
             cabbyMenu.RegisterCategory("Achievements", AchievementPatch.AddPanels);
             cabbyMenu.RegisterCategory("Settings", SettingsPatch.AddPanels);
+
+            // NOW get the last selected category from config AFTER all categories are registered
+            var lastSelectedCategoryConfig = configFile.Bind("MainMenu", "LastSelectedCategory", 0, 
+                "Last selected main menu category (0-based)");
+            
+            // Set up the callback to save category changes AFTER config binding
+            cabbyMenu.SetCategorySelectedCallback((categoryIndex) => {
+                lastSelectedCategoryConfig.Value = categoryIndex;
+            });
+            
+            // Store the last selected category for deferred restoration
+            int lastSelectedCategory = lastSelectedCategoryConfig.Value;
+            
+            if (lastSelectedCategory > 0 && lastSelectedCategory < cabbyMenu.GetRegisteredCategories())
+            {
+                // Defer the restoration until the dropdown is initialized
+                cabbyMenu.SetDeferredCategoryRestoration(lastSelectedCategory);
+            }
 
             // Apply quick start patches
             QuickStartPatch.ApplyPatches();
