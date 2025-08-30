@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 using UnityEngine.UI;
 using CabbyMenu.UI.Modders;
@@ -21,6 +23,100 @@ namespace CabbyMenu.UI.Popups
         protected readonly GameObject popupPanel;
         protected readonly TextMod headerTextMod;
         protected readonly TextMod messageTextMod;
+
+        // Static tracking for all open popups
+        private static readonly List<PopupBase> openPopups = new List<PopupBase>();
+
+        /// <summary>
+        /// Gets all currently open popups.
+        /// </summary>
+        public static IReadOnlyList<PopupBase> OpenPopups => openPopups.AsReadOnly();
+
+        /// <summary>
+        /// Closes all open popups.
+        /// </summary>
+        public static void CloseAllPopups()
+        {
+            // Clean up any destroyed popups first
+            CleanupDestroyedPopups();
+            
+            // Create a copy of the list to avoid modification during iteration
+            var popupsToClose = openPopups.ToList();
+            foreach (PopupBase popup in popupsToClose)
+            {
+                popup?.Hide();
+            }
+        }
+
+        /// <summary>
+        /// Removes destroyed popups from the open popups list.
+        /// </summary>
+        private static void CleanupDestroyedPopups()
+        {
+            openPopups.RemoveAll(popup => popup == null || popup.popupRoot == null);
+        }
+
+        /// <summary>
+        /// Clears all popups from the tracking list. Use when completely resetting the menu.
+        /// </summary>
+        public static void ClearAllPopups()
+        {
+            openPopups.Clear();
+        }
+
+        /// <summary>
+        /// Checks if the mouse position is over any popup component.
+        /// </summary>
+        /// <param name="mousePosition">The mouse position in screen coordinates.</param>
+        /// <returns>True if the mouse is over any popup, false otherwise.</returns>
+        public static bool IsMouseOverAnyPopup(Vector2 mousePosition)
+        {
+            // Clean up any destroyed popups first
+            CleanupDestroyedPopups();
+            
+            foreach (PopupBase popup in openPopups)
+            {
+                if (popup != null && popup.IsMouseOverPopup(mousePosition))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Checks if the mouse position is over this popup's components.
+        /// </summary>
+        /// <param name="mousePosition">The mouse position in screen coordinates.</param>
+        /// <returns>True if the mouse is over this popup, false otherwise.</returns>
+        public bool IsMouseOverPopup(Vector2 mousePosition)
+        {
+            if (popupRoot == null) return false;
+
+            // Check popup root
+            if (IsMouseOverGameObject(popupRoot, mousePosition))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Helper method to check if mouse is over a specific GameObject.
+        /// </summary>
+        /// <param name="gameObject">The GameObject to check.</param>
+        /// <param name="mousePosition">The mouse position in screen coordinates.</param>
+        /// <returns>True if the mouse is over the GameObject, false otherwise.</returns>
+        private bool IsMouseOverGameObject(GameObject gameObject, Vector2 mousePosition)
+        {
+            if (gameObject == null) return false;
+
+            RectTransform rectTransform = gameObject.GetComponent<RectTransform>();
+            if (rectTransform == null) return false;
+
+            return RectTransformUtility.RectangleContainsScreenPoint(rectTransform, mousePosition);
+        }
 
         /// <summary>
         /// Creates a new popup with the specified parameters.
@@ -206,13 +302,31 @@ namespace CabbyMenu.UI.Popups
         public virtual void Show() 
         { 
             popupRoot.SetActive(true);
+            
+            // Add to open popups list when showing
+            if (!openPopups.Contains(this))
+            {
+                openPopups.Add(this);
+            }
+            
             // Force layout update after showing to ensure proper sizing
             ForceLayoutUpdate();
         }
         
-        public virtual void Hide() => popupRoot.SetActive(false);
+        public virtual void Hide() 
+        { 
+            popupRoot.SetActive(false);
+            
+            // Remove from open popups list when hiding
+            openPopups.Remove(this);
+        }
 
-        public void Destroy() => UnityEngine.Object.Destroy(popupRoot);
+        public void Destroy() 
+        { 
+            // Remove from open popups list before destroying
+            openPopups.Remove(this);
+            UnityEngine.Object.Destroy(popupRoot);
+        }
 
         /// <summary>
         /// Forces a layout update to ensure the popup is properly sized

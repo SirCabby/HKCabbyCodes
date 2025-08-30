@@ -8,6 +8,7 @@ using CabbyMenu.UI.Modders;
 using CabbyMenu.UI.Controls.InputField;
 using CabbyMenu.UI.Controls.CustomDropdown;
 using CabbyMenu.UI.Controls;
+using CabbyMenu.UI.Popups;
 
 namespace CabbyMenu.UI
 {
@@ -596,6 +597,12 @@ namespace CabbyMenu.UI
                     {
                         CustomDropdown.CloseAllDropdowns();
                     }
+                    
+                    // Handle popup deselection - close all popups if clicking outside
+                    if (!PopupBase.IsMouseOverAnyPopup(mousePosition))
+                    {
+                        PopupBase.CloseAllPopups();
+                    }
                 }
 
                 // Update input field manager
@@ -616,6 +623,10 @@ namespace CabbyMenu.UI
                 // Close and clear all open dropdowns when menu is hidden
                 CustomDropdown.CloseAllDropdowns();
                 CustomDropdown.ClearAllDropdowns();
+
+                // Close and clear all open popups when menu is hidden
+                PopupBase.CloseAllPopups();
+                PopupBase.ClearAllPopups();
 
                 // Reset the menu on unpausing
                 if (isMenuOpen)
@@ -661,6 +672,9 @@ namespace CabbyMenu.UI
 
             // Close all open dropdowns when changing categories
             CustomDropdown.CloseAllDropdowns();
+
+            // Close all open popups when changing categories
+            PopupBase.CloseAllPopups();
 
             // Build selected cheat panels
             if (categoryDropdown != null && arg0 < categoryDropdown.Options.Count)
@@ -745,6 +759,9 @@ namespace CabbyMenu.UI
 
             // Clear any existing dropdown tracking when rebuilding the menu
             CustomDropdown.ClearAllDropdowns();
+
+            // Clear any existing popup tracking when rebuilding the menu
+            PopupBase.ClearAllPopups();
 
             // Ensure EventSystem exists
             if (UnityEngine.Object.FindObjectOfType<EventSystem>() == null)
