@@ -1,6 +1,9 @@
 using CabbyMenu.UI.CheatPanels;
 using CabbyMenu.UI.DynamicPanels;
+using CabbyMenu.SyncedReferences;
 using System.Collections.Generic;
+using System.Linq;
+using CabbyCodes.Patches.SpriteViewer;
 
 namespace CabbyCodes.Patches.Settings
 {
@@ -13,6 +16,13 @@ namespace CabbyCodes.Patches.Settings
         // dynamic list managed each refresh; no static index needed
         private static readonly List<CheatPanel> customSavePanels = new List<CheatPanel>();
         private static CheatPanel savedGamesHeader;
+        
+        // Track Save Game Analyzer panels for dynamic management
+        private static readonly List<CheatPanel> saveGameAnalyzerPanels = new List<CheatPanel>();
+        private static bool saveGameAnalyzerPanelsLoaded = false;
+        
+        // Public static field for dev options state
+        public static readonly BoxedReference<bool> DevOptionsEnabled = new BoxedReference<bool>(Constants.DEFAULT_DEV_OPTIONS_ENABLED);
 
         /// <summary>
         /// Adds all settings-related cheat panels to the mod menu.
@@ -22,11 +32,144 @@ namespace CabbyCodes.Patches.Settings
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Settings").SetColor(CheatPanel.headerColor));
             QuickStartPatch.AddPanel();
             
+            // Add dev options toggle
+            AddDevOptionsPanel();
+            
             // Create the panel container for managing dynamic panels
             panelContainer = new MainMenuPanelContainer(CabbyCodesPlugin.cabbyMenu);
             
             AddCustomSaveLoadPanels();
+            
+            // Only show Save Game Analyzer panels when dev options are enabled
+            if (DevOptionsEnabled.Get())
+            {
+                AddSaveGameAnalyzerPanels();
+            }
+        }
+
+        /// <summary>
+        /// Adds the dev options toggle panel.
+        /// </summary>
+        private static void AddDevOptionsPanel()
+        {
+            var devOptionsPanel = new TogglePanel(
+                new CabbyMenu.SyncedReferences.DelegateReference<bool>(
+                    () => DevOptionsEnabled.Get(),
+                    (enabled) => {
+                        // Store the dev options state in the BoxedReference
+                        DevOptionsEnabled.Set(enabled);
+                        
+                        // Refresh the dev options dependent panels when the dev options setting changes.
+                        RefreshDevOptionsDependentPanels();
+                    }
+                ),
+                "Enable Dev Options"
+            );
+            
+            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(devOptionsPanel);
+        }
+
+        /// <summary>
+        /// Refreshes the dev options dependent panels when the dev options setting changes.
+        /// </summary>
+        private static void RefreshDevOptionsDependentPanels()
+        {
+            if (CabbyCodesPlugin.cabbyMenu != null)
+            {
+                bool devOptionsEnabled = DevOptionsEnabled.Get();
+                
+                // Refresh the sprite viewer category to show/hide based on new setting
+                try
+                {
+                    CabbyCodesPlugin.cabbyMenu.UpdateCategoryRegistration("Sprite Viewer", devOptionsEnabled, SpriteViewerPatch.AddPanels);
+                }
+                catch
+                {
+                    // Handle any errors silently
+                }
+                
+                // Refresh the Save Game Analyzer panels
+                RefreshSaveGameAnalyzerPanels(devOptionsEnabled);
+            }
+        }
+        
+        /// <summary>
+        /// Refreshes the Save Game Analyzer panels based on dev options setting.
+        /// </summary>
+        private static void RefreshSaveGameAnalyzerPanels(bool showPanels)
+        {
+            if (showPanels)
+            {
+                // Add the Save Game Analyzer panels if they're not already loaded
+                if (!saveGameAnalyzerPanelsLoaded)
+                {
+                    AddSaveGameAnalyzerPanels();
+                }
+            }
+            else
+            {
+                // Remove the Save Game Analyzer panels if they're currently loaded
+                if (saveGameAnalyzerPanelsLoaded)
+                {
+                    RemoveSaveGameAnalyzerPanels();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Adds the Save Game Analyzer panels and tracks them for dynamic management.
+        /// </summary>
+        private static void AddSaveGameAnalyzerPanels()
+        {
+            if (saveGameAnalyzerPanelsLoaded)
+            {
+                return; // Already loaded
+            }
+            
+            // Clear any existing panels
+            saveGameAnalyzerPanels.Clear();
+            
+            // Store the current panels to know which ones are new
+            var currentPanels = new HashSet<CheatPanel>(CabbyCodesPlugin.cabbyMenu.GetAllPanels());
+            
+            // Add the Save Game Analyzer panels
             SaveGameAnalysisPatch.AddPanels();
+            
+            // Find the newly added panels by comparing with the current panels
+            var newPanels = CabbyCodesPlugin.cabbyMenu.GetAllPanels();
+            foreach (var panel in newPanels)
+            {
+                if (!currentPanels.Contains(panel))
+                {
+                    saveGameAnalyzerPanels.Add(panel);
+                }
+            }
+            
+            saveGameAnalyzerPanelsLoaded = true;
+        }
+        
+        /// <summary>
+        /// Removes the Save Game Analyzer panels from the UI.
+        /// </summary>
+        private static void RemoveSaveGameAnalyzerPanels()
+        {
+            if (!saveGameAnalyzerPanelsLoaded)
+            {
+                return; // Not loaded
+            }
+            
+            // Remove all tracked panels
+            foreach (var panel in saveGameAnalyzerPanels)
+            {
+                if (panel != null)
+                {
+                    CabbyCodesPlugin.cabbyMenu.RemoveCheatPanel(panel);
+                }
+            }
+            
+            // Clear tracking
+            saveGameAnalyzerPanels.Clear();
+            saveGameAnalyzerPanelsLoaded = false;
         }
 
         /// <summary>

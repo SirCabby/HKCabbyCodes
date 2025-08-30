@@ -8,6 +8,7 @@ using System.Linq;
 using System;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using CabbyCodes.Patches.Settings;
 
 namespace CabbyCodes.Patches.Flags.RoomFlags
 {
@@ -98,28 +99,41 @@ namespace CabbyCodes.Patches.Flags.RoomFlags
                                 var foundTogglePanel = allPanels.FirstOrDefault(p => p.GetDescription().Contains("Show ALL flags"));
                                 var foundDropdownPanel = allPanels.FirstOrDefault(p => p.GetDescription().Contains("Select Area"));
                                 
-                                if (foundTogglePanel != null && foundDropdownPanel != null)
+                                if (foundDropdownPanel != null)
                                 {
-                                    // Find the indices of the toggle and dropdown panels
-                                    int toggleIndex = container.GetPanelIndex(foundTogglePanel);
+                                    // Find the index of the dropdown panel (always exists)
                                     int dropdownIndex = container.GetPanelIndex(foundDropdownPanel);
                                     
-                                    // When toggling, preserve both toggle and dropdown. When changing areas, only preserve toggle.
-                                    // Since this is the toggle handler, we want to preserve both
-                                    int preserveCount = Math.Max(toggleIndex, dropdownIndex) + 1;
+                                    // Determine what to preserve based on whether dev options are enabled
+                                    int preserveCount;
+                                    if (foundTogglePanel != null && CabbyCodes.Patches.Settings.SettingsPatch.DevOptionsEnabled.Get())
+                                    {
+                                        // Dev options are on - preserve both toggle and dropdown
+                                        int toggleIndex = container.GetPanelIndex(foundTogglePanel);
+                                        preserveCount = Math.Max(toggleIndex, dropdownIndex) + 1;
+                                    }
+                                    else
+                                    {
+                                        // Dev options are off - preserve only dropdown
+                                        preserveCount = dropdownIndex + 1;
+                                    }
                                     
-                                    // Remove all panels after the toggle and dropdown
+                                    // Remove all panels after the preserved panels
                                     int dynamicPanelStartIndex = preserveCount;
                                     int dynamicPanelCount = allPanels.Count - preserveCount;
                                     
                                     if (dynamicPanelCount > 0)
                                     {
-                                        // Remove only the dynamic room flag panels (starting after toggle and dropdown)
+                                        // Remove only the dynamic room flag panels (starting after preserved panels)
                                         container.DetachPanelsAtRange(startIndex: dynamicPanelStartIndex, count: dynamicPanelCount);
                                     }
                                     
-                                    // Insert the new dynamic panels after the toggle and dropdown
+                                    // Insert the new dynamic panels after the preserved panels
                                     container.ReattachPanelsAtRange(newPanels, index: dynamicPanelStartIndex);
+                                }
+                                else
+                                {
+                                    // Could not find dropdown panel - this shouldn't happen
                                 }
                                 
                                 // Panel rebuild complete - hide and destroy loading popup in the next frame
@@ -131,22 +145,15 @@ namespace CabbyCodes.Patches.Flags.RoomFlags
                                     }
                                 });
                             }
-                            catch (System.Exception ex)
+                            catch
                             {
-                                UnityEngine.Debug.LogError($"[RoomFlagsPatch] Error during toggle: {ex.Message}\n{ex.StackTrace}");
-                                
-                                // Make sure to destroy loading popup even on error
-                                if (loadingPopup != null)
-                                {
-                                    loadingPopup.Hide();
-                                    loadingPopup.Destroy();
-                                }
+                                // Handle any errors silently
                             }
                         });
                     }
-                    catch (System.Exception ex)
+                    catch
                     {
-                        UnityEngine.Debug.LogError($"[RoomFlagsPatch] Error during toggle: {ex.Message}\n{ex.StackTrace}");
+                        // Handle any errors silently
                     }
                 }
             );
@@ -156,8 +163,12 @@ namespace CabbyCodes.Patches.Flags.RoomFlags
                 "Show ALL flags? (includes some unknown and many very useless ones)"
             );
             
-            // Add panels in the correct order: toggle first, then dropdown
-            panels.Add(showAllFlagsPanel);
+            // Only show the "show all flags" toggle when dev options are enabled
+            if (CabbyCodes.Patches.Settings.SettingsPatch.DevOptionsEnabled.Get())
+            {
+                // Add panels in the correct order: toggle first, then dropdown
+                panels.Add(showAllFlagsPanel);
+            }
             panels.Add(dropdownPanel);
 
             // Selection change listener will rebuild panels; no per-frame update needed
@@ -181,36 +192,46 @@ namespace CabbyCodes.Patches.Flags.RoomFlags
                         var newAreaPanels = CreateRoomFlagsPanels(areaIndex, currentShowAllFlags);
                         
                         // Get all current panels and find the toggle and dropdown panels to preserve them
-                        var allPanels = container.GetAllPanels();
-                        var foundTogglePanel = allPanels.FirstOrDefault(p => p.GetDescription().Contains("Show ALL flags"));
-                        var foundDropdownPanel = allPanels.FirstOrDefault(p => p.GetDescription().Contains("Select Area"));
-                        
-                        if (foundTogglePanel != null && foundDropdownPanel != null)
-                        {
-                            // Find the indices of the toggle and dropdown panels
-                            int toggleIndex = container.GetPanelIndex(foundTogglePanel);
-                            int dropdownIndex = container.GetPanelIndex(foundDropdownPanel);
-                            
-                            // For area changes, preserve both toggle and dropdown
-                            int preserveCount = Math.Max(toggleIndex, dropdownIndex) + 1;
-                            
-                            // Remove all panels after the toggle and dropdown
-                            int dynamicPanelStartIndex = preserveCount;
-                            int dynamicPanelCount = allPanels.Count - preserveCount;
-                            
-                            if (dynamicPanelCount > 0)
-                            {
-                                // Remove only the dynamic room flag panels (starting after toggle and dropdown)
-                                container.DetachPanelsAtRange(startIndex: dynamicPanelStartIndex, count: dynamicPanelCount);
-                            }
-                            
-                            // Insert the new dynamic panels after the toggle and dropdown
-                            container.ReattachPanelsAtRange(newAreaPanels, index: dynamicPanelStartIndex);
-                        }
-                        else
-                        {
-                            // Could not find toggle or dropdown panel
-                        }
+                                var allPanels = container.GetAllPanels();
+                                var foundTogglePanel = allPanels.FirstOrDefault(p => p.GetDescription().Contains("Show ALL flags"));
+                                var foundDropdownPanel = allPanels.FirstOrDefault(p => p.GetDescription().Contains("Select Area"));
+                                
+                                if (foundDropdownPanel != null)
+                                {
+                                    // Find the index of the dropdown panel (always exists)
+                                    int dropdownIndex = container.GetPanelIndex(foundDropdownPanel);
+                                    
+                                    // Determine what to preserve based on whether dev options are enabled
+                                    int preserveCount;
+                                    if (foundTogglePanel != null && CabbyCodes.Patches.Settings.SettingsPatch.DevOptionsEnabled.Get())
+                                    {
+                                        // Dev options are on - preserve both toggle and dropdown
+                                        int toggleIndex = container.GetPanelIndex(foundTogglePanel);
+                                        preserveCount = Math.Max(toggleIndex, dropdownIndex) + 1;
+                                    }
+                                    else
+                                    {
+                                        // Dev options are off - preserve only dropdown
+                                        preserveCount = dropdownIndex + 1;
+                                    }
+                                    
+                                    // Remove all panels after the preserved panels
+                                    int dynamicPanelStartIndex = preserveCount;
+                                    int dynamicPanelCount = allPanels.Count - preserveCount;
+                                    
+                                    if (dynamicPanelCount > 0)
+                                    {
+                                        // Remove only the dynamic room flag panels (starting after preserved panels)
+                                        container.DetachPanelsAtRange(startIndex: dynamicPanelStartIndex, count: dynamicPanelCount);
+                                    }
+                                    
+                                    // Insert the new dynamic panels after the preserved panels
+                                    container.ReattachPanelsAtRange(newAreaPanels, index: dynamicPanelStartIndex);
+                                }
+                                else
+                                {
+                                    // Could not find dropdown panel - this shouldn't happen
+                                }
                         
                         // Panel recreation complete - hide and destroy loading popup in the next frame
                         CabbyMenu.Utilities.CoroutineRunner.RunNextFrame(() => {
@@ -221,10 +242,8 @@ namespace CabbyCodes.Patches.Flags.RoomFlags
                             }
                         });
                     }
-                    catch (System.Exception ex)
+                    catch
                     {
-                        UnityEngine.Debug.LogError($"[RoomFlagsPatch] Area change error: {ex.Message}");
-                        
                         // Make sure to destroy loading popup even on error
                         if (loadingPopup != null)
                         {

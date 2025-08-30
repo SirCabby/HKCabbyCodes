@@ -31,95 +31,98 @@ namespace CabbyCodes.Patches.Flags
                 showAllFlagsState = new BoxedReference<bool>(false); // Start with filtered flags
             }
 
-            // Create the toggle panel for showing all flags
-            showAllFlagsPanel = new TogglePanel(
-                new DelegateReference<bool>(
-                    () => showAllFlagsState.Get(),
-                    (showAll) => {
-                        // Show loading popup immediately
-                        var loadingPopup = new PopupBase(CabbyCodesPlugin.cabbyMenu, "Loading", "Loading . . .", 400f, 200f);
-                        loadingPopup.SetPanelBackgroundColor(new Color(0.2f, 0.4f, 0.8f, 1f)); // Blue background
-                        loadingPopup.SetMessageBold(); // Make message text bold
-                        loadingPopup.Show();
-                        Canvas.ForceUpdateCanvases();
-                        
-                        // Defer panel operations to the next frame to ensure loading popup renders first
-                        CabbyMenu.Utilities.CoroutineRunner.RunNextFrame(() => {
-                            try
-                            {
-                                // Store the new state
-                                showAllFlagsState.Set(showAll);
-                                
-                                // Force the toggle button to update its visual state
-                                if (showAllFlagsPanel != null)
+            // Only show the "show all flags" toggle when dev options are enabled
+            if (CabbyCodes.Patches.Settings.SettingsPatch.DevOptionsEnabled.Get())
+            {
+                // Create the toggle panel for showing all flags
+                showAllFlagsPanel = new TogglePanel(
+                    new DelegateReference<bool>(
+                        () => showAllFlagsState.Get(),
+                        (showAll) => {
+                            // Show loading popup immediately
+                            var loadingPopup = new PopupBase(CabbyCodesPlugin.cabbyMenu, "Loading", "Loading . . .", 400f, 200f);
+                            loadingPopup.SetPanelBackgroundColor(new Color(0.2f, 0.4f, 0.8f, 1f)); // Blue background
+                            loadingPopup.SetMessageBold(); // Make message text bold
+                            loadingPopup.Show();
+                            Canvas.ForceUpdateCanvases();
+                            
+                            // Defer panel operations to the next frame to ensure loading popup renders first
+                            CabbyMenu.Utilities.CoroutineRunner.RunNextFrame(() => {
+                                try
                                 {
-                                    var toggleBtn = showAllFlagsPanel.GetToggleButton();
-                                    if (toggleBtn != null)
+                                    // Store the new state
+                                    showAllFlagsState.Set(showAll);
+                                    
+                                    // Force the toggle button to update its visual state
+                                    if (showAllFlagsPanel != null)
                                     {
-                                        toggleBtn.Update();
+                                        var toggleBtn = showAllFlagsPanel.GetToggleButton();
+                                        if (toggleBtn != null)
+                                        {
+                                            toggleBtn.Update();
+                                        }
                                     }
+                                    
+                                    // Rebuild the flag list with the new setting
+                                    allPlayerFlags = GetAllPlayerFlags(showAll);
+                                    
+                                    // Reset to first page when toggling
+                                    currentPage = 0;
+                                    
+                                    // Container proxying to the main menu
+                                    var container = new MainMenuPanelContainer(CabbyCodesPlugin.cabbyMenu);
+                                    
+                                    // Remove current panels
+                                    if (navigationPanel != null)
+                                    {
+                                        container.RemovePanel(navigationPanel);
+                                    }
+                                    foreach (var panel in currentFlagPanels)
+                                    {
+                                        container.RemovePanel(panel);
+                                    }
+                                    currentFlagPanels.Clear();
+                                    
+                                    // Recreate navigation panel and flag panels
+                                    navigationPanel = CreateNavigationPanel();
+                                    container.AddPanel(navigationPanel);
+                                    
+                                    currentFlagPanels = CreateFlagPanelsForCurrentPage();
+                                    foreach (var panel in currentFlagPanels)
+                                    {
+                                        container.AddPanel(panel);
+                                    }
+                                    
+                                    // Force UI update to reflect the new panels
+                                    Canvas.ForceUpdateCanvases();
+                                    
+                                    // Panel rebuild complete - hide and destroy loading popup in the next frame
+                                    CabbyMenu.Utilities.CoroutineRunner.RunNextFrame(() => {
+                                        if (loadingPopup != null)
+                                        {
+                                            loadingPopup.Hide();
+                                            loadingPopup.Destroy();
+                                        }
+                                    });
                                 }
-                                
-                                // Rebuild the flag list with the new setting
-                                allPlayerFlags = GetAllPlayerFlags(showAll);
-                                
-                                // Reset to first page when toggling
-                                currentPage = 0;
-                                
-                                // Container proxying to the main menu
-                                var container = new MainMenuPanelContainer(CabbyCodesPlugin.cabbyMenu);
-                                
-                                // Remove current panels
-                                if (navigationPanel != null)
+                                catch (System.Exception)
                                 {
-                                    container.RemovePanel(navigationPanel);
-                                }
-                                foreach (var panel in currentFlagPanels)
-                                {
-                                    container.RemovePanel(panel);
-                                }
-                                currentFlagPanels.Clear();
-                                
-                                // Recreate navigation panel and flag panels
-                                navigationPanel = CreateNavigationPanel();
-                                container.AddPanel(navigationPanel);
-                                
-                                currentFlagPanels = CreateFlagPanelsForCurrentPage();
-                                foreach (var panel in currentFlagPanels)
-                                {
-                                    container.AddPanel(panel);
-                                }
-                                
-                                // Force UI update to reflect the new panels
-                                Canvas.ForceUpdateCanvases();
-                                
-                                // Panel rebuild complete - hide and destroy loading popup in the next frame
-                                CabbyMenu.Utilities.CoroutineRunner.RunNextFrame(() => {
+                                    
+                                    // Make sure to destroy loading popup even on error
                                     if (loadingPopup != null)
                                     {
                                         loadingPopup.Hide();
                                         loadingPopup.Destroy();
                                     }
-                                });
-                            }
-                            catch (System.Exception ex)
-                            {
-                                UnityEngine.Debug.LogError($"[PlayerFlagPatch] Error during toggle: {ex.Message}\n{ex.StackTrace}");
-                                
-                                // Make sure to destroy loading popup even on error
-                                if (loadingPopup != null)
-                                {
-                                    loadingPopup.Hide();
-                                    loadingPopup.Destroy();
                                 }
-                            }
-                        });
-                    }
-                ),
-                "Show ALL flags? (includes some unknown and many very useless ones)"
-            );
-            
-            panels.Add(showAllFlagsPanel);
+                            });
+                        }
+                    ),
+                    "Show ALL flags? (includes some unknown and many very useless ones)"
+                );
+                
+                panels.Add(showAllFlagsPanel);
+            }
 
             // Initialize the list of all player flags if not already done
             if (allPlayerFlags == null)
@@ -136,11 +139,6 @@ namespace CabbyCodes.Patches.Flags
             panels.AddRange(currentFlagPanels);
 
             return panels;
-        }
-
-        private static List<FlagDef> GetAllPlayerFlags()
-        {
-            return GetAllPlayerFlags(false); // Default to filtered flags
         }
 
         private static List<FlagDef> GetAllPlayerFlags(bool showAllFlags)
@@ -233,9 +231,7 @@ namespace CabbyCodes.Patches.Flags
             return nav;
         }
 
-
-
-                private static void NavigateToPage(int newPage)
+        private static void NavigateToPage(int newPage)
         {
             if (newPage == currentPage)
             {
@@ -327,7 +323,7 @@ namespace CabbyCodes.Patches.Flags
             {
                 case "PlayerData_Bool":
                     var togglePanel = new TogglePanel(
-                        new CabbyMenu.SyncedReferences.DelegateReference<bool>(
+                        new DelegateReference<bool>(
                             () => FlagManager.GetBoolFlag(flagDef, flagDef.SemiPersistent),
                             v => FlagManager.SetBoolFlag(flagDef, v, flagDef.SemiPersistent)),
                         displayName);
@@ -336,7 +332,7 @@ namespace CabbyCodes.Patches.Flags
 
                 case "PlayerData_Int":
                     var intPanel = new RangeInputFieldPanel<int>(
-                        new CabbyMenu.SyncedReferences.DelegateReference<int>(
+                        new DelegateReference<int>(
                             () => FlagManager.GetIntFlag(flagDef),
                             v => FlagManager.SetIntFlag(flagDef, v)),
                         CabbyMenu.Utilities.KeyCodeMap.ValidChars.Numeric, 0, 999, displayName);
@@ -345,7 +341,7 @@ namespace CabbyCodes.Patches.Flags
 
                 case "PlayerData_Float":
                     var floatPanel = new RangeInputFieldPanel<float>(
-                        new CabbyMenu.SyncedReferences.DelegateReference<float>(
+                        new DelegateReference<float>(
                             () => FlagManager.GetFloatFlag(flagDef),
                             v => FlagManager.SetFloatFlag(flagDef, v)),
                         CabbyMenu.Utilities.KeyCodeMap.ValidChars.Decimal, 0f, 999f, displayName);
@@ -416,6 +412,8 @@ namespace CabbyCodes.Patches.Flags
             {
                 showAllFlagsState.Set(false);
             }
+            // Reset the show all flags panel reference
+            showAllFlagsPanel = null;
             // Destroy loading popup if it exists
             if (loadingPopup != null)
             {

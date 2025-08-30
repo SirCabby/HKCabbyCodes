@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using CabbyMenu.SyncedReferences;
+
 namespace CabbyCodes
 {
     /// <summary>
@@ -80,5 +83,8 @@ namespace CabbyCodes
         public const int PERMADEATH_MODE_ENABLED = 1;
         public const int DELICATE_FLOWER_BROKEN_STATE = 1;
         public const int DELICATE_FLOWER_RETURNED_STATE = 2;
+
+        // Dev Options
+        public const bool DEFAULT_DEV_OPTIONS_ENABLED = false;
     }
 }

@@ -9,10 +9,12 @@ using CabbyCodes.Patches.Flags.Triage;
 using CabbyCodes.Patches.Maps;
 using CabbyCodes.Patches.Player;
 using CabbyCodes.Patches.Settings;
+using CabbyCodes.Patches.SpriteViewer;
 using CabbyCodes.Patches.Teleport;
 using CabbyMenu.UI;
 using CabbyMenu.UI.Controls.InputField;
-using CabbyCodes.Patches.SpriteViewer;
+using CabbyCodes.Patches.Flags.RoomFlags;
+using CabbyCodes.SavedGames;
 using UnityEngine;
 
 namespace CabbyCodes
@@ -105,7 +107,15 @@ namespace CabbyCodes
             cabbyMenu.RegisterCategory("Grubs", GrubPatch.AddPanels);
             cabbyMenu.RegisterCategory("Hunter", HunterPatch.AddPanels);
             cabbyMenu.RegisterCategory("Flags", FlagsPatch.AddPanels);
-            cabbyMenu.RegisterCategory("Sprite Viewer", SpriteViewerPatch.AddPanels);
+            
+            // Only register Sprite Viewer category when dev options are enabled
+            bool initialDevOptionsState = CabbyCodes.Patches.Settings.SettingsPatch.DevOptionsEnabled.Get();
+            
+            if (initialDevOptionsState)
+            {
+                cabbyMenu.RegisterCategory("Sprite Viewer", SpriteViewerPatch.AddPanels);
+            }
+            
             cabbyMenu.RegisterCategory("Achievements", AchievementPatch.AddPanels);
             cabbyMenu.RegisterCategory("Settings", SettingsPatch.AddPanels);
 

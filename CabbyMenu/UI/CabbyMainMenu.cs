@@ -214,6 +214,181 @@ namespace CabbyMenu.UI
         }
 
         /// <summary>
+        /// Filters the category dropdown to show/hide Sprite Viewer based on dev options state.
+        /// This method can be called directly from CabbyCodes.
+        /// </summary>
+        /// <param name="showSpriteViewer">True to show Sprite Viewer, false to hide it</param>
+        public void FilterSpriteViewerCategory(bool showSpriteViewer)
+        {
+            if (categoryDropdown != null)
+            {
+                // Rebuild the category options list
+                List<string> options = new List<string>();
+                foreach (string category in registeredCategories.Keys)
+                {
+                    // Filter out Sprite Viewer when showSpriteViewer is false
+                    if (category == "Sprite Viewer" && !showSpriteViewer)
+                    {
+                        continue; // Skip this category
+                    }
+                    
+                    options.Add(category);
+                }
+                
+                // Update the dropdown options
+                categoryDropdown.SetOptions(options);
+                
+                // The issue is that SetOptions doesn't rebuild the visual options.
+                // Instead of trying to fix the existing dropdown, let's recreate it entirely.
+                
+                // Store the current selection
+                int currentSelection = categoryDropdown.Value;
+                
+                // Get the dropdown's parent and position
+                var dropdownGO = categoryDropdown.gameObject;
+                var parent = dropdownGO.transform.parent;
+                var rectTransform = dropdownGO.GetComponent<UnityEngine.RectTransform>();
+                var originalAnchoredPosition = rectTransform.anchoredPosition;
+                var originalSizeDelta = rectTransform.sizeDelta;
+                var originalAnchorMin = rectTransform.anchorMin;
+                var originalAnchorMax = rectTransform.anchorMax;
+                
+                // Remove the old dropdown
+                UnityEngine.Object.DestroyImmediate(dropdownGO);
+                
+                // Create a new dropdown
+                var (newDropdownGO, newCustomDropdown) = CustomDropdown.Build();
+                newDropdownGO.name = "Category Dropdown";
+                
+                // Apply the same configuration as the original dropdown
+                Vector2 categorySize = new Vector2(Constants.CATEGORY_DROPDOWN_WIDTH, Constants.CATEGORY_DROPDOWN_HEIGHT);
+                newCustomDropdown.SetSize(categorySize.x, categorySize.y);
+                newCustomDropdown.SetFontSize(Constants.DEFAULT_FONT_SIZE);
+                
+                // Position the new dropdown exactly like the original
+                newDropdownGO.transform.SetParent(parent, false);
+                var newRectTransform = newDropdownGO.GetComponent<UnityEngine.RectTransform>();
+                newRectTransform.anchorMin = originalAnchorMin;
+                newRectTransform.anchorMax = originalAnchorMax;
+                newRectTransform.anchoredPosition = originalAnchoredPosition;
+                newRectTransform.sizeDelta = originalSizeDelta;
+                
+                // Set the new options
+                newCustomDropdown.SetOptions(options);
+                newCustomDropdown.SetValue(currentSelection);
+                newCustomDropdown.onValueChanged.AddListener(OnCategorySelected);
+                
+                // Replace the reference
+                categoryDropdown = newCustomDropdown;
+                
+                // If the current selection is no longer valid, reset to first category
+                if (categoryDropdown.Value >= options.Count)
+                {
+                    categoryDropdown.SetValue(0);
+                    OnCategorySelected(0);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Dynamically registers or unregisters a category and refreshes the UI.
+        /// </summary>
+        /// <param name="categoryName">Name of the category to register/unregister</param>
+        /// <param name="addCategory">True to add, false to remove</param>
+        /// <param name="categoryAction">The action to execute when the category is selected (only needed when adding)</param>
+        public void UpdateCategoryRegistration(string categoryName, bool addCategory, System.Action categoryAction = null)
+        {
+            if (addCategory)
+            {
+                // Add category if it doesn't exist
+                if (!registeredCategories.ContainsKey(categoryName))
+                {
+                    registeredCategories.Add(categoryName, categoryAction);
+                }
+                else
+                {
+                    // Category already exists, skipping add
+                }
+            }
+            else
+            {
+                // Remove category if it exists
+                if (registeredCategories.ContainsKey(categoryName))
+                {
+                    registeredCategories.Remove(categoryName);
+                }
+                else
+                {
+                    // Category doesn't exist, skipping remove
+                }
+            }
+            
+            // Refresh the category dropdown
+            if (categoryDropdown != null)
+            {
+                List<string> options = new List<string>();
+                foreach (string category in registeredCategories.Keys)
+                {
+                    options.Add(category);
+                }
+                
+                // The issue is that SetOptions doesn't rebuild the visual options.
+                // Instead of trying to fix the existing dropdown, let's recreate it entirely.
+                
+                // Store the current selection
+                int currentSelection = categoryDropdown.Value;
+                
+                // Get the dropdown's parent and position
+                var dropdownGO = categoryDropdown.gameObject;
+                var parent = dropdownGO.transform.parent;
+                var rectTransform = dropdownGO.GetComponent<UnityEngine.RectTransform>();
+                var originalAnchoredPosition = rectTransform.anchoredPosition;
+                var originalSizeDelta = rectTransform.sizeDelta;
+                var originalAnchorMin = rectTransform.anchorMin;
+                var originalAnchorMax = rectTransform.anchorMax;
+                
+                // Remove the old dropdown
+                UnityEngine.Object.DestroyImmediate(dropdownGO);
+                
+                // Create a new dropdown
+                var (newDropdownGO, newCustomDropdown) = CustomDropdown.Build();
+                newDropdownGO.name = "Category Dropdown";
+                
+                // Apply the same configuration as the original dropdown
+                Vector2 categorySize = new Vector2(Constants.CATEGORY_DROPDOWN_WIDTH, Constants.CATEGORY_DROPDOWN_HEIGHT);
+                newCustomDropdown.SetSize(categorySize.x, categorySize.y);
+                newCustomDropdown.SetFontSize(Constants.DEFAULT_FONT_SIZE);
+                
+                // Position the new dropdown exactly like the original
+                newDropdownGO.transform.SetParent(parent, false);
+                var newRectTransform = newDropdownGO.GetComponent<UnityEngine.RectTransform>();
+                newRectTransform.anchorMin = originalAnchorMin;
+                newRectTransform.anchorMax = originalAnchorMax;
+                newRectTransform.anchoredPosition = originalAnchoredPosition;
+                newRectTransform.sizeDelta = originalSizeDelta;
+                
+                // Set the new options
+                newCustomDropdown.SetOptions(options);
+                newCustomDropdown.SetValue(currentSelection);
+                newCustomDropdown.onValueChanged.AddListener(OnCategorySelected);
+                
+                // Replace the reference
+                categoryDropdown = newCustomDropdown;
+                
+                // If the current selection is no longer valid, reset to first category
+                if (categoryDropdown.Value >= options.Count)
+                {
+                    categoryDropdown.SetValue(0);
+                    OnCategorySelected(0);
+                }
+            }
+            else
+            {
+                // Category dropdown is null, cannot refresh
+            }
+        }
+
+        /// <summary>
         /// Inserts a cheat panel at a specific index in the menu.
         /// </summary>
         /// <param name="cheatPanel">The cheat panel to insert.</param>
