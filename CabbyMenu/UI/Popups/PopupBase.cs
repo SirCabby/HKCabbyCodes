@@ -85,6 +85,27 @@ namespace CabbyMenu.UI.Popups
         }
 
         /// <summary>
+        /// Checks if the mouse position is over any popup's interactive content (excluding background).
+        /// This is more specific and only returns true for actual popup content like buttons.
+        /// </summary>
+        /// <param name="mousePosition">The mouse position in screen coordinates.</param>
+        /// <returns>True if the mouse is over any popup content, false otherwise.</returns>
+        public static bool IsMouseOverAnyPopupContent(Vector2 mousePosition)
+        {
+            // Clean up any destroyed popups first
+            CleanupDestroyedPopups();
+            
+            foreach (PopupBase popup in openPopups)
+            {
+                if (popup != null && popup.IsMouseOverPopupContent(mousePosition))
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        /// <summary>
         /// Checks if the mouse position is over this popup's components.
         /// </summary>
         /// <param name="mousePosition">The mouse position in screen coordinates.</param>
@@ -93,10 +114,70 @@ namespace CabbyMenu.UI.Popups
         {
             if (popupRoot == null) return false;
 
-            // Check popup root
-            if (IsMouseOverGameObject(popupRoot, mousePosition))
+            // Check popup panel (the main content area)
+            if (popupPanel != null && IsMouseOverGameObject(popupPanel, mousePosition))
             {
                 return true;
+            }
+
+            // Check all children of the popup panel recursively (buttons, text, etc.)
+            if (popupPanel != null && IsMouseOverChildren(popupPanel, mousePosition))
+            {
+                return true;
+            }
+
+            // Don't count the background dimmed area as "over the popup"
+            // This allows clicks on the background to close the popup
+            return false;
+        }
+
+        /// <summary>
+        /// Checks if the mouse position is over the popup's interactive content (excluding background).
+        /// This is more specific than IsMouseOverPopup and only returns true for actual content.
+        /// </summary>
+        /// <param name="mousePosition">The mouse position in screen coordinates.</param>
+        /// <returns>True if the mouse is over interactive popup content, false otherwise.</returns>
+        public bool IsMouseOverPopupContent(Vector2 mousePosition)
+        {
+            if (popupRoot == null || popupPanel == null) return false;
+
+            // Check popup panel (the main content area)
+            if (IsMouseOverGameObject(popupPanel, mousePosition))
+            {
+                return true;
+            }
+
+            // Check all children of the popup panel recursively (buttons, text, etc.)
+            return IsMouseOverChildren(popupPanel, mousePosition);
+        }
+
+        /// <summary>
+        /// Recursively checks if the mouse is over any children of the specified GameObject.
+        /// </summary>
+        /// <param name="gameObject">The GameObject to check children of</param>
+        /// <param name="mousePosition">The mouse position in screen coordinates</param>
+        /// <returns>True if the mouse is over any child, false otherwise</returns>
+        private bool IsMouseOverChildren(GameObject gameObject, Vector2 mousePosition)
+        {
+            if (gameObject == null) return false;
+
+            // Check all children recursively
+            for (int i = 0; i < gameObject.transform.childCount; i++)
+            {
+                Transform child = gameObject.transform.GetChild(i);
+                if (child == null) continue;
+
+                // Check if mouse is over this child
+                if (IsMouseOverGameObject(child.gameObject, mousePosition))
+                {
+                    return true;
+                }
+
+                // Recursively check children of this child
+                if (IsMouseOverChildren(child.gameObject, mousePosition))
+                {
+                    return true;
+                }
             }
 
             return false;

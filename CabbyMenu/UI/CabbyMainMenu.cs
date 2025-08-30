@@ -599,7 +599,7 @@ namespace CabbyMenu.UI
                     }
                     
                     // Handle popup deselection - close all popups if clicking outside
-                    if (!PopupBase.IsMouseOverAnyPopup(mousePosition))
+                    if (!PopupBase.IsMouseOverAnyPopupContent(mousePosition))
                     {
                         PopupBase.CloseAllPopups();
                     }
