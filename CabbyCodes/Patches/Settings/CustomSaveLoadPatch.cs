@@ -20,6 +20,11 @@ namespace CabbyCodes.Patches.Settings
         private static bool patchesApplied = false;
 
         /// <summary>
+        /// Flag to prevent double-saving when the Save button triggers multiple save attempts.
+        /// </summary>
+        private static bool isSaving = false;
+
+        /// <summary>
         /// Creates and returns the custom save name input field panel (for external use).
         /// </summary>
         /// <returns>The created InputFieldPanel for custom save names.</returns>
@@ -30,10 +35,10 @@ namespace CabbyCodes.Patches.Settings
             
             // Create custom input field sync that triggers save on Enter
             var customInputFieldSync = new StringInputFieldSync(
-                customSaveNameRef, 
-                KeyCodeMap.ValidChars.AlphaNumericWithSpaces, 
-                new Vector2(widthFor35Chars, CabbyMenu.Constants.DEFAULT_PANEL_HEIGHT), 
-                60, 
+                customSaveNameRef,
+                KeyCodeMap.ValidChars.AlphaNumericWithSpaces,
+                new Vector2(widthFor35Chars, CabbyMenu.Constants.DEFAULT_PANEL_HEIGHT),
+                60,
                 AttemptSaveCustomGame);
             
             var panel = new InputFieldPanel<string>(customInputFieldSync, "(Optional) Save game name");
@@ -177,10 +182,11 @@ namespace CabbyCodes.Patches.Settings
         /// <summary>
         /// Saves the current game state as a custom save.
         /// </summary>
-        private static void SaveCustomGame()
+        private static void SaveCustomGame(string customNameParam)
         {
-            // Get the custom name if provided
-            string customName = ((customSaveNameRef?.Get()) ?? "").Trim();
+            // flag already set by caller
+            // customNameParam already captured, but guard nulls
+            string customName = (customNameParam ?? string.Empty).Trim();
             
             SavedGameManager.SaveCustomGame(customName, (success) =>
             {
@@ -201,6 +207,9 @@ namespace CabbyCodes.Patches.Settings
                 {
                     CabbyCodesPlugin.BLogger.LogWarning(string.Format("Failed to save game: {0}", customName));
                 }
+
+                // Reset saving flag once callback completes
+                isSaving = false;
             });
         }
 
@@ -267,19 +276,32 @@ namespace CabbyCodes.Patches.Settings
         /// </summary>
         private static void AttemptSaveCustomGame()
         {
-            string customName = ((customSaveNameRef?.Get()) ?? "").Trim();
+            // Debounce duplicate calls that can occur when input field submits then button click fires
+            if (Time.realtimeSinceStartup - lastSaveAttemptTime < 0.2f)
+            {
+                return;
+            }
+            lastSaveAttemptTime = Time.realtimeSinceStartup;
+
+            if (isSaving) return; // Another save already in progress
+            // Capture the latest text directly from the UI to avoid stale reference value
+            string customName = GetCurrentInputFieldText().Trim();
+            
+            // Immediately mark saving in progress to block any other events until callback finishes
+            isSaving = true;
+
             string fileName = SavedGameManager.GenerateSaveFileName(customName);
             string filePath = System.IO.Path.Combine(SavedGameManager.GetCabbySavesDirectory(), fileName);
-
+ 
             if (System.IO.File.Exists(filePath))
             {
                 var menu = CabbyCodesPlugin.cabbyMenu;
                 if (menu == null)
                 {
-                    SaveCustomGame();
+                    SaveCustomGame(customName);
                     return;
                 }
-
+ 
                 string msg = $"A save named '{customName}' already exists.\n\nOverwrite the existing file?";
                 var popup = new CabbyMenu.UI.Popups.ConfirmationPopup(
                     menu,
@@ -287,14 +309,30 @@ namespace CabbyCodes.Patches.Settings
                     msg,
                     "Overwrite",
                     "Cancel",
-                    () => { SaveCustomGame(); },
+                    () => { SaveCustomGame(customName); },
                     null);
                 popup.Show();
             }
             else
             {
-                SaveCustomGame();
+                SaveCustomGame(customName);
             }
+        }
+
+        /// <summary>
+        /// Gets the latest text from the input field, even if not submitted yet.
+        /// </summary>
+        private static string GetCurrentInputFieldText()
+        {
+            if (customSaveNameInputPanel != null)
+            {
+                var inputField = customSaveNameInputPanel.GetInputField();
+                if (inputField != null)
+                {
+                    return (inputField.text ?? string.Empty);
+                }
+            }
+            return customSaveNameRef.Get() ?? string.Empty;
         }
 
         /// <summary>
@@ -324,5 +362,7 @@ namespace CabbyCodes.Patches.Settings
 
             patchesApplied = true;
         }
+
+        private static float lastSaveAttemptTime = -1f;
     }
 } 

@@ -29,6 +29,15 @@ namespace CabbyCodes.Patches.Teleport
         /// Synced reference for the custom teleport name input field.
         /// </summary>
         private static readonly BoxedReference<string> customTeleportNameRef = new BoxedReference<string>("");
+        /// <summary>
+        /// Debounce tracking to avoid duplicate save triggers (button + Enter) firing back-to-back.
+        /// </summary>
+        private static float lastSaveAttemptTime = -1f;
+
+        /// <summary>
+        /// Flag to prevent overlapping save operations.
+        /// </summary>
+        private static bool isSaving = false;
 
         /// <summary>
         /// Reference to the custom name input field panel for forcing updates.
@@ -164,12 +173,22 @@ namespace CabbyCodes.Patches.Teleport
         /// </summary>
         public static void SaveTeleportLocation()
         {
+            // Debounce duplicate rapid calls (Enter + Button)
+            if (Time.realtimeSinceStartup - lastSaveAttemptTime < 0.2f)
+            {
+                return;
+            }
+            lastSaveAttemptTime = Time.realtimeSinceStartup;
+
+            if (isSaving) return;
+            isSaving = true;
+
             var (sceneName, teleportLocation) = TeleportService.GetCurrentPlayerPosition();
 
-            // Get the custom name if provided, otherwise use the scene name
-            string customName = (customTeleportNameRef.Get() ?? "").Trim();
+            // Capture latest input field text directly for most up-to-date name
+            string customName = GetCurrentInputFieldText().Trim();
             string displayName = !string.IsNullOrEmpty(customName) ? customName : sceneName;
-
+            
             List<TeleportLocation> teleportLocations = savedTeleports;
             bool locationFound = false;
             for (int i = 0; i < teleportLocations.Count; i++)
@@ -231,6 +250,9 @@ namespace CabbyCodes.Patches.Teleport
                     CabbyCodesPlugin.BLogger.LogWarning(string.Format("Failed to create config entry for teleport location: {0} ({1})", displayName, sceneName));
                 }
             }
+
+            // Reset saving flag so future saves are allowed
+            isSaving = false;
         }
 
         /// <summary>
@@ -288,7 +310,7 @@ namespace CabbyCodes.Patches.Teleport
                 new Vector2(widthFor35Chars, CabbyMenu.Constants.DEFAULT_PANEL_HEIGHT), 
                 60, 
                 SaveTeleportLocation,
-                SaveTeleportLocation); // Added onEnterPressed callback
+                SaveTeleportLocation); // Enter triggers save as well
             
             customNameInputPanel = new InputFieldPanel<string>(customInputFieldSync, "(Optional) Custom teleport name");
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(customNameInputPanel);
@@ -415,6 +437,22 @@ namespace CabbyCodes.Patches.Teleport
             {
                 AddCustomPanel(location);
             }
+        }
+
+        /// <summary>
+        /// Gets the latest text from the optional teleport name input field UI.
+        /// </summary>
+        private static string GetCurrentInputFieldText()
+        {
+            if (customNameInputPanel != null)
+            {
+                var inputField = customNameInputPanel.GetInputField();
+                if (inputField != null)
+                {
+                    return inputField.text ?? string.Empty;
+                }
+            }
+            return customTeleportNameRef.Get() ?? string.Empty;
         }
     }
 } 
