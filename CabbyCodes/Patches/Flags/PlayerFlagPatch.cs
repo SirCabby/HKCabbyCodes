@@ -2,6 +2,7 @@ using CabbyCodes.Flags;
 using CabbyMenu.UI.CheatPanels;
 using CabbyMenu.UI.DynamicPanels;
 using CabbyMenu.UI.Popups;
+using CabbyMenu.SyncedReferences;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -17,15 +18,113 @@ namespace CabbyCodes.Patches.Flags
         private static CheatPanel navigationPanel; // Stored for direct manipulation
         private static List<CheatPanel> currentFlagPanels = new List<CheatPanel>();
         private static PopupBase loadingPopup; // Loading popup shown during navigation
+        private static BoxedReference<bool> showAllFlagsState; // Store the toggle state
+        private static TogglePanel showAllFlagsPanel; // Store reference to toggle panel
 
         public static List<CheatPanel> CreatePanels()
         {
             var panels = new List<CheatPanel>();
 
+            // Initialize the show all flags state if not already done
+            if (showAllFlagsState == null)
+            {
+                showAllFlagsState = new BoxedReference<bool>(false); // Start with filtered flags
+            }
+
+            // Create the toggle panel for showing all flags
+            showAllFlagsPanel = new TogglePanel(
+                new DelegateReference<bool>(
+                    () => showAllFlagsState.Get(),
+                    (showAll) => {
+                        // Show loading popup immediately
+                        var loadingPopup = new PopupBase(CabbyCodesPlugin.cabbyMenu, "Loading", "Loading . . .", 400f, 200f);
+                        loadingPopup.SetPanelBackgroundColor(new Color(0.2f, 0.4f, 0.8f, 1f)); // Blue background
+                        loadingPopup.SetMessageBold(); // Make message text bold
+                        loadingPopup.Show();
+                        Canvas.ForceUpdateCanvases();
+                        
+                        // Defer panel operations to the next frame to ensure loading popup renders first
+                        CabbyMenu.Utilities.CoroutineRunner.RunNextFrame(() => {
+                            try
+                            {
+                                // Store the new state
+                                showAllFlagsState.Set(showAll);
+                                
+                                // Force the toggle button to update its visual state
+                                if (showAllFlagsPanel != null)
+                                {
+                                    var toggleBtn = showAllFlagsPanel.GetToggleButton();
+                                    if (toggleBtn != null)
+                                    {
+                                        toggleBtn.Update();
+                                    }
+                                }
+                                
+                                // Rebuild the flag list with the new setting
+                                allPlayerFlags = GetAllPlayerFlags(showAll);
+                                
+                                // Reset to first page when toggling
+                                currentPage = 0;
+                                
+                                // Container proxying to the main menu
+                                var container = new MainMenuPanelContainer(CabbyCodesPlugin.cabbyMenu);
+                                
+                                // Remove current panels
+                                if (navigationPanel != null)
+                                {
+                                    container.RemovePanel(navigationPanel);
+                                }
+                                foreach (var panel in currentFlagPanels)
+                                {
+                                    container.RemovePanel(panel);
+                                }
+                                currentFlagPanels.Clear();
+                                
+                                // Recreate navigation panel and flag panels
+                                navigationPanel = CreateNavigationPanel();
+                                container.AddPanel(navigationPanel);
+                                
+                                currentFlagPanels = CreateFlagPanelsForCurrentPage();
+                                foreach (var panel in currentFlagPanels)
+                                {
+                                    container.AddPanel(panel);
+                                }
+                                
+                                // Force UI update to reflect the new panels
+                                Canvas.ForceUpdateCanvases();
+                                
+                                // Panel rebuild complete - hide and destroy loading popup in the next frame
+                                CabbyMenu.Utilities.CoroutineRunner.RunNextFrame(() => {
+                                    if (loadingPopup != null)
+                                    {
+                                        loadingPopup.Hide();
+                                        loadingPopup.Destroy();
+                                    }
+                                });
+                            }
+                            catch (System.Exception ex)
+                            {
+                                UnityEngine.Debug.LogError($"[PlayerFlagPatch] Error during toggle: {ex.Message}\n{ex.StackTrace}");
+                                
+                                // Make sure to destroy loading popup even on error
+                                if (loadingPopup != null)
+                                {
+                                    loadingPopup.Hide();
+                                    loadingPopup.Destroy();
+                                }
+                            }
+                        });
+                    }
+                ),
+                "Show ALL flags? (includes some unknown and many very useless ones)"
+            );
+            
+            panels.Add(showAllFlagsPanel);
+
             // Initialize the list of all player flags if not already done
             if (allPlayerFlags == null)
             {
-                allPlayerFlags = GetAllPlayerFlags();
+                allPlayerFlags = GetAllPlayerFlags(showAllFlagsState.Get());
             }
 
             // Create navigation panel
@@ -39,7 +138,12 @@ namespace CabbyCodes.Patches.Flags
             return panels;
         }
 
-                private static List<FlagDef> GetAllPlayerFlags()
+        private static List<FlagDef> GetAllPlayerFlags()
+        {
+            return GetAllPlayerFlags(false); // Default to filtered flags
+        }
+
+        private static List<FlagDef> GetAllPlayerFlags(bool showAllFlags)
         {
             var flags = new List<FlagDef>();
 
@@ -66,22 +170,25 @@ namespace CabbyCodes.Patches.Flags
                 }
             }
 
-            // Add flags from UnusedFlags array
-            try
+            // Add flags from UnusedFlags array only if showAllFlags is true
+            if (showAllFlags)
             {
-                var unusedFlags = FlagInstances.UnusedFlags;
-                
-                foreach (var flagDef in unusedFlags)
+                try
                 {
-                    if (flagDef.Scene == null)
+                    var unusedFlags = FlagInstances.UnusedFlags;
+                    
+                    foreach (var flagDef in unusedFlags)
                     {
-                        flags.Add(flagDef);
+                        if (flagDef.Scene == null)
+                        {
+                            flags.Add(flagDef);
+                        }
                     }
                 }
-            }
-            catch (System.Exception ex)
-            {
-                Debug.LogError($"[PlayerFlagPatch] UnusedFlags access failed: {ex.Message}");
+                catch (System.Exception ex)
+                {
+                    Debug.LogError($"[PlayerFlagPatch] UnusedFlags access failed: {ex.Message}");
+                }
             }
 
             // Sort by readable name for better organization
@@ -304,6 +411,11 @@ namespace CabbyCodes.Patches.Flags
             currentPage = 0;
             navigationPanel = null;
             currentFlagPanels.Clear();
+            // Reset the show all flags state
+            if (showAllFlagsState != null)
+            {
+                showAllFlagsState.Set(false);
+            }
             // Destroy loading popup if it exists
             if (loadingPopup != null)
             {
