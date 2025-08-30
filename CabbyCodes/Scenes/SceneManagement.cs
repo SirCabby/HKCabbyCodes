@@ -127,6 +127,103 @@ namespace CabbyCodes.Scenes
         }
 
         /// <summary>
+        /// Gets a dictionary mapping area names to lists of flags for that area, including unused flags.
+        /// This method provides a comprehensive view of all flags that could potentially be in each area.
+        /// </summary>
+        /// <returns>A dictionary where keys are area names and values are lists of flags including unused ones.</returns>
+        public static Dictionary<string, List<Flags.FlagDef>> GetAllAreaFlags()
+        {
+            var areaFlags = new Dictionary<string, List<Flags.FlagDef>>();
+            
+            // Get all FlagDef instances from FlagInstances class using reflection
+            var flagInstancesType = typeof(Flags.FlagInstances);
+            var fields = flagInstancesType.GetFields(BindingFlags.Public | BindingFlags.Static);
+            
+            foreach (var field in fields)
+            {
+                if (field.FieldType == typeof(Flags.FlagDef))
+                {
+                    var flagDef = (Flags.FlagDef)field.GetValue(null);
+                    
+                    // Skip global flags (scene name is "Global")
+                    if (flagDef.SceneName == "Global")
+                        continue;
+                    
+                    // Get the area name for this scene
+                    var sceneData = flagDef.Scene;
+                    if (sceneData != null)
+                    {
+                        string areaName = sceneData.AreaName;
+                        if (string.IsNullOrEmpty(areaName))
+                        {
+                            // Skip non-mappable scenes (boss rooms, transition rooms, etc.) that have no associated area
+                            continue;
+                        }
+                        
+                        if (!areaFlags.ContainsKey(areaName))
+                        {
+                            areaFlags[areaName] = new List<Flags.FlagDef>();
+                        }
+                        
+                        areaFlags[areaName].Add(flagDef);
+                    }
+                }
+            }
+            
+            // Add unused flags from the UnusedFlags array
+            try
+            {
+                var unusedFlags = Flags.FlagInstances.UnusedFlags;
+                
+                foreach (var unusedFlag in unusedFlags)
+                {
+                    if (unusedFlag != null)
+                    {
+                        // Handle scene-specific flags (PersistentBoolData, PersistentIntData, GeoRockData)
+                        if (!string.IsNullOrEmpty(unusedFlag.SceneName))
+                        {
+                            // Skip global flags
+                            if (unusedFlag.SceneName == "Global")
+                                continue;
+                            
+                            // Get the area name for this scene
+                            var sceneData = unusedFlag.Scene;
+                            if (sceneData != null)
+                            {
+                                string areaName = sceneData.AreaName;
+                                if (string.IsNullOrEmpty(areaName))
+                                {
+                                    // Skip non-mappable scenes
+                                    continue;
+                                }
+                                
+                                if (!areaFlags.ContainsKey(areaName))
+                                {
+                                    areaFlags[areaName] = new List<Flags.FlagDef>();
+                                }
+                                
+                                areaFlags[areaName].Add(unusedFlag);
+                            }
+                        }
+                        // Note: PlayerData flags are intentionally excluded as they don't belong to specific areas
+                    }
+                }
+            }
+            catch (System.Exception ex)
+            {
+                UnityEngine.Debug.LogWarning($"[SceneManagement] Failed to process unused flags: {ex.Message}");
+            }
+            
+            // Sort flags within each area by readable name
+            foreach (var area in areaFlags.Keys.ToList())
+            {
+                areaFlags[area] = areaFlags[area].OrderBy(f => f.ReadableName).ToList();
+            }
+            
+            return areaFlags;
+        }
+
+        /// <summary>
         /// Gets a dictionary mapping area names to lists of scene names in that area.
         /// </summary>
         /// <returns>A dictionary where keys are area names and values are lists of scene names.</returns>

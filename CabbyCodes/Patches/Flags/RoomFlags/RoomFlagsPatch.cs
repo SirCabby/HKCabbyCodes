@@ -1,8 +1,12 @@
 using CabbyMenu.UI.CheatPanels;
 using CabbyMenu.UI.DynamicPanels;
 using CabbyMenu.UI.Controls;
+using CabbyMenu.UI.Popups;
+using CabbyMenu.SyncedReferences;
 using System.Collections.Generic;
 using System.Linq;
+using System;
+using UnityEngine;
 using UnityEngine.EventSystems;
 
 namespace CabbyCodes.Patches.Flags.RoomFlags
@@ -17,28 +21,221 @@ namespace CabbyCodes.Patches.Flags.RoomFlags
             int currentAreaIndex = GetCurrentAreaIndex();
 
             // Dropdown bound to an AreaSelector reference
-            var areaSelector  = new AreaSelector(currentAreaIndex);
+            var areaSelector = new AreaSelector(currentAreaIndex, false); // Start with filtered flags
             var dropdownPanel = new DropdownPanel(areaSelector, "Select Area", Constants.DEFAULT_PANEL_HEIGHT);
-            panels.Add(dropdownPanel);
 
             // Container proxying to the main menu
             var container = new MainMenuPanelContainer(CabbyCodesPlugin.cabbyMenu);
 
+            // Create a BoxedReference to store the actual toggle state
+            var toggleState = new BoxedReference<bool>(false);
+
+            // Create a DelegateReference that will be updated after panelManager is created
+            DelegateReference<bool> showAllFlagsReference = null;
+
             // Manager responsible for creating and replacing room flag panels when the dropdown changes
             var panelManager = new DynamicPanelManager(
                 dropdownPanel,
-                CreateRoomFlagsPanels,
+                (areaIndex) => {
+                    // Always get the current value of toggleState when creating panels
+                    bool currentShowAllFlags = toggleState.Get();
+                    return CreateRoomFlagsPanels(areaIndex, currentShowAllFlags);
+                },
                 container,
-                insertionIndex: 1,  // insert directly after the dropdown
+                insertionIndex: 2,  // insert after both the toggle and dropdown
                 parentManager: null,
                 onPanelsChanged: null,
                 menu: CabbyCodesPlugin.cabbyMenu
             );
 
-            // Selection change listener will rebuild panels; no per-frame update needed
-            dropdownPanel.GetDropDownSync().GetCustomDropdown().onValueChanged.AddListener(_ => panelManager.RecreateDynamicPanels());
+            // Now create the DelegateReference with the change handler
+            showAllFlagsReference = new DelegateReference<bool>(
+                () => toggleState.Get(), // Return the current stored state
+                (showAll) => {
+                    try
+                    {
+                        // Show loading popup immediately
+                        var loadingPopup = new PopupBase(CabbyCodesPlugin.cabbyMenu, "Loading", "Loading . . .", 400f, 200f);
+                        loadingPopup.SetPanelBackgroundColor(new Color(0.2f, 0.4f, 0.8f, 1f)); // Blue background
+                        loadingPopup.SetMessageBold(); // Make message text bold
+                        loadingPopup.Show();
+                        Canvas.ForceUpdateCanvases();
+                        
+                        // Defer panel operations to the next frame to ensure loading popup renders first
+                        CabbyMenu.Utilities.CoroutineRunner.RunNextFrame(() => {
+                            try
+                            {
+                                // Store the new state
+                                toggleState.Set(showAll);
+                                
+                                // Update the area selector with the new flag list
+                                areaSelector.UpdateFlagList(showAll);
+                                
+                                // Since both filtered and unfiltered modes have the same area list, 
+                                // we don't need to maintain area selection - it will stay the same
+                                
+                                // Force the dropdown to update its value list and current selection
+                                var dropdownSync = dropdownPanel.GetDropDownSync();
+                                if (dropdownSync != null)
+                                {
+                                    // Update the dropdown's value list to reflect the new area names
+                                    var newAreaNames = areaSelector.GetValueList();
+                                    dropdownSync.GetCustomDropdown().SetOptions(newAreaNames);
+                                    // Set the dropdown to the current area selector value
+                                    dropdownSync.GetCustomDropdown().SetValue(areaSelector.Get());
+                                }
+                                
+                                // Rebuild the panels to show the updated flag list
+                                
+                                // Get the current area index AFTER all updates are complete
+                                int finalAreaIndex = areaSelector.Get();
+                                
+                                // Force panel recreation by directly calling the panel factory and updating the container
+                                var newPanels = CreateRoomFlagsPanels(finalAreaIndex, showAll);
+                                
+                                // Get all current panels and find the toggle and dropdown panels to preserve them
+                                var allPanels = container.GetAllPanels();
+                                var foundTogglePanel = allPanels.FirstOrDefault(p => p.GetDescription().Contains("Show ALL flags"));
+                                var foundDropdownPanel = allPanels.FirstOrDefault(p => p.GetDescription().Contains("Select Area"));
+                                
+                                if (foundTogglePanel != null && foundDropdownPanel != null)
+                                {
+                                    // Find the indices of the toggle and dropdown panels
+                                    int toggleIndex = container.GetPanelIndex(foundTogglePanel);
+                                    int dropdownIndex = container.GetPanelIndex(foundDropdownPanel);
+                                    
+                                    // When toggling, preserve both toggle and dropdown. When changing areas, only preserve toggle.
+                                    // Since this is the toggle handler, we want to preserve both
+                                    int preserveCount = Math.Max(toggleIndex, dropdownIndex) + 1;
+                                    
+                                    // Remove all panels after the toggle and dropdown
+                                    int dynamicPanelStartIndex = preserveCount;
+                                    int dynamicPanelCount = allPanels.Count - preserveCount;
+                                    
+                                    if (dynamicPanelCount > 0)
+                                    {
+                                        // Remove only the dynamic room flag panels (starting after toggle and dropdown)
+                                        container.DetachPanelsAtRange(startIndex: dynamicPanelStartIndex, count: dynamicPanelCount);
+                                    }
+                                    
+                                    // Insert the new dynamic panels after the toggle and dropdown
+                                    container.ReattachPanelsAtRange(newPanels, index: dynamicPanelStartIndex);
+                                }
+                                
+                                // Panel rebuild complete - hide and destroy loading popup in the next frame
+                                CabbyMenu.Utilities.CoroutineRunner.RunNextFrame(() => {
+                                    if (loadingPopup != null)
+                                    {
+                                        loadingPopup.Hide();
+                                        loadingPopup.Destroy();
+                                    }
+                                });
+                            }
+                            catch (System.Exception ex)
+                            {
+                                UnityEngine.Debug.LogError($"[RoomFlagsPatch] Error during toggle: {ex.Message}\n{ex.StackTrace}");
+                                
+                                // Make sure to destroy loading popup even on error
+                                if (loadingPopup != null)
+                                {
+                                    loadingPopup.Hide();
+                                    loadingPopup.Destroy();
+                                }
+                            }
+                        });
+                    }
+                    catch (System.Exception ex)
+                    {
+                        UnityEngine.Debug.LogError($"[RoomFlagsPatch] Error during toggle: {ex.Message}\n{ex.StackTrace}");
+                    }
+                }
+            );
 
-            // Defer initial panel creation to next frame, after the dropdown has been inserted
+            var showAllFlagsPanel = new TogglePanel(
+                showAllFlagsReference,
+                "Show ALL flags? (includes some unknown and many very useless ones)"
+            );
+            
+            // Add panels in the correct order: toggle first, then dropdown
+            panels.Add(showAllFlagsPanel);
+            panels.Add(dropdownPanel);
+
+            // Selection change listener will rebuild panels; no per-frame update needed
+            dropdownPanel.GetDropDownSync().GetCustomDropdown().onValueChanged.AddListener((areaIndex) => {
+                
+                // Show loading popup immediately
+                var loadingPopup = new PopupBase(CabbyCodesPlugin.cabbyMenu, "Loading", "Loading . . .", 400f, 200f);
+                loadingPopup.SetPanelBackgroundColor(new Color(0.2f, 0.4f, 0.8f, 1f)); // Blue background
+                loadingPopup.SetMessageBold(); // Make message text bold
+                loadingPopup.Show();
+                Canvas.ForceUpdateCanvases();
+                
+                // Defer panel operations to the next frame to ensure loading popup renders first
+                CabbyMenu.Utilities.CoroutineRunner.RunNextFrame(() => {
+                    try
+                    {
+                        // Get the current toggle state
+                        bool currentShowAllFlags = toggleState.Get();
+                        
+                        // Create new panels for the selected area
+                        var newAreaPanels = CreateRoomFlagsPanels(areaIndex, currentShowAllFlags);
+                        
+                        // Get all current panels and find the toggle and dropdown panels to preserve them
+                        var allPanels = container.GetAllPanels();
+                        var foundTogglePanel = allPanels.FirstOrDefault(p => p.GetDescription().Contains("Show ALL flags"));
+                        var foundDropdownPanel = allPanels.FirstOrDefault(p => p.GetDescription().Contains("Select Area"));
+                        
+                        if (foundTogglePanel != null && foundDropdownPanel != null)
+                        {
+                            // Find the indices of the toggle and dropdown panels
+                            int toggleIndex = container.GetPanelIndex(foundTogglePanel);
+                            int dropdownIndex = container.GetPanelIndex(foundDropdownPanel);
+                            
+                            // For area changes, preserve both toggle and dropdown
+                            int preserveCount = Math.Max(toggleIndex, dropdownIndex) + 1;
+                            
+                            // Remove all panels after the toggle and dropdown
+                            int dynamicPanelStartIndex = preserveCount;
+                            int dynamicPanelCount = allPanels.Count - preserveCount;
+                            
+                            if (dynamicPanelCount > 0)
+                            {
+                                // Remove only the dynamic room flag panels (starting after toggle and dropdown)
+                                container.DetachPanelsAtRange(startIndex: dynamicPanelStartIndex, count: dynamicPanelCount);
+                            }
+                            
+                            // Insert the new dynamic panels after the toggle and dropdown
+                            container.ReattachPanelsAtRange(newAreaPanels, index: dynamicPanelStartIndex);
+                        }
+                        else
+                        {
+                            // Could not find toggle or dropdown panel
+                        }
+                        
+                        // Panel recreation complete - hide and destroy loading popup in the next frame
+                        CabbyMenu.Utilities.CoroutineRunner.RunNextFrame(() => {
+                            if (loadingPopup != null)
+                            {
+                                loadingPopup.Hide();
+                                loadingPopup.Destroy();
+                            }
+                        });
+                    }
+                    catch (System.Exception ex)
+                    {
+                        UnityEngine.Debug.LogError($"[RoomFlagsPatch] Area change error: {ex.Message}");
+                        
+                        // Make sure to destroy loading popup even on error
+                        if (loadingPopup != null)
+                        {
+                            loadingPopup.Hide();
+                            loadingPopup.Destroy();
+                        }
+                    }
+                });
+            });
+
+            // Defer initial panel creation to next frame, after the panels have been inserted
             CabbyMenu.Utilities.CoroutineRunner.RunNextFrame(() => panelManager.CreateInitialPanels(currentAreaIndex));
 
             return panels;
@@ -75,10 +272,17 @@ namespace CabbyCodes.Patches.Flags.RoomFlags
 
         private static List<CheatPanel> CreateRoomFlagsPanels(int areaIndex)
         {
+            return CreateRoomFlagsPanels(areaIndex, false);
+        }
+
+        private static List<CheatPanel> CreateRoomFlagsPanels(int areaIndex, bool showAllFlags)
+        {
             var panels = new List<CheatPanel>();
             
-            // Get the area flags dictionary
-            var areaFlags = Scenes.SceneManagement.GetAreaFlags();
+            // Get the area flags dictionary based on the showAllFlags setting
+            var areaFlags = showAllFlags 
+                ? Scenes.SceneManagement.GetAllAreaFlags() 
+                : Scenes.SceneManagement.GetAreaFlags();
             var areaNames = areaFlags.Keys.ToList();
             
             if (areaIndex >= 0 && areaIndex < areaNames.Count)
