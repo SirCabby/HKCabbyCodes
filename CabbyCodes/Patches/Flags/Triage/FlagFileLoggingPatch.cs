@@ -128,6 +128,13 @@ namespace CabbyCodes.Patches.Flags.Triage
         public void LogMessage(string message)
         {
             if (!isEnabled || string.IsNullOrEmpty(logFilePath)) return;
+            
+            // Check if we should log this type of message based on settings
+            if (!ShouldLogMessageType(message))
+            {
+                return;
+            }
+            
             try
             {
                 string timestamp = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff");
@@ -138,6 +145,53 @@ namespace CabbyCodes.Patches.Flags.Triage
             {
                 Debug.LogError($"[Flag Monitor] Failed to write to log file: {ex.Message}");
             }
+        }
+
+        /// <summary>
+        /// Determines if a message should be logged based on current Flag Monitor settings
+        /// </summary>
+        private bool ShouldLogMessageType(string message)
+        {
+            // Import the FlagMonitorSettings to check configuration
+            // We need to use reflection since this class doesn't have direct access to FlagMonitorSettings
+            try
+            {
+                var settingsType = System.Type.GetType("CabbyCodes.Patches.Flags.Triage.FlagMonitorSettings");
+                if (settingsType != null)
+                {
+                    // Scene transitions
+                    if (message.StartsWith("[SceneChange]"))
+                    {
+                        var showSceneTransitions = (bool)settingsType.GetProperty("ShowSceneTransitions").GetValue(null);
+                        return showSceneTransitions;
+                    }
+                    
+                    // New discoveries
+                    if (message.StartsWith("[NEW PLAYERDATA FLAG]") || 
+                        message.StartsWith("[NEW SCENE FLAG") ||
+                        message.StartsWith("[NEW SCENE DISCOVERED]") ||
+                        message.StartsWith("[NEW BOSSSTATUE FLAG]"))
+                    {
+                        var showNewDiscoveries = (bool)settingsType.GetProperty("ShowNewDiscoveries").GetValue(null);
+                        return showNewDiscoveries;
+                    }
+                    
+                    // Value changes
+                    if (message.StartsWith("[PlayerData]:") || message.StartsWith("[Scene:"))
+                    {
+                        var showChangedValues = (bool)settingsType.GetProperty("ShowChangedValues").GetValue(null);
+                        return showChangedValues;
+                    }
+                }
+            }
+            catch
+            {
+                // If reflection fails, fall back to logging everything
+                return true;
+            }
+            
+            // Default to logging other types
+            return true;
         }
     }
 } 

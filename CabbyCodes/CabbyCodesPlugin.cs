@@ -62,6 +62,7 @@ namespace CabbyCodes
             // Initialize flag monitor configuration early so it's available when panels are created
             FlagMonitorReference.InitializeConfig();
             FlagFileLoggingReference.InitializeConfig();
+            FlagMonitorSettings.InitializeConfig();
 
             // Create persistent loader
             if (quickStartLoaderGo == null)

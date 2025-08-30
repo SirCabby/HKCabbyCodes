@@ -678,7 +678,7 @@ namespace CabbyCodes.Patches.Flags.Triage
                     newScenes.Add(sceneCodeLine);
                 }
                 
-                if (playerDataFlags.Count > 0)
+                if (playerDataFlags.Count > 0 && FlagMonitorSettings.IncludePlayerDataFlags)
                 {
                     lines.Add("// PlayerData Flags:");
                     playerDataFlags.Sort(); // Sort alphabetically
@@ -686,7 +686,7 @@ namespace CabbyCodes.Patches.Flags.Triage
                     lines.Add("");
                 }
 
-                if (sceneFlags.Count > 0)
+                if (sceneFlags.Count > 0 && FlagMonitorSettings.IncludeSceneFlags)
                 {
                     lines.Add("// Scene Flags:");
                     sceneFlags.Sort(); // Sort alphabetically
@@ -1118,8 +1118,12 @@ namespace CabbyCodes.Patches.Flags.Triage
             // Update the last known scene area before checking for new scenes
             UpdateLastKnownSceneArea(oldScene.name);
             
-            string notification = $"[SceneChange]: {oldScene.name} -> {newScene.name}";
-            AddNotification(notification);
+            // Only add scene change notification if enabled
+            if (FlagMonitorSettings.ShowSceneTransitions)
+            {
+                string notification = $"[SceneChange]: {oldScene.name} -> {newScene.name}";
+                AddNotification(notification);
+            }
             
             // Check for new scene discovery
             CheckForNewScene(newScene.name);
@@ -1199,6 +1203,12 @@ namespace CabbyCodes.Patches.Flags.Triage
 
         private static void AddNotification(string message)
         {
+            // Check if we should show this type of notification based on settings
+            if (!ShouldShowNotificationType(message))
+            {
+                return;
+            }
+
             // Log to file if enabled
             fileLoggingReference.LogMessage(message);
             
@@ -1215,6 +1225,36 @@ namespace CabbyCodes.Patches.Flags.Triage
                 
                 UpdateNotificationDisplay();
             }
+        }
+
+        /// <summary>
+        /// Determines if a notification should be shown based on current settings
+        /// </summary>
+        private static bool ShouldShowNotificationType(string message)
+        {
+            // Scene transitions
+            if (message.StartsWith("[SceneChange]"))
+            {
+                return FlagMonitorSettings.ShowSceneTransitions;
+            }
+            
+            // New discoveries
+            if (message.StartsWith("[NEW PLAYERDATA FLAG]") || 
+                message.StartsWith("[NEW SCENE FLAG") ||
+                message.StartsWith("[NEW SCENE DISCOVERED]") ||
+                message.StartsWith("[NEW BOSSSTATUE FLAG]"))
+            {
+                return FlagMonitorSettings.ShowNewDiscoveries;
+            }
+            
+            // Value changes
+            if (message.StartsWith("[PlayerData]:") || message.StartsWith("[Scene:"))
+            {
+                return FlagMonitorSettings.ShowChangedValues;
+            }
+            
+            // Default to showing other types
+            return true;
         }
 
         /// <summary>
@@ -1492,6 +1532,49 @@ namespace CabbyCodes.Patches.Flags.Triage
             var monitorToggle = new TogglePanel(monitorReference, "Enable real-time flag change notifications on screen");
             panels.Add(monitorToggle);
 
+            // Add settings section header
+            panels.Add(new InfoPanel("Display Settings").SetColor(CheatPanel.subHeaderColor));
+
+            // Create synced references for the new settings using DelegateReference to properly update FlagMonitorSettings
+            var showNewDiscoveriesRef = new CabbyMenu.SyncedReferences.DelegateReference<bool>(
+                () => FlagMonitorSettings.ShowNewDiscoveries,
+                (value) => FlagMonitorSettings.SetShowNewDiscoveries(value));
+            
+            var showChangedValuesRef = new CabbyMenu.SyncedReferences.DelegateReference<bool>(
+                () => FlagMonitorSettings.ShowChangedValues,
+                (value) => FlagMonitorSettings.SetShowChangedValues(value));
+            
+            var showSceneTransitionsRef = new CabbyMenu.SyncedReferences.DelegateReference<bool>(
+                () => FlagMonitorSettings.ShowSceneTransitions,
+                (value) => FlagMonitorSettings.SetShowSceneTransitions(value));
+            
+            var includePlayerDataFlagsRef = new CabbyMenu.SyncedReferences.DelegateReference<bool>(
+                () => FlagMonitorSettings.IncludePlayerDataFlags,
+                (value) => FlagMonitorSettings.SetIncludePlayerDataFlags(value));
+            
+            var includeSceneFlagsRef = new CabbyMenu.SyncedReferences.DelegateReference<bool>(
+                () => FlagMonitorSettings.IncludeSceneFlags,
+                (value) => FlagMonitorSettings.SetIncludeSceneFlags(value));
+
+            // Add setting toggles
+            var showNewDiscoveriesToggle = new TogglePanel(showNewDiscoveriesRef, "Show new discoveries");
+            panels.Add(showNewDiscoveriesToggle);
+
+            var showChangedValuesToggle = new TogglePanel(showChangedValuesRef, "Show changed values");
+            panels.Add(showChangedValuesToggle);
+
+            var showSceneTransitionsToggle = new TogglePanel(showSceneTransitionsRef, "Show scene transitions");
+            panels.Add(showSceneTransitionsToggle);
+
+            var includePlayerDataFlagsToggle = new TogglePanel(includePlayerDataFlagsRef, "Include PlayerData flags");
+            panels.Add(includePlayerDataFlagsToggle);
+
+            var includeSceneFlagsToggle = new TogglePanel(includeSceneFlagsRef, "Include Scene flags");
+            panels.Add(includeSceneFlagsToggle);
+
+            // Add utility section header
+            panels.Add(new InfoPanel("Utilities").SetColor(CheatPanel.subHeaderColor));
+
             var clearButton = new ButtonPanel(() =>
             {
                 ClearNotifications();
@@ -1613,6 +1696,12 @@ namespace CabbyCodes.Patches.Flags.Triage
         private static void PollPlayerDataFields()
         {
             if (PlayerData.instance == null) return;
+            
+            // Check if PlayerData monitoring is enabled
+            if (!FlagMonitorSettings.ShouldMonitorPlayerData())
+            {
+                return;
+            }
             
             // Check for critical menu scenes that should completely disable polling
             string currentScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
@@ -2264,6 +2353,12 @@ namespace CabbyCodes.Patches.Flags.Triage
         private static void PollSceneDataFields()
         {
             if (SceneData.instance == null) return;
+
+            // Check if Scene monitoring is enabled
+            if (!FlagMonitorSettings.ShouldMonitorScenes())
+            {
+                return;
+            }
 
             // Check for critical menu scenes that should completely disable polling
             string currentScene = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
