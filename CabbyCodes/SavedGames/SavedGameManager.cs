@@ -8,6 +8,7 @@ using UnityEngine;
 using CabbyCodes.Patches.Teleport;
 using CabbyCodes.CheatState;
 using CabbyCodes.Scenes;
+using CabbyMenu.UI;
 
 namespace CabbyCodes.SavedGames
 {
@@ -160,6 +161,40 @@ namespace CabbyCodes.SavedGames
 
         private static void LoadCustomGameInternal(string filePath, Action<bool> callback)
         {
+            // Get the existing loading popup that was created when user clicked load
+            var loadingPopup = CabbyCodes.Patches.Settings.CustomSaveLoadPatch.GetCurrentLoadingPopup();
+            
+            // Add a delay to ensure the popup has time to display before proceeding
+            if (loadingPopup != null)
+            {
+                // Use a coroutine to delay the loading logic by at least 1 frame
+                GameManager.instance?.StartCoroutine(DelayedLoadCustomGameInternal(filePath, callback, loadingPopup));
+            }
+            else
+            {
+                // No popup available, proceed immediately
+                LoadCustomGameInternalCore(filePath, callback, null);
+            }
+        }
+
+        /// <summary>
+        /// Coroutine to delay loading logic to allow popup to display.
+        /// </summary>
+        private static System.Collections.IEnumerator DelayedLoadCustomGameInternal(string filePath, Action<bool> callback, CabbyMenu.UI.IPersistentPopup loadingPopup)
+        {
+            // Wait at least 2 frames to ensure popup is fully visible and rendered
+            yield return null;
+            yield return null;
+            
+            // Now proceed with the actual loading logic
+            LoadCustomGameInternalCore(filePath, callback, loadingPopup);
+        }
+
+        /// <summary>
+        /// Core loading logic that was previously in LoadCustomGameInternal.
+        /// </summary>
+        private static void LoadCustomGameInternalCore(string filePath, Action<bool> callback, CabbyMenu.UI.IPersistentPopup loadingPopup)
+        {
             try
             {
                 byte[] fileData = File.ReadAllBytes(filePath);
@@ -229,9 +264,21 @@ namespace CabbyCodes.SavedGames
                         gameManager.OnFinishedEnteringScene -= handler;
 
                         // Start coroutine that waits for atBench flag and the extra delay
-                        gameManager.StartCoroutine(TeleportAfterBench(teleportLocation));
+                        gameManager.StartCoroutine(TeleportAfterBench(teleportLocation, loadingPopup));
                     }
                     gameManager.OnFinishedEnteringScene += handler;
+                }
+                else
+                {
+                    // No scene teleport needed, hide popup immediately
+                    if (loadingPopup != null)
+                    {
+                        loadingPopup.Hide();
+                        loadingPopup.Destroy();
+                    }
+                    
+                    // Clear the popup reference
+                    CabbyCodes.Patches.Settings.CustomSaveLoadPatch.ClearCurrentLoadingPopup();
                 }
                 
                 callback?.Invoke(true);
@@ -239,15 +286,29 @@ namespace CabbyCodes.SavedGames
             catch (Exception ex)
             {
                 Debug.LogError($"Failed to load custom game from {filePath}: {ex.Message}");
+                
+                // Hide popup on error
+                if (loadingPopup != null)
+                {
+                    loadingPopup.Hide();
+                    loadingPopup.Destroy();
+                }
+                
+                // Clear the popup reference
+                CabbyCodes.Patches.Settings.CustomSaveLoadPatch.ClearCurrentLoadingPopup();
+                
                 callback?.Invoke(false);
             }
         }
+
+
 
         /// <summary>
         /// Coroutine to teleport to the correct scene and position after the game has loaded.
         /// </summary>
         /// <param name="teleportLocation">The location to teleport to.</param>
-        private static System.Collections.IEnumerator TeleportAfterBench(TeleportLocation teleportLocation)
+        /// <param name="loadingPopup">The loading popup to hide after teleport is complete.</param>
+        private static System.Collections.IEnumerator TeleportAfterBench(TeleportLocation teleportLocation, CabbyMenu.UI.IPersistentPopup loadingPopup)
         {
             // Wait until the player sits down at a bench (atBench becomes true)
             while (PlayerData.instance == null || !PlayerData.instance.atBench)
@@ -255,11 +316,17 @@ namespace CabbyCodes.SavedGames
                 yield return null; // wait one frame
             }
 
+            // Update popup message to instruct user to get off bench
+            loadingPopup?.SetMessageText("Get off bench to restore position");
+
             // Wait until the player STANDS UP again (atBench becomes false)
             while (PlayerData.instance != null && PlayerData.instance.atBench)
             {
                 yield return null; // still sitting
             }
+
+            // Restore original message
+            loadingPopup?.SetMessageText("Please Wait . . .");
 
             // Extra delay to ensure everything is fully settled after standing up
             yield return new WaitForSeconds(0.5f);
@@ -290,6 +357,13 @@ namespace CabbyCodes.SavedGames
                     teleportLocation.Scene.SceneName, teleportLocation.Location.x, teleportLocation.Location.y));
 
                 TeleportService.DoTeleport(teleportLocation);
+            }
+            
+            // Hide and destroy the loading popup after teleport is complete
+            if (loadingPopup != null)
+            {
+                loadingPopup.Hide();
+                loadingPopup.Destroy();
             }
         }
     }

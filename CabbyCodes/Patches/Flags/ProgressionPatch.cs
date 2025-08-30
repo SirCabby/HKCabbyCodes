@@ -490,10 +490,7 @@ namespace CabbyCodes.Patches.Flags
                 {
                     bool interactable = GameStateProvider.GetCurrentSceneName() != "GG_Atrium";
                     var dropdown = doorDropdownPanel.GetDropDownSync()?.GetCustomDropdown();
-                    if (dropdown != null)
-                    {
-                        dropdown.SetInteractable(interactable);
-                    }
+                    dropdown?.SetInteractable(interactable);
                 });
                 // Execute to set initial state
                 if (doorDropdownPanel.updateActions.Count > 0)

@@ -1115,10 +1115,7 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
                 CreateHoverPopup();
             }
 
-            if (hoverPopup != null)
-            {
-                hoverPopup.ShowPopup(message);
-            }
+            hoverPopup?.ShowPopup(message);
         }
         
 
@@ -1128,10 +1125,7 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
         /// </summary>
         private void HideHoverPopup()
         {
-            if (hoverPopup != null)
-            {
-                hoverPopup.HidePopup();
-            }
+            hoverPopup?.HidePopup();
             isHoveringOverDisabledOption = false;
             currentHoveredOptionIndex = -1;
         }
@@ -1347,7 +1341,7 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
             optionButtons.Add(parentPanel);
 
             // Attach scroll proxy so mouse wheel over this button scrolls the dropdown
-            ScrollRect parentScrollRect = scrollView != null ? scrollView.GetComponent<ScrollRect>() : null;
+            ScrollRect parentScrollRect = scrollView?.GetComponent<ScrollRect>();
             if (parentScrollRect != null)
             {
                 var proxy = optionObj.AddComponent<OptionScrollProxy>();

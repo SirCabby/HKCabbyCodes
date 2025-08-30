@@ -33,10 +33,7 @@ namespace CabbyMenu.UI.Controls
         private void Start()
         {
             // Initially hide the popup
-            if (popupBackground != null)
-            {
-                popupBackground.SetActive(false);
-            }
+            popupBackground?.SetActive(false);
         }
 
         private void OnDestroy()

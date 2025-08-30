@@ -83,10 +83,7 @@ namespace CabbyCodes.Patches.Flags
                                     if (showAllFlagsPanel != null)
                                     {
                                         var toggleBtn = showAllFlagsPanel.GetToggleButton();
-                                        if (toggleBtn != null)
-                                        {
-                                            toggleBtn.Update();
-                                        }
+                                        toggleBtn?.Update();
                                     }
                                     
                                     // Rebuild the flag list with the new setting
@@ -447,10 +444,7 @@ namespace CabbyCodes.Patches.Flags
             navigationPanel = null;
             currentFlagPanels.Clear();
             // Reset the show all flags state
-            if (showAllFlagsState != null)
-            {
-                showAllFlagsState.Set(false);
-            }
+            showAllFlagsState?.Set(false);
             // Reset the show all flags panel reference
             showAllFlagsPanel = null;
             // Destroy loading popup if it exists
