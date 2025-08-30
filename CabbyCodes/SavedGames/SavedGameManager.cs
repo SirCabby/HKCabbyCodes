@@ -8,7 +8,6 @@ using UnityEngine;
 using CabbyCodes.Patches.Teleport;
 using CabbyCodes.CheatState;
 using CabbyCodes.Scenes;
-using CabbyMenu.UI;
 
 namespace CabbyCodes.SavedGames
 {
@@ -162,7 +161,7 @@ namespace CabbyCodes.SavedGames
         private static void LoadCustomGameInternal(string filePath, Action<bool> callback)
         {
             // Get the existing loading popup that was created when user clicked load
-            var loadingPopup = CabbyCodes.Patches.Settings.CustomSaveLoadPatch.GetCurrentLoadingPopup();
+            var loadingPopup = Patches.Settings.CustomSaveLoadPatch.GetCurrentLoadingPopup();
             
             // Add a delay to ensure the popup has time to display before proceeding
             if (loadingPopup != null)
@@ -278,7 +277,10 @@ namespace CabbyCodes.SavedGames
                     }
                     
                     // Clear the popup reference
-                    CabbyCodes.Patches.Settings.CustomSaveLoadPatch.ClearCurrentLoadingPopup();
+                    Patches.Settings.CustomSaveLoadPatch.ClearCurrentLoadingPopup();
+                    
+                    // Also hide reload popup if this was a reload
+                    HideReloadPopupIfPresent();
                 }
                 
                 callback?.Invoke(true);
@@ -295,12 +297,47 @@ namespace CabbyCodes.SavedGames
                 }
                 
                 // Clear the popup reference
-                CabbyCodes.Patches.Settings.CustomSaveLoadPatch.ClearCurrentLoadingPopup();
+                Patches.Settings.CustomSaveLoadPatch.ClearCurrentLoadingPopup();
+                
+                // Also hide reload popup if this was a reload
+                HideReloadPopupIfPresent();
                 
                 callback?.Invoke(false);
             }
         }
 
+        /// <summary>
+        /// Hides the reload popup if it exists. Used when custom save loads complete.
+        /// </summary>
+        private static void HideReloadPopupIfPresent()
+        {
+            // Access the reload popup through reflection since it's private in GameReloadManager
+            try
+            {
+                var gameReloadManagerType = typeof(GameReloadManager);
+                var currentReloadPopupField = gameReloadManagerType.GetField("currentReloadPopup", 
+                    System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
+                
+                if (currentReloadPopupField != null)
+                {
+                    if (currentReloadPopupField.GetValue(null) is CabbyMenu.UI.IPersistentPopup reloadPopup)
+                    {
+                        reloadPopup.Hide();
+                        reloadPopup.Destroy();
+                        currentReloadPopupField.SetValue(null, null);
+
+                        // Clear all reload requests
+                        var clearAllReloadRequestsMethod = gameReloadManagerType.GetMethod("ClearAllReloadRequests",
+                            System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Static);
+                        clearAllReloadRequestsMethod?.Invoke(null, null);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                CabbyCodesPlugin.BLogger.LogWarning(string.Format("Failed to hide reload popup: {0}", ex.Message));
+            }
+        }
 
 
         /// <summary>
@@ -318,6 +355,9 @@ namespace CabbyCodes.SavedGames
 
             // Update popup message to instruct user to get off bench
             loadingPopup?.SetMessageText("Get off bench to restore position");
+            
+            // Also update reload popup message if it exists
+            UpdateReloadPopupMessage("Get off bench to restore position");
 
             // Wait until the player STANDS UP again (atBench becomes false)
             while (PlayerData.instance != null && PlayerData.instance.atBench)
@@ -327,6 +367,9 @@ namespace CabbyCodes.SavedGames
 
             // Restore original message
             loadingPopup?.SetMessageText("Please Wait . . .");
+            
+            // Also update reload popup message
+            UpdateReloadPopupMessage("Please Wait . . .");
 
             // Extra delay to ensure everything is fully settled after standing up
             yield return new WaitForSeconds(0.5f);
@@ -364,6 +407,35 @@ namespace CabbyCodes.SavedGames
             {
                 loadingPopup.Hide();
                 loadingPopup.Destroy();
+            }
+            
+            // Also hide reload popup if this was a reload
+            HideReloadPopupIfPresent();
+        }
+
+        /// <summary>
+        /// Updates the reload popup message if it exists. Used during bench sequence.
+        /// </summary>
+        /// <param name="message">The message to display.</param>
+        private static void UpdateReloadPopupMessage(string message)
+        {
+            try
+            {
+                var gameReloadManagerType = typeof(GameReloadManager);
+                var currentReloadPopupField = gameReloadManagerType.GetField("currentReloadPopup", 
+                    System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static);
+                
+                if (currentReloadPopupField != null)
+                {
+                    if (currentReloadPopupField.GetValue(null) is CabbyMenu.UI.IPersistentPopup reloadPopup)
+                    {
+                        reloadPopup.SetMessageText(message);
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                CabbyCodesPlugin.BLogger.LogWarning(string.Format("Failed to update reload popup message: {0}", ex.Message));
             }
         }
     }
