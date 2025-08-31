@@ -35,13 +35,13 @@ namespace CabbyCodes.Patches.Settings
             // Calculate width for 35 characters but allow 50 characters
             int widthFor35Chars = CalculatePanelWidth(35);
             
-            // Create custom input field sync that triggers save on Enter
+            // Create custom input field sync that triggers save on Enter, but with logic to prevent auto-saving when clicking away
             var customInputFieldSync = new StringInputFieldSync(
                 customSaveNameRef,
                 KeyCodeMap.ValidChars.AlphaNumericWithSpaces,
                 new Vector2(widthFor35Chars, CabbyMenu.Constants.DEFAULT_PANEL_HEIGHT),
                 60,
-                AttemptSaveCustomGame);
+                () => AttemptSaveCustomGame());
             
             var panel = new InputFieldPanel<string>(customInputFieldSync, "(Optional) Save game name");
             customSaveNameInputPanel = panel;
@@ -53,7 +53,7 @@ namespace CabbyCodes.Patches.Settings
         /// </summary>
         public static ButtonPanel CreateSaveButtonPanel()
         {
-            return new ButtonPanel(AttemptSaveCustomGame, "Save", "Save game at current location");
+            return new ButtonPanel(() => AttemptSaveCustomGame(true), "Save", "Save game at current location");
         }
 
         /// <summary>
@@ -442,8 +442,15 @@ namespace CabbyCodes.Patches.Settings
         /// <summary>
         /// Attempts to save the game, prompting for overwrite if file exists.
         /// </summary>
-        private static void AttemptSaveCustomGame()
+        /// <param name="fromButtonClick">True if called from Save button click, false if from input field submission.</param>
+        private static void AttemptSaveCustomGame(bool fromButtonClick = false)
         {
+            // Only save if this is a legitimate submit action (Enter key) or from button click
+            if (!fromButtonClick && !Input.GetKeyDown(KeyCode.Return) && !Input.GetKeyDown(KeyCode.KeypadEnter))
+            {
+                return;
+            }
+
             // Debounce duplicate calls that can occur when input field submits then button click fires
             if (Time.realtimeSinceStartup - lastSaveAttemptTime < 0.2f)
             {

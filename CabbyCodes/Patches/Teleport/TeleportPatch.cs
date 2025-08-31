@@ -171,8 +171,15 @@ namespace CabbyCodes.Patches.Teleport
         /// <summary>
         /// Saves the current player position as a custom teleport location.
         /// </summary>
-        public static void SaveTeleportLocation()
+        /// <param name="fromButtonClick">True if called from Save button click, false if from input field submission.</param>
+        public static void SaveTeleportLocation(bool fromButtonClick = false)
         {
+            // Only save if this is a legitimate submit action (Enter key) or from button click
+            if (!fromButtonClick && !Input.GetKeyDown(KeyCode.Return) && !Input.GetKeyDown(KeyCode.KeypadEnter))
+            {
+                return;
+            }
+
             // Debounce duplicate rapid calls (Enter + Button)
             if (Time.realtimeSinceStartup - lastSaveAttemptTime < 0.2f)
             {
@@ -292,7 +299,7 @@ namespace CabbyCodes.Patches.Teleport
         /// </summary>
         private static void AddSavePanel()
         {
-            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new ButtonPanel(SaveTeleportLocation, "Save", "Save a custom teleport at current position"));
+            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new ButtonPanel(() => SaveTeleportLocation(true), "Save", "Save a custom teleport at current position"));
         }
 
         /// <summary>
@@ -303,14 +310,13 @@ namespace CabbyCodes.Patches.Teleport
             // Calculate width for 35 characters but allow 50 characters
             int widthFor35Chars = CalculatePanelWidth(35);
             
-            // Create custom input field sync that triggers save on Enter
+            // Create custom input field sync that triggers save on Enter, but with logic to prevent auto-saving when clicking away
             var customInputFieldSync = new StringInputFieldSync(
                 customTeleportNameRef, 
                 CabbyMenu.Utilities.KeyCodeMap.ValidChars.AlphaNumeric, 
                 new Vector2(widthFor35Chars, CabbyMenu.Constants.DEFAULT_PANEL_HEIGHT), 
                 60, 
-                SaveTeleportLocation,
-                SaveTeleportLocation); // Enter triggers save as well
+                () => SaveTeleportLocation());
             
             customNameInputPanel = new InputFieldPanel<string>(customInputFieldSync, "(Optional) Custom teleport name");
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(customNameInputPanel);
