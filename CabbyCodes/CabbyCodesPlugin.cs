@@ -192,6 +192,12 @@ namespace CabbyCodes
                 lastMenuState = currentMenuState;
             }
             
+            // Update Enter key state for custom save/load functionality
+            CustomSaveLoadPatch.UpdateEnterKeyState();
+            
+            // Update Enter key state for teleport functionality
+            TeleportPatch.UpdateEnterKeyState();
+            
             cabbyMenu.Update();
             FlagMonitorReference.UpdatePanelVisibility();
         }

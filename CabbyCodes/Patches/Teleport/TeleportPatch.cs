@@ -40,6 +40,22 @@ namespace CabbyCodes.Patches.Teleport
         private static bool isSaving = false;
 
         /// <summary>
+        /// Flag to track if Enter key was recently pressed for legitimate input field submission.
+        /// This gets set when Enter is detected and reset after a short delay.
+        /// </summary>
+        private static bool enterKeyRecentlyPressed = false;
+
+        /// <summary>
+        /// Time when Enter key was last pressed, used to reset the flag after a delay.
+        /// </summary>
+        private static float enterKeyPressTime = -1f;
+
+        /// <summary>
+        /// Duration to keep the Enter key flag active after pressing Enter.
+        /// </summary>
+        private static readonly float ENTER_KEY_FLAG_DURATION = 0.1f; // 100ms should be plenty
+
+        /// <summary>
         /// Reference to the custom name input field panel for forcing updates.
         /// </summary>
         private static InputFieldPanel<string> customNameInputPanel;
@@ -166,7 +182,25 @@ namespace CabbyCodes.Patches.Teleport
             TeleportService.DoTeleport(teleportLocation);
         }
 
-
+        /// <summary>
+        /// Checks for Enter key presses and updates the flag accordingly.
+        /// This should be called every frame to maintain accurate Enter key state.
+        /// </summary>
+        public static void UpdateEnterKeyState()
+        {
+            // Check if Enter key was just pressed
+            if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
+            {
+                enterKeyRecentlyPressed = true;
+                enterKeyPressTime = Time.realtimeSinceStartup;
+            }
+            
+            // Reset the flag after the duration expires
+            if (enterKeyRecentlyPressed && Time.realtimeSinceStartup - enterKeyPressTime > ENTER_KEY_FLAG_DURATION)
+            {
+                enterKeyRecentlyPressed = false;
+            }
+        }
 
         /// <summary>
         /// Saves the current player position as a custom teleport location.
@@ -175,7 +209,7 @@ namespace CabbyCodes.Patches.Teleport
         public static void SaveTeleportLocation(bool fromButtonClick = false)
         {
             // Only save if this is a legitimate submit action (Enter key) or from button click
-            if (!fromButtonClick && !Input.GetKeyDown(KeyCode.Return) && !Input.GetKeyDown(KeyCode.KeypadEnter))
+            if (!fromButtonClick && !enterKeyRecentlyPressed)
             {
                 return;
             }
@@ -260,6 +294,12 @@ namespace CabbyCodes.Patches.Teleport
 
             // Reset saving flag so future saves are allowed
             isSaving = false;
+
+            // Reset the Enter key flag after processing to prevent multiple saves from the same key press
+            if (!fromButtonClick)
+            {
+                enterKeyRecentlyPressed = false;
+            }
         }
 
         /// <summary>
