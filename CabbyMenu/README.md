@@ -208,30 +208,43 @@ cabbyMenu.Update(); // Called every frame
 - `CabbyMenu`: Core utilities and base classes
 - `CabbyMenu.UI`: UI-related components
 - `CabbyMenu.UI.CheatPanels`: Pre-built UI panels
-- `CabbyMenu.UI.ReferenceControls`: Synchronized UI controls
-- `CabbyMenu.UI.Factories`: UI element factories
+- `CabbyMenu.UI.Controls`: UI controls (ToggleButton, InputField, etc.)
+- `CabbyMenu.UI.DynamicPanels`: Dynamic panel management
 - `CabbyMenu.UI.Modders`: UI component modifiers
+- `CabbyMenu.UI.Popups`: Popup dialogs
 - `CabbyMenu.SyncedReferences`: Data synchronization interfaces
-- `CabbyMenu.Types`: Type definitions (including IGameStateProvider)
-- `CabbyMenu.Debug`: Debug utilities
+- `CabbyMenu.TextProcessors`: Text processing utilities
+- `CabbyMenu.Utilities`: Utility classes
 
 ### Project Structure
 ```
 CabbyMenu/
 ├── UI/                    # UI components and controls
 │   ├── CheatPanels/      # Pre-built UI panels
-│   ├── ReferenceControls/ # Synchronized controls
-│   ├── Factories/        # UI element factories
+│   ├── Controls/          # UI controls (ToggleButton, InputField, etc.)
+│   ├── DynamicPanels/    # Dynamic panel management
 │   ├── Modders/          # UI component modifiers
-│   └── CabbyMainMenu.cs  # Main menu system
+│   ├── Popups/           # Popup dialogs
+│   ├── CabbyMainMenu.cs  # Main menu system
+│   ├── Fitter.cs         # UI layout utility
+│   └── IPersistentPopup.cs # Popup interface
 ├── SyncedReferences/     # Data synchronization
 │   ├── ISyncedReference.cs
 │   ├── ISyncedValueList.cs
-│   └── BoxedReference.cs
-├── Types/                # Type definitions
-│   ├── IGameStateProvider.cs
-│   └── InputFieldStatus.cs
-├── Debug/                # Debug utilities
+│   ├── BoxedReference.cs
+│   ├── DelegateReference.cs
+│   └── DelegateValueList.cs
+├── TextProcessors/       # Text processing utilities
+│   ├── ITextProcessor.cs
+│   ├── TextProcessor.cs
+│   ├── BaseNumericProcessor.cs
+│   ├── NumericTextProcessor.cs
+│   ├── StringTextProcessor.cs
+│   └── DecimalTextProcessor.cs
+├── Utilities/            # Utility classes
+│   ├── ValidationUtils.cs
+│   ├── KeyCodeMap.cs
+│   └── CoroutineRunner.cs
 ├── Constants.cs          # UI constants
 └── README.md            # This file
 ```
@@ -250,12 +263,24 @@ public static class Constants
     public const int DEFAULT_PANEL_HEIGHT = 60;
     public const double CLICK_TIMER_DELAY = 0.2;
     
-    // Utility functions to calculate panel widths
-    public static float CalculateCharacterWidth(int fontSize);
-    public static int CalculatePanelWidth(int characterLimit);
-    public static int CalculateButtonWidth(string text);
+    // Font Sizes
+    public const int DEFAULT_FONT_SIZE = 36;
+    public const int TITLE_FONT_SIZE = 60;
+    
+    // Colors
+    public static readonly Color ON_COLOR = new Color(0f, 0.8f, 1f, 1f);
+    public static readonly Color OFF_COLOR = new Color(0.6f, 0.6f, 0.6f, 1f);
+    
+    // Layout Settings
+    public const int CHEAT_PANEL_PADDING = 20;
+    public const int CHEAT_PANEL_SPACING = 50;
 }
 ```
+
+**Note**: Utility methods for calculating panel widths are implemented in specific UI components rather than in the Constants class:
+- `ButtonPanel.CalculateButtonWidth(string text)` - Calculates button width based on text
+- `InputFieldPanel.CalculatePanelWidth(int characterLimit)` - Calculates input field width
+- `TextInputFieldStatus.CalculateCharacterWidth(int fontSize)` - Calculates character width
 
 ### Customization
 You can override these constants in your mod or extend the library to add new ones:

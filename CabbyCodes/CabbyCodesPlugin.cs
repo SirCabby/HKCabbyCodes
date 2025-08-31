@@ -79,7 +79,7 @@ namespace CabbyCodes
         [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "Unity lifecycle method called by Unity engine")]
         private void Start()
         {
-            UnityExplorer.ExplorerStandalone.CreateInstance();
+            //UnityExplorer.ExplorerStandalone.CreateInstance();
 
             // Create the game state provider
             gameStateProvider = new GameStateProvider();
@@ -191,6 +191,12 @@ namespace CabbyCodes
                 }
                 lastMenuState = currentMenuState;
             }
+            
+            // Update Enter key state for custom save/load functionality
+            CustomSaveLoadPatch.UpdateEnterKeyState();
+            
+            // Update Enter key state for teleport functionality
+            TeleportPatch.UpdateEnterKeyState();
             
             cabbyMenu.Update();
             FlagMonitorReference.UpdatePanelVisibility();

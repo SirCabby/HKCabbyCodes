@@ -27,6 +27,22 @@ namespace CabbyCodes.Patches.Settings
         private static bool isSaving = false;
 
         /// <summary>
+        /// Flag to track if Enter key was recently pressed for legitimate input field submission.
+        /// This gets set when Enter is detected and reset after a short delay.
+        /// </summary>
+        private static bool enterKeyRecentlyPressed = false;
+
+        /// <summary>
+        /// Time when Enter key was last pressed, used to reset the flag after a delay.
+        /// </summary>
+        private static float enterKeyPressTime = -1f;
+
+        /// <summary>
+        /// Duration to keep the Enter key flag active after pressing Enter.
+        /// </summary>
+        private static readonly float ENTER_KEY_FLAG_DURATION = 0.1f; // 100ms should be plenty
+
+        /// <summary>
         /// Creates and returns the custom save name input field panel (for external use).
         /// </summary>
         /// <returns>The created InputFieldPanel for custom save names.</returns>
@@ -35,13 +51,13 @@ namespace CabbyCodes.Patches.Settings
             // Calculate width for 35 characters but allow 50 characters
             int widthFor35Chars = CalculatePanelWidth(35);
             
-            // Create custom input field sync that triggers save on Enter
+            // Create custom input field sync that triggers save on Enter, but with logic to prevent auto-saving when clicking away
             var customInputFieldSync = new StringInputFieldSync(
                 customSaveNameRef,
                 KeyCodeMap.ValidChars.AlphaNumericWithSpaces,
                 new Vector2(widthFor35Chars, CabbyMenu.Constants.DEFAULT_PANEL_HEIGHT),
                 60,
-                AttemptSaveCustomGame);
+                () => AttemptSaveCustomGame());
             
             var panel = new InputFieldPanel<string>(customInputFieldSync, "(Optional) Save game name");
             customSaveNameInputPanel = panel;
@@ -53,7 +69,7 @@ namespace CabbyCodes.Patches.Settings
         /// </summary>
         public static ButtonPanel CreateSaveButtonPanel()
         {
-            return new ButtonPanel(AttemptSaveCustomGame, "Save", "Save game at current location");
+            return new ButtonPanel(() => AttemptSaveCustomGame(true), "Save", "Save game at current location");
         }
 
         /// <summary>
@@ -440,10 +456,37 @@ namespace CabbyCodes.Patches.Settings
         }
 
         /// <summary>
+        /// Checks for Enter key presses and updates the flag accordingly.
+        /// This should be called every frame to maintain accurate Enter key state.
+        /// </summary>
+        public static void UpdateEnterKeyState()
+        {
+            // Check if Enter key was just pressed
+            if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
+            {
+                enterKeyRecentlyPressed = true;
+                enterKeyPressTime = Time.realtimeSinceStartup;
+            }
+            
+            // Reset the flag after the duration expires
+            if (enterKeyRecentlyPressed && Time.realtimeSinceStartup - enterKeyPressTime > ENTER_KEY_FLAG_DURATION)
+            {
+                enterKeyRecentlyPressed = false;
+            }
+        }
+
+        /// <summary>
         /// Attempts to save the game, prompting for overwrite if file exists.
         /// </summary>
-        private static void AttemptSaveCustomGame()
+        /// <param name="fromButtonClick">True if called from Save button click, false if from input field submission.</param>
+        private static void AttemptSaveCustomGame(bool fromButtonClick = false)
         {
+            // Only save if this is a legitimate submit action (Enter key) or from button click
+            if (!fromButtonClick && !enterKeyRecentlyPressed)
+            {
+                return;
+            }
+
             // Debounce duplicate calls that can occur when input field submits then button click fires
             if (Time.realtimeSinceStartup - lastSaveAttemptTime < 0.2f)
             {
@@ -484,6 +527,12 @@ namespace CabbyCodes.Patches.Settings
             else
             {
                 SaveCustomGame(customName);
+            }
+
+            // Reset the Enter key flag after processing to prevent multiple saves from the same key press
+            if (!fromButtonClick)
+            {
+                enterKeyRecentlyPressed = false;
             }
         }
 
