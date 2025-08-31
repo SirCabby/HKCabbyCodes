@@ -1,0 +1,5 @@
+# CODEOWNERS file for HKCabbyCodes repository
+# This file defines who is responsible for different parts of the codebase
+
+# Global repository owners - these people have access to everything
+* @SirCabby 
