@@ -219,7 +219,6 @@ namespace CabbyCodes.Patches.Settings
                     quickStartPerformed = true;
                     string fileToLoad = CustomFileToLoad;
                     CustomFileToLoad = null;
-                    CabbyCodesPlugin.BLogger.LogDebug(string.Format("QuickStartPatch: Loading custom file '{0}' after main menu.", fileToLoad));
                     SavedGameManager.LoadCustomGame(fileToLoad, (success) => {
                         if (success)
                         {
@@ -245,7 +244,7 @@ namespace CabbyCodes.Patches.Settings
                     !__instance.ui.IsAnimatingMenus && !__instance.ui.IsFadingMenu)
                 {
                     // Create and show loading popup immediately
-                    var loadingPopup = CreateQuickLoadPopup();
+                    var loadingPopup = CreateQuickLoadPopup(saveSlot.Value);
                     if (loadingPopup != null)
                     {
                         loadingPopup.Show();
@@ -313,8 +312,9 @@ namespace CabbyCodes.Patches.Settings
         /// <summary>
         /// Creates a loading popup for quick load operations.
         /// </summary>
+        /// <param name="slotNumber">The save slot number being loaded.</param>
         /// <returns>The created loading popup, or null if creation fails.</returns>
-        private static CabbyMenu.UI.IPersistentPopup CreateQuickLoadPopup()
+        private static CabbyMenu.UI.IPersistentPopup CreateQuickLoadPopup(int slotNumber)
         {
             try
             {
@@ -334,7 +334,7 @@ namespace CabbyCodes.Patches.Settings
                 scaler.referenceResolution = new Vector2(1920, 1080); // Standard reference resolution
                 
                 // Create the popup content
-                CreateQuickLoadPopupContent(persistentGo);
+                CreateQuickLoadPopupContent(persistentGo, slotNumber);
                 
                 // Return a simple popup wrapper that manages the persistent GameObject
                 return new CabbyMenu.UI.PersistentPopupWrapper(persistentGo);
@@ -350,12 +350,13 @@ namespace CabbyCodes.Patches.Settings
         /// Creates the visual content for the quick load popup.
         /// </summary>
         /// <param name="parent">The parent GameObject to attach content to.</param>
-        private static void CreateQuickLoadPopupContent(GameObject parent)
+        /// <param name="slotNumber">The save slot number being loaded.</param>
+        private static void CreateQuickLoadPopupContent(GameObject parent, int slotNumber)
         {
             // Create dimmed background
             GameObject background = DefaultControls.CreatePanel(new DefaultControls.Resources());
             background.name = "Popup Background";
-            var backgroundImage = background.GetComponent<UnityEngine.UI.Image>();
+            var backgroundImage = background.GetComponent<Image>();
             backgroundImage.color = new Color(0f, 0f, 0f, 0.6f);
             background.transform.SetParent(parent.transform, false);
             
@@ -368,7 +369,7 @@ namespace CabbyCodes.Patches.Settings
             // Create main popup panel
             GameObject popupPanel = DefaultControls.CreatePanel(new DefaultControls.Resources());
             popupPanel.name = "Popup Panel";
-            var panelImage = popupPanel.GetComponent<UnityEngine.UI.Image>();
+            var panelImage = popupPanel.GetComponent<Image>();
             panelImage.color = new Color(0f, 0f, 0f, 1f);
             popupPanel.transform.SetParent(parent.transform, false);
             
@@ -392,7 +393,7 @@ namespace CabbyCodes.Patches.Settings
             // Create header
             GameObject headerContainer = DefaultControls.CreatePanel(new DefaultControls.Resources());
             headerContainer.name = "Header Container";
-            var headerImage = headerContainer.GetComponent<UnityEngine.UI.Image>();
+            var headerImage = headerContainer.GetComponent<Image>();
             headerImage.color = new Color(0.2f, 0.2f, 0.2f, 1f);
             headerContainer.transform.SetParent(popupPanel.transform, false);
             
@@ -403,8 +404,8 @@ namespace CabbyCodes.Patches.Settings
             // Header text
             GameObject headerText = new GameObject("Header Text");
             headerText.transform.SetParent(headerContainer.transform, false);
-            var headerTextComponent = headerText.AddComponent<UnityEngine.UI.Text>();
-            headerTextComponent.text = "Loading Game";
+            var headerTextComponent = headerText.AddComponent<Text>();
+            headerTextComponent.text = string.Format("Loading Game - Slot {0}", slotNumber);
             headerTextComponent.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
             headerTextComponent.fontSize = 24;
             headerTextComponent.fontStyle = FontStyle.Bold;
@@ -419,7 +420,7 @@ namespace CabbyCodes.Patches.Settings
             // Create message text
             GameObject messageText = new GameObject("Message Text");
             messageText.transform.SetParent(popupPanel.transform, false);
-            var messageTextComponent = messageText.AddComponent<UnityEngine.UI.Text>();
+            var messageTextComponent = messageText.AddComponent<Text>();
             messageTextComponent.text = "Please Wait . . .";
             messageTextComponent.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
             messageTextComponent.fontSize = 18;
@@ -489,7 +490,6 @@ namespace CabbyCodes.Patches.Settings
                 loadingPopup.Hide();
                 loadingPopup.Destroy();
                 currentQuickLoadPopup = null;
-                CabbyCodesPlugin.BLogger.LogDebug("QuickStartPatch: Quick load popup hidden - player is back in game");
             }
         }
 
