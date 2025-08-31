@@ -332,7 +332,8 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
         /// </summary>
         private void UpdateDropdownWidth()
         {
-            if (!useDynamicSizing) return;
+            // Check if the component is still valid
+            if (this == null || transform == null || !useDynamicSizing) return;
 
             float newWidth = CalculateRequiredWidth();
             if (Mathf.Abs(newWidth - mainButtonWidth) > 1f)
@@ -697,12 +698,17 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
 
         private void ConfigureMainButtonLayout()
         {
+            // Check if the component is still valid and attached to a GameObject
+            if (this == null || transform == null)
+            {
+                return;
+            }
+
             RectTransform mainRect = GetComponent<RectTransform>();
             if (mainRect != null)
             {
                 mainRect.sizeDelta = new Vector2(mainButtonWidth, mainButtonHeight);
                 mainRect.pivot = new Vector2(0.0f, 0.5f); // Left-center pivot for left-aligned positioning
-
             }
 
             // Update border size to be larger than the button
@@ -733,7 +739,8 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
 
         private void EnsureDropdownPanelCreated()
         {
-            if (dropdownPanel != null) return;
+            // Check if the component is still valid
+            if (this == null || transform == null || dropdownPanel != null) return;
 
             // Find the appropriate parent - use the same parent that contains this dropdown button
             // This ensures the dropdown panel moves with the parent when it scrolls
@@ -751,6 +758,12 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
             
             // Create dropdown panel
             dropdownPanel = CreateDropdownPanel(parentTransform);
+            
+            // Check if panel creation failed
+            if (dropdownPanel == null)
+            {
+                return;
+            }
 
             // Create scroll view components
             CreateScrollViewComponents();
@@ -761,12 +774,32 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
 
         private GameObject CreateDropdownPanel(Transform parentTransform)
         {
+            // Check if the component is still valid
+            if (this == null || transform == null)
+            {
+                return null;
+            }
+
             GameObject panel = new GameObject("DropdownPanel");
             panel.transform.SetParent(parentTransform, false);
 
             // Configure panel rect transform - use relative positioning to the button
             RectTransform panelRect = panel.AddComponent<RectTransform>();
             RectTransform mainRect = GetComponent<RectTransform>();
+            
+            if (mainRect == null)
+            {
+                // If we can't get the main rect transform, return a basic panel
+                panelRect.anchorMin = Vector2.zero;
+                panelRect.anchorMax = Vector2.zero;
+                panelRect.sizeDelta = new Vector2(mainButtonWidth, 100f);
+                panelRect.localPosition = Vector3.zero;
+                panelRect.pivot = new Vector2(0f, 1f);
+                
+                Image basicPanelImage = panel.AddComponent<Image>();
+                basicPanelImage.color = Constants.DROPDOWN_PANEL_BACKGROUND;
+                return panel;
+            }
 
             // Use absolute positioning (0,0) anchors so we can position relative to the button
             panelRect.anchorMin = Vector2.zero; // Bottom-left
@@ -948,6 +981,12 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
         /// <param name="hoverMessages">Optional list of hover messages for disabled options</param>
         public void SetOptions(List<string> options, List<bool> disabledOptions = null, List<string> hoverMessages = null)
         {
+            // Check if the component is still valid
+            if (this == null || transform == null)
+            {
+                return;
+            }
+
             this.options = options.ToList();
             
             // Initialize disabled options list
@@ -1172,32 +1211,38 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
 
         private void UpdateMainButtonText()
         {
-            if (mainButtonText != null && options.Count > 0)
+            // Check if the component is still valid
+            if (this == null || transform == null || mainButtonText == null || options.Count == 0)
             {
-                // Find the first enabled option to display
-                int displayIndex = 0;
-                if (selectedIndex >= 0 && selectedIndex < options.Count && !IsOptionDisabled(selectedIndex))
-                {
-                    displayIndex = selectedIndex;
-                }
-                else
-                {
-                    // Find first enabled option
-                    for (int i = 0; i < options.Count; i++)
+                return;
+            }
+
+            // Find the first enabled option to display
+            int displayIndex = 0;
+            if (selectedIndex >= 0 && selectedIndex < options.Count && !IsOptionDisabled(selectedIndex))
+            {
+                displayIndex = selectedIndex;
+            }
+            else
+            {
+                // Find first enabled option
+                for (int i = 0; i < options.Count; i++)
+            {
+                    if (!IsOptionDisabled(i))
                     {
-                        if (!IsOptionDisabled(i))
-                        {
-                            displayIndex = i;
-                            break;
-                        }
+                        displayIndex = i;
+                        break;
                     }
                 }
+            }
 
-                string displayText = options[displayIndex];
-                mainButtonText.text = displayText;
+            string displayText = options[displayIndex];
+            mainButtonText.text = displayText;
 
-                // Dynamically set font size based on button height
-                RectTransform mainRect = GetComponent<RectTransform>();
+            // Dynamically set font size based on button height
+            RectTransform mainRect = GetComponent<RectTransform>();
+            if (mainRect != null)
+            {
                 int fontSize = Mathf.RoundToInt(mainRect.sizeDelta.y * FONT_SIZE_RATIO);
                 mainButtonText.fontSize = fontSize;
                 mainButtonText.color = Color.black;
@@ -1208,8 +1253,11 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
 
                 // Log z and screen position and font size
                 RectTransform textRect = mainButtonText.GetComponent<RectTransform>();
-                Vector3 textWorld = textRect.position;
-                RectTransformUtility.WorldToScreenPoint(null, textWorld);
+                if (textRect != null)
+                {
+                    Vector3 textWorld = textRect.position;
+                    RectTransformUtility.WorldToScreenPoint(null, textWorld);
+                }
             }
         }
 

@@ -474,27 +474,41 @@ namespace CabbyCodes.Patches.Settings
                     {
                         var customDropdown = dropDownSync.GetCustomDropdown();
                         
-                        // Force a complete recreation by using reflection to access the private ClearExistingOptionButtons method
-                        var clearMethod = customDropdown.GetType().GetMethod("ClearExistingOptionButtons", 
-                            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                        // Check if the custom dropdown is still valid
+                        if (customDropdown == null || customDropdown.transform == null)
+                        {
+                            return; // Skip refresh if dropdown is invalid
+                        }
+                        
+                        try
+                        {
+                            // Force a complete recreation by using reflection to access the private ClearExistingOptionButtons method
+                            var clearMethod = customDropdown.GetType().GetMethod("ClearExistingOptionButtons", 
+                                System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
 
-                        // Clear existing buttons
-                        clearMethod?.Invoke(customDropdown, null);
+                            // Clear existing buttons
+                            clearMethod?.Invoke(customDropdown, null);
 
-                        // Set the new options
-                        dropDownSync.SetOptions(updatedFiles);
-                        
-                        // Force the dropdown to recreate the option buttons by calling CreateOptionButtons
-                        var createMethod = customDropdown.GetType().GetMethod("CreateOptionButtons", 
-                            System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
-                        
-                        createMethod?.Invoke(customDropdown, null);
-                        
-                        // Reset the dropdown selection to 0
-                        customDropdown.SetValue(0);
-                        
-                        // Update the dropdown to reflect the changes
-                        dropDownSync.Update();
+                            // Set the new options
+                            dropDownSync.SetOptions(updatedFiles);
+                            
+                            // Force the dropdown to recreate the option buttons by calling CreateOptionButtons
+                            var createMethod = customDropdown.GetType().GetMethod("CreateOptionButtons", 
+                                System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+                            
+                            createMethod?.Invoke(customDropdown, null);
+                            
+                            // Reset the dropdown selection to 0
+                            customDropdown.SetValue(0);
+                            
+                            // Update the dropdown to reflect the changes
+                            dropDownSync.Update();
+                        }
+                        catch (System.Exception ex)
+                        {
+                            // Log the error but don't crash the mod
+                            UnityEngine.Debug.LogWarning($"[CabbyCodes] Error refreshing file list: {ex.Message}");
+                        }
                     }
                 }
             }
