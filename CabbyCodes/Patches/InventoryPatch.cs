@@ -14,6 +14,24 @@ namespace CabbyCodes.Patches
         private static int startingMaxHealth = -1;
         private static int startingMaxHealthBase = -1;
         private static bool hasInitializedStartingState = false;
+        private static bool hasHeartPieceChanges = false;
+        
+        // Static state tracking for vessel fragment changes that require save/reload
+        private static int startingMpReserveMax = -1;
+        private static bool hasInitializedVesselStartingState = false;
+        private static bool hasVesselFragmentChanges = false;
+        
+        // Callback for when the menu is opened/closed
+        public static Action<bool> onMenuStateChanged;
+        
+        /// <summary>
+        /// Sets up the callback for menu state changes. Call this from the main plugin.
+        /// </summary>
+        /// <param name="callback">Callback that receives true when menu opens, false when it closes</param>
+        public static void SetMenuStateCallback(Action<bool> callback)
+        {
+            onMenuStateChanged = callback;
+        }
 
         // Reference to the nail upgrade dropdown for updating disabled options
         private static CabbyMenu.UI.Controls.CustomDropdown.CustomDropdown nailUpgradeDropdown;
@@ -107,6 +125,98 @@ namespace CabbyCodes.Patches
             startingMaxHealth = -1;
             startingMaxHealthBase = -1;
             hasInitializedStartingState = false;
+            hasHeartPieceChanges = false;
+        }
+        
+        /// <summary>
+        /// Resets the vessel fragment state tracking. Call this when loading a new save or when
+        /// the game state is reset to prevent unnecessary reloads.
+        /// </summary>
+        public static void ResetVesselFragmentStateTracking()
+        {
+            startingMpReserveMax = -1;
+            hasInitializedVesselStartingState = false;
+            hasVesselFragmentChanges = false;
+        }
+        
+        /// <summary>
+        /// Initializes the starting heart piece state when the menu opens.
+        /// Call this when the menu is opened to capture the current state.
+        /// </summary>
+        public static void InitializeHeartPieceStartingState()
+        {
+            startingMaxHealth = FlagManager.GetIntFlag(FlagInstances.maxHealth);
+            startingMaxHealthBase = FlagManager.GetIntFlag(FlagInstances.maxHealthBase);
+            hasInitializedStartingState = true;
+            hasHeartPieceChanges = false;
+        }
+        
+        /// <summary>
+        /// Initializes the starting vessel fragment state when the menu opens.
+        /// Call this when the menu is opened to capture the current state.
+        /// </summary>
+        public static void InitializeVesselFragmentStartingState()
+        {
+            startingMpReserveMax = FlagManager.GetIntFlag(FlagInstances.MPReserveMax);
+            hasInitializedVesselStartingState = true;
+            hasVesselFragmentChanges = false;
+        }
+
+        /// <summary>
+        /// Checks if a reload is needed due to heart piece changes and requests it if necessary.
+        /// Call this when the menu is closed to determine if a reload is needed.
+        /// </summary>
+        public static void CheckHeartPieceReloadNeeded()
+        {
+            if (hasHeartPieceChanges)
+            {
+                var currentMaxHealth = FlagManager.GetIntFlag(FlagInstances.maxHealth);
+                var currentMaxHealthBase = FlagManager.GetIntFlag(FlagInstances.maxHealthBase);
+                
+                bool healthDiffersFromStart = currentMaxHealth != startingMaxHealth || currentMaxHealthBase != startingMaxHealthBase;
+                
+                if (healthDiffersFromStart)
+                {
+                    // Health has changed from starting state, request reload
+                    GameReloadManager.RequestReload($"HeartPiece");
+                }
+                else
+                {
+                    // Health matches starting state, cancel reload request
+                    GameReloadManager.CancelReload($"HeartPiece");
+                }
+                
+                // Reset the change tracking after checking
+                hasHeartPieceChanges = false;
+            }
+        }
+        
+        /// <summary>
+        /// Checks if a reload is needed due to vessel fragment changes and requests it if necessary.
+        /// Call this when the menu is closed to determine if a reload is needed.
+        /// </summary>
+        public static void CheckVesselFragmentReloadNeeded()
+        {
+            if (hasVesselFragmentChanges)
+            {
+                var currentMpReserveMax = FlagManager.GetIntFlag(FlagInstances.MPReserveMax);
+                
+                bool mpReserveDiffersFromStart = currentMpReserveMax != startingMpReserveMax;
+                
+                if (mpReserveDiffersFromStart)
+                {
+                    // MP reserve has changed from starting state, request reload
+                    GameReloadManager.RequestReload($"VesselFragment");
+                }
+                else
+                {
+                    // MP reserve matches starting state, cancel reload request
+                    GameReloadManager.CancelReload($"VesselFragment");
+                }
+                
+                // Reset the change tracking after checking
+                hasVesselFragmentChanges = false;
+            }
         }
 
         public override List<CheatPanel> CreatePanels()
@@ -637,12 +747,10 @@ namespace CabbyCodes.Patches
             return new TogglePanel(new DelegateReference<bool>(
                 () => FlagManager.GetBoolFlag(flag),
                 value => {
-                    // Initialize starting state if not done yet
+                    // Initialize starting state if not done yet (this will be called when menu opens)
                     if (!hasInitializedStartingState)
                     {
-                        startingMaxHealth = FlagManager.GetIntFlag(FlagInstances.maxHealth);
-                        startingMaxHealthBase = FlagManager.GetIntFlag(FlagInstances.maxHealthBase);
-                        hasInitializedStartingState = true;
+                        InitializeHeartPieceStartingState();
                     }
 
                     FlagManager.SetBoolFlag(flag, value);
@@ -699,18 +807,8 @@ namespace CabbyCodes.Patches
                     // Set heartPieceMax flag based on whether max health is 9
                     FlagManager.SetBoolFlag(FlagInstances.heartPieceMax, finalMaxHealth >= 9);
                     
-                    bool healthDiffersFromStart = finalMaxHealth != startingMaxHealth || finalMaxHealthBase != startingMaxHealthBase;
-                    
-                    if (healthDiffersFromStart)
-                    {
-                        // Health has changed from starting state, request reload
-                        GameReloadManager.RequestReload($"HeartPiece");
-                    }
-                    else
-                    {
-                        // Health matches starting state, cancel reload request
-                        GameReloadManager.CancelReload($"HeartPiece");
-                    }
+                    // Mark that heart piece changes have occurred (reload check will happen when menu closes)
+                    hasHeartPieceChanges = true;
                 }
             ), flag.ReadableName);
         }
@@ -739,6 +837,12 @@ namespace CabbyCodes.Patches
                 () => FlagManager.GetBoolFlag(vesselFragmentFlag),
                 value =>
                 {
+                    // Initialize starting state if not done yet (this will be called when menu opens)
+                    if (!hasInitializedVesselStartingState)
+                    {
+                        InitializeVesselFragmentStartingState();
+                    }
+                    
                     FlagManager.SetBoolFlag(vesselFragmentFlag, value);
                     
                     var currentVesselFragments = FlagManager.GetIntFlag(FlagInstances.vesselFragments);
@@ -776,6 +880,9 @@ namespace CabbyCodes.Patches
                     // Update vesselFragmentMax flag based on MPReserveMax
                     var finalMpReserveMax = FlagManager.GetIntFlag(FlagInstances.MPReserveMax);
                     FlagManager.SetBoolFlag(FlagInstances.vesselFragmentMax, finalMpReserveMax >= 99);
+                    
+                    // Mark that vessel fragment changes have occurred (reload check will happen when menu closes)
+                    hasVesselFragmentChanges = true;
                 }
             ), vesselFragmentFlag.ReadableName);
         }

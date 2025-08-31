@@ -87,6 +87,22 @@ namespace CabbyCodes
             // Initialize the menu with the game state provider
             cabbyMenu = new CabbyMainMenu(Constants.NAME, Constants.VERSION, gameStateProvider);
             
+            // Set up menu state callback for heart piece and vessel fragment tracking
+            InventoryPatch.SetMenuStateCallback((menuOpen) => {
+                if (menuOpen)
+                {
+                    // Menu opened - initialize starting states
+                    InventoryPatch.InitializeHeartPieceStartingState();
+                    InventoryPatch.InitializeVesselFragmentStartingState();
+                }
+                else
+                {
+                    // Menu closed - check if reloads are needed
+                    InventoryPatch.CheckHeartPieceReloadNeeded();
+                    InventoryPatch.CheckVesselFragmentReloadNeeded();
+                }
+            });
+            
             // Set up input field registration for all used types
             BaseInputFieldSync<int>.RegisterInputFieldSync = (inputFieldStatus) => {
                 cabbyMenu.RegisterInputFieldSync(inputFieldStatus);
@@ -164,8 +180,23 @@ namespace CabbyCodes
         [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "Unity lifecycle method called by Unity engine")]
         private void Update()
         {
+            // Track menu state changes for heart piece reload logic
+            bool currentMenuState = gameStateProvider.ShouldShowMenu();
+            if (currentMenuState != lastMenuState)
+            {
+                // Menu state changed - notify InventoryPatch
+                if (InventoryPatch.onMenuStateChanged != null)
+                {
+                    InventoryPatch.onMenuStateChanged(currentMenuState);
+                }
+                lastMenuState = currentMenuState;
+            }
+            
             cabbyMenu.Update();
             FlagMonitorReference.UpdatePanelVisibility();
         }
+        
+        // Track the last known menu state
+        private bool lastMenuState = false;
     }
 }
