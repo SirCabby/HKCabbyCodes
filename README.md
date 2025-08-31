@@ -19,12 +19,11 @@ CabbyCodes is a powerful cheat menu mod that gives you complete control over you
 ### Key Features
 
 #### 🛡️ Player Modifications
-- **Health Control**: Adjust max health (5-9 masks)
-- **Geo Management**: Set geo amount (0-9,999,999)
-- **Soul Control**: Modify soul reserves and focus
-- **Damage Control**: Toggle one-hit kills for enemies
 - **Invulnerability**: Toggle player invincibility
-- **Movement**: Control dash, wall jump, and other abilities
+- **Geo Management**: Set geo amount (0-9,999,999)
+- **Infinite Soul**: Modify soul reserves and focus
+- **Damage Control**: Toggle one-hit kills for enemies
+- **Movement**: Infinite Air Jump
 
 #### 📦 Inventory Management
 - **Currency Items**: 
@@ -50,6 +49,47 @@ CabbyCodes is a powerful cheat menu mod that gives you complete control over you
 - **Custom Locations**: Add and manage custom teleport points
 - **Quick Travel**: Instant travel to any discovered location
 
+#### 💾 Custom Save System
+- **Unlimited Save Files**: Create unlimited custom save files at any point in the game
+- **Location-Based Saves**: Save at specific points of interest and any location
+- **Quick Load**: Instantly load any custom save file from the in-game menu
+- **Save Management**: Organize and manage multiple save files with custom names
+- **Real Saves**: These save files encoded like normal saves!  You can replace your slot save with one of these!
+
+## 🖼️ Visual Showcase
+
+See CabbyCodes in action! Here are screenshots of the various menu sections and features:
+
+![Pause Menu Integration](pics/PauseMenu.png)
+*The Cabby Codes button seamlessly integrates into the game's pause menu*
+
+![Main Menu Interface](pics/OptionsAndCheats.png)
+*The main cheat menu with organized categories and useful player cheats*
+
+![Player Modifications](pics/Inventory.png)
+*Access anything inventory related*
+
+![Teleportation System](pics/Teleport.png)
+*Custom teleport locations and quick travel system*
+
+![Charm Management](pics/Charms.png)
+*Complete charm system with costs and effects management*
+
+![Grub Rescue Tracking](pics/Grubs.png)
+*Track and control all 46 grub rescue locations*
+
+![Hunter's Journal](pics/Hunter.png)
+*Complete enemy kill tracking and journal management*
+
+![Boss Flags & Progression](pics/BossFlags.png)
+*Control boss encounters and game progression flags*
+
+![Achievement System](pics/Achievements.png)
+*Track and manage all game achievements*
+
+![Custom Save System](pics/Saves.png)
+*Create unlimited custom save files at any location*
+
 ## 🚀 Installation
 
 ### Prerequisites
@@ -58,17 +98,18 @@ CabbyCodes is a powerful cheat menu mod that gives you complete control over you
 
 ### Installation Steps
 1. **Install BepInEx**:
-   - Download BepInEx 6.0+ from [GitHub](https://github.com/BepInEx/BepInEx/releases)
+   - Download BepInEx 6.0+ from [GitHub](https://github.com/BepInEx/BepInEx/releases/tag/v6.0.0-pre.2)
+        - Version: `BepInEx-Unity.Mono-win-x64-6.0.0-pre.2.zip`
    - Extract to your Hollow Knight directory
+        - C:\Program Files (x86)\Steam\steamapps\common\Hollow Knight
    - Run the game once to generate BepInEx folders
 
 2. **Install CabbyCodes**:
    - Download the latest release from the releases page
-   - Extract both `CabbyCodes.dll` and `CabbyMenu.dll` to `BepInEx/plugins/`
+   - Extract both `CabbyCodes.dll` and `CabbyMenu.dll` to `Hollow Knight/BepInEx/plugins/`
    - Start the game
 
 3. **Verify Installation**:
-   - Check BepInEx console for "Plugin cabby.cabbycodes is loaded!"
    - Pause the game to access the cheat menu
 
 ## 🎯 Usage
@@ -140,15 +181,21 @@ HKCabbyCodes/
 ├── CabbyCodes/                   # Main mod project
 │   ├── Patches/                  # Game modification patches, organized by category
 │   │   ├── Achievements/
-│   │   ├── Charms/
+│   │   ├── BasePatches/
+│   │   ├── CharmPatch.cs
 │   │   ├── Flags/
-│   │   ├── Hunter/
-│   │   ├── Inventory/
+│   │   ├── GrubPatch.cs
+│   │   ├── HunterPatch.cs
+│   │   ├── InventoryPatch.cs
 │   │   ├── Maps/
 │   │   ├── Player/
 │   │   ├── Settings/
-│   │   └── ... (other patch categories)
-│   ├── Types/                    # Game-specific types (e.g., Charm, TeleportLocation)
+│   │   ├── SpriteViewer/
+│   │   └── Teleport/
+│   ├── CheatState/               # Cheat state management system
+│   ├── Flags/                    # Flag definitions and management
+│   ├── SavedGames/               # Save game management
+│   ├── Scenes/                   # Scene and area data
 │   ├── lib/                      # Required game DLLs (not in version control)
 │   ├── Constants.cs              # Game-specific constants
 │   ├── CabbyCodesPlugin.cs       # Main plugin entry point
@@ -157,22 +204,23 @@ HKCabbyCodes/
 │
 ├── CabbyMenu/                    # UI library project
 │   ├── UI/
-│   │   ├── CheatPanels/          # Modular cheat panel components (ButtonPanel, TogglePanel, etc.)
-│   │   ├── Controls/             # UI controls (ToggleButton, InputField, Dropdown, etc.)
-│   │   ├── Factories/            # UI element factories
+│   │   ├── CheatPanels/          # Modular cheat panel components
+│   │   ├── Controls/             # UI controls (ToggleButton, InputField, etc.)
+│   │   ├── DynamicPanels/        # Dynamic panel management
 │   │   ├── Modders/              # UI modder utilities
-│   │   └── Fitter.cs             # UI layout utility
-│   ├── Utilities/                # Shared utilities (ValidationUtils, KeyCodeMap, CoroutineRunner)
+│   │   ├── Popups/               # Popup dialogs
+│   │   ├── CabbyMainMenu.cs      # Main menu system
+│   │   ├── Fitter.cs             # UI layout utility
+│   │   └── IPersistentPopup.cs   # Popup interface
 │   ├── SyncedReferences/         # Data synchronization types/interfaces
 │   ├── TextProcessors/           # Input text processing utilities
-│   ├── Extensions/               # Extension methods for logging, etc.
+│   ├── Utilities/                # Shared utilities
 │   ├── Constants.cs              # UI-specific constants
 │   ├── IGameStateProvider.cs     # Interface for menu visibility logic
-│   ├── CodeState.cs              # Shared state management
 │   └── ... (other core files)
 │
 ├── Makefile                      # Build and deployment scripts
-├── global.json                   # .NET SDK version specification
+├── global.json                   # .NET SDK version specification (9.0.301)
 ├── CabbyCodes.sln                # Solution file
 └── README.md                     # Project documentation
 ```
@@ -207,6 +255,8 @@ Before building the project, you need to obtain the following DLL files and plac
 #### Required Files:
 - **Assembly-CSharp.dll** - Main game assembly (from Hollow Knight installation)
 - **PlayMaker.dll** - PlayMaker FSM library (from Hollow Knight installation)
+
+#### Optional Files:
 - **UnityExplorer.STANDALONE.Mono.dll** - UnityExplorer in-game inspector (from UnityExplorer release) *(optional, see note below)*
 
 #### File Structure:
@@ -219,15 +269,6 @@ CabbyCodes/
 ```
 
 **Note**: These files are excluded from version control due to licensing restrictions. You must obtain them manually before building and debugging the project.
-
-**UnityExplorer is optional:**
-- If you do **not** want to use UnityExplorer, you can comment out the following line in `CabbyCodes/CabbyCodesPlugin.cs` (inside the `Start` method):
-  ```csharp
-  UnityExplorer.ExplorerStandalone.CreateInstance();
-  ```
-- This will allow you to build and run the mod without needing `UnityExplorer.STANDALONE.Mono.dll` in your `lib` folder.
-
-### 🔧 Optional / Useful Files
 
 #### UnityExplorer - In-Game Debug Tool
 
@@ -251,6 +292,12 @@ UnityExplorer is a powerful in-game inspector and debugger that provides a graph
 - **Access**: Press `F7` in-game to open the UnityExplorer window
 - **Debugging**: Use it to inspect game state, player data, and scene objects
 - **Development**: Essential for understanding game structure and testing mod features
+
+- If you want to use UnityExplorer, you can comment out the following line in `CabbyCodes/CabbyCodesPlugin.cs` (inside the `Start` method):
+  ```csharp
+  UnityExplorer.ExplorerStandalone.CreateInstance();
+  ```
+- This will allow you to build and run the mod with `UnityExplorer.STANDALONE.Mono.dll` in your `lib` folder.
 
 #### UniverseLib - Reflection and Debugging Library
 
@@ -350,22 +397,22 @@ Check the BepInEx console for detailed information about:
 
 ## 🤝 Contributing
 
+**Contributions are welcome!** We encourage community involvement in improving CabbyCodes. Whether you're fixing bugs, adding new features, or improving documentation, your contributions help make this mod better for everyone.
+
 ### How to Contribute
-1. **Fork the repository**
+
+#### Submitting Changes
+1. **Fork the repository** to your GitHub account
 2. **Create a feature branch**: `git checkout -b feature/new-feature`
-3. **Make your changes** and add tests
+3. **Make your changes** and add tests if applicable
 4. **Commit your changes**: `git commit -am 'Add new feature'`
 5. **Push to the branch**: `git push origin feature/new-feature`
-6. **Submit a pull request**
+6. **Submit a pull request** from your fork to the main repository
 
-### Development Guidelines
-- Follow C# coding conventions
-- Add XML documentation to public methods
-- Include error handling for all user inputs
-- Test changes thoroughly before submitting
-- Update documentation for new features
-- Keep UI constants in CabbyMenu project
-- Keep game-specific constants in CabbyCodes project
+#### Before Contributing
+- **Check existing issues** to see if your idea has already been discussed
+- **Use the Issues tab** to report bugs or request new features
+- **Use the Discussions tab** to discuss potential changes or ask questions
 
 ### Project Organization
 - **Game Logic**: Add to CabbyCodes project

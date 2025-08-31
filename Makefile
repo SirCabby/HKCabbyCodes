@@ -13,17 +13,17 @@ CABBYCODES_PROJECT = CabbyCodes/CabbyCodes.csproj
 CABBYMENU_PROJECT = CabbyMenu/CabbyMenu.csproj
 
 # Paths
-BUILD_DIR = CabbyCodes/bin/$(CONFIGURATION)/$(TARGET_FRAMEWORK)
-OBJ_DIR = CabbyCodes/obj/$(CONFIGURATION)/$(TARGET_FRAMEWORK)
-CABBYMENU_BUILD_DIR = CabbyMenu/bin/$(CONFIGURATION)/$(TARGET_FRAMEWORK)
-CABBYMENU_OBJ_DIR = CabbyMenu/obj/$(CONFIGURATION)/$(TARGET_FRAMEWORK)
+BUILD_DIR = CabbyCodes\bin\$(CONFIGURATION)\$(TARGET_FRAMEWORK)
+OBJ_DIR = CabbyCodes\obj\$(CONFIGURATION)\$(TARGET_FRAMEWORK)
+CABBYMENU_BUILD_DIR = CabbyMenu\bin\$(CONFIGURATION)\$(TARGET_FRAMEWORK)
+CABBYMENU_OBJ_DIR = CabbyMenu\obj\$(CONFIGURATION)\$(TARGET_FRAMEWORK)
 
 # Hollow Knight installation path (modify as needed)
 HOLLOW_KNIGHT_PATH = C:\Program Files (x86)\Steam\steamapps\common\Hollow Knight
 BEPINEX_PLUGINS_PATH = $(HOLLOW_KNIGHT_PATH)\BepInEx\plugins
 
 # .NET SDK version (from global.json)
-DOTNET_VERSION = 6.0.318
+DOTNET_VERSION = 9.0.301
 
 # Default target
 .PHONY: all
@@ -193,6 +193,7 @@ package: build
 	@echo "Packaging $(PROJECT_NAME)..."
 	@if not exist dist mkdir dist
 	@copy /Y "$(BUILD_DIR)\$(PROJECT_NAME).dll" dist\
+	@copy /Y "$(CABBYMENU_BUILD_DIR)\CabbyMenu.dll" dist\
 	@if exist README.md copy /Y README.md dist\
-	@powershell -Command "Compress-Archive -Path dist\* -DestinationPath './$(PROJECT_NAME)-$(Get-Date -Format yyyyMMdd).zip' -Force"
+	@powershell -Command "Compress-Archive -Path 'dist\*' -DestinationPath '$(PROJECT_NAME)-$(Get-Date -Format yyyyMMdd).zip' -Force"
 	@echo "Package created: $(PROJECT_NAME)-(date in zip filename)"
