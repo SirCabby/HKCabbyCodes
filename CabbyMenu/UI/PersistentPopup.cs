@@ -35,7 +35,18 @@ namespace CabbyMenu.UI
 
         public void SetMessageText(string message)
         {
-            var messageText = persistentRoot.transform.Find("Popup Panel/Message Text").GetComponent<Text>();
+            if (persistentRoot == null)
+            {
+                return;
+            }
+            
+            var messageTextTransform = persistentRoot.transform.Find("Popup Panel/Message Text");
+            if (messageTextTransform == null)
+            {
+                return;
+            }
+            
+            var messageText = messageTextTransform.GetComponent<Text>();
             if (messageText != null)
             {
                 messageText.text = message;

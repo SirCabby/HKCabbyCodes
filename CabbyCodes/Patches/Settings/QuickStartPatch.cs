@@ -9,7 +9,6 @@ using System.Collections;
 using GlobalEnums;
 using CabbyMenu.Utilities;
 using CabbyCodes.SavedGames;
-using CabbyMenu.UI;
 
 namespace CabbyCodes.Patches.Settings
 {
@@ -222,7 +221,12 @@ namespace CabbyCodes.Patches.Settings
                     CustomFileToLoad = null;
                     CabbyCodesPlugin.BLogger.LogDebug(string.Format("QuickStartPatch: Loading custom file '{0}' after main menu.", fileToLoad));
                     SavedGameManager.LoadCustomGame(fileToLoad, (success) => {
-                        if (!success)
+                        if (success)
+                        {
+                            // Call OnGameLoadComplete after custom file load to restore menu state
+                            GameReloadManager.OnGameLoadComplete();
+                        }
+                        else
                         {
                             CabbyCodesPlugin.BLogger.LogWarning(string.Format("QuickStartPatch: Failed to load custom file '{0}'.", fileToLoad));
                         }
@@ -475,6 +479,9 @@ namespace CabbyCodes.Patches.Settings
             
             // Wait a bit more to ensure everything is fully settled
             yield return new WaitForSeconds(0.5f);
+
+            // Restore menu state after the game has finished loading
+            GameReloadManager.OnGameLoadComplete();
 
             // Hide and destroy loading popup only when the player is actually back in the game
             if (loadingPopup != null)

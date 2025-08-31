@@ -27,7 +27,12 @@ namespace CabbyCodes.Patches.Settings
                     QuickStartPatch.CustomFileToLoad = null;
                     CabbyCodesPlugin.BLogger.LogInfo(string.Format("QuickStartLoader: Loading custom file '{0}' after main menu.", fileToLoad));
                     SavedGameManager.LoadCustomGame(fileToLoad, (success) => {
-                        if (!success)
+                        if (success)
+                        {
+                            // Call OnGameLoadComplete after custom file load to restore menu state
+                            GameReloadManager.OnGameLoadComplete();
+                        }
+                        else
                         {
                             CabbyCodesPlugin.BLogger.LogWarning(string.Format("QuickStartLoader: Failed to load custom file '{0}'.", fileToLoad));
                         }

@@ -614,7 +614,10 @@ namespace CabbyMenu.UI
                 inputFieldManager.SubmitAndDeselect();
                 
                 rootGoMod.SetActive(false);
-                if (categoryDropdown != null && !deferredRestorationApplied)
+                
+                // Only reset category if we have a deferred restoration that needs to be applied
+                // This prevents losing the current category selection when just closing/reopening the menu
+                if (categoryDropdown != null && deferredCategoryRestoration.HasValue && !deferredRestorationApplied)
                 {
                     categoryDropdown.SetValue(0);
                     OnCategorySelected(0);
@@ -729,6 +732,19 @@ namespace CabbyMenu.UI
         }
         
         /// <summary>
+        /// Gets the currently selected category index.
+        /// </summary>
+        /// <returns>The index of the currently selected category, or -1 if none selected</returns>
+        public int GetCurrentCategoryIndex()
+        {
+            if (categoryDropdown != null)
+            {
+                return categoryDropdown.Value;
+            }
+            return -1;
+        }
+        
+        /// <summary>
         /// Sets the category dropdown to a specific value and triggers the category selection.
         /// </summary>
         /// <param name="categoryIndex">The index of the category to select</param>
@@ -748,6 +764,60 @@ namespace CabbyMenu.UI
         public void SetDeferredCategoryRestoration(int categoryIndex)
         {
             deferredCategoryRestoration = categoryIndex;
+        }
+        
+        /// <summary>
+        /// Sets a deferred category restoration and resets the restoration state to force it to be applied.
+        /// This is used when the menu needs to be rebuilt with a different category.
+        /// </summary>
+        /// <param name="categoryIndex">The index of the category to restore to</param>
+        public void SetDeferredCategoryRestorationAndReset(int categoryIndex)
+        {
+            deferredCategoryRestoration = categoryIndex;
+            deferredRestorationApplied = false; // Reset so it will be applied again
+        }
+        
+        /// <summary>
+        /// Refreshes the deferred restoration from the config callback.
+        /// This should be called when the menu needs to be rebuilt to ensure the correct category is restored.
+        /// </summary>
+        public void RefreshDeferredRestorationFromConfig()
+        {
+            // This method will be called from outside to set the deferred restoration
+            // The actual config reading will happen in the calling code
+        }
+        
+        /// <summary>
+        /// Sets the deferred restoration from an external source (like config).
+        /// This is used when the menu needs to be rebuilt with a specific category.
+        /// </summary>
+        /// <param name="categoryIndex">The index of the category to restore to</param>
+        public void SetDeferredRestorationFromExternal(int categoryIndex)
+        {
+            deferredCategoryRestoration = categoryIndex;
+            deferredRestorationApplied = false; // Reset so it will be applied again
+        }
+        
+        /// <summary>
+        /// Forces a rebuild of the menu with a new category selection.
+        /// This is used when the deferred restoration has already been applied but we need to change it.
+        /// </summary>
+        /// <param name="categoryIndex">The index of the category to switch to</param>
+        public void ForceCategoryChange(int categoryIndex)
+        {
+            if (categoryIndex >= 0 && categoryIndex < GetRegisteredCategories())
+            {
+                // Reset the deferred restoration state
+                deferredRestorationApplied = false;
+                deferredCategoryRestoration = categoryIndex;
+                
+                // Force a rebuild of the canvas
+                if (rootGameObject != null)
+                {
+                    UnityEngine.Object.Destroy(rootGameObject);
+                    rootGameObject = null;
+                }
+            }
         }
 
         /// <summary>
@@ -884,6 +954,7 @@ namespace CabbyMenu.UI
             }
             else
             {
+                // If no deferred restoration, default to first category
                 OnCategorySelected(0);
             }
         }

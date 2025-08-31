@@ -221,6 +221,9 @@ namespace CabbyCodes.Patches.Settings
         /// <param name="saveFileName">The name of the save file to load.</param>
         private static void LoadCustomSave(string saveFileName)
         {
+            // Capture menu state before custom save load
+            MenuStateManager.CaptureCurrentState();
+            
             // Cache the current slot before leaving (in case it changed)
             if (GameManager.instance != null)
             {
@@ -431,6 +434,9 @@ namespace CabbyCodes.Patches.Settings
             
             // Unsubscribe to avoid memory leaks
             gm.OnFinishedEnteringScene -= () => OnFinishedEnteringSceneLoad(targetPosition);
+            
+            // Restore menu state after the scene has finished loading
+            GameReloadManager.OnGameLoadComplete();
         }
 
         /// <summary>

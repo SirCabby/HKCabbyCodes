@@ -259,6 +259,9 @@ namespace CabbyCodes.SavedGames
             // If a reload is pending and the game is unpaused, trigger the save/quit/reload
             if (pendingReload && GameManager.instance != null && !GameManager.instance.IsGamePaused())
             {
+                // Capture menu state before reload
+                MenuStateManager.CaptureCurrentState();
+                
                 // Show popup when the actual reload begins
                 ShowReloadPopup();
                 
@@ -311,6 +314,19 @@ namespace CabbyCodes.SavedGames
             
             // Don't clear reload requests or hide popup yet - wait until player is back in game
             // The popup will be hidden when the custom file load completes
+        }
+        
+        /// <summary>
+        /// Called when the game has finished loading and the player is back in the game world.
+        /// This is the ideal time to restore menu state.
+        /// </summary>
+        public static void OnGameLoadComplete()
+        {
+            // Restore the captured menu state
+            MenuStateManager.RestoreCapturedState(() => {
+                // Clear the captured state after successful restoration
+                MenuStateManager.ClearCapturedState();
+            });
         }
 
         private System.Collections.IEnumerator DeleteTempSaveAfterDelay(string fileName)
