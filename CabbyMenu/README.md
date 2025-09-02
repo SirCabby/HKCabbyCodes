@@ -190,7 +190,7 @@ using CabbyMenu.Types;
 var gameStateProvider = new MyGameStateProvider();
 
 // Initialize the menu with the provider
-var cabbyMenu = new CabbyMainMenu("My Mod", "1.0.0", gameStateProvider);
+var cabbyMenu = new CabbyMainMenu("My Mod", "1.0.1", gameStateProvider);
 
 // The menu will automatically show/hide based on your provider
 cabbyMenu.Update(); // Called every frame
