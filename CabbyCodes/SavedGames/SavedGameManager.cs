@@ -347,22 +347,36 @@ namespace CabbyCodes.SavedGames
         /// <param name="loadingPopup">The loading popup to hide after teleport is complete.</param>
         private static System.Collections.IEnumerator TeleportAfterBench(TeleportLocation teleportLocation, CabbyMenu.UI.IPersistentPopup loadingPopup)
         {
-            // Wait until the player sits down at a bench (atBench becomes true)
+            // Wait until the player sits down at a bench (atBench becomes true) with 10 second timeout
+            float timeoutDuration = 1f;
+            float startTime = Time.realtimeSinceStartup;
+            
             while (PlayerData.instance == null || !PlayerData.instance.atBench)
             {
+                // Check if we've exceeded the timeout
+                if (Time.realtimeSinceStartup - startTime > timeoutDuration)
+                {
+                    break;
+                }
                 yield return null; // wait one frame
             }
-
-            // Update popup message to instruct user to get off bench
-            loadingPopup?.SetMessageText("Get off bench to restore position");
             
-            // Also update reload popup message if it exists
-            UpdateReloadPopupMessage("Get off bench to restore position");
-
-            // Wait until the player STANDS UP again (atBench becomes false)
-            while (PlayerData.instance != null && PlayerData.instance.atBench)
+            // Check if we actually found a bench or timed out
+            bool foundBench = PlayerData.instance != null && PlayerData.instance.atBench;
+            
+            if (foundBench)
             {
-                yield return null; // still sitting
+                // Update popup message to instruct user to get off bench
+                loadingPopup?.SetMessageText("Get off bench to restore position");
+                
+                // Also update reload popup message if it exists
+                UpdateReloadPopupMessage("Get off bench to restore position");
+
+                // Wait until the player STANDS UP again (atBench becomes false)
+                while (PlayerData.instance != null && PlayerData.instance.atBench)
+                {
+                    yield return null; // still sitting
+                }
             }
 
             // Restore original message
@@ -405,9 +419,19 @@ namespace CabbyCodes.SavedGames
             // Hide and destroy the loading popup after teleport is complete
             if (loadingPopup != null)
             {
-                loadingPopup.Hide();
-                loadingPopup.Destroy();
+                try
+                {
+                    loadingPopup.Hide();
+                    loadingPopup.Destroy();
+                }
+                catch (System.Exception ex)
+                {
+                    CabbyCodesPlugin.BLogger.LogWarning(string.Format("TeleportAfterBench: Error hiding/destroying popup: {0}", ex.Message));
+                }
             }
+            
+            // Clear the popup reference
+            Patches.Settings.CustomSaveLoadPatch.ClearCurrentLoadingPopup();
             
             // Also hide reload popup if this was a reload
             HideReloadPopupIfPresent();

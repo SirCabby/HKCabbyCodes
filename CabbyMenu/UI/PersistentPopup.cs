@@ -17,39 +17,77 @@ namespace CabbyMenu.UI
 
         public void Show()
         {
-            persistentRoot?.SetActive(true);
+            try
+            {
+                if (persistentRoot != null && persistentRoot)
+                {
+                    persistentRoot.SetActive(true);
+                }
+            }
+            catch (System.Exception ex)
+            {
+                // Log the error but don't rethrow to prevent crashes
+                UnityEngine.Debug.LogWarning($"PersistentPopupWrapper.Show() failed: {ex.Message}");
+            }
         }
 
         public void Hide()
         {
-            persistentRoot?.SetActive(false);
+            try
+            {
+                if (persistentRoot != null && persistentRoot)
+                {
+                    persistentRoot.SetActive(false);
+                }
+            }
+            catch (System.Exception ex)
+            {
+                // Log the error but don't rethrow to prevent crashes
+                UnityEngine.Debug.LogWarning($"PersistentPopupWrapper.Hide() failed: {ex.Message}");
+            }
         }
 
         public void Destroy()
         {
-            if (persistentRoot != null)
+            try
             {
-                Object.Destroy(persistentRoot);
+                if (persistentRoot != null && persistentRoot)
+                {
+                    Object.Destroy(persistentRoot);
+                }
+            }
+            catch (System.Exception ex)
+            {
+                // Log the error but don't rethrow to prevent crashes
+                UnityEngine.Debug.LogWarning($"PersistentPopupWrapper.Destroy() failed: {ex.Message}");
             }
         }
 
         public void SetMessageText(string message)
         {
-            if (persistentRoot == null)
+            try
             {
-                return;
+                if (persistentRoot == null || !persistentRoot)
+                {
+                    return;
+                }
+                
+                var messageTextTransform = persistentRoot.transform.Find("Popup Panel/Message Text");
+                if (messageTextTransform == null)
+                {
+                    return;
+                }
+                
+                var messageText = messageTextTransform.GetComponent<Text>();
+                if (messageText != null)
+                {
+                    messageText.text = message;
+                }
             }
-            
-            var messageTextTransform = persistentRoot.transform.Find("Popup Panel/Message Text");
-            if (messageTextTransform == null)
+            catch (System.Exception ex)
             {
-                return;
-            }
-            
-            var messageText = messageTextTransform.GetComponent<Text>();
-            if (messageText != null)
-            {
-                messageText.text = message;
+                // Log the error but don't rethrow to prevent crashes
+                UnityEngine.Debug.LogWarning($"PersistentPopupWrapper.SetMessageText() failed: {ex.Message}");
             }
         }
     }

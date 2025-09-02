@@ -472,9 +472,18 @@ namespace CabbyCodes.Patches.Settings
             // This ensures the popup stays visible until the game is fully loaded and playable
             yield return new WaitForSeconds(1f); // Give the game time to load
             
-            // Wait for the player to be in a playable state
+            // Wait for the player to be in a playable state with timeout
+            float playableStateTimeout = 15f; // Longer timeout for game loading
+            float playableStartTime = Time.realtimeSinceStartup;
+            
             while (PlayerData.instance == null || gameManager.gameState != GameState.PLAYING)
             {
+                // Check if we've exceeded the timeout
+                if (Time.realtimeSinceStartup - playableStartTime > playableStateTimeout)
+                {
+                    CabbyCodesPlugin.BLogger.LogWarning("WaitForMainMenuInitializationAndLoadGame: Timeout waiting for playable state, proceeding anyway");
+                    break;
+                }
                 yield return null;
             }
             
