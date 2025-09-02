@@ -310,16 +310,19 @@ namespace CabbyCodes.Patches
                         if (value > 1)
                         {
                             FlagManager.SetBoolFlag(FlagInstances.hasDash, true);
+                            FlagManager.SetBoolFlag(FlagInstances.canDash, true);
                             FlagManager.SetBoolFlag(FlagInstances.hasShadowDash, true);
                         }
                         else if (value == 1)
                         {
                             FlagManager.SetBoolFlag(FlagInstances.hasDash, true);
+                            FlagManager.SetBoolFlag(FlagInstances.canDash, true);
                             FlagManager.SetBoolFlag(FlagInstances.hasShadowDash, false);
                         }
                         else
                         {
                             FlagManager.SetBoolFlag(FlagInstances.hasDash, false);
+                            FlagManager.SetBoolFlag(FlagInstances.canDash, false);
                             FlagManager.SetBoolFlag(FlagInstances.hasShadowDash, false);
                         }
                     },
