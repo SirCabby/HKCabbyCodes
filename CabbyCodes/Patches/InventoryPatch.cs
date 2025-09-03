@@ -928,11 +928,14 @@ namespace CabbyCodes.Patches
         {
             var currentSimpleKeys = FlagManager.GetIntFlag(FlagInstances.simpleKeys);
             
-            // Panel is disabled if there are no simple keys available
-            // This prevents disabling keys when they are in use
-            bool shouldBeInteractable = currentSimpleKeys > 0;
-            
+            // Get the current state of this specific panel's toggle
             var toggleButton = panel.GetToggleButton();
+            bool isCurrentlyEnabled = toggleButton.IsOn.Get();
+            
+            // If the key is currently enabled (true), check if we can disable it (need keys available)
+            // If the key is currently disabled (false), always allow enabling it
+            bool shouldBeInteractable = !isCurrentlyEnabled || currentSimpleKeys > 0;
+            
             toggleButton.SetInteractable(shouldBeInteractable);
             
             // Set disabled message for hover popup
