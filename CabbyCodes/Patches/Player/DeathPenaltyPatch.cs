@@ -4,7 +4,7 @@ using HarmonyLib;
 using BepInEx.Configuration;
 using CabbyCodes.Flags;
 using CabbyCodes.CheatState;
-using System.Collections;
+using UnityEngine;
 
 namespace CabbyCodes.Patches.Player
 {
@@ -14,7 +14,9 @@ namespace CabbyCodes.Patches.Player
         private static ConfigEntry<bool> configValue;
         private static readonly Harmony harmony = new Harmony(key);
         private static readonly MethodInfo mOriginal = AccessTools.Method(typeof(PlayerData), nameof(PlayerData.StartSoulLimiter));
-        private static readonly MethodInfo mOriginal2 = typeof(HeroController).GetMethod("Die", BindingFlags.NonPublic | BindingFlags.Instance);
+        private static readonly MethodInfo mOriginal2 = AccessTools.Method(typeof(GameManager), "PlayerDead");
+        private static readonly MethodInfo mHeroDie = AccessTools.Method(typeof(HeroController), "Die");
+        private static int storedGeoAmount;
 
         /// <summary>
         /// Initializes the configuration entry.
@@ -43,7 +45,7 @@ namespace CabbyCodes.Patches.Player
             if (value)
             {
                 CheatStateManager.RegisterRestorableCheat(this);
-                ApplyDeathPenaltyPatches();
+                EnableDeathPenaltyPrevention();
             }
             else
             {
@@ -61,19 +63,49 @@ namespace CabbyCodes.Patches.Player
             // This method is called by CheatStateManager after scene transitions
             if (Get())
             {
-                ApplyDeathPenaltyPatches();
+                EnableDeathPenaltyPrevention();
             }
         }
 
-        private void ApplyDeathPenaltyPatches()
+        private static void EnableDeathPenaltyPrevention()
         {
-            // Patch StartSoulLimiter to skip execution
-            harmony.Patch(mOriginal, prefix: new HarmonyMethod(typeof(DeathPenaltyPatch).GetMethod(nameof(StartSoulLimiter_Prefix), BindingFlags.Static | BindingFlags.Public)));
-            
-            // Patch Die method to prevent shade creation
-            if (mOriginal2 != null)
+            try
             {
-                harmony.Patch(mOriginal2, postfix: new HarmonyMethod(typeof(DeathPenaltyPatch).GetMethod(nameof(Die_Postfix), BindingFlags.Static | BindingFlags.Public)));
+                harmony.UnpatchSelf();
+                harmony.Patch(mOriginal, prefix: new HarmonyMethod(typeof(DeathPenaltyPatch).GetMethod(nameof(StartSoulLimiter_Prefix), BindingFlags.Static | BindingFlags.Public)));
+                
+                // Patch PlayerDead to apply death penalty prevention logic
+                if (mOriginal2 != null)
+                {
+                    harmony.Patch(mOriginal2, prefix: new HarmonyMethod(typeof(DeathPenaltyPatch).GetMethod(nameof(PlayerDead_Prefix), BindingFlags.Static | BindingFlags.Public)));
+                }
+
+                // Patch HeroController.Die to capture geo early
+                if (mHeroDie != null)
+                {
+                    harmony.Patch(mHeroDie, prefix: new HarmonyMethod(typeof(DeathPenaltyPatch).GetMethod(nameof(HeroDie_Prefix), BindingFlags.Static | BindingFlags.Public)));
+                }
+            }
+            catch (System.Exception ex)
+            {
+                CabbyCodesPlugin.BLogger.LogError("DeathPenaltyPatch: Failed to apply death penalty patches - " + ex.Message);
+            }
+        }
+
+        private static void DisableDeathPenaltyPrevention()
+        {
+            // No cleanup needed for direct execution approach
+        }
+
+
+        /// <summary>
+        /// Prefix method for GameManager.PlayerDead() to apply death penalty prevention logic.
+        /// </summary>
+        public static void PlayerDead_Prefix()
+        {
+            if (PlayerData.instance != null)
+            {
+                ApplyDeathPenaltyLogic();
             }
         }
 
@@ -87,27 +119,26 @@ namespace CabbyCodes.Patches.Player
         }
 
         /// <summary>
-        /// Postfix method for HeroController.Die() to prevent shade creation.
+        /// Prefix for HeroController.Die to capture geo amount immediately when death sequence starts.
         /// </summary>
-        public static void Die_Postfix()
+        public static void HeroDie_Prefix()
         {
-            // Start coroutine with 1-frame delay
-            GameManager.instance.StartCoroutine(Die_PostfixDelayed());
+            if (PlayerData.instance != null)
+            {
+                storedGeoAmount = PlayerData.instance.geo;
+            }
         }
 
         /// <summary>
-        /// Delayed execution of death penalty removal after 1 frame.
+        /// Applies death penalty prevention logic by clearing shade scene, removing soul limitation, and restoring geo.
         /// </summary>
-        private static IEnumerator Die_PostfixDelayed()
+        private static void ApplyDeathPenaltyLogic()
         {
-            // Wait for 1 frame
-            yield return null;
-            
-            // Execute death penalty removal logic
             FlagManager.SetStringFlag(FlagInstances.shadeScene, "None");
             FlagManager.SetBoolFlag(FlagInstances.soulLimited, false);
-            FlagManager.SetIntFlag(FlagInstances.geo, FlagManager.GetIntFlag(FlagInstances.geoPool));
+            FlagManager.SetIntFlag(FlagInstances.geo, storedGeoAmount);
             FlagManager.SetIntFlag(FlagInstances.geoPool, 0);
+            FlagManager.SetIntFlag(FlagInstances.maxMP, 99);
         }
     }
 } 

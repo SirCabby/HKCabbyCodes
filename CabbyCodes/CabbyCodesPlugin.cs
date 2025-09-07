@@ -171,6 +171,9 @@ namespace CabbyCodes
             // Ensure file logging is set up if it was previously enabled
             FlagFileLoggingReference.EnsureFileExists();
 
+            // Initialize player patches immediately on startup (don't wait for category selection)
+            PlayerPatch.AddPanels();
+
             BLogger.LogInfo("CabbyCodes menu initialized successfully");
         }
 
