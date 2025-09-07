@@ -453,6 +453,108 @@ namespace CabbyCodes.Flags
         }
 
         /// <summary>
+        /// Sets a string flag to the specified value. Automatically handles global string flags.
+        /// </summary>
+        /// <param name="flagDef">The flag definition containing the flag information.</param>
+        /// <param name="value">The string value to set.</param>
+        public static void SetStringFlag(FlagDef flagDef, string value)
+        {
+            if (flagDef == null)
+                return;
+
+            if (IsGlobalFlag(flagDef))
+            {
+                try
+                {
+                    PlayerData.instance.SetString(flagDef.Id, value);
+                }
+                catch (System.Exception)
+                {
+                    // If the flag doesn't exist in PlayerData, ignore the operation
+                }
+            }
+            // Note: Unity doesn't have PersistentStringData, so scene-specific string flags are not supported
+        }
+
+        /// <summary>
+        /// Sets a string flag to the specified value using direct parameters. Automatically handles global string flags.
+        /// </summary>
+        /// <param name="id">The flag identifier.</param>
+        /// <param name="sceneName">The scene name, or "Global" for global flags.</param>
+        /// <param name="value">The string value to set.</param>
+        public static void SetStringFlag(string id, string sceneName, string value)
+        {
+            if (string.IsNullOrEmpty(id))
+                return;
+
+            if (sceneName == "Global")
+            {
+                try
+                {
+                    PlayerData.instance.SetString(id, value);
+                }
+                catch (System.Exception)
+                {
+                    // If the flag doesn't exist in PlayerData, ignore the operation
+                }
+            }
+            // Note: Unity doesn't have PersistentStringData, so scene-specific string flags are not supported
+        }
+
+        /// <summary>
+        /// Gets the current string value of a flag. Automatically handles global string flags.
+        /// </summary>
+        /// <param name="flagDef">The flag definition containing the flag information.</param>
+        /// <returns>The current string value of the flag, or empty string if not found.</returns>
+        public static string GetStringFlag(FlagDef flagDef)
+        {
+            if (flagDef == null)
+                return string.Empty;
+
+            if (IsGlobalFlag(flagDef))
+            {
+                try
+                {
+                    return PlayerData.instance.GetString(flagDef.Id);
+                }
+                catch (System.Exception)
+                {
+                    // If the flag doesn't exist in PlayerData, return empty string
+                    return string.Empty;
+                }
+            }
+            
+            return string.Empty;
+        }
+
+        /// <summary>
+        /// Gets the current string value of a flag using direct parameters. Automatically handles global string flags.
+        /// </summary>
+        /// <param name="id">The flag identifier.</param>
+        /// <param name="sceneName">The scene name, or "Global" for global flags.</param>
+        /// <returns>The current string value of the flag, or empty string if not found.</returns>
+        public static string GetStringFlag(string id, string sceneName)
+        {
+            if (string.IsNullOrEmpty(id))
+                return string.Empty;
+
+            if (sceneName == "Global")
+            {
+                try
+                {
+                    return PlayerData.instance.GetString(id);
+                }
+                catch (System.Exception)
+                {
+                    // If the flag doesn't exist in PlayerData, return empty string
+                    return string.Empty;
+                }
+            }
+            
+            return string.Empty;
+        }
+
+        /// <summary>
         /// Creates or retrieves a PersistentBoolData object for the specified scene and ID.
         /// This method provides the same functionality as PbdMaker.GetPbd for internal use.
         /// </summary>

@@ -13,14 +13,12 @@ namespace CabbyCodes.Patches.Player
     /// </summary>
     public class PlayerPatch : BasePatch
     {
-        // Static state tracking for max health changes that require save/reload
-        private static int startingMaxHealth = -1;
-        
         // Configuration entries for player cheat settings
         private static ConfigEntry<bool> invulnerabilityEnabled;
         private static ConfigEntry<bool> oneHitKillsEnabled;
         private static ConfigEntry<bool> infiniteSoulEnabled;
         private static ConfigEntry<bool> infiniteGeoEnabled;
+        private static ConfigEntry<bool> removeDeathPenaltyEnabled;
         
         /// <summary>
         /// Initializes the configuration entries.
@@ -35,6 +33,8 @@ namespace CabbyCodes.Patches.Player
                 "Enable infinite soul");
             infiniteGeoEnabled = CabbyCodesPlugin.configFile.Bind("Player", "InfiniteGeo", false, 
                 "Enable infinite geo");
+            removeDeathPenaltyEnabled = CabbyCodesPlugin.configFile.Bind("Player", "RemoveDeathPenalty", false, 
+                "Remove death penalty (prevents soul limiter on death)");
         }
         
         public static void AddPanels()
@@ -52,13 +52,12 @@ namespace CabbyCodes.Patches.Player
 
         public override List<CheatPanel> CreatePanels()
         {
-            startingMaxHealth = FlagManager.GetIntFlag(FlagInstances.maxHealth);
-
             // Create patch instances and check if they should be initially active
             var invulPatch = new InvulPatch();
             var damagePatch = new DamagePatch();
             var soulPatch = new SoulPatch();
             var geoPatch = new GeoPatch();
+            var deathPenaltyPatch = new DeathPenaltyPatch();
 
             // Activate patches if they were enabled in config
             if (invulnerabilityEnabled.Value)
@@ -76,6 +75,10 @@ namespace CabbyCodes.Patches.Player
             if (infiniteGeoEnabled.Value)
             {
                 geoPatch.Set(true);
+            }
+            if (removeDeathPenaltyEnabled.Value)
+            {
+                deathPenaltyPatch.Set(true);
             }
 
             var panels = new List<CheatPanel>
@@ -99,6 +102,7 @@ namespace CabbyCodes.Patches.Player
                     FlagValidationData.GetIntValidationData(FlagInstances.healthBlue).MaxValue, 
                     FlagInstances.healthBlue.ReadableName),
                 new TogglePanel(soulPatch, "Infinite Soul"),
+                new TogglePanel(deathPenaltyPatch, "Remove Death Penalty"),
                 new TogglePanel(geoPatch, "Infinite Geo"),
                 new TogglePanel(new PermadeathPatch(), FlagInstances.permadeathMode.ReadableName),
                 new RangeInputFieldPanel<float>(
@@ -113,7 +117,7 @@ namespace CabbyCodes.Patches.Player
                     FlagValidationData.GetFloatValidationData(FlagInstances.playTime).ValidChars,
                     FlagValidationData.GetFloatValidationData(FlagInstances.playTime).MinValue,
                     FlagValidationData.GetFloatValidationData(FlagInstances.playTime).MaxValue,
-                    "Playtime (seconds)")
+                    "Playtime (seconds)"),
             };
 
             return panels;
