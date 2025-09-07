@@ -184,11 +184,11 @@ help:
 	@echo "  run              - Deploy and run Hollow Knight"
 	@echo "  check-sdk        - Check .NET SDK version"
 	@echo "  info             - Show project information"
-	@echo "  rev x.x.x        - Update version, build, and create versioned release package"
-	@echo "  package          - Package the mod for distribution"
+	@echo "  rev x.x.x        - Update version numbers across projects"
+	@echo "  package          - Build and create release package using project version"
 	@echo "  help             - Show this help message"
 
-# Update version and create release package
+# Update version numbers only
 .PHONY: rev
 rev:
 	@if "$(filter-out $@,$(MAKECMDGOALS))" == "" (echo Error: Version parameter is required. Use: make rev x.x.x && exit /b 1)
@@ -196,13 +196,7 @@ rev:
 	@powershell -Command "(Get-Content 'CabbyCodes\CabbyCodes.csproj') -replace '<Version>.*</Version>', '<Version>$(filter-out $@,$(MAKECMDGOALS))</Version>' | Set-Content 'CabbyCodes\CabbyCodes.csproj'"
 	@powershell -Command "(Get-Content 'CabbyMenu\CabbyMenu.csproj') -replace '<Version>.*</Version>', '<Version>$(filter-out $@,$(MAKECMDGOALS))</Version>' | Set-Content 'CabbyMenu\CabbyMenu.csproj'"
 	@powershell -Command "(Get-Content 'CabbyCodes\Constants.cs') -replace 'public const string VERSION = \".*\";', 'public const string VERSION = \"$(filter-out $@,$(MAKECMDGOALS))\";' | Set-Content 'CabbyCodes\Constants.cs'"
-	@echo "Building project..."
-	@$(MAKE) build
-	@echo "Creating release package..."
-	@if not exist Output mkdir Output
-	@powershell -Command "Compress-Archive -Path '$(BUILD_DIR)\$(PROJECT_NAME).dll','$(CABBYMENU_BUILD_DIR)\CabbyMenu.dll' -DestinationPath 'Output\$(PROJECT_NAME)_v$(filter-out $@,$(MAKECMDGOALS)).zip' -Force"
-	@echo "Release package created: Output\$(PROJECT_NAME)_v$(filter-out $@,$(MAKECMDGOALS)).zip"
-	@echo "Version $(filter-out $@,$(MAKECMDGOALS)) release completed successfully!"
+	@echo "Version files updated successfully!"
 
 # Catch-all target to prevent make from complaining about unknown targets when using positional args
 %:
@@ -213,7 +207,5 @@ rev:
 package: build
 	@echo "Packaging $(PROJECT_NAME)..."
 	@if not exist Output mkdir Output
-	@copy /Y "$(BUILD_DIR)\$(PROJECT_NAME).dll" Output\
-	@copy /Y "$(CABBYMENU_BUILD_DIR)\CabbyMenu.dll" Output\
-	@powershell -Command "Compress-Archive -Path 'Output\*' -DestinationPath 'Output\$(PROJECT_NAME)-$(Get-Date -Format yyyyMMdd).zip' -Force"
-	@echo "Package created: Output\$(PROJECT_NAME)-(date in zip filename)"
+	@powershell -NoProfile -Command "$$ver = ([regex]::Match((Get-Content 'CabbyCodes\\CabbyCodes.csproj' -Raw), '<Version>([^<]+)</Version>')).Groups[1].Value; Compress-Archive -Path '$(BUILD_DIR)\\$(PROJECT_NAME).dll','$(CABBYMENU_BUILD_DIR)\\CabbyMenu.dll' -DestinationPath ('Output\\$(PROJECT_NAME)_v' + $$ver + '.zip') -Force"
+	@echo "Package created in Output folder."
