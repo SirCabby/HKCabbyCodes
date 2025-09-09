@@ -3,12 +3,12 @@ using System.Reflection;
 using HarmonyLib;
 using BepInEx.Configuration;
 using CabbyCodes.Flags;
-using CabbyCodes.CheatState;
-using UnityEngine;
+using System.Collections;
+using CabbyMenu.Utilities;
 
 namespace CabbyCodes.Patches.Player
 {
-    public class DeathPenaltyPatch : ISyncedReference<bool>, ICheatStateRestorable
+    public class DeathPenaltyPatch : ISyncedReference<bool>
     {
         public const string key = "DeathPenalty_Patch";
         private static ConfigEntry<bool> configValue;
@@ -40,11 +40,9 @@ namespace CabbyCodes.Patches.Player
         {
             InitializeConfig();
             configValue.Value = value;
-            CheatStateManager.RegisterCheatState(key, value);
             
             if (value)
             {
-                CheatStateManager.RegisterRestorableCheat(this);
                 EnableDeathPenaltyPrevention();
             }
             else
@@ -53,19 +51,6 @@ namespace CabbyCodes.Patches.Player
             }
         }
 
-        public string GetCheatKey()
-        {
-            return key;
-        }
-
-        public void RestoreState()
-        {
-            // This method is called by CheatStateManager after scene transitions
-            if (Get())
-            {
-                EnableDeathPenaltyPrevention();
-            }
-        }
 
         private static void EnableDeathPenaltyPrevention()
         {
@@ -92,21 +77,17 @@ namespace CabbyCodes.Patches.Player
             }
         }
 
-        private static void DisableDeathPenaltyPrevention()
-        {
-            // No cleanup needed for direct execution approach
-        }
-
-
         /// <summary>
         /// Prefix method for GameManager.PlayerDead() to apply death penalty prevention logic.
         /// </summary>
-        public static void PlayerDead_Prefix()
+        public static bool PlayerDead_Prefix()
         {
             if (PlayerData.instance != null)
             {
-                ApplyDeathPenaltyLogic();
+                CoroutineRunner.Instance.StartCoroutine(ApplyDeathPenaltyLogic());
             }
+
+            return true;
         }
 
         /// <summary>
@@ -121,24 +102,28 @@ namespace CabbyCodes.Patches.Player
         /// <summary>
         /// Prefix for HeroController.Die to capture geo amount immediately when death sequence starts.
         /// </summary>
-        public static void HeroDie_Prefix()
+        public static bool HeroDie_Prefix()
         {
             if (PlayerData.instance != null)
             {
                 storedGeoAmount = PlayerData.instance.geo;
             }
+
+            return true;
         }
 
         /// <summary>
         /// Applies death penalty prevention logic by clearing shade scene, removing soul limitation, and restoring geo.
+        /// Runs as a coroutine.
         /// </summary>
-        private static void ApplyDeathPenaltyLogic()
+        private static IEnumerator ApplyDeathPenaltyLogic()
         {
             FlagManager.SetStringFlag(FlagInstances.shadeScene, "None");
             FlagManager.SetBoolFlag(FlagInstances.soulLimited, false);
             FlagManager.SetIntFlag(FlagInstances.geo, storedGeoAmount);
             FlagManager.SetIntFlag(FlagInstances.geoPool, 0);
             FlagManager.SetIntFlag(FlagInstances.maxMP, 99);
+            yield break;
         }
     }
 } 

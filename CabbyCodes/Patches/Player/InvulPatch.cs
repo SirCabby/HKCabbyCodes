@@ -49,6 +49,7 @@ namespace CabbyCodes.Patches.Player
             }
             else
             {
+                CheatStateManager.UnregisterRestorableCheat(this);
                 harmony.UnpatchSelf();
                 FlagManager.SetBoolFlag(flag, false);
             }

@@ -9,17 +9,10 @@ namespace CabbyCodes
     /// </summary>
     public class GameStateProvider : IGameStateProvider
     {
-        private static CheatStateManager cheatStateManager;
-
         public GameStateProvider()
         {
-            // Create the cheat state manager if it doesn't exist
-            if (cheatStateManager == null)
-            {
-                var go = new GameObject("CheatStateManager");
-                Object.DontDestroyOnLoad(go);
-                cheatStateManager = go.AddComponent<CheatStateManager>();
-            }
+            // Initialize the CheatStateManager
+            CheatStateManager.Initialize();
         }
 
         /// <summary>
