@@ -8,7 +8,7 @@ namespace CabbyCodes
         // Plugin Information
         public const string GUID = "cabby.cabbycodes";
         public const string NAME = "Cabby Codes";
-        public const string VERSION = "1.1.1";
+        public const string VERSION = "1.1.2";
 
         // Game Limits
         public const int MIN_HEALTH = 5;
