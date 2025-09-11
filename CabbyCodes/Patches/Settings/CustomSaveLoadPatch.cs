@@ -2,7 +2,6 @@ using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using CabbyMenu.Utilities;
 using GlobalEnums;
 using CabbyCodes.SavedGames;
@@ -285,116 +284,19 @@ namespace CabbyCodes.Patches.Settings
         /// <returns>The created persistent popup.</returns>
         private static IPersistentPopup CreatePersistentLoadingPopup()
         {
-            // Create a persistent GameObject that won't be destroyed during scene changes
-            var persistentGo = new GameObject("PersistentLoadingPopup");
-            Object.DontDestroyOnLoad(persistentGo);
-            
-            // Add Canvas components for UI rendering
-            Canvas canvas = persistentGo.AddComponent<Canvas>();
-            canvas.renderMode = RenderMode.ScreenSpaceOverlay; // This is crucial for visibility
-            canvas.overrideSorting = true;
-            canvas.sortingOrder = 1000; // Ensure popup appears on top of all UI
-            persistentGo.AddComponent<GraphicRaycaster>();
-            
-            CanvasScaler scaler = persistentGo.AddComponent<CanvasScaler>();
-            scaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
-            scaler.referenceResolution = new Vector2(1920, 1080); // Standard reference resolution
-            
-            // Create the popup content
-            CreatePopupContent(persistentGo);
-            
-            // Return a simple popup wrapper that manages the persistent GameObject
-            return new PersistentPopupWrapper(persistentGo);
-        }
+            // Leverage PopupBase with no CabbyMainMenu to create a persistent stand-alone popup
+            var popup = new CabbyMenu.UI.Popups.PopupBase(
+                "Loading Game",
+                "Please Wait . . .",
+                500f,
+                400f,
+                showHeader: true,
+                autoResize: false);
 
-        /// <summary>
-        /// Creates the visual content for the loading popup.
-        /// </summary>
-        /// <param name="parent">The parent GameObject to attach content to.</param>
-        private static void CreatePopupContent(GameObject parent)
-        {
-            // Create dimmed background
-            GameObject background = DefaultControls.CreatePanel(new DefaultControls.Resources());
-            background.name = "Popup Background";
-            var backgroundImage = background.GetComponent<Image>();
-            backgroundImage.color = new Color(0f, 0f, 0f, 0.6f);
-            background.transform.SetParent(parent.transform, false);
-            
-            // Set background to fill the screen
-            var backgroundRect = background.GetComponent<RectTransform>();
-            backgroundRect.anchorMin = Vector2.zero;
-            backgroundRect.anchorMax = Vector2.one;
-            backgroundRect.sizeDelta = Vector2.zero;
+            // Ensure it starts hidden until we show it explicitly
+            popup.Hide();
 
-            // Create main popup panel
-            GameObject popupPanel = DefaultControls.CreatePanel(new DefaultControls.Resources());
-            popupPanel.name = "Popup Panel";
-            var panelImage = popupPanel.GetComponent<Image>();
-            panelImage.color = new Color(0f, 0f, 0f, 1f);
-            popupPanel.transform.SetParent(parent.transform, false);
-            
-            // Center the panel
-            var panelRect = popupPanel.GetComponent<RectTransform>();
-            panelRect.anchorMin = new Vector2(0.5f, 0.5f);
-            panelRect.anchorMax = new Vector2(0.5f, 0.5f);
-            panelRect.sizeDelta = new Vector2(400, 200);
-            panelRect.anchoredPosition = Vector2.zero;
-
-            // Add layout components
-            VerticalLayoutGroup verticalLayout = popupPanel.AddComponent<VerticalLayoutGroup>();
-            verticalLayout.padding = new RectOffset(20, 20, 20, 20);
-            verticalLayout.spacing = 10;
-            verticalLayout.childAlignment = TextAnchor.UpperCenter;
-            verticalLayout.childControlWidth = true;
-            verticalLayout.childControlHeight = true;
-            verticalLayout.childForceExpandWidth = true;
-            verticalLayout.childForceExpandHeight = false;
-
-            // Create header
-            GameObject headerContainer = DefaultControls.CreatePanel(new DefaultControls.Resources());
-            headerContainer.name = "Header Container";
-            var headerImage = headerContainer.GetComponent<Image>();
-            headerImage.color = new Color(0.2f, 0.2f, 0.2f, 1f);
-            headerContainer.transform.SetParent(popupPanel.transform, false);
-            
-            var headerLayout = headerContainer.AddComponent<LayoutElement>();
-            headerLayout.preferredHeight = 60;
-            headerLayout.minHeight = 50;
-
-            // Header text
-            GameObject headerText = new GameObject("Header Text");
-            headerText.transform.SetParent(headerContainer.transform, false);
-            var headerTextComponent = headerText.AddComponent<Text>();
-            headerTextComponent.text = "Loading Game";
-            headerTextComponent.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-            headerTextComponent.fontSize = 24;
-            headerTextComponent.fontStyle = FontStyle.Bold;
-            headerTextComponent.color = Color.white;
-            headerTextComponent.alignment = TextAnchor.MiddleCenter;
-            
-            var headerTextRect = headerText.GetComponent<RectTransform>();
-            headerTextRect.anchorMin = Vector2.zero;
-            headerTextRect.anchorMax = Vector2.one;
-            headerTextRect.sizeDelta = Vector2.zero;
-
-            // Create message text
-            GameObject messageText = new GameObject("Message Text");
-            messageText.transform.SetParent(popupPanel.transform, false);
-            var messageTextComponent = messageText.AddComponent<Text>();
-            messageTextComponent.text = "Please Wait . . .";
-            messageTextComponent.font = Resources.GetBuiltinResource<Font>("Arial.ttf");
-            messageTextComponent.fontSize = 18;
-            messageTextComponent.color = Color.white;
-            messageTextComponent.alignment = TextAnchor.MiddleCenter;
-            
-            var messageLayout = messageText.AddComponent<LayoutElement>();
-            messageLayout.preferredHeight = 80;
-            messageLayout.minHeight = 60;
-            
-            var messageTextRect = messageText.GetComponent<RectTransform>();
-            messageTextRect.anchorMin = Vector2.zero;
-            messageTextRect.anchorMax = Vector2.one;
-            messageTextRect.sizeDelta = Vector2.zero;
+            return popup;
         }
 
         /// <summary>

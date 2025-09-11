@@ -11,9 +11,8 @@ namespace CabbyMenu.UI.Popups
     /// Base class for popups displayed above all other UI elements.
     /// Provides a header and message area but no buttons.
     /// </summary>
-    public class PopupBase
+    public class PopupBase : IPersistentPopup
     {
-        protected readonly CabbyMenu.UI.CabbyMainMenu menu;
         protected readonly string headerText;
         protected readonly string messageText;
         protected readonly float width;
@@ -200,34 +199,39 @@ namespace CabbyMenu.UI.Popups
         }
 
         /// <summary>
-        /// Creates a new popup with the specified parameters.
+        /// Core constructor used by all overloads
         /// </summary>
-        /// <param name="menu">The menu to attach the popup to.</param>
-        /// <param name="headerText">The header text to display.</param>
-        /// <param name="messageText">The message text to display.</param>
-        /// <param name="width">The width of the popup.</param>
-        /// <param name="height">The height of the popup.</param>
-        /// <param name="showHeader">Whether to show the header (default: true).</param>
-        public PopupBase(CabbyMenu.UI.CabbyMainMenu menu, string headerText, string messageText, float width, float height, bool showHeader = true)
+        private readonly bool autoResize;
+
+        private PopupBase(GameObject parent, string headerText, string messageText, float width, float height, bool showHeader = true, bool autoResize = true)
         {
-            this.menu = menu;
             this.headerText = headerText;
             this.messageText = messageText;
             this.width = width;
             this.height = height;
             this.showHeader = showHeader;
-
-            if (menu == null) throw new ArgumentNullException(nameof(menu));
-            GameObject parent = menu.GetRootGameObject();
-            if (parent == null) throw new InvalidOperationException("CabbyMainMenu has no root GameObject.");
+            this.autoResize = autoResize;
 
             // Overlay root that contains its own canvas so we can override sorting order.
             popupRoot = new GameObject("Popup Overlay");
-            popupRoot.transform.SetParent(parent.transform, false);
+
+            if (parent != null)
+            {
+                popupRoot.transform.SetParent(parent.transform, false);
+            }
+            else
+            {
+                // Stand-alone popup – keep across scene loads
+                UnityEngine.Object.DontDestroyOnLoad(popupRoot);
+            }
 
             Canvas canvas = popupRoot.AddComponent<Canvas>();
             canvas.overrideSorting = true;
             canvas.sortingOrder = 1000; // Ensure popup appears on top of all UI.
+            if (parent == null)
+            {
+                canvas.renderMode = RenderMode.ScreenSpaceOverlay;
+            }
             popupRoot.AddComponent<GraphicRaycaster>();
 
             CanvasScaler scaler = popupRoot.AddComponent<CanvasScaler>();
@@ -333,7 +337,25 @@ namespace CabbyMenu.UI.Popups
             // Auto-resize the popup based on content after everything is set up
             if (showHeader)
             {
-                AutoResizeToContent();
+                if (autoResize)
+                {
+                    AutoResizeToContent();
+                }
+                else
+                {
+                    // Ensure fixed size is honoured when autoresize disabled
+                    var le = popupPanel.GetComponent<LayoutElement>() ?? popupPanel.AddComponent<LayoutElement>();
+                    le.preferredWidth = width;
+                    le.preferredHeight = height;
+                    le.flexibleWidth = 0f;
+                    le.flexibleHeight = 0f;
+
+                    var rt = popupPanel.GetComponent<RectTransform>();
+                    if (rt != null)
+                    {
+                        rt.sizeDelta = new Vector2(width, height);
+                    }
+                }
             }
             else
             {
@@ -355,6 +377,22 @@ namespace CabbyMenu.UI.Popups
                     rectTransform.sizeDelta = new Vector2(width, height);
                 }
             }
+        }
+
+        /// <summary>
+        /// Creates a popup attached to the specified CabbyMainMenu (maintains backward compatibility).
+        /// </summary>
+        public PopupBase(CabbyMainMenu menu, string headerText, string messageText, float width, float height, bool showHeader = true, bool autoResize = true)
+            : this(menu?.GetRootGameObject(), headerText, messageText, width, height, showHeader, autoResize)
+        {
+        }
+
+        /// <summary>
+        /// Creates a stand-alone popup with no parent (persists across scenes).
+        /// </summary>
+        public PopupBase(string headerText, string messageText, float width, float height, bool showHeader = true, bool autoResize = true)
+            : this((GameObject)null, headerText, messageText, width, height, showHeader, autoResize)
+        {
         }
 
         // Store initial dimensions for reference
@@ -522,40 +560,37 @@ namespace CabbyMenu.UI.Popups
         /// <returns>Vector2 with optimal width and height</returns>
         public Vector2 CalculateOptimalSize(string text, float maxWidth = 800f)
         {
-            if (string.IsNullOrEmpty(text)) return new Vector2(initialWidth, initialHeight);
-
-            // Estimate text dimensions based on font size and character count
-            float charWidth = Constants.DEFAULT_FONT_SIZE * 0.6f; // Approximate character width
-            float lineHeight = Constants.DEFAULT_FONT_SIZE * 1.2f; // Approximate line height
-            
-            // Calculate available width for text (accounting for padding and margins)
-            float availableWidth = maxWidth - 80f; // 80f for padding
-            
-            // Calculate how many characters fit per line
-            int charsPerLine = Mathf.FloorToInt(availableWidth / charWidth);
-            if (charsPerLine <= 0) charsPerLine = 1;
-            
-            // Calculate how many lines the text will take with word wrapping
-            int lineCount = Mathf.CeilToInt((float)text.Length / charsPerLine);
-            
-            // Add extra height for multi-line text to account for word wrapping and spacing
-            float extraHeight = 0f;
-            if (lineCount > 1)
+            if (string.IsNullOrEmpty(text) || messageTextMod == null)
             {
-                extraHeight = (lineCount - 1) * (lineHeight * 0.3f); // Reduced spacing for word wrapping
+                return new Vector2(initialWidth, initialHeight);
             }
-            
-            // Calculate optimal dimensions
-            float optimalWidth = Mathf.Min(maxWidth, Mathf.Max(400f, availableWidth + 80f)); // Ensure minimum width
-            float optimalHeight = Mathf.Max(300f, lineCount * lineHeight + extraHeight + 200f); // 200f for header and padding
-            
-            // Ensure height is sufficient for the content
-            optimalHeight = Mathf.Max(optimalHeight, 300f + (lineCount * lineHeight));
-            
-            // Add extra height for buttons and proper spacing
-            optimalHeight += 100f; // Space for buttons and margins
-            
-            return new Vector2(optimalWidth, optimalHeight);
+
+            const float PADDING = 80f; // matching verticalLayout padding (left+right)
+            const float HEADER_EXTRA_HEIGHT = 120f; // header container plus spacing
+            const float MIN_WIDTH = 200f;
+            const float MIN_HEIGHT = 200f;
+
+            Text txt = messageTextMod.Get().GetComponent<Text>();
+            if (txt == null)
+            {
+                return new Vector2(initialWidth, initialHeight);
+            }
+
+            // Prepare generation settings with constrained width (maxWidth - padding)
+            Vector2 extents = new Vector2(maxWidth - PADDING, 0f);
+            var settings = txt.GetGenerationSettings(extents);
+
+            float preferredWidth = txt.cachedTextGeneratorForLayout.GetPreferredWidth(txt.text, settings) / txt.pixelsPerUnit;
+            // Add extra horizontal buffer so text isn't flush against edges
+            float clampedWidth = Mathf.Clamp(preferredWidth + PADDING + 40f, MIN_WIDTH, maxWidth);
+
+            // Use clamped width to compute preferredHeight precisely
+            settings = txt.GetGenerationSettings(new Vector2(clampedWidth - PADDING, 0f));
+            float preferredHeight = txt.cachedTextGeneratorForLayout.GetPreferredHeight(txt.text, settings) / txt.pixelsPerUnit;
+
+            float totalHeight = Mathf.Max(preferredHeight + HEADER_EXTRA_HEIGHT, MIN_HEIGHT);
+
+            return new Vector2(clampedWidth, totalHeight);
         }
 
         /// <summary>
