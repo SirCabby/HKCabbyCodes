@@ -13,6 +13,7 @@ namespace CabbyCodes.Patches.Flags.Triage
         private static ConfigEntry<bool> showSceneTransitions;
         private static ConfigEntry<bool> includePlayerDataFlags;
         private static ConfigEntry<bool> includeSceneFlags;
+        private static ConfigEntry<bool> includeAllFlags; // Include all flags, even those in ignore list
 
         // Public properties with default values
         public static bool ShowNewDiscoveries => showNewDiscoveries?.Value ?? true;
@@ -20,6 +21,7 @@ namespace CabbyCodes.Patches.Flags.Triage
         public static bool ShowSceneTransitions => showSceneTransitions?.Value ?? true;
         public static bool IncludePlayerDataFlags => includePlayerDataFlags?.Value ?? true;
         public static bool IncludeSceneFlags => includeSceneFlags?.Value ?? true;
+        public static bool IncludeAllFlags => includeAllFlags?.Value ?? false;
 
         /// <summary>
         /// Initializes all configuration entries for Flag Monitor settings
@@ -40,6 +42,9 @@ namespace CabbyCodes.Patches.Flags.Triage
             
             includeSceneFlags = CabbyCodesPlugin.configFile.Bind("FlagMonitor", "IncludeSceneFlags", true,
                 "Monitor and display Scene flag changes");
+            
+            includeAllFlags = CabbyCodesPlugin.configFile.Bind("FlagMonitor", "IncludeAllFlags", false,
+                "Include flags from ignore list and unused flags in reporting updates");
         }
 
         /// <summary>
@@ -94,6 +99,17 @@ namespace CabbyCodes.Patches.Flags.Triage
             if (includeSceneFlags != null)
             {
                 includeSceneFlags.Value = value;
+            }
+        }
+
+        /// <summary>
+        /// Updates the IncludeAllFlags setting
+        /// </summary>
+        public static void SetIncludeAllFlags(bool value)
+        {
+            if (includeAllFlags != null)
+            {
+                includeAllFlags.Value = value;
             }
         }
 

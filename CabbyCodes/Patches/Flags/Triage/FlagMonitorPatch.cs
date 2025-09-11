@@ -1005,10 +1005,22 @@ namespace CabbyCodes.Patches.Flags.Triage
                     }
                 }
                 
-                // Remove ignored fields from tracking set
-                foreach (var ignoredField in ignoredFields)
+                // Handle ignored fields based on IncludeAllFlags setting
+                if (FlagMonitorSettings.IncludeAllFlags)
                 {
-                    trackedPlayerDataFields.Remove(ignoredField);
+                    // When including all flags, add ignored fields back to tracking
+                    foreach (var ignoredField in ignoredFields)
+                    {
+                        trackedPlayerDataFields.Add(ignoredField);
+                    }
+                }
+                else
+                {
+                    // When not including all flags, remove ignored fields from tracking
+                    foreach (var ignoredField in ignoredFields)
+                    {
+                        trackedPlayerDataFields.Remove(ignoredField);
+                    }
                 }
                 
                 // Build FieldInfo cache for performance
@@ -1556,6 +1568,10 @@ namespace CabbyCodes.Patches.Flags.Triage
                 () => FlagMonitorSettings.IncludeSceneFlags,
                 (value) => FlagMonitorSettings.SetIncludeSceneFlags(value));
 
+            var includeAllFlagsRef = new CabbyMenu.SyncedReferences.DelegateReference<bool>(
+                () => FlagMonitorSettings.IncludeAllFlags,
+                (value) => FlagMonitorSettings.SetIncludeAllFlags(value));
+
             // Add setting toggles
             var showNewDiscoveriesToggle = new TogglePanel(showNewDiscoveriesRef, "Show new discoveries");
             panels.Add(showNewDiscoveriesToggle);
@@ -1571,6 +1587,9 @@ namespace CabbyCodes.Patches.Flags.Triage
 
             var includeSceneFlagsToggle = new TogglePanel(includeSceneFlagsRef, "Include Scene flags");
             panels.Add(includeSceneFlagsToggle);
+
+            var includeAllFlagsToggle = new TogglePanel(includeAllFlagsRef, "Include ALL flags (ignored + unused)");
+            panels.Add(includeAllFlagsToggle);
 
             // Add utility section header
             panels.Add(new InfoPanel("Utilities").SetColor(CheatPanel.subHeaderColor));
@@ -1734,7 +1753,7 @@ namespace CabbyCodes.Patches.Flags.Triage
                 var fieldName = field.Name;
                 
                 // Skip ignored fields
-                if (ignoredFields.Contains(fieldName)) continue;
+                if (!FlagMonitorSettings.IncludeAllFlags && ignoredFields.Contains(fieldName)) continue;
 
                 try
                 {
@@ -1744,7 +1763,16 @@ namespace CabbyCodes.Patches.Flags.Triage
                     previousPlayerDataValues.TryGetValue(fieldName, out object previousValue);
 
                     // Check if this is a newly discovered flag (not in current tracking AND not previously discovered)
-                    bool isNewFlag = !trackedPlayerDataFields.Contains(fieldName) && !discoveredPlayerDataFlags.Contains(fieldName);
+                    // When IncludeAllFlags is enabled, also check if it's not an ignored field
+                    bool isNewFlag = !trackedPlayerDataFields.Contains(fieldName) && 
+                                   !discoveredPlayerDataFlags.Contains(fieldName) &&
+                                   (!FlagMonitorSettings.IncludeAllFlags || !ignoredFields.Contains(fieldName));
+                    
+                    // If IncludeAllFlags is enabled and this is an ignored field, add it to discovered set but don't treat as new
+                    if (FlagMonitorSettings.IncludeAllFlags && ignoredFields.Contains(fieldName) && !discoveredPlayerDataFlags.Contains(fieldName))
+                    {
+                        discoveredPlayerDataFlags.Add(fieldName);
+                    }
                     
                     if (isNewFlag)
                     {
@@ -2418,7 +2446,7 @@ namespace CabbyCodes.Patches.Flags.Triage
                     bool isNewFlag = !trackedSceneDataFields.Contains(uniqueKey) && 
                                    !discoveredSceneFlags.Contains(uniqueKey) &&
                                    !historicalDiscoveries.ContainsKey(uniqueKey) &&
-                                   !IsFlagInUnusedFlags(pbd.id, pbd.sceneName);
+                                   (FlagMonitorSettings.IncludeAllFlags || !IsFlagInUnusedFlags(pbd.id, pbd.sceneName));
                     
 
                     
@@ -2462,8 +2490,8 @@ namespace CabbyCodes.Patches.Flags.Triage
 
                     if (valueChanged)
                     {
-                        // Skip value change notifications for unused flags
-                        if (IsFlagInUnusedFlags(pbd.id, pbd.sceneName))
+                        // Skip value change notifications for unused flags (unless IncludeAllFlags is enabled)
+                        if (!FlagMonitorSettings.IncludeAllFlags && IsFlagInUnusedFlags(pbd.id, pbd.sceneName))
                         {
                             // Still update the previous value to avoid repeated checks
                             previousSceneDataValues[key] = currentValue;
@@ -2493,7 +2521,7 @@ namespace CabbyCodes.Patches.Flags.Triage
                     bool isNewFlag = !trackedSceneDataFields.Contains(uniqueKey) && 
                                    !discoveredSceneFlags.Contains(uniqueKey) &&
                                    !historicalDiscoveries.ContainsKey(uniqueKey) &&
-                                   !IsFlagInUnusedFlags(pid.id, pid.sceneName);
+                                   (FlagMonitorSettings.IncludeAllFlags || !IsFlagInUnusedFlags(pid.id, pid.sceneName));
                     
                     if (isNewFlag)
                     {
@@ -2535,8 +2563,8 @@ namespace CabbyCodes.Patches.Flags.Triage
 
                     if (valueChanged)
                     {
-                        // Skip value change notifications for unused flags
-                        if (IsFlagInUnusedFlags(pid.id, pid.sceneName))
+                        // Skip value change notifications for unused flags (unless IncludeAllFlags is enabled)
+                        if (!FlagMonitorSettings.IncludeAllFlags && IsFlagInUnusedFlags(pid.id, pid.sceneName))
                         {
                             // Still update the previous value to avoid repeated checks
                             previousSceneDataValues[key] = currentValue;
@@ -2568,7 +2596,7 @@ namespace CabbyCodes.Patches.Flags.Triage
                     bool isNewFlag = !trackedSceneDataFields.Contains(uniqueKey) && 
                                    !discoveredSceneFlags.Contains(uniqueKey) &&
                                    !historicalDiscoveries.ContainsKey(uniqueKey) &&
-                                   !IsFlagInUnusedFlags(grd.id, grd.sceneName);
+                                   (FlagMonitorSettings.IncludeAllFlags || !IsFlagInUnusedFlags(grd.id, grd.sceneName));
                     
                     if (isNewFlag)
                     {
@@ -2611,8 +2639,8 @@ namespace CabbyCodes.Patches.Flags.Triage
 
                     if (valueChanged)
                     {
-                        // Skip value change notifications for unused flags
-                        if (IsFlagInUnusedFlags(grd.id, grd.sceneName))
+                        // Skip value change notifications for unused flags (unless IncludeAllFlags is enabled)
+                        if (!FlagMonitorSettings.IncludeAllFlags && IsFlagInUnusedFlags(grd.id, grd.sceneName))
                         {
                             // Still update the previous value to avoid repeated checks
                             previousSceneDataValues[key] = currentValue;
