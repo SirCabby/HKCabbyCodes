@@ -286,7 +286,7 @@ namespace CabbyCodes.Patches.Settings
         {
             // Leverage PopupBase with no CabbyMainMenu to create a persistent stand-alone popup
             var popup = new CabbyMenu.UI.Popups.PopupBase(
-                "Loading Game",
+                " Loading Game",
                 "Please Wait . . .",
                 500f,
                 400f,

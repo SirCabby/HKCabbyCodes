@@ -3,6 +3,7 @@ using System.Collections;
 using System.Reflection;
 using UnityEngine;
 using GlobalEnums;
+using CabbyMenu.UI;
 using CabbyMenu.UI.Popups;
 
 namespace CabbyCodes.Patches.Teleport
@@ -80,9 +81,59 @@ namespace CabbyCodes.Patches.Teleport
         /// <param name="teleportLocation">The location to teleport to.</param>
         private static IEnumerator WaitForHeroReadyAndTeleport(TeleportLocation teleportLocation)
         {
+            // Show a persistent loading popup while we prepare the teleport
+            if (loadingPopup == null)
+            {
+                loadingPopup = new PopupBase("Teleport", "Preparing teleport . . .", 600f, 300f, showHeader: true, autoResize: true);
+                loadingPopup.Show();
+                // Remove from PopupBase tracking so it isn't hidden when menu closes
+                try
+                {
+                    var listField = typeof(PopupBase).GetField("openPopups", BindingFlags.NonPublic | BindingFlags.Static);
+                    var list = listField?.GetValue(null) as IList;
+                    list?.Remove(loadingPopup);
+                }
+                catch {}
+
+                // If hero is currently seated at a bench, update popup message to match custom save load style
+                try
+                {
+                    if (PlayerData.instance != null && PlayerData.instance.atBench && loadingPopup is PopupBase benchPopup)
+                    {
+                        benchPopup.SetMessageText("Get off bench to restore position");
+                    }
+                }
+                catch {}
+
+                RaisePopupSortingOrder(loadingPopup, 5000);
+                popupStartTime = Time.realtimeSinceStartup;
+                try
+                {
+                    var rootField = typeof(PopupBase).GetField("popupRoot", BindingFlags.NonPublic | BindingFlags.Instance);
+                    if (rootField != null)
+                    {
+                        var rootObj = rootField.GetValue(loadingPopup) as GameObject;
+                        var canvas = rootObj?.GetComponent<Canvas>();
+                        if (canvas != null)
+                        {
+                            canvas.sortingOrder = 5000;
+                        }
+                    }
+                }
+                catch { }
+            }
+            
             GameManager gm = GameManager._instance;
             if (gm == null)
             {
+                // Clean up the loading popup if we cannot proceed
+                loadingPopup?.Destroy();
+                if (loadingPopup != null && popupStartTime >= 0f)
+                {
+                    float openTime = Time.realtimeSinceStartup - popupStartTime;
+                    CabbyCodesPlugin.BLogger.LogInfo(string.Format("Teleport loading popup destroyed after {0:F2} seconds", openTime));
+                }
+                loadingPopup = null;
                 teleportInProgress = false;
                 yield break;
             }
@@ -122,6 +173,9 @@ namespace CabbyCodes.Patches.Teleport
                 SceneName = teleportLocation.Scene.SceneName,
                 Visualization = GameManager.SceneLoadVisualizations.Dream
             });
+
+            // Hero is ready; remove the loading popup before starting the scene transition
+            // Keep the loading popup visible until the scene has finished loading (destroy later)
         }
 
         /// <summary>
@@ -141,11 +195,14 @@ namespace CabbyCodes.Patches.Teleport
             bool acceptingInput = gm.inputHandler.acceptingInput;
             var heroState = hero.hero_state;
             bool onGround = false;
+            bool atBench = false;
             try { onGround = hero.cState.onGround; } catch { }
+            try { atBench = PlayerData.instance != null && PlayerData.instance.atBench; } catch { }
 
             if (!isGamePlaying) return false;
             if (!acceptingInput) return false;
             if (heroState == ActorStates.no_input || heroState == ActorStates.airborne) return false;
+            if (atBench) return false;
             if (!onGround) return false;
             if (hero.transform == null) return false;
 
@@ -154,7 +211,13 @@ namespace CabbyCodes.Patches.Teleport
 
         // Store the pending teleport location
         private static TeleportLocation _pendingTeleportLocation;
-
+        
+        // Reference to the loading popup shown while waiting for the hero to be ready
+        private static IPersistentPopup loadingPopup;
+        
+        // Track popup open time
+        private static float popupStartTime = -1f;
+        
         // Event handler to set the hero's position after entering the scene
         private static void OnFinishedEnteringSceneTeleport()
         {
@@ -179,6 +242,14 @@ namespace CabbyCodes.Patches.Teleport
                 
                 gm.actorSnapshotUnpaused?.TransitionTo(0f);
                 gm.ui?.SetState(UIState.PLAYING);
+
+                // Destroy the loading popup now that teleport is complete
+                loadingPopup?.Destroy();
+                if (loadingPopup != null && popupStartTime >= 0f)
+                {
+                    float openTime = Time.realtimeSinceStartup - popupStartTime;
+                }
+                loadingPopup = null;
             }
             // Unsubscribe to avoid memory leaks
             gm.OnFinishedEnteringScene -= OnFinishedEnteringSceneTeleport;
@@ -265,7 +336,7 @@ namespace CabbyCodes.Patches.Teleport
         /// </summary>
         /// <param name="menu">The menu to attach the popup to</param>
         /// <returns>A configured loading popup</returns>
-        public static PopupBase CreateLoadingPopup(CabbyMenu.UI.CabbyMainMenu menu)
+        public static PopupBase CreateLoadingPopup(CabbyMainMenu menu)
         {
             if (menu == null) return null;
             
@@ -280,7 +351,7 @@ namespace CabbyCodes.Patches.Teleport
         /// </summary>
         /// <param name="menu">The menu to attach the popup to</param>
         /// <returns>The created and shown loading popup</returns>
-        public static PopupBase ShowLoadingPopup(CabbyMenu.UI.CabbyMainMenu menu)
+        public static PopupBase ShowLoadingPopup(CabbyMainMenu menu)
         {
             var popup = CreateLoadingPopup(menu);
             if (popup != null)
@@ -289,6 +360,27 @@ namespace CabbyCodes.Patches.Teleport
                 Canvas.ForceUpdateCanvases();
             }
             return popup;
+        }
+
+        /// <summary>
+        /// Raises the canvas sorting order of a PopupBase to ensure visibility above other UI.
+        /// </summary>
+        /// <param name="popup">PopupBase instance.</param>
+        /// <param name="order">Desired sorting order.</param>
+        private static void RaisePopupSortingOrder(IPersistentPopup popup, int order)
+        {
+            if (popup == null) return;
+            try
+            {
+                var rootField = typeof(PopupBase).GetField("popupRoot", BindingFlags.NonPublic | BindingFlags.Instance);
+                GameObject rootObj = rootField?.GetValue(popup) as GameObject;
+                Canvas canvas = rootObj != null ? rootObj.GetComponent<Canvas>() : null;
+                if (canvas != null)
+                {
+                    canvas.sortingOrder = order;
+                }
+            }
+            catch { }
         }
     }
 } 
