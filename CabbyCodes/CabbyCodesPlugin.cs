@@ -1,7 +1,9 @@
 using BepInEx;
 using BepInEx.Configuration;
 using BepInEx.Logging;
+#if BEPINEX6
 using BepInEx.Unity.Mono;
+#endif
 using CabbyCodes.Patches;
 using CabbyCodes.Patches.Achievements;
 using CabbyCodes.Patches.Flags;

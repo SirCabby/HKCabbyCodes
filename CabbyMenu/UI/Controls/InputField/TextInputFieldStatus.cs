@@ -211,7 +211,7 @@ namespace CabbyMenu.UI.Controls.InputField
         }
 
         public override UnityEngine.UI.InputField GetInputField() => InputFieldGo.GetComponent<UnityEngine.UI.InputField>();
-        public override int GetIndex() => InputFieldGo.transform.GetParent().GetSiblingIndex();
+        public override int GetIndex() => InputFieldGo.transform.parent.GetSiblingIndex();
         public override (int start, int end)? GetTextSelection() { return null; } // Implement if selection logic is needed
         public override int CalculateCursorPositionFromMouse(Vector2 mousePosition)
         {

@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
-using UnityEngine.Events;
 using System.Linq;
 
 namespace CabbyMenu.UI.Controls.CustomDropdown
@@ -82,7 +81,32 @@ namespace CabbyMenu.UI.Controls.CustomDropdown
         private int currentHoveredOptionIndex = -1;
 
         // Events - Using UnityEvent for consistency
+#if UNITY_2020_1_OR_NEWER
         public UnityEvent<int> onValueChanged = new UnityEvent<int>();
+#else
+        // Simple event wrapper for Unity 2018 compatibility
+        public class UnityEventIntWrapper
+        {
+            private System.Action<int> _action;
+            
+            public void AddListener(System.Action<int> listener)
+            {
+                _action += listener;
+            }
+            
+            public void RemoveListener(System.Action<int> listener)
+            {
+                _action -= listener;
+            }
+            
+            public void Invoke(int value)
+            {
+                _action?.Invoke(value);
+            }
+        }
+        
+        public UnityEventIntWrapper onValueChanged = new UnityEventIntWrapper();
+#endif
 
         // Callback for refreshing disabled options when dropdown is opened
         public System.Action onDropdownOpened;

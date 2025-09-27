@@ -4,7 +4,7 @@
     <TargetFramework>net472</TargetFramework>
     <AssemblyName>CabbyMenu</AssemblyName>
     <Description>Hollow Knight Cabby Menu UI Library</Description>
-    <Version>1.1.3</Version>
+    <Version>1.2.0</Version>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <LangVersion>7.3</LangVersion>
     <RestoreAdditionalProjectSources>
@@ -16,14 +16,36 @@
     <Title>Hollow Knight Cabby Menu UI Library</Title>
     <PackageId>$(AssemblyName)</PackageId>
     <Authors>$(AssemblyName)test</Authors>
+    <!-- Conditional compilation symbols based on build configuration -->
+    <DefineConstants Condition="'$(Configuration)' == 'BepInEx5'">$(DefineConstants);BEPINEX5</DefineConstants>
+    <DefineConstants Condition="'$(Configuration)' == 'BepInEx6'">$(DefineConstants);BEPINEX6</DefineConstants>
   </PropertyGroup>
 
-  <ItemGroup>
+  <!-- BepInEx 5 package references -->
+  <ItemGroup Condition="'$(Configuration)' == 'BepInEx5'">
+    <PackageReference Include="BepInEx.Analyzers" Version="1.*" PrivateAssets="all" />
+    <PackageReference Include="BepInEx.Core" Version="5.*" />
+    <PackageReference Include="BepInEx.PluginInfoProps" Version="2.*" />
+    <PackageReference Include="UnityEngine.Modules" Version="2020.2.2" IncludeAssets="compile" />
+  </ItemGroup>
+
+  <!-- BepInEx 6 package references -->
+  <ItemGroup Condition="'$(Configuration)' == 'BepInEx6'">
     <PackageReference Include="BepInEx.Unity.Mono" Version="6.0.0-be.*" IncludeAssets="compile" />
     <PackageReference Include="BepInEx.PluginInfoProps" Version="2.*" />
+    <PackageReference Include="UnityEngine.Modules" Version="2020.2" IncludeAssets="compile" />
+  </ItemGroup>
+
+  <!-- Default BepInEx 6 package references for Release/Debug -->
+  <ItemGroup Condition="'$(Configuration)' == 'Release' OR '$(Configuration)' == 'Debug'">
+    <PackageReference Include="BepInEx.Unity.Mono" Version="6.0.0-be.*" IncludeAssets="compile" />
+    <PackageReference Include="BepInEx.PluginInfoProps" Version="2.*" />
+  </ItemGroup>
+
+  <!-- Common package references for both versions -->
+  <ItemGroup>
     <PackageReference Include="HarmonyX" Version="2.10.2" />
     <PackageReference Include="Unity3D.UnityEngine.UI" Version="2018.3.5.1" />
-    <PackageReference Include="UnityEngine.Modules" Version="2020.2" IncludeAssets="compile" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">
