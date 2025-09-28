@@ -9,11 +9,15 @@ using CabbyMenu.UI.DynamicPanels;
 using CabbyCodes.Flags;
 using CabbyCodes.SavedGames;
 using CabbyCodes.Patches.BasePatches;
+using BepInEx.Configuration;
 
 namespace CabbyCodes.Patches.Maps
 {
     public class MapPatch : BasePatch
     {
+        private static bool sceneEventHandlerRegistered = false;
+        private static ConfigEntry<bool> autoMapConfig;
+
         public static void AddPanels()
         {
             var mapPatch = new MapPatch();
@@ -22,13 +26,47 @@ namespace CabbyCodes.Patches.Maps
             {
                 CabbyCodesPlugin.cabbyMenu.AddCheatPanel(panel);
             }
+
+            // Initialize scene monitoring for auto map functionality
+            InitializeSceneMonitoring();
+        }
+
+        /// <summary>
+        /// Initializes the auto map configuration entry.
+        /// </summary>
+        private static void InitializeAutoMapConfig()
+        {
+            if (autoMapConfig == null)
+            {
+                autoMapConfig = CabbyCodesPlugin.configFile.Bind("Maps", "AutoMap", false, 
+                    "Automatically give map for current area and enable room mapping when entering scenes");
+            }
+        }
+
+        /// <summary>
+        /// Initialize scene change monitoring for auto map functionality.
+        /// </summary>
+        private static void InitializeSceneMonitoring()
+        {
+            if (sceneEventHandlerRegistered) return;
+            
+            UnityEngine.SceneManagement.SceneManager.activeSceneChanged += OnActiveSceneChanged;
+            sceneEventHandlerRegistered = true;
+        }
+
+        private static void OnActiveSceneChanged(UnityEngine.SceneManagement.Scene oldScene, UnityEngine.SceneManagement.Scene newScene)
+        {
+            // Call auto map functionality when entering a new scene
+            EnableAutoMapForCurrentScene();
         }
 
         public override List<CheatPanel> CreatePanels()
         {
             var panels = new List<CheatPanel>
             {
-                new InfoPanel("Maps: Enable to have map for area").SetColor(CheatPanel.headerColor),
+                new InfoPanel("Maps").SetColor(CheatPanel.headerColor),
+                CreateAutoMapPanel(),
+                new InfoPanel("Enable to have map for area").SetColor(CheatPanel.subHeaderColor),
                 new InfoPanel("Warning: Still requires Inventory Map and Quill items to view / fill maps out").SetColor(CheatPanel.warningColor)
             };
 
@@ -103,7 +141,7 @@ namespace CabbyCodes.Patches.Maps
                             FlagManager.SetBoolFlag(flag, value);
                             
                             // Update the hasMap flag based on whether any map flags are true
-                            UpdateHasMapFlag();
+                            UpdateHasMapFlagStatic();
                         }
                     ), GetDescription(flag)));
             }
@@ -111,7 +149,7 @@ namespace CabbyCodes.Patches.Maps
             return panels;
         }
 
-        private void UpdateHasMapFlag()
+        private static void UpdateHasMapFlagStatic()
         {
             // Check if any map flags are true
             bool anyMapTrue = FlagManager.GetBoolFlag(FlagInstances.mapAbyss) ||
@@ -244,6 +282,125 @@ namespace CabbyCodes.Patches.Maps
 
             // Note: Individual room reloads are now handled by the room-specific requests above
             // No need to call SaveAndReload here since each room manages its own reload state
+        }
+
+        private TogglePanel CreateAutoMapPanel()
+        {
+            return new TogglePanel(new DelegateReference<bool>(
+                () => {
+                    InitializeAutoMapConfig();
+                    return autoMapConfig.Value;
+                },
+                value =>
+                {
+                    InitializeAutoMapConfig();
+                    autoMapConfig.Value = value;
+                    
+                    if (value)
+                    {
+                        // When enabling auto map, also enable the map flag
+                        FlagManager.SetBoolFlag(FlagInstances.hasMap, true);
+                        
+                        // Enable auto map for current scene if we're in a valid area
+                        EnableAutoMapForCurrentScene();
+                    }
+                }
+            ), "Auto Map");
+        }
+
+        /// <summary>
+        /// Enables auto map for the current scene. Should be called when entering a new scene.
+        /// </summary>
+        public static void EnableAutoMapForCurrentScene()
+        {
+            InitializeAutoMapConfig();
+            if (!autoMapConfig.Value)
+            {
+                return; // Auto map is disabled
+            }
+
+            try
+            {
+                // Get current scene name
+                string currentSceneName = GameStateProvider.GetCurrentSceneName();
+                
+                // Get scene data to determine area
+                var sceneData = GetSceneData(currentSceneName);
+                if (sceneData == null || string.IsNullOrEmpty(sceneData.AreaName))
+                {
+                    // Scene doesn't belong to any area or is not mappable
+                    return;
+                }
+
+                string areaName = sceneData.AreaName;
+
+                // Enable the area map flag
+                EnableAreaMapFlag(areaName);
+
+                // Enable the room mapping for this scene
+                if (!FlagManager.ContainsInListFlag(FlagInstances.scenesMapped, currentSceneName))
+                {
+                    FlagManager.AddToListFlag(FlagInstances.scenesMapped, currentSceneName);
+                    // Cancel reload request since we're adding the room back
+                    GameReloadManager.CancelReload($"MapRoom_{currentSceneName}");
+                }
+            }
+            catch
+            {
+                // If anything goes wrong, silently fail to avoid breaking the game
+            }
+        }
+
+        /// <summary>
+        /// Enables the map flag for a specific area.
+        /// </summary>
+        private static void EnableAreaMapFlag(string areaName)
+        {
+            switch (areaName)
+            {
+                case "Abyss":
+                    FlagManager.SetBoolFlag(FlagInstances.mapAbyss, true);
+                    break;
+                case "City":
+                    FlagManager.SetBoolFlag(FlagInstances.mapCity, true);
+                    break;
+                case "Cliffs":
+                    FlagManager.SetBoolFlag(FlagInstances.mapCliffs, true);
+                    break;
+                case "Crossroads":
+                    FlagManager.SetBoolFlag(FlagInstances.mapCrossroads, true);
+                    break;
+                case "Deepnest":
+                    FlagManager.SetBoolFlag(FlagInstances.mapDeepnest, true);
+                    break;
+                case "FogCanyon":
+                    FlagManager.SetBoolFlag(FlagInstances.mapFogCanyon, true);
+                    break;
+                case "FungalWastes":
+                    FlagManager.SetBoolFlag(FlagInstances.mapFungalWastes, true);
+                    break;
+                case "Greenpath":
+                    FlagManager.SetBoolFlag(FlagInstances.mapGreenpath, true);
+                    break;
+                case "Mines":
+                    FlagManager.SetBoolFlag(FlagInstances.mapMines, true);
+                    break;
+                case "Outskirts":
+                    FlagManager.SetBoolFlag(FlagInstances.mapOutskirts, true);
+                    break;
+                case "RestingGrounds":
+                    FlagManager.SetBoolFlag(FlagInstances.mapRestingGrounds, true);
+                    break;
+                case "RoyalGardens":
+                    FlagManager.SetBoolFlag(FlagInstances.mapRoyalGardens, true);
+                    break;
+                case "Waterways":
+                    FlagManager.SetBoolFlag(FlagInstances.mapWaterways, true);
+                    break;
+            }
+
+            // Update the hasMap flag based on whether any map flags are true
+            UpdateHasMapFlagStatic();
         }
     }
 }
