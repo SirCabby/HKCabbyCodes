@@ -51,15 +51,23 @@ namespace CabbyCodes
         private GameObject quickStartLoaderGo;
 
         /// <summary>
+        /// Singleton accessor for external helpers.
+        /// </summary>
+        public static CabbyCodesPlugin Instance { get; private set; }
+
+        /// <summary>
         /// Called when the plugin is loaded. Initializes the configuration system and logging.
         /// </summary>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "Unity lifecycle method called by Unity engine")]
         private void Awake()
         {
+            Instance = this;
             BLogger = Logger;
             BLogger.LogInfo("Plugin cabby.cabbycodes is loaded!");
             BLogger.LogInfo(string.Format("Config location: {0}", Config.ConfigFilePath));
             configFile = Config;
+
+            QuickOpenHotkeyManager.Initialize(configFile);
 
             // Initialize flag monitor configuration early so it's available when panels are created
             FlagMonitorReference.InitializeConfig();
@@ -205,6 +213,7 @@ namespace CabbyCodes
             
             cabbyMenu.Update();
             FlagMonitorReference.UpdatePanelVisibility();
+            QuickOpenHotkeyManager.Update();
         }
         
         // Track the last known menu state

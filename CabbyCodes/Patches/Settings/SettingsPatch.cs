@@ -3,6 +3,7 @@ using CabbyMenu.UI.DynamicPanels;
 using System.Collections.Generic;
 using CabbyCodes.Patches.SpriteViewer;
 using BepInEx.Configuration;
+using CabbyMenu.SyncedReferences;
 
 namespace CabbyCodes.Patches.Settings
 {
@@ -39,12 +40,14 @@ namespace CabbyCodes.Patches.Settings
         {
             // Initialize configuration
             InitializeConfig();
+            QuickOpenHotkeyManager.Initialize(CabbyCodesPlugin.configFile);
             
             CabbyCodesPlugin.cabbyMenu.AddCheatPanel(new InfoPanel("Settings").SetColor(CheatPanel.headerColor));
             QuickStartPatch.AddPanel();
             
             // Add dev options toggle
             AddDevOptionsPanel();
+            AddQuickOpenHotkeyPanel();
             
             // Create the panel container for managing dynamic panels
             panelContainer = new MainMenuPanelContainer(CabbyCodesPlugin.cabbyMenu);
@@ -56,6 +59,16 @@ namespace CabbyCodes.Patches.Settings
             {
                 AddSaveGameAnalyzerPanels();
             }
+        }
+
+        /// <summary>
+        /// Adds the quick open hotkey toggle and binding UI.
+        /// </summary>
+        private static void AddQuickOpenHotkeyPanel()
+        {
+            var toggleReference = new DelegateReference<bool>(QuickOpenHotkeyManager.GetEnabled, QuickOpenHotkeyManager.SetEnabled);
+            var hotkeyPanel = new HotkeyBindingPanel(toggleReference, "Set Codes Quick Open Hotkey");
+            CabbyCodesPlugin.cabbyMenu.AddCheatPanel(hotkeyPanel);
         }
 
         /// <summary>

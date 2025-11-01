@@ -644,8 +644,7 @@ namespace CabbyMenu.UI
         /// </summary>
         private void OnMenuButtonClicked()
         {
-            isMenuOpen = !isMenuOpen;
-            menuPanelGoMod.SetActive(isMenuOpen);
+            SetMenuOpen(!isMenuOpen);
         }
 
         /// <summary>
@@ -969,6 +968,55 @@ namespace CabbyMenu.UI
                 BuildCanvas();
             }
             return rootGameObject;
+        }
+
+        /// <summary>
+        /// Gets whether the Cabby Codes menu panel is currently open.
+        /// </summary>
+        public bool IsMenuOpen()
+        {
+            return isMenuOpen;
+        }
+
+        /// <summary>
+        /// Sets the open state of the Cabby Codes menu panel.
+        /// </summary>
+        /// <param name="open">True to show the panel, false to hide it.</param>
+        public void SetMenuOpen(bool open)
+        {
+            if (isMenuOpen == open)
+            {
+                if (menuPanelGoMod != null)
+                {
+                    menuPanelGoMod.SetActive(open);
+                }
+                return;
+            }
+
+            EnsureCanvasReady();
+
+            isMenuOpen = open;
+
+            if (menuPanelGoMod != null)
+            {
+                menuPanelGoMod.SetActive(open);
+            }
+        }
+
+        /// <summary>
+        /// Ensures the canvas and menu panel exist so toggling can occur safely.
+        /// </summary>
+        private void EnsureCanvasReady()
+        {
+            if (rootGameObject == null)
+            {
+                BuildCanvas();
+            }
+
+            if (rootGoMod != null && !rootGoMod.IsActive() && gameStateProvider.ShouldShowMenu())
+            {
+                rootGoMod.SetActive(true);
+            }
         }
     }
 }
