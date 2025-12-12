@@ -12,6 +12,7 @@ Global
 		Release|Any CPU = Release|Any CPU
 		BepInEx5|Any CPU = BepInEx5|Any CPU
 		BepInEx6|Any CPU = BepInEx6|Any CPU
+		Lumafly|Any CPU = Lumafly|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{64F2F117-CB6B-4027-9787-810A39A71F22}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
@@ -22,6 +23,8 @@ Global
 		{64F2F117-CB6B-4027-9787-810A39A71F22}.BepInEx5|Any CPU.Build.0 = BepInEx5|Any CPU
 		{64F2F117-CB6B-4027-9787-810A39A71F22}.BepInEx6|Any CPU.ActiveCfg = BepInEx6|Any CPU
 		{64F2F117-CB6B-4027-9787-810A39A71F22}.BepInEx6|Any CPU.Build.0 = BepInEx6|Any CPU
+		{64F2F117-CB6B-4027-9787-810A39A71F22}.Lumafly|Any CPU.ActiveCfg = Lumafly|Any CPU
+		{64F2F117-CB6B-4027-9787-810A39A71F22}.Lumafly|Any CPU.Build.0 = Lumafly|Any CPU
 		{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -30,6 +33,8 @@ Global
 		{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}.BepInEx5|Any CPU.Build.0 = BepInEx5|Any CPU
 		{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}.BepInEx6|Any CPU.ActiveCfg = BepInEx6|Any CPU
 		{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}.BepInEx6|Any CPU.Build.0 = BepInEx6|Any CPU
+		{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}.Lumafly|Any CPU.ActiveCfg = Lumafly|Any CPU
+		{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}.Lumafly|Any CPU.Build.0 = Lumafly|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

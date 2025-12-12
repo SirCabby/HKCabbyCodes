@@ -34,6 +34,10 @@ CABBYMENU_OBJ_DIR = CabbyMenu\obj\$(CONFIGURATION)\$(TARGET_FRAMEWORK)
 # Hollow Knight installation path (modify as needed)
 HOLLOW_KNIGHT_PATH = C:\Program Files (x86)\Steam\steamapps\common\Hollow Knight
 BEPINEX_PLUGINS_PATH = $(HOLLOW_KNIGHT_PATH)\BepInEx\plugins
+LUMAFLY_MODS_PATH = $(HOLLOW_KNIGHT_PATH)\hollow_knight_Data\Managed\Mods
+
+# HarmonyX DLL path for Lumafly builds (HKAPI doesn't include Harmony)
+HARMONY_DLL = $(USERPROFILE)\.nuget\packages\harmonyx\2.10.2\lib\net45\0Harmony.dll
 
 # .NET SDK version (from global.json)
 DOTNET_VERSION = 9.0.301
@@ -101,10 +105,27 @@ build-bepinex6:
 	dotnet build $(CABBYMENU_PROJECT) --configuration BepInEx6 --no-restore
 	@echo "BepInEx 6 build completed!"
 
-# Build both BepInEx versions
+# Build for Lumafly (HKAPI)
+# NOTE: Requires HKAPI-patched Assembly-CSharp.dll in CabbyCodes/lib-lumafly/
+.PHONY: build-lumafly
+build-lumafly:
+	@if not exist "CabbyCodes\lib-lumafly\Assembly-CSharp.dll" ( \
+		echo ERROR: Lumafly build requires HKAPI-patched Assembly-CSharp.dll && \
+		echo Please read CabbyCodes\lib-lumafly\README.txt for instructions. && \
+		exit /b 1 \
+	)
+	@echo "Restoring NuGet packages for Lumafly..."
+	dotnet restore $(SOLUTION_FILE) /p:Configuration=Lumafly
+	@echo "Building for Lumafly (HKAPI)..."
+	dotnet build $(CABBYCODES_PROJECT) --configuration Lumafly --no-restore
+	dotnet build $(CABBYMENU_PROJECT) --configuration Lumafly --no-restore
+	@echo "Lumafly build completed!"
+
+# Build all versions (BepInEx 5, BepInEx 6, and Lumafly if available)
 .PHONY: build-all-versions
 build-all-versions: build-bepinex5 build-bepinex6
-	@echo "All BepInEx versions built successfully!"
+	@if exist "CabbyCodes\lib-lumafly\Assembly-CSharp.dll" (echo "Building Lumafly version..." && make build-lumafly) else (echo "NOTE: Skipping Lumafly build - HKAPI assembly not found in lib-lumafly")
+	@echo "All available versions built successfully!"
 
 # Restore NuGet packages
 .PHONY: restore
@@ -173,6 +194,32 @@ deploy: build
 	@if exist "$(BEPINEX_PLUGINS_PATH)\CabbyMenu.dll" ( echo CabbyMenu.dll successfully copied to plugins folder. ) else ( echo Error: CabbyMenu.dll was not copied! )
 	@echo Deploy complete.
 
+# Deploy Lumafly version to Hollow Knight Mods folder
+# HKAPI mods are placed in their own subfolder within the Mods directory
+.PHONY: deploy-lumafly
+deploy-lumafly: build-lumafly
+	@echo Closing any existing Hollow Knight processes...
+	@taskkill /f /im "hollow_knight.exe" >nul 2>&1 || exit /b 0
+	@echo Deploying $(PROJECT_NAME) for Lumafly to Hollow Knight...
+	@if not exist "$(HOLLOW_KNIGHT_PATH)" echo Error: Hollow Knight directory "$(HOLLOW_KNIGHT_PATH)" not found. Please ensure Hollow Knight is installed. && exit /b 1
+	@if not exist "$(LUMAFLY_MODS_PATH)\$(PROJECT_NAME)" mkdir "$(LUMAFLY_MODS_PATH)\$(PROJECT_NAME)"
+	@if exist "$(LUMAFLY_MODS_PATH)\$(PROJECT_NAME)\$(PROJECT_NAME).dll" del /f /q "$(LUMAFLY_MODS_PATH)\$(PROJECT_NAME)\$(PROJECT_NAME).dll"
+	@if exist "$(LUMAFLY_MODS_PATH)\$(PROJECT_NAME)\CabbyMenu.dll" del /f /q "$(LUMAFLY_MODS_PATH)\$(PROJECT_NAME)\CabbyMenu.dll"
+	@copy /Y "CabbyCodes\bin\Lumafly\$(TARGET_FRAMEWORK)\$(PROJECT_NAME).dll" "$(LUMAFLY_MODS_PATH)\$(PROJECT_NAME)\$(PROJECT_NAME).dll"
+	@copy /Y "CabbyMenu\bin\Lumafly\$(TARGET_FRAMEWORK)\CabbyMenu.dll" "$(LUMAFLY_MODS_PATH)\$(PROJECT_NAME)\CabbyMenu.dll"
+	@copy /Y "$(HARMONY_DLL)" "$(LUMAFLY_MODS_PATH)\$(PROJECT_NAME)\0Harmony.dll"
+	@if exist "$(LUMAFLY_MODS_PATH)\$(PROJECT_NAME)\$(PROJECT_NAME).dll" ( echo $(PROJECT_NAME).dll successfully copied to Mods\$(PROJECT_NAME) folder. ) else ( echo Error: $(PROJECT_NAME).dll was not copied! )
+	@if exist "$(LUMAFLY_MODS_PATH)\$(PROJECT_NAME)\CabbyMenu.dll" ( echo CabbyMenu.dll successfully copied to Mods\$(PROJECT_NAME) folder. ) else ( echo Error: CabbyMenu.dll was not copied! )
+	@if exist "$(LUMAFLY_MODS_PATH)\$(PROJECT_NAME)\0Harmony.dll" ( echo 0Harmony.dll successfully copied to Mods\$(PROJECT_NAME) folder. ) else ( echo Error: 0Harmony.dll was not copied! )
+	@echo Lumafly deploy complete.
+
+# Deploy Lumafly and run Hollow Knight
+.PHONY: run-lumafly
+run-lumafly: deploy-lumafly
+	@echo Launching Hollow Knight via Steam...
+	@start "" "steam://rungameid/367520"
+	@echo Hollow Knight launched via Steam!
+
 # Deploy and run Hollow Knight
 # Usage: make run [VERSION=5|6] (defaults to 6)
 .PHONY: run
@@ -215,7 +262,8 @@ help:
 	@echo "  build-cabbymenu        - Build only CabbyMenu project (BepInEx 6)"
 	@echo "  build-bepinex5         - Build for BepInEx 5"
 	@echo "  build-bepinex6         - Build for BepInEx 6"
-	@echo "  build-all-versions     - Build both BepInEx versions"
+	@echo "  build-lumafly          - Build for Lumafly (HKAPI)"
+	@echo "  build-all-versions     - Build all versions (BepInEx 5, 6, and Lumafly)"
 	@echo "  restore                - Restore NuGet packages"
 	@echo "  clean                  - Clean build artifacts"
 	@echo "  clean-all              - Deep clean (removes all build artifacts)"
@@ -224,13 +272,15 @@ help:
 	@echo "  deploy                 - Deploy to Hollow Knight (defaults to BepInEx 6)"
 	@echo "  deploy 5		        - Deploy BepInEx 5 version"
 	@echo "  deploy 6		        - Deploy BepInEx 6 version"
+	@echo "  deploy-lumafly         - Deploy Lumafly version to Mods folder"
+	@echo "  run-lumafly            - Deploy Lumafly and run Hollow Knight"
 	@echo "  run                    - Deploy and run Hollow Knight (defaults to BepInEx 6)"
 	@echo "  run 5		            - Deploy and run BepInEx 5 version"
 	@echo "  run 6		            - Deploy and run BepInEx 6 version"
 	@echo "  check-sdk              - Check .NET SDK version"
 	@echo "  info                   - Show project information"
 	@echo "  rev x.x.x              - Update version numbers across projects"
-	@echo "  package                - Package both BepInEx versions in single ZIP"
+	@echo "  package                - Package all versions in single ZIP"
 	@echo "  help                   - Show this help message"
 
 # Update version numbers only
@@ -252,16 +302,18 @@ rev:
 %:
 	@:
 
-# Package the mod (create a single zip file with both versions)
+# Package the mod (create a single zip file with all versions)
+# Will include Lumafly only if the HKAPI assembly is present
 .PHONY: package
-package: build-all-versions
-	@echo "Packaging $(PROJECT_NAME) with both BepInEx versions..."
+package: build-bepinex5 build-bepinex6
+	@echo "Packaging $(PROJECT_NAME)..."
 	@if not exist "Output\temp_package\CabbyCodes for BepInEx 5" mkdir "Output\temp_package\CabbyCodes for BepInEx 5"
 	@if not exist "Output\temp_package\CabbyCodes for BepInEx 6" mkdir "Output\temp_package\CabbyCodes for BepInEx 6"
 	@copy /Y "CabbyCodes\bin\BepInEx5\$(TARGET_FRAMEWORK)\$(PROJECT_NAME).dll" "Output\temp_package\CabbyCodes for BepInEx 5\$(PROJECT_NAME).dll"
 	@copy /Y "CabbyMenu\bin\BepInEx5\$(TARGET_FRAMEWORK)\CabbyMenu.dll" "Output\temp_package\CabbyCodes for BepInEx 5\CabbyMenu.dll"
 	@copy /Y "CabbyCodes\bin\BepInEx6\$(TARGET_FRAMEWORK)\$(PROJECT_NAME).dll" "Output\temp_package\CabbyCodes for BepInEx 6\$(PROJECT_NAME).dll"
 	@copy /Y "CabbyMenu\bin\BepInEx6\$(TARGET_FRAMEWORK)\CabbyMenu.dll" "Output\temp_package\CabbyCodes for BepInEx 6\CabbyMenu.dll"
-	@powershell -Command "$$modVer=([regex]::Match([IO.File]::ReadAllText('CabbyCodes/CabbyCodes.csproj'),'<Version>([^<]+)</Version>')).Groups[1].Value; $$zipPath='Output\$(PROJECT_NAME)_v'+$$modVer+'.zip'; Compress-Archive -Path 'Output\temp_package\CabbyCodes for BepInEx 5','Output\temp_package\CabbyCodes for BepInEx 6' -DestinationPath $$zipPath -Force; Write-Host 'Package created: '+$$zipPath"
+	@if exist "CabbyCodes\lib-lumafly\Assembly-CSharp.dll" (echo "Building and including Lumafly version..." && make build-lumafly && if not exist "Output\temp_package\CabbyCodes for Lumafly" mkdir "Output\temp_package\CabbyCodes for Lumafly" && copy /Y "CabbyCodes\bin\Lumafly\$(TARGET_FRAMEWORK)\$(PROJECT_NAME).dll" "Output\temp_package\CabbyCodes for Lumafly\$(PROJECT_NAME).dll" && copy /Y "CabbyMenu\bin\Lumafly\$(TARGET_FRAMEWORK)\CabbyMenu.dll" "Output\temp_package\CabbyCodes for Lumafly\CabbyMenu.dll") else (echo "NOTE: Skipping Lumafly - HKAPI assembly not found in lib-lumafly")
+	@powershell -Command "$$modVer=([regex]::Match([IO.File]::ReadAllText('CabbyCodes/CabbyCodes.csproj'),'<Version>([^<]+)</Version>')).Groups[1].Value; $$zipPath='Output\$(PROJECT_NAME)_v'+$$modVer+'.zip'; $$folders=@('Output\temp_package\CabbyCodes for BepInEx 5','Output\temp_package\CabbyCodes for BepInEx 6'); if(Test-Path 'Output\temp_package\CabbyCodes for Lumafly'){$$folders+='Output\temp_package\CabbyCodes for Lumafly'}; Compress-Archive -Path $$folders -DestinationPath $$zipPath -Force; Write-Host 'Package created:' $$zipPath"
 	@if exist "Output\temp_package" rmdir /s /q "Output\temp_package"
 

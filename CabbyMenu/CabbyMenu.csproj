@@ -19,6 +19,7 @@
     <!-- Conditional compilation symbols based on build configuration -->
     <DefineConstants Condition="'$(Configuration)' == 'BepInEx5'">$(DefineConstants);BEPINEX5</DefineConstants>
     <DefineConstants Condition="'$(Configuration)' == 'BepInEx6'">$(DefineConstants);BEPINEX6</DefineConstants>
+    <DefineConstants Condition="'$(Configuration)' == 'Lumafly'">$(DefineConstants);LUMAFLY</DefineConstants>
   </PropertyGroup>
 
   <!-- BepInEx 5 package references -->
@@ -34,6 +35,13 @@
     <PackageReference Include="BepInEx.Unity.Mono" Version="6.0.0-be.*" IncludeAssets="compile" />
     <PackageReference Include="BepInEx.PluginInfoProps" Version="2.*" />
     <PackageReference Include="UnityEngine.Modules" Version="2020.2" IncludeAssets="compile" />
+  </ItemGroup>
+
+  <!-- Lumafly (HKAPI) package references -->
+  <ItemGroup Condition="'$(Configuration)' == 'Lumafly'">
+    <PackageReference Include="UnityEngine.Modules" Version="2020.2" IncludeAssets="compile" />
+    <!-- BepInEx.Core for ConfigEntry types - these work independently of the modloader -->
+    <PackageReference Include="BepInEx.Core" Version="5.*" />
   </ItemGroup>
 
   <!-- Default BepInEx 6 package references for Release/Debug -->

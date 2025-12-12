@@ -1,10 +1,5 @@
-#if !LUMAFLY
-using BepInEx;
+#if LUMAFLY
 using BepInEx.Configuration;
-using BepInEx.Logging;
-#if BEPINEX6
-using BepInEx.Unity.Mono;
-#endif
 using CabbyCodes.Patches;
 using CabbyCodes.Patches.Achievements;
 using CabbyCodes.Patches.Flags;
@@ -16,30 +11,21 @@ using CabbyCodes.Patches.SpriteViewer;
 using CabbyCodes.Patches.Teleport;
 using CabbyMenu.UI;
 using CabbyMenu.UI.Controls.InputField;
+using Modding;
+using System.IO;
 using UnityEngine;
 
 namespace CabbyCodes
 {
     /// <summary>
-    /// Main plugin class for CabbyCodes mod. Handles initialization, configuration, and menu setup.
+    /// Main mod class for CabbyCodes when using Lumafly/HKAPI. Handles initialization and menu setup.
     /// </summary>
-    [BepInPlugin(Constants.GUID, Constants.NAME, Constants.VERSION)]
-    public class CabbyCodesPlugin : BaseUnityPlugin
+    public class CabbyCodesModLumafly : Mod
     {
-        /// <summary>
-        /// Logger instance for the plugin.
-        /// </summary>
-        public static ManualLogSource BLogger;
-
         /// <summary>
         /// Main menu instance for the mod.
         /// </summary>
         public static CabbyMainMenu cabbyMenu;
-
-        /// <summary>
-        /// Configuration file instance.
-        /// </summary>
-        public static ConfigFile configFile;
 
         /// <summary>
         /// Game state provider for the menu system.
@@ -47,84 +33,117 @@ namespace CabbyCodes
         private static GameStateProvider gameStateProvider;
 
         /// <summary>
+        /// Singleton accessor for external helpers.
+        /// </summary>
+        public static CabbyCodesModLumafly Instance { get; private set; }
+
+        /// <summary>
+        /// Update handler MonoBehaviour.
+        /// </summary>
+        private GameObject updateHandlerGo;
+
+        /// <summary>
         /// Loader for custom/quick start loads, persistent across scenes.
         /// </summary>
         private GameObject quickStartLoaderGo;
 
         /// <summary>
-        /// Singleton accessor for external helpers.
+        /// Tracks the last menu state for change detection.
         /// </summary>
-        public static CabbyCodesPlugin Instance { get; private set; }
+        private bool lastMenuState = false;
 
         /// <summary>
-        /// Called when the plugin is loaded. Initializes the configuration system and logging.
+        /// Constructor required by HKAPI.
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "Unity lifecycle method called by Unity engine")]
-        private void Awake()
+        public CabbyCodesModLumafly() : base(Constants.NAME)
         {
             Instance = this;
-            BLogger = Logger;
-            BLogger.LogInfo("Plugin cabby.cabbycodes is loaded!");
-            BLogger.LogInfo(string.Format("Config location: {0}", Config.ConfigFilePath));
-            configFile = Config;
+        }
 
-            QuickOpenHotkeyManager.Initialize(configFile);
+        /// <summary>
+        /// Returns the mod version.
+        /// </summary>
+        public override string GetVersion()
+        {
+            return Constants.VERSION;
+        }
 
-            // Initialize flag monitor configuration early so it's available when panels are created
+        /// <summary>
+        /// Called when the mod is loaded. Initializes the mod menu and patches.
+        /// </summary>
+        public override void Initialize()
+        {
+            Log("Initializing CabbyCodes...");
+
+            // Initialize the compatibility stub for CabbyCodesPlugin
+            CabbyCodesPlugin.BLogger = new LumaflyLoggerWrapper(Constants.NAME);
+
+            // Create ConfigFile for HKAPI (stores in Mods folder)
+            string configPath = Path.Combine(
+                Path.GetDirectoryName(typeof(CabbyCodesModLumafly).Assembly.Location),
+                Constants.NAME.Replace(" ", "") + ".cfg"
+            );
+            CabbyCodesPlugin.configFile = new ConfigFile(configPath, true);
+            CabbyCodesPlugin.BLogger.LogInfo(string.Format("Config location: {0}", configPath));
+
+            // Initialize config-dependent features
+            QuickOpenHotkeyManager.Initialize(CabbyCodesPlugin.configFile);
             FlagMonitorReference.InitializeConfig();
             FlagFileLoggingReference.InitializeConfig();
             FlagMonitorSettings.InitializeConfig();
 
-            // Create persistent loader
+            // Create persistent update handler
+            if (updateHandlerGo == null)
+            {
+                updateHandlerGo = new GameObject("CabbyCodesUpdateHandler");
+                updateHandlerGo.AddComponent<CabbyCodesUpdateHandler>();
+                GameObject.DontDestroyOnLoad(updateHandlerGo);
+            }
+
+            // Create persistent loader for quick start
             if (quickStartLoaderGo == null)
             {
                 quickStartLoaderGo = new GameObject("QuickStartLoader");
                 quickStartLoaderGo.AddComponent<QuickStartLoader>();
-                DontDestroyOnLoad(quickStartLoaderGo);
+                GameObject.DontDestroyOnLoad(quickStartLoaderGo);
             }
-        }
-
-        /// <summary>
-        /// Called after Awake. Sets up the Unity Explorer and initializes the mod menu with all categories.
-        /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "Unity lifecycle method called by Unity engine")]
-        private void Start()
-        {
-            //UnityExplorer.ExplorerStandalone.CreateInstance();
 
             // Create the game state provider
             gameStateProvider = new GameStateProvider();
 
             // Initialize the menu with the game state provider
             cabbyMenu = new CabbyMainMenu(Constants.NAME, Constants.VERSION, gameStateProvider);
-            
+
             // Set up menu state callback for heart piece and vessel fragment tracking
-            InventoryPatch.SetMenuStateCallback((menuOpen) => {
+            InventoryPatch.SetMenuStateCallback((menuOpen) =>
+            {
                 if (menuOpen)
                 {
-                    // Menu opened - initialize starting states
                     InventoryPatch.InitializeHeartPieceStartingState();
                     InventoryPatch.InitializeVesselFragmentStartingState();
                 }
                 else
                 {
-                    // Menu closed - check if reloads are needed
                     InventoryPatch.CheckHeartPieceReloadNeeded();
                     InventoryPatch.CheckVesselFragmentReloadNeeded();
                 }
             });
-            
+
             // Set up input field registration for all used types
-            BaseInputFieldSync<int>.RegisterInputFieldSync = (inputFieldStatus) => {
+            BaseInputFieldSync<int>.RegisterInputFieldSync = (inputFieldStatus) =>
+            {
                 cabbyMenu.RegisterInputFieldSync(inputFieldStatus);
             };
-            BaseInputFieldSync<float>.RegisterInputFieldSync = (inputFieldStatus) => {
+            BaseInputFieldSync<float>.RegisterInputFieldSync = (inputFieldStatus) =>
+            {
                 cabbyMenu.RegisterInputFieldSync(inputFieldStatus);
             };
-            BaseInputFieldSync<string>.RegisterInputFieldSync = (inputFieldStatus) => {
+            BaseInputFieldSync<string>.RegisterInputFieldSync = (inputFieldStatus) =>
+            {
                 cabbyMenu.RegisterInputFieldSync(inputFieldStatus);
             };
-            
+
+            // Register categories
             cabbyMenu.RegisterCategory("Player", PlayerPatch.AddPanels);
             cabbyMenu.RegisterCategory("Teleport", TeleportPatch.AddPanels);
             cabbyMenu.RegisterCategory("Inventory", InventoryPatch.AddPanels);
@@ -133,46 +152,46 @@ namespace CabbyCodes
             cabbyMenu.RegisterCategory("Grubs", GrubPatch.AddPanels);
             cabbyMenu.RegisterCategory("Hunter", HunterPatch.AddPanels);
             cabbyMenu.RegisterCategory("Flags", FlagsPatch.AddPanels);
-            
-            // Only register Sprite Viewer category when dev options are enabled
-            bool initialDevOptionsState = configFile.Bind("Settings", "EnableDevOptions", Constants.DEFAULT_DEV_OPTIONS_ENABLED, 
+
+            // Register dev options category if enabled
+            bool initialDevOptionsState = CabbyCodesPlugin.configFile.Bind("Settings", "EnableDevOptions", Constants.DEFAULT_DEV_OPTIONS_ENABLED,
                 "Enable developer options and advanced features").Value;
-            
+
             if (initialDevOptionsState)
             {
                 cabbyMenu.RegisterCategory("Sprite Viewer", SpriteViewerPatch.AddPanels);
             }
-            
+
             cabbyMenu.RegisterCategory("Achievements", AchievementPatch.AddPanels);
             cabbyMenu.RegisterCategory("Settings", SettingsPatch.AddPanels);
 
-            // NOW get the last selected category from config AFTER all categories are registered
-            var lastSelectedCategoryConfig = configFile.Bind("MainMenu", "LastSelectedCategory", 0, 
+            // Get the last selected category from config AFTER all categories are registered
+            var lastSelectedCategoryConfig = CabbyCodesPlugin.configFile.Bind("MainMenu", "LastSelectedCategory", 0,
                 "Last selected main menu category (0-based)");
-            
-            // Set up the callback to save category changes AFTER config binding
-            cabbyMenu.SetCategorySelectedCallback((categoryIndex) => {
+
+            // Set up the callback to save category changes
+            cabbyMenu.SetCategorySelectedCallback((categoryIndex) =>
+            {
                 lastSelectedCategoryConfig.Value = categoryIndex;
             });
-            
+
             // Store the last selected category for deferred restoration
             int lastSelectedCategory = lastSelectedCategoryConfig.Value;
-            
+
             if (lastSelectedCategory > 0 && lastSelectedCategory < cabbyMenu.GetRegisteredCategories())
             {
-                // Defer the restoration until the dropdown is initialized
                 cabbyMenu.SetDeferredCategoryRestoration(lastSelectedCategory);
             }
 
             // Apply quick start patches
             QuickStartPatch.ApplyPatches();
-            
+
             // Apply custom save/load patches
             CustomSaveLoadPatch.ApplyPatches();
 
             // Apply flag monitor patches
             FlagMonitorPatch.ApplyPatches();
-            
+
             // Initialize scene monitoring for flag monitor
             FlagMonitorPatch.InitializeSceneMonitoring();
 
@@ -182,43 +201,41 @@ namespace CabbyCodes
             // Ensure file logging is set up if it was previously enabled
             FlagFileLoggingReference.EnsureFileExists();
 
-            // Initialize player patches immediately on startup (don't wait for category selection)
+            // Initialize player patches immediately on startup
             PlayerPatch.AddPanels();
 
-            BLogger.LogInfo("CabbyCodes menu initialized successfully");
+            Log("CabbyCodes initialized successfully");
         }
 
         /// <summary>
-        /// Called every frame. Updates the mod menu and handles user input.
+        /// Called during the Update loop by the update handler.
         /// </summary>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "Unity lifecycle method called by Unity engine")]
-        private void Update()
+        internal void OnUpdate()
         {
+            if (gameStateProvider == null || cabbyMenu == null) return;
+
             // Track menu state changes for heart piece reload logic
             bool currentMenuState = gameStateProvider.ShouldShowMenu();
             if (currentMenuState != lastMenuState)
             {
-                // Menu state changed - notify InventoryPatch
                 if (InventoryPatch.onMenuStateChanged != null)
                 {
                     InventoryPatch.onMenuStateChanged(currentMenuState);
                 }
                 lastMenuState = currentMenuState;
             }
-            
+
             // Update Enter key state for custom save/load functionality
             CustomSaveLoadPatch.UpdateEnterKeyState();
-            
+
             // Update Enter key state for teleport functionality
             TeleportPatch.UpdateEnterKeyState();
-            
+
             cabbyMenu.Update();
             FlagMonitorReference.UpdatePanelVisibility();
             QuickOpenHotkeyManager.Update();
         }
-        
-        // Track the last known menu state
-        private bool lastMenuState = false;
     }
 }
 #endif
+
