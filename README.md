@@ -5,11 +5,14 @@ A comprehensive cheat menu mod for Hollow Knight that provides extensive control
 ## 📋 Table of Contents
 - [What is CabbyCodes?](#-what-is-cabbycodes)
 - [Installation](#-installation)
+  - [BepInEx Installation](#option-a-bepinex-installation-recommended-for-most-users)
+  - [Lumafly/HKAPI Installation](#option-b-lumaflyh-api-installation)
 - [Usage](#-usage)
 - [Configuration](#️-configuration)
 - [User Troubleshooting](#-user-troubleshooting)
 - [Development](#️-development)
 - [Contributing](#-contributing)
+- [License & Third-Party Licenses](#-license)
 - [Support](#-support)
 
 ## 🎮 What is CabbyCodes?
@@ -92,25 +95,65 @@ See CabbyCodes in action! Here are screenshots of the various menu sections and 
 
 ## 🚀 Installation
 
-### Prerequisites
-- Hollow Knight (Steam version)
-- BepInEx 6.0 or later
+CabbyCodes supports two mod loaders: **BepInEx** and **Lumafly** (Hollow Knight Modding API). Choose the installation method that matches your setup.
 
-### Installation Steps
+### Option A: BepInEx Installation (Recommended for most users)
+
+#### Prerequisites
+- Hollow Knight (Steam version)
+- BepInEx 5.x or 6.x
+
+#### Installation Steps
 1. **Install BepInEx**:
-   - Download BepInEx 6.0+ from [GitHub](https://github.com/BepInEx/BepInEx/releases/tag/v6.0.0-pre.2)
-        - Version: `BepInEx-Unity.Mono-win-x64-6.0.0-pre.2.zip`
-   - Extract to your Hollow Knight directory
-        - C:\Program Files (x86)\Steam\steamapps\common\Hollow Knight
+   - Download BepInEx from [GitHub](https://github.com/BepInEx/BepInEx/releases)
+     - For BepInEx 6: `BepInEx-Unity.Mono-win-x64-6.0.0-pre.2.zip`
+     - For BepInEx 5: `BepInEx_win_x64_5.x.x.x.zip`
+   - Extract to your Hollow Knight directory:
+     - `C:\Program Files (x86)\Steam\steamapps\common\Hollow Knight`
    - Run the game once to generate BepInEx folders
 
 2. **Install CabbyCodes**:
    - Download the latest release from the releases page
-   - Extract both `CabbyCodes.dll` and `CabbyMenu.dll` to `Hollow Knight/BepInEx/plugins/`
-   - Start the game
+   - Extract the appropriate folder for your BepInEx version:
+     - **BepInEx 5**: Use files from `CabbyCodes for BepInEx 5/`
+     - **BepInEx 6**: Use files from `CabbyCodes for BepInEx 6/`
+   - Copy both `CabbyCodes.dll` and `CabbyMenu.dll` to `Hollow Knight/BepInEx/plugins/`
 
 3. **Verify Installation**:
+   - Start the game and pause to access the cheat menu
+
+---
+
+### Option B: Lumafly/HKAPI Installation
+
+#### Prerequisites
+- Hollow Knight (Steam version)
+- [Lumafly](https://github.com/TheMulhwormo/Lumafly) mod manager with Hollow Knight Modding API installed
+
+#### Installation Steps
+1. **Install Lumafly and HKAPI**:
+   - Download and run [Lumafly](https://github.com/TheMulhwormo/Lumafly/releases)
+   - Install any mod through Lumafly to set up the Modding API
+
+2. **Install CabbyCodes**:
+   - Download the latest release from the releases page
+   - Extract the `CabbyCodes for Lumafly/` folder
+   - Copy the **entire folder contents** to a new folder:
+     - `Hollow Knight/hollow_knight_Data/Managed/Mods/CabbyCodes/`
+   - The folder should contain:
+     - `CabbyCodes.dll`
+     - `CabbyMenu.dll`
+     - `0Harmony.dll` (required - included in the release)
+
+3. **Verify Installation**:
+   - Start the game - the mod should appear in Lumafly's mod list
    - Pause the game to access the cheat menu
+
+#### Important Notes for Lumafly Users
+- The `0Harmony.dll` file is **required** and must be in the same folder as the mod DLLs
+- HKAPI mods are installed differently than BepInEx - they go in `Managed/Mods/` not `BepInEx/plugins/`
+- Each mod needs its own subfolder within the `Mods` directory
+- Check `%APPDATA%\..\LocalLow\Team Cherry\Hollow Knight\ModLog.txt` for loading errors
 
 ## 🎯 Usage
 
@@ -134,12 +177,21 @@ See CabbyCodes in action! Here are screenshots of the various menu sections and 
 ## ⚙️ Configuration
 
 ### Config File Location
+
+The config file location depends on your mod loader:
+
+**BepInEx:**
 ```
-BepInEx/config/cabby.cabbycodes.cfg
+Hollow Knight/BepInEx/config/cabby.cabbycodes.cfg
+```
+
+**Lumafly/HKAPI:**
+```
+Hollow Knight/hollow_knight_Data/Managed/Mods/CabbyCodes/CabbyCodes.cfg
 ```
 
 ### Configuration System
-The mod uses BepInEx's built-in configuration system for:
+The mod uses a configuration system for:
 - **Teleport Locations**: Custom teleport points are automatically saved and loaded
 - **Game State**: Various game modifications are persisted between sessions
 - **Menu Settings**: Basic menu configuration options
@@ -154,10 +206,20 @@ Custom teleport locations are automatically saved to the config file and will pe
 
 ### Common Issues
 
-**Menu doesn't appear:**
-- Ensure both `CabbyCodes.dll` and `CabbyMenu.dll` are in the plugins folder
+**Menu doesn't appear (BepInEx):**
+- Ensure both `CabbyCodes.dll` and `CabbyMenu.dll` are in the `BepInEx/plugins/` folder
 - Check BepInEx console for error messages
 - Verify BepInEx is properly installed
+
+**Menu doesn't appear (Lumafly/HKAPI):**
+- Ensure all three files (`CabbyCodes.dll`, `CabbyMenu.dll`, `0Harmony.dll`) are in `Managed/Mods/CabbyCodes/`
+- The mod must be in its own subfolder - files directly in `Mods/` won't load
+- Check `ModLog.txt` at `%APPDATA%\..\LocalLow\Team Cherry\Hollow Knight\ModLog.txt` for errors
+- Verify the Modding API is installed (install any mod through Lumafly first)
+
+**"Failed to initialize" error (Lumafly):**
+- Make sure `0Harmony.dll` is present in the mod folder
+- This file is included in the release package - don't remove it
 
 **Values not updating:**
 - Check that input values are within the required range
@@ -424,11 +486,39 @@ Check the BepInEx console for detailed information about:
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
+### Third-Party Licenses
+
+**HarmonyX** - The Lumafly version of CabbyCodes includes `0Harmony.dll` from [HarmonyX](https://github.com/BepInEx/HarmonyX), which is licensed under the MIT License:
+
+```
+MIT License
+
+Copyright (c) 2020 BepInEx Team
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```
+
 ## 🙏 Acknowledgments
 
 - **Team Cherry** for creating Hollow Knight
-- **BepInEx Team** for the modding framework
-- **HarmonyX** for runtime patching capabilities
+- **BepInEx Team** for the modding framework and [HarmonyX](https://github.com/BepInEx/HarmonyX)
+- **Hollow Knight Modding Community** for the [Modding API](https://github.com/hk-modding/api)
 - **Unity Technologies** for the game engine
 
 ## 📞 Support
