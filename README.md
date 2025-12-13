@@ -9,9 +9,9 @@ A comprehensive cheat menu mod for Hollow Knight that provides extensive control
   - [BepInEx 6 Installation](#option-b-bepinex-6-installation)
   - [BepInEx 5 Installation](#option-c-bepinex-5-installation)
 - [Usage](#-usage)
-- [Configuration](#️-configuration)
+- [Configuration](#-configuration)
 - [User Troubleshooting](#-user-troubleshooting)
-- [Development](#️-development)
+- [Development](#-development)
 - [Contributing](#-contributing)
 - [License & Third-Party Licenses](#-license)
 - [Support](#-support)
@@ -119,15 +119,15 @@ Until CabbyCodes is added to the Lumafly modlist, follow these steps for manual 
 
 ##### Prerequisites
 - Hollow Knight (Steam version)
-- [Lumafly](https://github.com/TheMulhwormo/Lumafly) mod manager
+- [Lumafly](https://github.com/TheMulhima/Lumafly) mod manager
 
 ##### Installation Steps
 1. **Install Lumafly**:
-   - Download and run [Lumafly](https://github.com/TheMulhwormo/Lumafly/releases)
+   - Download and run [Lumafly](https://github.com/TheMulhima/Lumafly/releases)
    - Install any mod through Lumafly to set up the Modding API
 
 2. **Install CabbyCodes**:
-   - Download the latest release from the [releases page](https://github.com/HKCabbyCodes/releases)
+   - Download the latest release from the [releases page](https://github.com/SirCabby/HKCabbyCodes/releases)
    - Extract the `CabbyCodes for Lumafly/` folder
    - Copy the **entire folder contents** to a new folder:
      - `Hollow Knight/hollow_knight_Data/Managed/Mods/CabbyCodes/`
@@ -521,7 +521,7 @@ UnityExplorer is a powerful in-game inspector and debugger that provides a graph
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License.
 
 ### Third-Party Licenses
 
