@@ -1,26 +1,12 @@
 namespace CabbyMenu
 {
     /// <summary>
-    /// Abstract base class providing common patch methods for Harmony patches.
+    /// Common patch utility methods. 
+    /// Note: With the migration to MonoMod hooks, the Harmony prefix skip patterns are no longer needed.
+    /// This class is kept for potential future utility methods.
     /// </summary>
     public abstract class CommonPatches
     {
-        /// <summary>
-        /// Prefix method that skips the original method execution.
-        /// </summary>
-        /// <returns>False to skip the original method.</returns>
-        public static bool Prefix_SkipOriginal()
-        {
-            return false;
-        }
-
-        /// <summary>
-        /// Prefix method that allows the original method to execute.
-        /// </summary>
-        /// <returns>True to allow the original method to execute.</returns>
-        public static bool Prefix_RunOriginal()
-        {
-            return true;
-        }
+        // Harmony prefix methods removed - MonoMod hooks skip the original by not calling orig()
     }
 }

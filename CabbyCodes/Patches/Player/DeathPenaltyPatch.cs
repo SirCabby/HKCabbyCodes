@@ -1,10 +1,11 @@
 using CabbyMenu.SyncedReferences;
-using System.Reflection;
-using HarmonyLib;
 using BepInEx.Configuration;
 using CabbyCodes.Flags;
 using System.Collections;
 using CabbyMenu.Utilities;
+using MonoMod.RuntimeDetour;
+using System;
+using System.Reflection;
 
 namespace CabbyCodes.Patches.Player
 {
@@ -12,11 +13,12 @@ namespace CabbyCodes.Patches.Player
     {
         public const string key = "DeathPenalty_Patch";
         private static ConfigEntry<bool> configValue;
-        private static readonly Harmony harmony = new Harmony(key);
-        private static readonly MethodInfo mOriginal = AccessTools.Method(typeof(PlayerData), nameof(PlayerData.StartSoulLimiter));
-        private static readonly MethodInfo mOriginal2 = AccessTools.Method(typeof(GameManager), "PlayerDead");
-        private static readonly MethodInfo mHeroDie = AccessTools.Method(typeof(HeroController), "Die");
         private static int storedGeoAmount;
+
+        // MonoMod.RuntimeDetour hooks - unified for all builds
+        private static Hook hookStartSoulLimiter;
+        private static Hook hookPlayerDead;
+        private static Hook hookDie;
 
         /// <summary>
         /// Initializes the configuration entry.
@@ -47,29 +49,16 @@ namespace CabbyCodes.Patches.Player
             }
             else
             {
-                harmony.UnpatchSelf();
+                RemoveHooks();
             }
         }
-
 
         private static void EnableDeathPenaltyPrevention()
         {
             try
             {
-                harmony.UnpatchSelf();
-                harmony.Patch(mOriginal, prefix: new HarmonyMethod(typeof(DeathPenaltyPatch).GetMethod(nameof(StartSoulLimiter_Prefix), BindingFlags.Static | BindingFlags.Public)));
-                
-                // Patch PlayerDead to apply death penalty prevention logic
-                if (mOriginal2 != null)
-                {
-                    harmony.Patch(mOriginal2, prefix: new HarmonyMethod(typeof(DeathPenaltyPatch).GetMethod(nameof(PlayerDead_Prefix), BindingFlags.Static | BindingFlags.Public)));
-                }
-
-                // Patch HeroController.Die to capture geo early
-                if (mHeroDie != null)
-                {
-                    harmony.Patch(mHeroDie, prefix: new HarmonyMethod(typeof(DeathPenaltyPatch).GetMethod(nameof(HeroDie_Prefix), BindingFlags.Static | BindingFlags.Public)));
-                }
+                RemoveHooks();
+                ApplyHooks();
             }
             catch (System.Exception ex)
             {
@@ -77,39 +66,79 @@ namespace CabbyCodes.Patches.Player
             }
         }
 
+        private static void ApplyHooks()
+        {
+            if (hookStartSoulLimiter == null)
+            {
+                hookStartSoulLimiter = new Hook(
+                    typeof(PlayerData).GetMethod(nameof(PlayerData.StartSoulLimiter), BindingFlags.Public | BindingFlags.Instance),
+                    typeof(DeathPenaltyPatch).GetMethod(nameof(OnStartSoulLimiter), BindingFlags.NonPublic | BindingFlags.Static)
+                );
+            }
+            if (hookPlayerDead == null)
+            {
+                var playerDeadMethod = typeof(GameManager).GetMethod("PlayerDead", BindingFlags.NonPublic | BindingFlags.Instance);
+                if (playerDeadMethod != null)
+                {
+                    hookPlayerDead = new Hook(
+                        playerDeadMethod,
+                        typeof(DeathPenaltyPatch).GetMethod(nameof(OnPlayerDead), BindingFlags.NonPublic | BindingFlags.Static)
+                    );
+                }
+            }
+            if (hookDie == null)
+            {
+                var dieMethod = typeof(HeroController).GetMethod("Die", BindingFlags.NonPublic | BindingFlags.Instance);
+                if (dieMethod != null)
+                {
+                    hookDie = new Hook(
+                        dieMethod,
+                        typeof(DeathPenaltyPatch).GetMethod(nameof(OnDie), BindingFlags.NonPublic | BindingFlags.Static)
+                    );
+                }
+            }
+        }
+
+        private static void RemoveHooks()
+        {
+            hookStartSoulLimiter?.Dispose();
+            hookStartSoulLimiter = null;
+            hookPlayerDead?.Dispose();
+            hookPlayerDead = null;
+            hookDie?.Dispose();
+            hookDie = null;
+        }
+
         /// <summary>
-        /// Prefix method for GameManager.PlayerDead() to apply death penalty prevention logic.
+        /// Hook for PlayerData.StartSoulLimiter() - skip execution.
         /// </summary>
-        public static bool PlayerDead_Prefix()
+        private static void OnStartSoulLimiter(Action<PlayerData> orig, PlayerData self)
+        {
+            // Skip original - don't call orig()
+        }
+
+        /// <summary>
+        /// Hook for GameManager.PlayerDead() - apply death penalty prevention logic before calling original.
+        /// </summary>
+        private static void OnPlayerDead(Action<GameManager, float> orig, GameManager self, float waitTime)
         {
             if (PlayerData.instance != null)
             {
                 CoroutineRunner.Instance.StartCoroutine(ApplyDeathPenaltyLogic());
             }
-
-            return true;
+            orig(self, waitTime); // Allow original to run
         }
 
         /// <summary>
-        /// Prefix method for PlayerData.StartSoulLimiter() to skip execution.
+        /// Hook for HeroController.Die() - capture geo amount immediately when death sequence starts.
         /// </summary>
-        public static bool StartSoulLimiter_Prefix()
-        {
-            // Return false to skip the original method
-            return false;
-        }
-
-        /// <summary>
-        /// Prefix for HeroController.Die to capture geo amount immediately when death sequence starts.
-        /// </summary>
-        public static bool HeroDie_Prefix()
+        private static void OnDie(Action<HeroController> orig, HeroController self)
         {
             if (PlayerData.instance != null)
             {
                 storedGeoAmount = PlayerData.instance.geo;
             }
-
-            return true;
+            orig(self); // Allow original to run
         }
 
         /// <summary>
@@ -126,4 +155,4 @@ namespace CabbyCodes.Patches.Player
             yield break;
         }
     }
-} 
+}

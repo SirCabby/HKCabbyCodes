@@ -143,14 +143,12 @@ CabbyCodes supports two mod loaders: **BepInEx** and **Lumafly** (Hollow Knight 
    - The folder should contain:
      - `CabbyCodes.dll`
      - `CabbyMenu.dll`
-     - `0Harmony.dll` (required - included in the release)
 
 3. **Verify Installation**:
    - Start the game - the mod should appear in Lumafly's mod list
    - Pause the game to access the cheat menu
 
 #### Important Notes for Lumafly Users
-- The `0Harmony.dll` file is **required** and must be in the same folder as the mod DLLs
 - HKAPI mods are installed differently than BepInEx - they go in `Managed/Mods/` not `BepInEx/plugins/`
 - Each mod needs its own subfolder within the `Mods` directory
 - Check `%APPDATA%\..\LocalLow\Team Cherry\Hollow Knight\ModLog.txt` for loading errors
@@ -212,14 +210,10 @@ Custom teleport locations are automatically saved to the config file and will pe
 - Verify BepInEx is properly installed
 
 **Menu doesn't appear (Lumafly/HKAPI):**
-- Ensure all three files (`CabbyCodes.dll`, `CabbyMenu.dll`, `0Harmony.dll`) are in `Managed/Mods/CabbyCodes/`
+- Ensure both files (`CabbyCodes.dll`, `CabbyMenu.dll`) are in `Managed/Mods/CabbyCodes/`
 - The mod must be in its own subfolder - files directly in `Mods/` won't load
 - Check `ModLog.txt` at `%APPDATA%\..\LocalLow\Team Cherry\Hollow Knight\ModLog.txt` for errors
 - Verify the Modding API is installed (install any mod through Lumafly first)
-
-**"Failed to initialize" error (Lumafly):**
-- Make sure `0Harmony.dll` is present in the mod folder
-- This file is included in the release package - don't remove it
 
 **Values not updating:**
 - Check that input values are within the required range
@@ -488,12 +482,12 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ### Third-Party Licenses
 
-**HarmonyX** - The Lumafly version of CabbyCodes includes `0Harmony.dll` from [HarmonyX](https://github.com/BepInEx/HarmonyX), which is licensed under the MIT License:
+**MonoMod** - This mod uses [MonoMod.RuntimeDetour](https://github.com/MonoMod/MonoMod) for runtime method hooking, which is licensed under the MIT License:
 
 ```
 MIT License
 
-Copyright (c) 2020 BepInEx Team
+Copyright (c) 2015 - 2020 0x0ade
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -517,7 +511,8 @@ SOFTWARE.
 ## 🙏 Acknowledgments
 
 - **Team Cherry** for creating Hollow Knight
-- **BepInEx Team** for the modding framework and [HarmonyX](https://github.com/BepInEx/HarmonyX)
+- **BepInEx Team** for the modding framework
+- **0x0ade and MonoMod Contributors** for [MonoMod](https://github.com/MonoMod/MonoMod) runtime hooking
 - **Hollow Knight Modding Community** for the [Modding API](https://github.com/hk-modding/api)
 - **Unity Technologies** for the game engine
 

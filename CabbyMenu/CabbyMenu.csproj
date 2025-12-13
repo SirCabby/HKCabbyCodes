@@ -40,8 +40,6 @@
   <!-- Lumafly (HKAPI) package references -->
   <ItemGroup Condition="'$(Configuration)' == 'Lumafly'">
     <PackageReference Include="UnityEngine.Modules" Version="2020.2" IncludeAssets="compile" />
-    <!-- BepInEx.Core for ConfigEntry types - these work independently of the modloader -->
-    <PackageReference Include="BepInEx.Core" Version="5.*" />
   </ItemGroup>
 
   <!-- Default BepInEx 6 package references for Release/Debug -->
@@ -50,9 +48,8 @@
     <PackageReference Include="BepInEx.PluginInfoProps" Version="2.*" />
   </ItemGroup>
 
-  <!-- Common package references for both versions -->
+  <!-- Common package references for all versions -->
   <ItemGroup>
-    <PackageReference Include="HarmonyX" Version="2.10.2" />
     <PackageReference Include="Unity3D.UnityEngine.UI" Version="2018.3.5.1" />
   </ItemGroup>
 

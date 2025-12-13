@@ -42,7 +42,7 @@ CabbyMenu is designed as a **standalone library** that can be referenced by othe
 - **ObjectPrint**: Debug utility for object inspection
 - **LoggingExtensions**: Extended logging methods
 - **PbdMaker**: Persistent data management
-- **CommonPatches**: Common Harmony patch methods
+- **CommonPatches**: Common utility methods for patches
 
 ## 🚀 Setup
 
@@ -306,8 +306,8 @@ make build-cabbymenu
 ```
 
 ### Dependencies
-- BepInEx.Unity.Mono
-- HarmonyX
+- BepInEx.Unity.Mono (for BepInEx builds)
+- MonoMod.RuntimeDetour (for runtime method hooking)
 - Unity3D.UnityEngine.UI
 - UnityEngine.Modules
 - Assembly-CSharp (Hollow Knight)

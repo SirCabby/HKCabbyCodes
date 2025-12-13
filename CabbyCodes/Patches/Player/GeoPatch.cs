@@ -1,8 +1,8 @@
 using CabbyMenu.SyncedReferences;
-using System.Reflection;
-using HarmonyLib;
-using CabbyMenu;
 using BepInEx.Configuration;
+using MonoMod.RuntimeDetour;
+using System;
+using System.Reflection;
 
 namespace CabbyCodes.Patches.Player
 {
@@ -10,9 +10,10 @@ namespace CabbyCodes.Patches.Player
     {
         public const string key = "Geo_Patch";
         private static ConfigEntry<bool> configValue;
-        private static readonly Harmony harmony = new Harmony(key);
-        private static readonly MethodInfo mOriginal1 = AccessTools.Method(typeof(PlayerData), nameof(PlayerData.TakeGeo));
-        private static readonly MethodInfo mOriginal2 = AccessTools.Method(typeof(GeoCounter), nameof(GeoCounter.TakeGeo));
+
+        // MonoMod.RuntimeDetour hooks - unified for all builds
+        private static Hook hookTakeGeo;
+        private static Hook hookGeoCounterTakeGeo;
 
         /// <summary>
         /// Initializes the configuration entry.
@@ -39,13 +40,49 @@ namespace CabbyCodes.Patches.Player
 
             if (value)
             {
-                harmony.Patch(mOriginal1, prefix: new HarmonyMethod(typeof(CommonPatches).GetMethod("Prefix_SkipOriginal")));
-                harmony.Patch(mOriginal2, prefix: new HarmonyMethod(typeof(CommonPatches).GetMethod("Prefix_SkipOriginal")));
+                ApplyHooks();
             }
             else
             {
-                harmony.UnpatchSelf();
+                RemoveHooks();
             }
+        }
+
+        private static void ApplyHooks()
+        {
+            if (hookTakeGeo == null)
+            {
+                hookTakeGeo = new Hook(
+                    typeof(PlayerData).GetMethod(nameof(PlayerData.TakeGeo), BindingFlags.Public | BindingFlags.Instance),
+                    typeof(GeoPatch).GetMethod(nameof(OnTakeGeo), BindingFlags.NonPublic | BindingFlags.Static)
+                );
+            }
+            if (hookGeoCounterTakeGeo == null)
+            {
+                hookGeoCounterTakeGeo = new Hook(
+                    typeof(GeoCounter).GetMethod(nameof(GeoCounter.TakeGeo), BindingFlags.Public | BindingFlags.Instance),
+                    typeof(GeoPatch).GetMethod(nameof(OnGeoCounterTakeGeo), BindingFlags.NonPublic | BindingFlags.Static)
+                );
+            }
+        }
+
+        private static void RemoveHooks()
+        {
+            hookTakeGeo?.Dispose();
+            hookTakeGeo = null;
+            hookGeoCounterTakeGeo?.Dispose();
+            hookGeoCounterTakeGeo = null;
+        }
+
+        // Hook handlers - skip original by not calling orig()
+        private static void OnTakeGeo(Action<PlayerData, int> orig, PlayerData self, int amount)
+        {
+            // Skip original - don't call orig()
+        }
+
+        private static void OnGeoCounterTakeGeo(Action<GeoCounter, int> orig, GeoCounter self, int geo)
+        {
+            // Skip original - don't call orig()
         }
     }
 }

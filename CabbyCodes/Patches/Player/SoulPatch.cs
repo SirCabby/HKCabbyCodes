@@ -1,8 +1,8 @@
 using CabbyMenu.SyncedReferences;
-using System.Reflection;
-using HarmonyLib;
-using CabbyMenu;
 using BepInEx.Configuration;
+using MonoMod.RuntimeDetour;
+using System;
+using System.Reflection;
 
 namespace CabbyCodes.Patches.Player
 {
@@ -10,10 +10,11 @@ namespace CabbyCodes.Patches.Player
     {
         public const string key = "Soul_Patch";
         private static ConfigEntry<bool> configValue;
-        private static readonly Harmony harmony = new Harmony(key);
-        private static readonly MethodInfo mOriginal = AccessTools.Method(typeof(PlayerData), nameof(PlayerData.TakeMP));
-        private static readonly MethodInfo mOriginal2 = AccessTools.Method(typeof(PlayerData), nameof(PlayerData.TakeReserveMP));
-        private static readonly MethodInfo mOriginal3 = AccessTools.Method(typeof(PlayerData), nameof(PlayerData.ClearMP));
+        
+        // MonoMod.RuntimeDetour hooks - unified for all builds
+        private static Hook hookTakeMP;
+        private static Hook hookTakeReserveMP;
+        private static Hook hookClearMP;
 
         /// <summary>
         /// Initializes the configuration entry.
@@ -40,15 +41,64 @@ namespace CabbyCodes.Patches.Player
 
             if (value)
             {
-                harmony.Patch(mOriginal, prefix: new HarmonyMethod(typeof(CommonPatches).GetMethod("Prefix_SkipOriginal")));
-                harmony.Patch(mOriginal2, prefix: new HarmonyMethod(typeof(CommonPatches).GetMethod("Prefix_SkipOriginal")));
-                harmony.Patch(mOriginal3, prefix: new HarmonyMethod(typeof(CommonPatches).GetMethod("Prefix_SkipOriginal")));
-                PlayerData.instance.AddMPCharge(Constants.INFINITE_SOUL_CHARGE);
+                ApplyHooks();
+                PlayerData.instance?.AddMPCharge(Constants.INFINITE_SOUL_CHARGE);
             }
             else
             {
-                harmony.UnpatchSelf();
+                RemoveHooks();
             }
+        }
+
+        private static void ApplyHooks()
+        {
+            if (hookTakeMP == null)
+            {
+                hookTakeMP = new Hook(
+                    typeof(PlayerData).GetMethod(nameof(PlayerData.TakeMP), BindingFlags.Public | BindingFlags.Instance),
+                    typeof(SoulPatch).GetMethod(nameof(OnTakeMP), BindingFlags.NonPublic | BindingFlags.Static)
+                );
+            }
+            if (hookTakeReserveMP == null)
+            {
+                hookTakeReserveMP = new Hook(
+                    typeof(PlayerData).GetMethod(nameof(PlayerData.TakeReserveMP), BindingFlags.Public | BindingFlags.Instance),
+                    typeof(SoulPatch).GetMethod(nameof(OnTakeReserveMP), BindingFlags.NonPublic | BindingFlags.Static)
+                );
+            }
+            if (hookClearMP == null)
+            {
+                hookClearMP = new Hook(
+                    typeof(PlayerData).GetMethod(nameof(PlayerData.ClearMP), BindingFlags.Public | BindingFlags.Instance),
+                    typeof(SoulPatch).GetMethod(nameof(OnClearMP), BindingFlags.NonPublic | BindingFlags.Static)
+                );
+            }
+        }
+
+        private static void RemoveHooks()
+        {
+            hookTakeMP?.Dispose();
+            hookTakeMP = null;
+            hookTakeReserveMP?.Dispose();
+            hookTakeReserveMP = null;
+            hookClearMP?.Dispose();
+            hookClearMP = null;
+        }
+
+        // Hook handlers - skip original by not calling orig()
+        private static void OnTakeMP(Action<PlayerData, int> orig, PlayerData self, int amount)
+        {
+            // Skip original - don't call orig()
+        }
+
+        private static void OnTakeReserveMP(Action<PlayerData, int> orig, PlayerData self, int amount)
+        {
+            // Skip original - don't call orig()
+        }
+
+        private static void OnClearMP(Action<PlayerData> orig, PlayerData self)
+        {
+            // Skip original - don't call orig()
         }
     }
 }

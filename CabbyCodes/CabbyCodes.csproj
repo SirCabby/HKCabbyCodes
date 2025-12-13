@@ -38,10 +38,9 @@
   </ItemGroup>
 
   <!-- Lumafly (HKAPI) package references -->
+  <!-- Note: ConfigEntry/ConfigFile types are provided by standalone implementations in Lumafly/*.cs -->
   <ItemGroup Condition="'$(Configuration)' == 'Lumafly'">
     <PackageReference Include="UnityEngine.Modules" Version="2020.2" IncludeAssets="compile" />
-    <!-- BepInEx.Core for ConfigEntry types - these work independently of the modloader -->
-    <PackageReference Include="BepInEx.Core" Version="5.*" />
   </ItemGroup>
 
   <!-- Default BepInEx 6 package references for Release/Debug -->
@@ -50,10 +49,19 @@
     <PackageReference Include="BepInEx.PluginInfoProps" Version="2.*" />
   </ItemGroup>
 
-  <!-- Common package references for both versions -->
+  <!-- Common package references for all versions -->
   <ItemGroup>
-    <PackageReference Include="HarmonyX" Version="2.10.2" />
     <PackageReference Include="Unity3D.UnityEngine.UI" Version="2018.3.5.1" />
+  </ItemGroup>
+
+  <!-- MonoMod.RuntimeDetour for BepInEx 5 builds - use compatible version -->
+  <ItemGroup Condition="'$(Configuration)' == 'BepInEx5'">
+    <PackageReference Include="MonoMod.RuntimeDetour" Version="22.01.29.01" />
+  </ItemGroup>
+  
+  <!-- MonoMod.RuntimeDetour for BepInEx 6 builds - use compatible version -->
+  <ItemGroup Condition="'$(Configuration)' == 'BepInEx6' OR '$(Configuration)' == 'Release' OR '$(Configuration)' == 'Debug'">
+    <PackageReference Include="MonoMod.RuntimeDetour" Version="22.05.01.01" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework.TrimEnd(`0123456789`))' == 'net'">
@@ -74,13 +82,19 @@
   </ItemGroup>
 
   <!-- Assembly references for Lumafly (HKAPI) builds -->
-  <!-- NOTE: Place HKAPI-patched Assembly-CSharp.dll in lib-lumafly folder -->
+  <!-- NOTE: Place HKAPI-patched Assembly-CSharp.dll and MonoMod DLLs in lib-lumafly folder -->
   <ItemGroup Condition="'$(Configuration)' == 'Lumafly'">
     <Reference Include="Assembly-CSharp">
       <HintPath>lib-lumafly\Assembly-CSharp.dll</HintPath>
     </Reference>
     <Reference Include="PlayMaker">
       <HintPath>lib\PlayMaker.dll</HintPath>
+    </Reference>
+    <Reference Include="MonoMod.RuntimeDetour">
+      <HintPath>lib-lumafly\MonoMod.RuntimeDetour.dll</HintPath>
+    </Reference>
+    <Reference Include="MonoMod.Utils">
+      <HintPath>lib-lumafly\MonoMod.Utils.dll</HintPath>
     </Reference>
   </ItemGroup>
 

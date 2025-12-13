@@ -1,6 +1,4 @@
 #if LUMAFLY
-using BepInEx.Logging;
-
 namespace CabbyCodes
 {
     /// <summary>
@@ -34,27 +32,6 @@ namespace CabbyCodes
         {
             Modding.Logger.LogDebug(string.Format("[{0}] {1}", modName, message));
         }
-
-        public void Log(LogLevel level, object data)
-        {
-            switch (level)
-            {
-                case LogLevel.Error:
-                case LogLevel.Fatal:
-                    LogError(data?.ToString() ?? "");
-                    break;
-                case LogLevel.Warning:
-                    LogWarning(data?.ToString() ?? "");
-                    break;
-                case LogLevel.Debug:
-                    LogDebug(data?.ToString() ?? "");
-                    break;
-                default:
-                    LogInfo(data?.ToString() ?? "");
-                    break;
-            }
-        }
     }
 }
 #endif
-

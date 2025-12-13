@@ -1,7 +1,8 @@
 using CabbyMenu.SyncedReferences;
-using System.Reflection;
-using HarmonyLib;
 using BepInEx.Configuration;
+using MonoMod.RuntimeDetour;
+using System;
+using System.Reflection;
 
 namespace CabbyCodes.Patches.Player
 {
@@ -9,9 +10,12 @@ namespace CabbyCodes.Patches.Player
     {
         public const string key = "Damage_Patch";
         private static ConfigEntry<bool> configValue;
-        private static readonly Harmony harmony = new Harmony(key);
-        private static readonly MethodInfo mOriginal1 = AccessTools.Method(typeof(HealthManager), nameof(HealthManager.Hit), new System.Type[] { typeof(HitInstance) });
-        private static readonly MethodInfo mOriginal2 = typeof(HealthManager).GetMethod("TakeDamage", BindingFlags.NonPublic | BindingFlags.Instance);
+        
+        // Cache the TakeDamage method for invoking in our hook
+        private static readonly MethodInfo mTakeDamage = typeof(HealthManager).GetMethod("TakeDamage", BindingFlags.NonPublic | BindingFlags.Instance);
+
+        // MonoMod.RuntimeDetour hooks - unified for all builds
+        private static Hook hookHit;
 
         /// <summary>
         /// Initializes the configuration entry.
@@ -38,27 +42,51 @@ namespace CabbyCodes.Patches.Player
 
             if (value)
             {
-                harmony.Patch(mOriginal1, prefix: new HarmonyMethod(typeof(DamagePatch).GetMethod(nameof(Hit_Override), BindingFlags.Static | BindingFlags.Public)));
+                ApplyHooks();
             }
             else
             {
-                harmony.UnpatchSelf();
+                RemoveHooks();
             }
         }
 
-        //HealthManager.Hit();
-        public static bool Hit_Override(HitInstance hitInstance, HealthManager __instance)
+        private static void ApplyHooks()
         {
+            if (hookHit == null)
+            {
+                // Get the Hit method with HitInstance parameter
+                var hitMethod = typeof(HealthManager).GetMethod(nameof(HealthManager.Hit), 
+                    BindingFlags.Public | BindingFlags.Instance, 
+                    null, 
+                    new Type[] { typeof(HitInstance) }, 
+                    null);
+                    
+                hookHit = new Hook(
+                    hitMethod,
+                    typeof(DamagePatch).GetMethod(nameof(OnHit), BindingFlags.NonPublic | BindingFlags.Static)
+                );
+            }
+        }
+
+        private static void RemoveHooks()
+        {
+            hookHit?.Dispose();
+            hookHit = null;
+        }
+
+        // Hook handler - custom damage logic
+        private static void OnHit(Action<HealthManager, HitInstance> orig, HealthManager self, HitInstance hitInstance)
+        {
+            // Modify the hit to do massive damage
             hitInstance.DamageDealt = Constants.ONE_HIT_KILL_DAMAGE;
             hitInstance.IgnoreInvulnerable = true;
 
-            if (!__instance.isDead)
+            if (!self.isDead)
             {
                 FSMUtility.SendEventToGameObject(hitInstance.Source, "DEALT DAMAGE");
-                mOriginal2.Invoke(__instance, new object[] { hitInstance });
+                mTakeDamage.Invoke(self, new object[] { hitInstance });
             }
-
-            return false;
+            // Don't call orig() - we've handled the hit ourselves
         }
     }
 }

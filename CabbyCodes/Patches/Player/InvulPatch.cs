@@ -1,10 +1,10 @@
 using CabbyMenu.SyncedReferences;
-using System.Reflection;
-using HarmonyLib;
-using CabbyMenu;
+using BepInEx.Configuration;
 using CabbyCodes.Flags;
 using CabbyCodes.CheatState;
-using BepInEx.Configuration;
+using MonoMod.RuntimeDetour;
+using System;
+using System.Reflection;
 
 namespace CabbyCodes.Patches.Player
 {
@@ -12,11 +12,12 @@ namespace CabbyCodes.Patches.Player
     {
         public const string key = "Invul_Patch";
         private static ConfigEntry<bool> configValue;
-        private static readonly Harmony harmony = new Harmony(key);
-        private static readonly MethodInfo mOriginal = AccessTools.Method(typeof(PlayerData), nameof(PlayerData.TakeHealth));
-        private static readonly MethodInfo mOriginal2 = AccessTools.Method(typeof(PlayerData), nameof(PlayerData.WouldDie));
-        private static readonly MethodInfo mOriginal3 = AccessTools.Method(typeof(HeroController), nameof(HeroController.TakeDamage));
         private static readonly FlagDef flag = FlagInstances.isInvincible;
+
+        // MonoMod.RuntimeDetour hooks - unified for all builds
+        private static Hook hookTakeHealth;
+        private static Hook hookWouldDie;
+        private static Hook hookTakeDamage;
 
         /// <summary>
         /// Initializes the configuration entry.
@@ -50,7 +51,7 @@ namespace CabbyCodes.Patches.Player
             else
             {
                 CheatStateManager.UnregisterRestorableCheat(this);
-                harmony.UnpatchSelf();
+                RemoveHooks();
                 FlagManager.SetBoolFlag(flag, false);
             }
         }
@@ -71,13 +72,61 @@ namespace CabbyCodes.Patches.Player
 
         private void ApplyInvulnerabilityState()
         {
-            harmony.Patch(mOriginal, prefix: new HarmonyMethod(typeof(CommonPatches).GetMethod("Prefix_SkipOriginal")));
-            harmony.Patch(mOriginal2, prefix: new HarmonyMethod(typeof(CommonPatches).GetMethod("Prefix_SkipOriginal")));
-            harmony.Patch(mOriginal3, prefix: new HarmonyMethod(typeof(CommonPatches).GetMethod("Prefix_SkipOriginal")));
-            
+            ApplyHooks();
             FlagManager.SetBoolFlag(flag, true);
-            
             PlayerData.instance?.MaxHealth();
+        }
+
+        private static void ApplyHooks()
+        {
+            if (hookTakeHealth == null)
+            {
+                hookTakeHealth = new Hook(
+                    typeof(PlayerData).GetMethod(nameof(PlayerData.TakeHealth), BindingFlags.Public | BindingFlags.Instance),
+                    typeof(InvulPatch).GetMethod(nameof(OnTakeHealth), BindingFlags.NonPublic | BindingFlags.Static)
+                );
+            }
+            if (hookWouldDie == null)
+            {
+                hookWouldDie = new Hook(
+                    typeof(PlayerData).GetMethod(nameof(PlayerData.WouldDie), BindingFlags.Public | BindingFlags.Instance),
+                    typeof(InvulPatch).GetMethod(nameof(OnWouldDie), BindingFlags.NonPublic | BindingFlags.Static)
+                );
+            }
+            if (hookTakeDamage == null)
+            {
+                hookTakeDamage = new Hook(
+                    typeof(HeroController).GetMethod(nameof(HeroController.TakeDamage), BindingFlags.Public | BindingFlags.Instance),
+                    typeof(InvulPatch).GetMethod(nameof(OnTakeDamage), BindingFlags.NonPublic | BindingFlags.Static)
+                );
+            }
+        }
+
+        private static void RemoveHooks()
+        {
+            hookTakeHealth?.Dispose();
+            hookTakeHealth = null;
+            hookWouldDie?.Dispose();
+            hookWouldDie = null;
+            hookTakeDamage?.Dispose();
+            hookTakeDamage = null;
+        }
+
+        // Hook handlers - skip original by not calling orig()
+        private static void OnTakeHealth(Action<PlayerData, int> orig, PlayerData self, int amount)
+        {
+            // Skip original - don't call orig()
+        }
+
+        private static bool OnWouldDie(Func<PlayerData, int, bool> orig, PlayerData self, int damage)
+        {
+            // Always return false - player would never die
+            return false;
+        }
+
+        private static void OnTakeDamage(Action<HeroController, UnityEngine.GameObject, GlobalEnums.CollisionSide, int, int> orig, HeroController self, UnityEngine.GameObject go, GlobalEnums.CollisionSide damageSide, int damageAmount, int hazardType)
+        {
+            // Skip original - don't call orig()
         }
     }
 }

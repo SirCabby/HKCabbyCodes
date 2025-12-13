@@ -1,14 +1,15 @@
 using BepInEx.Configuration;
 using CabbyMenu.SyncedReferences;
 using CabbyMenu.UI.CheatPanels;
-using HarmonyLib;
-using System.Reflection;
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 using GlobalEnums;
 using CabbyMenu.Utilities;
 using CabbyCodes.SavedGames;
+using MonoMod.RuntimeDetour;
+using System;
+using System.Reflection;
 
 namespace CabbyCodes.Patches.Settings
 {
@@ -22,10 +23,9 @@ namespace CabbyCodes.Patches.Settings
         /// </summary>
         private const string CONFIG_KEY = "QuickStart";
 
-        /// <summary>
-        /// Harmony instance for patching game methods.
-        /// </summary>
-        private static readonly Harmony harmony = new Harmony("cabby.quickstart");
+        // MonoMod.RuntimeDetour hooks - unified for all builds
+        private static Hook hookStartManagerStart;
+        private static Hook hookGameManagerUpdate;
 
         /// <summary>
         /// Configuration entry for enabling quick start.
@@ -137,7 +137,7 @@ namespace CabbyCodes.Patches.Settings
         }
 
         /// <summary>
-        /// Applies Harmony patches for quick start functionality.
+        /// Applies patches for quick start functionality.
         /// </summary>
         public static void ApplyPatches()
         {
@@ -180,12 +180,16 @@ namespace CabbyCodes.Patches.Settings
         /// </summary>
         private static void ApplyIntroSkipPatches()
         {
-            // Patch StartManager.Start to intercept intro scene loading
-            MethodInfo startManagerStartMethod = typeof(StartManager).GetMethod("Start", BindingFlags.NonPublic | BindingFlags.Instance);
-            if (startManagerStartMethod != null)
+            if (hookStartManagerStart == null)
             {
-                harmony.Patch(startManagerStartMethod, 
-                    prefix: new HarmonyMethod(typeof(QuickStartPatch).GetMethod(nameof(StartManagerStartPrefix), BindingFlags.NonPublic | BindingFlags.Static)));
+                var startMethod = typeof(StartManager).GetMethod("Start", BindingFlags.NonPublic | BindingFlags.Instance);
+                if (startMethod != null)
+                {
+                    hookStartManagerStart = new Hook(
+                        startMethod,
+                        typeof(QuickStartPatch).GetMethod(nameof(OnStartManagerStart), BindingFlags.NonPublic | BindingFlags.Static)
+                    );
+                }
             }
         }
 
@@ -194,27 +198,57 @@ namespace CabbyCodes.Patches.Settings
         /// </summary>
         private static void ApplyQuickLoadPatches()
         {
-            // Patch GameManager.Update to check for quick load opportunity
-            MethodInfo gameManagerUpdateMethod = typeof(GameManager).GetMethod("Update", BindingFlags.NonPublic | BindingFlags.Instance);
-            if (gameManagerUpdateMethod != null)
+            if (hookGameManagerUpdate == null)
             {
-                harmony.Patch(gameManagerUpdateMethod, 
-                    postfix: new HarmonyMethod(typeof(QuickStartPatch).GetMethod(nameof(GameManagerUpdatePostfix), BindingFlags.NonPublic | BindingFlags.Static)));
+                var updateMethod = typeof(GameManager).GetMethod("Update", BindingFlags.NonPublic | BindingFlags.Instance);
+                if (updateMethod != null)
+                {
+                    hookGameManagerUpdate = new Hook(
+                        updateMethod,
+                        typeof(QuickStartPatch).GetMethod(nameof(OnGameManagerUpdate), BindingFlags.NonPublic | BindingFlags.Static)
+                    );
+                }
             }
         }
 
         /// <summary>
-        /// Postfix method for GameManager.Update to handle quick loading.
+        /// Hook for StartManager.Start - skip intro screens if enabled.
         /// </summary>
-        private static void GameManagerUpdatePostfix(GameManager __instance)
+        private static IEnumerator OnStartManagerStart(Func<StartManager, IEnumerator> orig, StartManager self)
+        {
+            if (!skipIntroScreens.Value)
+            {
+                // Allow original to run
+                yield return orig(self);
+                yield break;
+            }
+
+            // Skip intro - don't call orig(), start our own coroutine
+            self.StartCoroutine(SkipIntroAndGoToMainMenu());
+            yield break;
+        }
+
+        /// <summary>
+        /// Hook for GameManager.Update - handle quick loading after original runs.
+        /// </summary>
+        private static void OnGameManagerUpdate(Action<GameManager> orig, GameManager self)
+        {
+            orig(self); // Run original first
+            GameManagerUpdatePostfix(self); // Then our postfix
+        }
+
+        /// <summary>
+        /// Postfix logic for GameManager.Update to handle quick loading.
+        /// </summary>
+        private static void GameManagerUpdatePostfix(GameManager instance)
         {
             // Custom file quick load support
             if (!string.IsNullOrEmpty(CustomFileToLoad) && !quickStartPerformed)
             {
-                if (__instance.gameState == GameState.MAIN_MENU && 
-                    __instance.ui != null &&
-                    __instance.ui.menuState == MainMenuState.MAIN_MENU &&
-                    !__instance.ui.IsAnimatingMenus && !__instance.ui.IsFadingMenu)
+                if (instance.gameState == GameState.MAIN_MENU && 
+                    instance.ui != null &&
+                    instance.ui.menuState == MainMenuState.MAIN_MENU &&
+                    !instance.ui.IsAnimatingMenus && !instance.ui.IsFadingMenu)
                 {
                     quickStartPerformed = true;
                     string fileToLoad = CustomFileToLoad;
@@ -238,10 +272,10 @@ namespace CabbyCodes.Patches.Settings
             if (quickLoadEnabled.Value && !quickStartPerformed && currentQuickLoadPopup == null)
             {
                 // Show popup immediately when quick load is enabled and we haven't started yet
-                if (__instance.gameState == GameState.MAIN_MENU && 
-                    __instance.ui != null &&
-                    __instance.ui.menuState == MainMenuState.MAIN_MENU &&
-                    !__instance.ui.IsAnimatingMenus && !__instance.ui.IsFadingMenu)
+                if (instance.gameState == GameState.MAIN_MENU && 
+                    instance.ui != null &&
+                    instance.ui.menuState == MainMenuState.MAIN_MENU &&
+                    !instance.ui.IsAnimatingMenus && !instance.ui.IsFadingMenu)
                 {
                     // Create and show loading popup immediately
                     var loadingPopup = CreateQuickLoadPopup(saveSlot.Value);
@@ -258,18 +292,18 @@ namespace CabbyCodes.Patches.Settings
             if (quickLoadEnabled.Value && !quickStartPerformed && currentQuickLoadPopup != null)
             {
                 // Check if we're in the main menu state and ready for quick load
-                if (__instance.gameState == GameState.MAIN_MENU && 
-                    __instance.ui != null &&
-                    __instance.ui.menuState == MainMenuState.MAIN_MENU)
+                if (instance.gameState == GameState.MAIN_MENU && 
+                    instance.ui != null &&
+                    instance.ui.menuState == MainMenuState.MAIN_MENU)
                 {
                     // Wait a short moment for the menu to be fully ready
-                    if (!__instance.ui.IsAnimatingMenus && !__instance.ui.IsFadingMenu)
+                    if (!instance.ui.IsAnimatingMenus && !instance.ui.IsFadingMenu)
                     {
                         // Set the flag immediately to prevent multiple calls
                         quickStartPerformed = true;
                         
                         // Perform quick load using the normal game flow
-                        PerformQuickLoad(__instance);
+                        PerformQuickLoad(instance);
                     }
                 }
             }
@@ -320,7 +354,7 @@ namespace CabbyCodes.Patches.Settings
             {
                 // Create a scene-independent popup that can persist across scene changes
                 var persistentGo = new GameObject("QuickLoadLoadingPopup");
-                Object.DontDestroyOnLoad(persistentGo);
+                UnityEngine.Object.DontDestroyOnLoad(persistentGo);
                 
                 // Add Canvas components for UI rendering
                 Canvas canvas = persistentGo.AddComponent<Canvas>();
@@ -503,19 +537,6 @@ namespace CabbyCodes.Patches.Settings
         }
 
         /// <summary>
-        /// Prefix method for StartManager.Start to skip intro screens.
-        /// </summary>
-        private static bool StartManagerStartPrefix(StartManager __instance)
-        {
-            if (!skipIntroScreens.Value) return true; // Continue with original method
-
-            // Start the coroutine that skips intro and goes directly to main menu
-            __instance.StartCoroutine(SkipIntroAndGoToMainMenu());
-            
-            return false; // Skip the original method
-        }
-
-        /// <summary>
         /// Coroutine to skip intro and go directly to main menu.
         /// </summary>
         private static IEnumerator SkipIntroAndGoToMainMenu()
@@ -529,4 +550,4 @@ namespace CabbyCodes.Patches.Settings
             yield return loadOperation;
         }
     }
-} 
+}
