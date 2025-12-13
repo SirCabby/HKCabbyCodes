@@ -5,8 +5,9 @@ A comprehensive cheat menu mod for Hollow Knight that provides extensive control
 ## 📋 Table of Contents
 - [What is CabbyCodes?](#-what-is-cabbycodes)
 - [Installation](#-installation)
-  - [BepInEx Installation](#option-a-bepinex-installation-recommended-for-most-users)
-  - [Lumafly/HKAPI Installation](#option-b-lumaflyh-api-installation)
+  - [Lumafly Installation (Recommended)](#option-a-lumafly-installation-recommended)
+  - [BepInEx 6 Installation](#option-b-bepinex-6-installation)
+  - [BepInEx 5 Installation](#option-c-bepinex-5-installation)
 - [Usage](#-usage)
 - [Configuration](#️-configuration)
 - [User Troubleshooting](#-user-troubleshooting)
@@ -95,48 +96,38 @@ See CabbyCodes in action! Here are screenshots of the various menu sections and 
 
 ## 🚀 Installation
 
-CabbyCodes supports two mod loaders: **BepInEx** and **Lumafly** (Hollow Knight Modding API). Choose the installation method that matches your setup.
+CabbyCodes supports three mod loaders: **Lumafly** (Hollow Knight Modding API), **BepInEx 6**, and **BepInEx 5**. Lumafly is the recommended option for most users as it's the standard mod manager for the Hollow Knight modding community.
 
-### Option A: BepInEx Installation (Recommended for most users)
+### Option A: Lumafly Installation (Recommended)
 
-#### Prerequisites
-- Hollow Knight (Steam version)
-- BepInEx 5.x or 6.x
+Lumafly is the official mod manager for Hollow Knight and provides the easiest installation experience.
 
-#### Installation Steps
-1. **Install BepInEx**:
-   - Download BepInEx from [GitHub](https://github.com/BepInEx/BepInEx/releases)
-     - For BepInEx 6: `BepInEx-Unity.Mono-win-x64-6.0.0-pre.2.zip`
-     - For BepInEx 5: `BepInEx_win_x64_5.x.x.x.zip`
-   - Extract to your Hollow Knight directory:
-     - `C:\Program Files (x86)\Steam\steamapps\common\Hollow Knight`
-   - Run the game once to generate BepInEx folders
+#### 🔜 Coming Soon: One-Click Install
 
-2. **Install CabbyCodes**:
-   - Download the latest release from the releases page
-   - Extract the appropriate folder for your BepInEx version:
-     - **BepInEx 5**: Use files from `CabbyCodes for BepInEx 5/`
-     - **BepInEx 6**: Use files from `CabbyCodes for BepInEx 6/`
-   - Copy both `CabbyCodes.dll` and `CabbyMenu.dll` to `Hollow Knight/BepInEx/plugins/`
+CabbyCodes will soon be available directly in the Lumafly mod browser! Once added to the public modlist, you'll be able to:
+1. Open Lumafly
+2. Search for "CabbyCodes"
+3. Click Install
 
-3. **Verify Installation**:
-   - Start the game and pause to access the cheat menu
+Check back soon for this streamlined installation option.
 
 ---
 
-### Option B: Lumafly/HKAPI Installation
+#### Manual Lumafly Installation
 
-#### Prerequisites
+Until CabbyCodes is added to the Lumafly modlist, follow these steps for manual installation:
+
+##### Prerequisites
 - Hollow Knight (Steam version)
-- [Lumafly](https://github.com/TheMulhwormo/Lumafly) mod manager with Hollow Knight Modding API installed
+- [Lumafly](https://github.com/TheMulhwormo/Lumafly) mod manager
 
-#### Installation Steps
-1. **Install Lumafly and HKAPI**:
+##### Installation Steps
+1. **Install Lumafly**:
    - Download and run [Lumafly](https://github.com/TheMulhwormo/Lumafly/releases)
    - Install any mod through Lumafly to set up the Modding API
 
 2. **Install CabbyCodes**:
-   - Download the latest release from the releases page
+   - Download the latest release from the [releases page](https://github.com/HKCabbyCodes/releases)
    - Extract the `CabbyCodes for Lumafly/` folder
    - Copy the **entire folder contents** to a new folder:
      - `Hollow Knight/hollow_knight_Data/Managed/Mods/CabbyCodes/`
@@ -148,10 +139,62 @@ CabbyCodes supports two mod loaders: **BepInEx** and **Lumafly** (Hollow Knight 
    - Start the game - the mod should appear in Lumafly's mod list
    - Pause the game to access the cheat menu
 
-#### Important Notes for Lumafly Users
-- HKAPI mods are installed differently than BepInEx - they go in `Managed/Mods/` not `BepInEx/plugins/`
+##### Important Notes for Lumafly Users
+- HKAPI mods go in `Managed/Mods/` not `BepInEx/plugins/`
 - Each mod needs its own subfolder within the `Mods` directory
 - Check `%APPDATA%\..\LocalLow\Team Cherry\Hollow Knight\ModLog.txt` for loading errors
+
+---
+
+### Option B: BepInEx 6 Installation
+
+For users who prefer BepInEx 6 or have an existing BepInEx 6 setup.
+
+#### Prerequisites
+- Hollow Knight (Steam version)
+- BepInEx 6.x
+
+#### Installation Steps
+1. **Install BepInEx 6**:
+   - Download BepInEx 6 from [GitHub](https://github.com/BepInEx/BepInEx/releases)
+     - Download `BepInEx-Unity.Mono-win-x64-6.0.0-pre.2.zip`
+   - Extract to your Hollow Knight directory:
+     - `C:\Program Files (x86)\Steam\steamapps\common\Hollow Knight`
+   - Run the game once to generate BepInEx folders
+
+2. **Install CabbyCodes**:
+   - Download the latest release from the releases page
+   - Extract the `CabbyCodes for BepInEx 6/` folder
+   - Copy both `CabbyCodes.dll` and `CabbyMenu.dll` to `Hollow Knight/BepInEx/plugins/`
+
+3. **Verify Installation**:
+   - Start the game and pause to access the cheat menu
+
+---
+
+### Option C: BepInEx 5 Installation
+
+For users with an existing BepInEx 5 setup or compatibility requirements.
+
+#### Prerequisites
+- Hollow Knight (Steam version)
+- BepInEx 5.x
+
+#### Installation Steps
+1. **Install BepInEx 5**:
+   - Download BepInEx 5 from [GitHub](https://github.com/BepInEx/BepInEx/releases/tag/v5.4.23.2)
+     - Download `BepInEx_win_x64_5.4.23.2.zip`
+   - Extract to your Hollow Knight directory:
+     - `C:\Program Files (x86)\Steam\steamapps\common\Hollow Knight`
+   - Run the game once to generate BepInEx folders
+
+2. **Install CabbyCodes**:
+   - Download the latest release from the releases page
+   - Extract the `CabbyCodes for BepInEx 5/` folder
+   - Copy both `CabbyCodes.dll` and `CabbyMenu.dll` to `Hollow Knight/BepInEx/plugins/`
+
+3. **Verify Installation**:
+   - Start the game and pause to access the cheat menu
 
 ## 🎯 Usage
 
@@ -204,16 +247,16 @@ Custom teleport locations are automatically saved to the config file and will pe
 
 ### Common Issues
 
-**Menu doesn't appear (BepInEx):**
-- Ensure both `CabbyCodes.dll` and `CabbyMenu.dll` are in the `BepInEx/plugins/` folder
-- Check BepInEx console for error messages
-- Verify BepInEx is properly installed
-
 **Menu doesn't appear (Lumafly/HKAPI):**
 - Ensure both files (`CabbyCodes.dll`, `CabbyMenu.dll`) are in `Managed/Mods/CabbyCodes/`
 - The mod must be in its own subfolder - files directly in `Mods/` won't load
 - Check `ModLog.txt` at `%APPDATA%\..\LocalLow\Team Cherry\Hollow Knight\ModLog.txt` for errors
 - Verify the Modding API is installed (install any mod through Lumafly first)
+
+**Menu doesn't appear (BepInEx):**
+- Ensure both `CabbyCodes.dll` and `CabbyMenu.dll` are in the `BepInEx/plugins/` folder
+- Check BepInEx console for error messages
+- Verify BepInEx is properly installed
 
 **Values not updating:**
 - Check that input values are within the required range
@@ -250,9 +293,11 @@ HKCabbyCodes/
 │   │   └── Teleport/
 │   ├── CheatState/               # Cheat state management system
 │   ├── Flags/                    # Flag definitions and management
+│   ├── Lumafly/                  # Lumafly-specific implementations
 │   ├── SavedGames/               # Save game management
 │   ├── Scenes/                   # Scene and area data
-│   ├── lib/                      # Required game DLLs (not in version control)
+│   ├── lib/                      # BepInEx build dependencies (not in version control)
+│   ├── lib-lumafly/              # Lumafly build dependencies (not in version control)
 │   ├── Constants.cs              # Game-specific constants
 │   ├── CabbyCodesPlugin.cs       # Main plugin entry point
 │   ├── GameStateProvider.cs      # Game state logic for menu visibility
@@ -281,16 +326,10 @@ HKCabbyCodes/
 └── README.md                     # Project documentation
 ```
 
-**Key changes:**
-- All utilities (e.g., `ValidationUtils`, `KeyCodeMap`) are now in `CabbyMenu/Utilities/`.
-- UI controls and panels are organized under `CabbyMenu/UI/`.
-- Patch files in `CabbyCodes/Patches/` are organized by gameplay category.
-- Assembly analysis tools and references are in `AssemblyTools/`.
-
 ### 🔧 Development Requirements
 
 #### .NET Framework and SDK
-- **Target Framework**: .NET Framework 4.7.2 (required for compatibility with nuget dependencies and BepInEx version 6)
+- **Target Framework**: .NET Framework 4.7.2 (required for compatibility with NuGet dependencies and BepInEx)
 - **SDK Version**: .NET 9.0.301 (latest available, .NET 5.0+ is compatible)
 - **Language Version**: C# 7.3 (latest supported by .NET Framework 4.7.2)
 
@@ -304,96 +343,73 @@ HKCabbyCodes/
 - **CabbyCodes.csproj**: Targets `net472` with `LangVersion` set to `7.3`
 - **CabbyMenu.csproj**: Targets `net472` with `LangVersion` set to `7.3`
 
-### 📚 Required Library Files
+### 📚 Dependency Management
 
-Before building the project, you need to obtain the following DLL files and place them in the `CabbyCodes/lib/` directory:
+CabbyCodes supports three build configurations with different dependency sources:
 
-#### Required Files:
-- **Assembly-CSharp.dll** - Main game assembly (from Hollow Knight installation)
-- **PlayMaker.dll** - PlayMaker FSM library (from Hollow Knight installation)
+#### Build Configurations
 
-#### Optional Files:
-- **UnityExplorer.STANDALONE.Mono.dll** - UnityExplorer in-game inspector (from UnityExplorer release) *(optional, see note below)*
+| Configuration | Mod Loader | NuGet Packages | Local Dependencies |
+|--------------|------------|----------------|-------------------|
+| `BepInEx5` | BepInEx 5.x | BepInEx.Core 5.x, MonoMod.RuntimeDetour 22.01.29.01 | `lib/Assembly-CSharp.dll` (vanilla) |
+| `BepInEx6` | BepInEx 6.x | BepInEx.Unity.Mono 6.0.0-be.*, MonoMod.RuntimeDetour 22.05.01.01 | `lib/Assembly-CSharp.dll` (vanilla) |
+| `Lumafly` | HKAPI | UnityEngine.Modules only | `lib-lumafly/Assembly-CSharp.dll` (HKAPI-patched), MonoMod DLLs |
 
-#### File Structure:
-```
-CabbyCodes/
-└── lib/
-    ├── Assembly-CSharp.dll
-    ├── PlayMaker.dll
-    ├── UnityExplorer.STANDALONE.Mono.dll
-```
+#### NuGet Package Sources
 
-**Note**: These files are excluded from version control due to licensing restrictions. You must obtain them manually before building and debugging the project.
+The project uses multiple NuGet sources configured in the `.csproj` files:
+- `https://api.nuget.org/v3/index.json` - Official NuGet
+- `https://nuget.bepinex.dev/v3/index.json` - BepInEx packages
+- `https://nuget.samboy.dev/v3/index.json` - Additional mod dependencies
 
-#### UnityExplorer - In-Game Debug Tool
+#### Local Dependencies
 
-**What is UnityExplorer?**
-UnityExplorer is a powerful in-game inspector and debugger that provides a graphical interface for examining game objects, components, and values at runtime. It's essential for development and debugging of Hollow Knight mods.
+**For BepInEx builds** (`lib/` folder):
+- `Assembly-CSharp.dll` - Vanilla (unmodified) game assembly
+- `PlayMaker.dll` - PlayMaker FSM library
+- `UnityExplorer.STANDALONE.Mono.dll` - Optional debug tool
 
-**What does it do?**
-- **Object Inspector**: Browse and examine all game objects in the scene
-- **Component Viewer**: View and modify component properties in real-time
-- **Value Editor**: Change game values on-the-fly for testing
-- **Method Invoker**: Call game methods directly for debugging
-- **Scene Browser**: Navigate through different game scenes and objects
+**For Lumafly builds** (`lib-lumafly/` folder):
+- `Assembly-CSharp.dll` - HKAPI-patched game assembly
+- `MonoMod.RuntimeDetour.dll` - Runtime hooking library
+- `MonoMod.Utils.dll` - MonoMod utilities
 
-**How to Install UnityExplorer:**
-1. **Download**: Get the latest release from [UnityExplorer GitHub](https://github.com/sinai-dev/UnityExplorer/releases)
-2. **Extract**: Download the `UnityExplorer.STANDALONE.Mono.dll` file
-3. **Install**: Place the DLL in your Hollow Knight `BepInEx/plugins/` folder
-4. **Activate**: The mod automatically creates a UnityExplorer instance when the game starts
+See the README files in each `lib` folder for detailed instructions on obtaining these files.
 
-**Using UnityExplorer:**
-- **Access**: Press `F7` in-game to open the UnityExplorer window
-- **Debugging**: Use it to inspect game state, player data, and scene objects
-- **Development**: Essential for understanding game structure and testing mod features
+#### Hooking Strategy
 
-- If you want to use UnityExplorer, you can comment out the following line in `CabbyCodes/CabbyCodesPlugin.cs` (inside the `Start` method):
-  ```csharp
-  UnityExplorer.ExplorerStandalone.CreateInstance();
-  ```
-- This will allow you to build and run the mod with `UnityExplorer.STANDALONE.Mono.dll` in your `lib` folder.
-
-#### UniverseLib - Reflection and Debugging Library
-
-**What is UniverseLib?**
-UniverseLib is a powerful reflection and debugging library that provides advanced tools for accessing private fields, methods, and game objects at runtime. It's commonly used in Hollow Knight modding for deep game state inspection and manipulation.
-
-**What does it do?**
-- **Reflection Utilities**: Access private fields and methods
-- **Object Inspection**: Deep examination of game objects and components
-- **Memory Manipulation**: Advanced memory reading and writing capabilities
-- **Runtime Type Creation**: Create and modify types at runtime
-- **Debugging Tools**: Enhanced debugging and development features
-
-**How to Install UniverseLib:**
-1. **Download**: Get the latest release from [UniverseLib releases](https://github.com/sinai-dev/UniverseLib/releases)
-2. **Extract**: Download the `UniverseLib.Mono.dll` file
-3. **Install**: Place the DLL in your Hollow Knight `BepInEx/plugins/` folder
-4. **Usage**: Access through UnityExplorer or other modding tools
-
-**Using UniverseLib:**
-- **Integration**: Works with UnityExplorer for enhanced debugging
-- **Development**: Essential for advanced mod development and testing
-- **Reflection**: Access game internals that aren't normally accessible
+All builds use **MonoMod.RuntimeDetour.Hook** for method patching:
+- BepInEx builds get MonoMod via NuGet packages
+- Lumafly builds use local MonoMod DLLs from the HKAPI installation
+- This unified approach allows identical patch code across all platforms
 
 ### 🛠️ Building from Source
 
 #### Using Make (Recommended)
+
 ```bash
-# Build the entire solution
+# Build for BepInEx 6 (default)
 make build
 
-# Build individual projects
-make build-cabbycodes
-make build-cabbymenu
+# Build for specific versions
+make build VERSION=5     # BepInEx 5
+make build VERSION=6     # BepInEx 6
+
+# Build specific configurations
+make build-bepinex5      # BepInEx 5 only
+make build-bepinex6      # BepInEx 6 only
+make build-lumafly       # Lumafly only
+
+# Build all versions
+make build-all-versions
 
 # Clean build artifacts
 make clean
 
 # Deploy to game directory
-make deploy
+make deploy              # BepInEx 6 (default)
+make deploy VERSION=5    # BepInEx 5
+make deploy-lumafly      # Lumafly
 ```
 
 #### Using .NET CLI
@@ -401,12 +417,10 @@ make deploy
 # Restore dependencies
 dotnet restore
 
-# Build the solution
-dotnet build --configuration Release
-
-# Build individual projects
-dotnet build CabbyCodes/CabbyCodes.csproj --configuration Release
-dotnet build CabbyMenu/CabbyMenu.csproj --configuration Release
+# Build specific configurations
+dotnet build CabbyCodes/CabbyCodes.csproj --configuration BepInEx5
+dotnet build CabbyCodes/CabbyCodes.csproj --configuration BepInEx6
+dotnet build CabbyCodes/CabbyCodes.csproj --configuration Lumafly
 ```
 
 ### 🔗 Project Dependencies
@@ -415,6 +429,13 @@ dotnet build CabbyMenu/CabbyMenu.csproj --configuration Release
 - Both projects target .NET Framework 4.7.2
 
 ### 📦 Build Output
+
+Build outputs are organized by configuration:
+- **BepInEx 5**: `CabbyCodes/bin/BepInEx5/net472/`
+- **BepInEx 6**: `CabbyCodes/bin/BepInEx6/net472/`
+- **Lumafly**: `CabbyCodes/bin/Lumafly/net472/`
+
+Each contains:
 - **CabbyCodes.dll**: Main mod plugin (contains game patches)
 - **CabbyMenu.dll**: UI library (required by CabbyCodes)
 
@@ -423,6 +444,7 @@ dotnet build CabbyMenu/CabbyMenu.csproj --configuration Release
 #### CabbyCodes Project
 - **CabbyCodesPlugin**: Main plugin entry point
 - **Patches/**: Game modification patches organized by category
+- **Lumafly/**: Standalone implementations for Lumafly builds (config system, logging)
 - **Constants.cs**: Game-specific constants (health limits, currency limits, etc.)
 
 #### CabbyMenu Project
@@ -435,9 +457,14 @@ dotnet build CabbyMenu/CabbyMenu.csproj --configuration Release
 ### Common Issues
 
 **Build errors:**
-- Ensure .NET 6.0 SDK is installed
+- Ensure .NET 9.0 SDK is installed
 - Run `dotnet restore` to restore dependencies
 - Check that both projects are included in the solution
+- Verify the correct Assembly-CSharp.dll is in the appropriate lib folder
+
+**Missing dependencies:**
+- BepInEx builds: Check `CabbyCodes/lib/README.txt` for required files
+- Lumafly builds: Check `CabbyCodes/lib-lumafly/README.txt` for required files
 
 **Deployment issues:**
 - Use `make deploy` to automatically copy both DLLs
@@ -450,6 +477,22 @@ Check the BepInEx console for detailed information about:
 - Value changes
 - Error conditions
 - Configuration loading/saving
+
+### Optional Debug Tools
+
+#### UnityExplorer - In-Game Debug Tool
+
+UnityExplorer is a powerful in-game inspector and debugger that provides a graphical interface for examining game objects at runtime.
+
+**Features:**
+- Browse and examine all game objects in the scene
+- View and modify component properties in real-time
+- Navigate through different game scenes and objects
+
+**How to Install:**
+1. Download from [UnityExplorer GitHub](https://github.com/sinai-dev/UnityExplorer/releases)
+2. Place `UnityExplorer.STANDALONE.Mono.dll` in `BepInEx/plugins/`
+3. Press `F7` in-game to open the explorer
 
 ## 🤝 Contributing
 
@@ -524,8 +567,9 @@ SOFTWARE.
 ### Reporting Bugs
 When reporting bugs, please include:
 - Game version and mod version
+- Mod loader type (BepInEx 5, BepInEx 6, or Lumafly)
 - Steps to reproduce the issue
-- BepInEx console output
+- Console output or ModLog.txt
 - Any error messages
 - System specifications
 
