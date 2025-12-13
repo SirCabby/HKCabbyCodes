@@ -35,9 +35,9 @@ CABBYMENU_OBJ_DIR = CabbyMenu\obj\$(CONFIGURATION)\$(TARGET_FRAMEWORK)
 HOLLOW_KNIGHT_PATH = C:\Program Files (x86)\Steam\steamapps\common\Hollow Knight
 BEPINEX_PLUGINS_PATH = $(HOLLOW_KNIGHT_PATH)\BepInEx\plugins
 LUMAFLY_MODS_PATH = $(HOLLOW_KNIGHT_PATH)\hollow_knight_Data\Managed\Mods
+MANAGED_PATH = $(HOLLOW_KNIGHT_PATH)\hollow_knight_Data\Managed
 
-# HarmonyX DLL path for Lumafly builds (HKAPI doesn't include Harmony)
-HARMONY_DLL = $(USERPROFILE)\.nuget\packages\harmonyx\2.10.2\lib\net45\0Harmony.dll
+# Note: HarmonyX is no longer needed - migrated to MonoMod hooks
 
 # .NET SDK version (from global.json)
 DOTNET_VERSION = 9.0.301
@@ -207,10 +207,8 @@ deploy-lumafly: build-lumafly
 	@if exist "$(LUMAFLY_MODS_PATH)\$(PROJECT_NAME)\CabbyMenu.dll" del /f /q "$(LUMAFLY_MODS_PATH)\$(PROJECT_NAME)\CabbyMenu.dll"
 	@copy /Y "CabbyCodes\bin\Lumafly\$(TARGET_FRAMEWORK)\$(PROJECT_NAME).dll" "$(LUMAFLY_MODS_PATH)\$(PROJECT_NAME)\$(PROJECT_NAME).dll"
 	@copy /Y "CabbyMenu\bin\Lumafly\$(TARGET_FRAMEWORK)\CabbyMenu.dll" "$(LUMAFLY_MODS_PATH)\$(PROJECT_NAME)\CabbyMenu.dll"
-	@copy /Y "$(HARMONY_DLL)" "$(LUMAFLY_MODS_PATH)\$(PROJECT_NAME)\0Harmony.dll"
 	@if exist "$(LUMAFLY_MODS_PATH)\$(PROJECT_NAME)\$(PROJECT_NAME).dll" ( echo $(PROJECT_NAME).dll successfully copied to Mods\$(PROJECT_NAME) folder. ) else ( echo Error: $(PROJECT_NAME).dll was not copied! )
 	@if exist "$(LUMAFLY_MODS_PATH)\$(PROJECT_NAME)\CabbyMenu.dll" ( echo CabbyMenu.dll successfully copied to Mods\$(PROJECT_NAME) folder. ) else ( echo Error: CabbyMenu.dll was not copied! )
-	@if exist "$(LUMAFLY_MODS_PATH)\$(PROJECT_NAME)\0Harmony.dll" ( echo 0Harmony.dll successfully copied to Mods\$(PROJECT_NAME) folder. ) else ( echo Error: 0Harmony.dll was not copied! )
 	@echo Lumafly deploy complete.
 
 # Deploy Lumafly and run Hollow Knight
@@ -313,6 +311,6 @@ package: build-bepinex5 build-bepinex6
 	@copy /Y "CabbyMenu\bin\BepInEx5\$(TARGET_FRAMEWORK)\CabbyMenu.dll" "Output\temp_package\CabbyCodes for BepInEx 5\CabbyMenu.dll"
 	@copy /Y "CabbyCodes\bin\BepInEx6\$(TARGET_FRAMEWORK)\$(PROJECT_NAME).dll" "Output\temp_package\CabbyCodes for BepInEx 6\$(PROJECT_NAME).dll"
 	@copy /Y "CabbyMenu\bin\BepInEx6\$(TARGET_FRAMEWORK)\CabbyMenu.dll" "Output\temp_package\CabbyCodes for BepInEx 6\CabbyMenu.dll"
-	@if exist "CabbyCodes\lib-lumafly\Assembly-CSharp.dll" (echo "Building and including Lumafly version..." && make build-lumafly && if not exist "Output\temp_package\CabbyCodes for Lumafly" mkdir "Output\temp_package\CabbyCodes for Lumafly" && copy /Y "CabbyCodes\bin\Lumafly\$(TARGET_FRAMEWORK)\$(PROJECT_NAME).dll" "Output\temp_package\CabbyCodes for Lumafly\$(PROJECT_NAME).dll" && copy /Y "CabbyMenu\bin\Lumafly\$(TARGET_FRAMEWORK)\CabbyMenu.dll" "Output\temp_package\CabbyCodes for Lumafly\CabbyMenu.dll" && copy /Y "$(HARMONY_DLL)" "Output\temp_package\CabbyCodes for Lumafly\0Harmony.dll") else (echo "NOTE: Skipping Lumafly - HKAPI assembly not found in lib-lumafly")
+	@if exist "CabbyCodes\lib-lumafly\Assembly-CSharp.dll" (echo "Building and including Lumafly version..." && make build-lumafly && if not exist "Output\temp_package\CabbyCodes for Lumafly" mkdir "Output\temp_package\CabbyCodes for Lumafly" && copy /Y "CabbyCodes\bin\Lumafly\$(TARGET_FRAMEWORK)\$(PROJECT_NAME).dll" "Output\temp_package\CabbyCodes for Lumafly\$(PROJECT_NAME).dll" && copy /Y "CabbyMenu\bin\Lumafly\$(TARGET_FRAMEWORK)\CabbyMenu.dll" "Output\temp_package\CabbyCodes for Lumafly\CabbyMenu.dll") else (echo "NOTE: Skipping Lumafly - HKAPI assembly not found in lib-lumafly")
 	@powershell -Command "$$modVer=([regex]::Match([IO.File]::ReadAllText('CabbyCodes/CabbyCodes.csproj'),'<Version>([^<]+)</Version>')).Groups[1].Value; $$zipPath='Output\$(PROJECT_NAME)_v'+$$modVer+'.zip'; $$lumaflyZip='Output\$(PROJECT_NAME)_Lumafly_v'+$$modVer+'.zip'; $$skipped=@(); $$folders=@('Output\temp_package\CabbyCodes for BepInEx 5','Output\temp_package\CabbyCodes for BepInEx 6'); if(Test-Path 'Output\temp_package\CabbyCodes for Lumafly'){$$folders+='Output\temp_package\CabbyCodes for Lumafly'}; if(Test-Path $$zipPath){Write-Host 'SKIPPED:' $$zipPath 'already exists'; $$skipped+=$$zipPath}else{Compress-Archive -Path $$folders -DestinationPath $$zipPath; Write-Host 'Package created:' $$zipPath}; if(Test-Path 'Output\temp_package\CabbyCodes for Lumafly'){if(Test-Path $$lumaflyZip){Write-Host 'SKIPPED:' $$lumaflyZip 'already exists'; $$skipped+=$$lumaflyZip}else{Compress-Archive -Path 'Output\temp_package\CabbyCodes for Lumafly\*' -DestinationPath $$lumaflyZip; Write-Host 'Lumafly package created:' $$lumaflyZip}}; if(Test-Path 'Output\temp_package'){Remove-Item -Recurse -Force 'Output\temp_package'}; if($$skipped.Count -gt 0){Write-Host ''; Write-Host 'ERROR: The following zip files already exist and were skipped:' -ForegroundColor Red; $$skipped | ForEach-Object {Write-Host '  -' $$_ -ForegroundColor Red}; Write-Host 'Delete these files or update the version number before packaging.' -ForegroundColor Red; exit 1}"
 
