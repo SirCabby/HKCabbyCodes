@@ -68,4 +68,5 @@ Thumbs.db
 
 # Library files (see README for instructions on obtaining these)
 */lib/*
+!*/lib/README.txt
 /Output
