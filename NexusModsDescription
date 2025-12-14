@@ -1,0 +1,102 @@
+This mod is fully open sourced and open to contributions!  See the full readme for the project here: [url=https://github.com/SirCabby/HKCabbyCodes]https://github.com/SirCabby/HKCabbyCodes[/url]
+
+[size=4]Features
+[/size]
+[list]
+[*][size=3][b]Game Flag management for over 4,000 flags[/b] - Control NPC, Boss, Progression, Environmental and many other types of flags!  Missed something? Want to reset something?  Replay a section?  Can do it all![/size]
+[/list][list]
+[*][size=3][b]Custom teleportation system[/b] - Save your current location and recall it whenever you want.  Like a dreamgate, but save as many as you want![/size]
+[*][size=3][b]Custom save game system[/b] - Tired of each save slot always updating to latest?  Want to make multiple save game checkpoints for special moments or choices?  Now you can save anywhere, not just benches.  This system uses the in game save model, so these save files are valid game saves and can be interchanged if desired![/size]
+[*][size=3][b]Convenience [/b]- Settings to skip the intro scenes and even quick load into a save file to make reloads super fast.[/size]
+[*][size=3][b]Built in cheats[/b] - God mode, infinite jumps, infinite geo, infinite soul, one hit kills, remove charm notch costs, and more![/size]
+[*][size=3][b]Manage Inventory[/b] - Update the inventory status however you like.  Change charm states from fragile to unbreakable.[/size]
+[*][size=3][b]Maps [/b]- Toggle all maps on at the beginning and map their rooms out[/size]
+[*][size=3][b]Grubs [/b]- Toggle capturing of all grubs, with teleport buttons to go to each grub[/size]
+[*][size=3][b]Hunter's Journal[/b] - Update the hunter's journal to have discovered or completed any entry[/size]
+[*][size=3][b]Manage Achievements[/b] - Toggle achievements on or off.  Want a fresh play and to re-earn achievements? No problem![/size]
+[*][size=3]Many more minor features...[/size]
+[/list]
+[size=4]Installation
+[/size]
+[size=2][b][color=#ff7700]Lumafly is the recommended mod loader for the Hollow Knight modding community[/color][/b]
+[/size]
+[b][u]Lumafly Installation (Recommended)[/u][/b]
+
+CabbyCodes is available directly in the Lumafly mod browser!
+
+[list=1]
+[*][b]Install Lumafly[/b] (if you haven't already):
+[list]
+[*]Download and run [url=https://github.com/TheMulhima/Lumafly/releases]Lumafly[/url]
+[/list][*][b]Install CabbyCodes[/b]:
+[list]
+[*]Open Lumafly
+[*]Search for "CabbyCodes" in the mod browser
+[*]Click the [b]Install[/b] button
+[*]Lumafly handles all dependencies automatically!
+[/list][*][b]Launch the Game[/b]:
+[list]
+[*]Start Hollow Knight through Lumafly or Steam
+[*]Pause the game to access the cheat menu
+[/list][/list]
+[b][u]BepInEx Installation (Alternative)[/u][/b]
+
+[list=1]
+[*]Install BepInEx ModLoader:
+[list]
+[*]Download BepInEx 6.0+ from [url=https://github.com/BepInEx/BepInEx/releases/tag/v6.0.0-pre.2]GitHub[/url] (or BepInEx 5 from [url=https://github.com/BepInEx/BepInEx/releases/tag/v5.4.23.4]GitHub[/url])
+[*]Windows Version (only version officially supported, check posts section for other OSs):
+[list]
+[*]For BepInEx 5: BepInEx_win_x64_5.4.23.4.zip 
+[*]For BepInEx 6: BepInEx-Unity.Mono-win-x64-6.0.0-pre.2.zip
+[/list][*]When you open the BepInEx zip file, you will see a BepInEx folder and other files outside the folder. Extract all of these to your Hollow Knight directory:
+[list]
+[*]C:\Program Files (x86)\Steam\steamapps\common\Hollow Knight
+[/list][*]When done it should look like:
+[list]
+[*]C:\Program Files (x86)\Steam\steamapps\common\Hollow Knight\BepInEx\
+[*]C:\Program Files (x86)\Steam\steamapps\common\Hollow Knight\doorstop_config.ini
+[*]C:\Program Files (x86)\Steam\steamapps\common\Hollow Knight\winhttp.dll
+[/list][/list][*]Install CabbyCodes:
+[list]
+[*]Download the latest release from the releases page
+[*]Extract both `CabbyCodes.dll` and `CabbyMenu.dll` to:
+[list]
+[*]Hollow Knight/BepInEx/plugins/
+[/list][*]Start the game
+[/list][*]Verify Installation:
+[list]
+[*]Pause the game to access the cheat menu
+[/list][/list]
+[size=4]Still need help?
+[/size]
+[b]Posting for help[/b]
+[list]
+[*]Please include this log info if you can get it when posting about it not working
+[/list]
+Lumafly Users:
+[list=1]
+[*]There should be a log created at `%APPDATA%\..\LocalLow\Team Cherry\Hollow Knight\ModLog.txt` - send me those contents.
+[*]Include your operating system
+[/list]
+BepInEx Users:
+[list=1]
+[*][b]BepInEx console logs[/b]: You should see a secondary window show up for BepInEx (outside the game window, may need to play in windowed mode to see it). If it exists, copy the logs out.
+[*]If it exists, copy the contents of "Hollow Knight\BepInEx\LogOutput.log"
+[*]Include your operating system
+[/list]
+[b]Menu is not showing or Game Crash[/b]
+[list]
+[*][b]Lumafly[/b]: Is the ModLog.txt available?
+[/list][list=1]
+[*]Find the log mentioned in the section above and send it my way!
+[/list][list]
+[*][b]BepInEx[/b]: Is BepInEx console running?
+[/list][list=1]
+[*]If not, there's something wrong with your BepInEx installation. Either you grabbed the wrong version for your operating system (I put the default in for Windows, which is the only OS I can officially support), or perhaps not all the files were placed in the right spots. Double check the folder paths labeled above. BepInEx is not supported by me, and you can find further troubleshooting info on their [url=https://docs.bepinex.dev/articles/user_guide/troubleshooting.html]site[/url]. Unfortunately if you cannot get BepInEx to run, it has nothing to do with this mod and I won't be much help other than the directions I've given.
+[*]If it is running, grab the info explained in the posting for help section and post it, I'll take a look.
+[/list]
+[b]Toggle doesn't work / Bug found[/b]
+[list]
+[*]Please report the specifics in the posts section and I will fix it!
+[/list]
