@@ -100,26 +100,39 @@ CabbyCodes supports three mod loaders: **Lumafly** (Hollow Knight Modding API), 
 
 ### Option A: Lumafly Installation (Recommended)
 
-Lumafly is the official mod manager for Hollow Knight and provides the easiest installation experience.
+Lumafly is the official mod manager for Hollow Knight and provides the easiest installation experience. CabbyCodes is now available directly in the Lumafly mod browser!
 
-#### 🔜 Coming Soon: One-Click Install
+#### Installation Steps
 
-CabbyCodes will soon be available directly in the Lumafly mod browser! Once added to the public modlist, you'll be able to:
-1. Open Lumafly
-2. Search for "CabbyCodes"
-3. Click Install
+1. **Install Lumafly** (if you haven't already):
+   - Download and run [Lumafly](https://github.com/TheMulhima/Lumafly/releases)
 
-Check back soon for this streamlined installation option.
+2. **Install CabbyCodes**:
+   - Open Lumafly
+   - Search for "CabbyCodes" in the mod browser
+   - Click the **Install** button
+
+![Lumafly Installation](pics/LumaflyInstall.png)
+*Search for "cabby" in Lumafly and click Install to add CabbyCodes*
+
+3. **Launch the Game**:
+   - Start Hollow Knight through Lumafly or Steam
+   - Pause the game to access the cheat menu
+
+#### Important Notes for Lumafly Users
+- Lumafly handles all dependencies automatically
+- Updates are managed through Lumafly - check for updates regularly
+- Check `%APPDATA%\..\LocalLow\Team Cherry\Hollow Knight\ModLog.txt` for any loading errors
 
 ---
 
-#### Manual Lumafly Installation
+#### Manual Lumafly Installation (Alternative)
 
-Until CabbyCodes is added to the Lumafly modlist, follow these steps for manual installation:
+If you prefer to install manually or need to install a specific version, follow these steps:
 
 ##### Prerequisites
 - Hollow Knight (Steam version)
-- [Lumafly](https://github.com/TheMulhima/Lumafly) mod manager
+- [Lumafly](https://github.com/TheMulhima/Lumafly) mod manager with Modding API installed
 
 ##### Installation Steps
 1. **Install Lumafly**:
@@ -139,10 +152,9 @@ Until CabbyCodes is added to the Lumafly modlist, follow these steps for manual 
    - Start the game - the mod should appear in Lumafly's mod list
    - Pause the game to access the cheat menu
 
-##### Important Notes for Lumafly Users
+##### Important Notes for Manual Installation
 - HKAPI mods go in `Managed/Mods/` not `BepInEx/plugins/`
 - Each mod needs its own subfolder within the `Mods` directory
-- Check `%APPDATA%\..\LocalLow\Team Cherry\Hollow Knight\ModLog.txt` for loading errors
 
 ---
 
