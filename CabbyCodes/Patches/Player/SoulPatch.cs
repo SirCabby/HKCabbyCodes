@@ -52,26 +52,33 @@ namespace CabbyCodes.Patches.Player
 
         private static void ApplyHooks()
         {
-            if (hookTakeMP == null)
+            try
             {
-                hookTakeMP = new Hook(
-                    typeof(PlayerData).GetMethod(nameof(PlayerData.TakeMP), BindingFlags.Public | BindingFlags.Instance),
-                    typeof(SoulPatch).GetMethod(nameof(OnTakeMP), BindingFlags.NonPublic | BindingFlags.Static)
-                );
+                if (hookTakeMP == null)
+                {
+                    hookTakeMP = new Hook(
+                        typeof(PlayerData).GetMethod(nameof(PlayerData.TakeMP), BindingFlags.Public | BindingFlags.Instance),
+                        typeof(SoulPatch).GetMethod(nameof(OnTakeMP), BindingFlags.NonPublic | BindingFlags.Static)
+                    );
+                }
+                if (hookTakeReserveMP == null)
+                {
+                    hookTakeReserveMP = new Hook(
+                        typeof(PlayerData).GetMethod(nameof(PlayerData.TakeReserveMP), BindingFlags.Public | BindingFlags.Instance),
+                        typeof(SoulPatch).GetMethod(nameof(OnTakeReserveMP), BindingFlags.NonPublic | BindingFlags.Static)
+                    );
+                }
+                if (hookClearMP == null)
+                {
+                    hookClearMP = new Hook(
+                        typeof(PlayerData).GetMethod(nameof(PlayerData.ClearMP), BindingFlags.Public | BindingFlags.Instance),
+                        typeof(SoulPatch).GetMethod(nameof(OnClearMP), BindingFlags.NonPublic | BindingFlags.Static)
+                    );
+                }
             }
-            if (hookTakeReserveMP == null)
+            catch (Exception ex)
             {
-                hookTakeReserveMP = new Hook(
-                    typeof(PlayerData).GetMethod(nameof(PlayerData.TakeReserveMP), BindingFlags.Public | BindingFlags.Instance),
-                    typeof(SoulPatch).GetMethod(nameof(OnTakeReserveMP), BindingFlags.NonPublic | BindingFlags.Static)
-                );
-            }
-            if (hookClearMP == null)
-            {
-                hookClearMP = new Hook(
-                    typeof(PlayerData).GetMethod(nameof(PlayerData.ClearMP), BindingFlags.Public | BindingFlags.Instance),
-                    typeof(SoulPatch).GetMethod(nameof(OnClearMP), BindingFlags.NonPublic | BindingFlags.Static)
-                );
+                CabbyCodesPlugin.BLogger.LogError("SoulPatch: Failed to apply hooks - " + ex.Message);
             }
         }
 

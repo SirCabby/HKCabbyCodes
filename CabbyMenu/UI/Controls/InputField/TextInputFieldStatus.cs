@@ -224,11 +224,9 @@ namespace CabbyMenu.UI.Controls.InputField
             if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, mousePosition, null, out Vector2 localPoint))
                 return 0;
 
-            // Find the text component to get font information
-            Transform textTransform = InputFieldGo.transform.Find("Text");
-            if (textTransform == null) return 0;
-            
-            Text textComponent = textTransform.GetComponent<Text>();
+            // Get the text component via the InputField reference (hierarchy-independent)
+            UnityEngine.UI.InputField field = GetInputField();
+            Text textComponent = field != null ? field.textComponent : null;
             if (textComponent == null) return 0;
             
             // Calculate cursor position based on mouse X position

@@ -44,11 +44,11 @@ CabbyCodes is available directly in the Lumafly mod browser!
 [list=1]
 [*]Install BepInEx ModLoader:
 [list]
-[*]Download BepInEx 6.0+ from [url=https://github.com/BepInEx/BepInEx/releases/tag/v6.0.0-pre.2]GitHub[/url] (or BepInEx 5 from [url=https://github.com/BepInEx/BepInEx/releases/tag/v5.4.23.4]GitHub[/url])
+[*]Download BepInEx 6.0+ from the [url=https://builds.bepinex.dev/projects/bepinex_be]BepInEx Bleeding Edge builds page[/url] (or BepInEx 5 from [url=https://github.com/BepInEx/BepInEx/releases/tag/v5.4.23.4]GitHub[/url])
 [*]Windows Version (only version officially supported, check posts section for other OSs):
 [list]
 [*]For BepInEx 5: BepInEx_win_x64_5.4.23.4.zip 
-[*]For BepInEx 6: BepInEx-Unity.Mono-win-x64-6.0.0-pre.2.zip
+[*]For BepInEx 6: Download the latest BepInEx-Unity.Mono-win-x64-6.0.0-be.*.zip from the bleeding edge builds page (e.g. 6.0.0-be.753 or newer)
 [/list][*]When you open the BepInEx zip file, you will see a BepInEx folder and other files outside the folder. Extract all of these to your Hollow Knight directory:
 [list]
 [*]C:\Program Files (x86)\Steam\steamapps\common\Hollow Knight

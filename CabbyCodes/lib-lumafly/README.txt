@@ -52,6 +52,23 @@ use the MonoMod libraries that ship with the Hollow Knight Modding API.
 This allows the mod to use the same MonoMod.RuntimeDetour.Hook approach 
 for all builds, keeping the patch code identical across platforms.
 
+After Game Patches
+------------------
+When Hollow Knight receives a game update, the Modding API and managed
+assemblies may change. These DLLs must be refreshed after any game update.
+
+To refresh Lumafly DLLs:
+1. Open Lumafly and update the Modding API if an update is available
+2. Install any mod through Lumafly to ensure the latest HKAPI is installed
+3. Copy fresh DLLs from:
+   [Hollow Knight installation]\hollow_knight_Data\Managed\
+   - Assembly-CSharp.dll (HKAPI-patched version)
+   - MonoMod.RuntimeDetour.dll
+   - MonoMod.Utils.dll
+
+After refreshing, rebuild:
+  make clean && make build-lumafly
+
 Dependency Notes
 ----------------
 - NuGet only provides UnityEngine.Modules for Lumafly builds

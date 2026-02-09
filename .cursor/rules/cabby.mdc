@@ -46,8 +46,8 @@ This is a Hollow Knight mod project called "CabbyCodes" that provides various ch
 - **.NET SDK**: 9.0.301 (specified in global.json)
 - **Target Framework**: .NET Framework 4.7.2 (net472)
 - **C# Language Version**: 7.3
-- **BepInEx**: 6.0.0-be.* (modding framework)
-- **HarmonyX**: 2.10.2 (for runtime patching)
+- **BepInEx**: 6.0.0-be.* (modding framework, latest bleeding edge from https://builds.bepinex.dev/projects/bepinex_be)
+- **MonoMod.RuntimeDetour**: Used for runtime method hooking (migrated from HarmonyX)
 - **Unity**: 2018.3.5.1 (UI components), 2020.2 (modules)
 - **Unity Engine**: Hollow Knight is a Unity game
 
@@ -96,7 +96,8 @@ This is a Hollow Knight mod project called "CabbyCodes" that provides various ch
 ## Debugging & Logging
 - Ask user for logs if needed to understand what is happening during testing
 - Include meaningful log messages for debugging that capture many related fields in the various unity components
-- Don't use try-catch blocks around game API calls
+- Don't use try-catch blocks around game API calls in hot paths (Update loops, hook handlers)
+- DO use try-catch around MonoMod hook creation (new Hook()) to prevent one broken hook from crashing the mod
 - Log both success and failure cases for troubleshooting
 - Use Makefile build target to test compiling
 - Whenever generating non-java files for debugging, such as logs or command outputs, put them in the /Output folder
@@ -105,8 +106,16 @@ This is a Hollow Knight mod project called "CabbyCodes" that provides various ch
 ## Performance Considerations
 - Minimize allocations in hot paths
 - Cache frequently accessed game objects
-- Use `[HarmonyPatch]` attributes efficiently
+- Create MonoMod hooks efficiently and cache them
 - Avoid expensive operations in Update loops
+
+## Game Patch Resilience
+- Hollow Knight game updates can break BepInEx, MonoMod, and mod code
+- After a game patch, run `make refresh-libs` to update local game DLLs
+- Always wrap MonoMod hook creation in try-catch with logging so individual hook failures don't crash the entire mod
+- Wrap top-level ApplyPatches() calls in CabbyCodesPlugin.cs with try-catch for graceful degradation
+- Users need the latest BepInEx bleeding edge build (from https://builds.bepinex.dev/projects/bepinex_be) - not the old pre.2 release
+- When a crash log mentions MonoMod, HarmonyLib, or ConsoleSetOutFix, it's likely a BepInEx version mismatch, not a mod issue
 
 ## Command Preferences
 - Use Windows Command Prompt (`cmd`) commands when possible

@@ -180,7 +180,8 @@ deploy: build
 	) else ( \
 		echo Deploying $(PROJECT_NAME) for BepInEx 6 to Hollow Knight... \
 	)
-	@if not exist "$(BEPINEX_PLUGINS_PATH)" echo Error: BepInEx plugins directory "$(BEPINEX_PLUGINS_PATH)" not found. Please ensure Hollow Knight is installed and BepInEx is set up correctly. && exit /b 1
+	@if not exist "$(HOLLOW_KNIGHT_PATH)" (echo Error: Hollow Knight directory "$(HOLLOW_KNIGHT_PATH)" not found. Please ensure Hollow Knight is installed. && exit /b 1)
+	@if not exist "$(BEPINEX_PLUGINS_PATH)" (echo BepInEx plugins directory not found, creating "$(BEPINEX_PLUGINS_PATH)"... && mkdir "$(BEPINEX_PLUGINS_PATH)")
 	@if exist "$(BEPINEX_PLUGINS_PATH)\$(PROJECT_NAME).dll" del /f /q "$(BEPINEX_PLUGINS_PATH)\$(PROJECT_NAME).dll"
 	@if exist "$(BEPINEX_PLUGINS_PATH)\CabbyMenu.dll" del /f /q "$(BEPINEX_PLUGINS_PATH)\CabbyMenu.dll"
 	@if "$(VERSION)" == "5" ( \
@@ -225,6 +226,31 @@ run: deploy
 	@echo Launching Hollow Knight via Steam...
 	@start "" "steam://rungameid/367520"
 	@echo Hollow Knight launched via Steam!
+
+# Update BepInEx 6 installation in Hollow Knight directory
+# Downloads the latest bleeding edge build and extracts it to the game folder
+# Run this when BepInEx crashes on game startup after a Hollow Knight update
+.PHONY: update-bepinex
+update-bepinex:
+	@if not exist "$(HOLLOW_KNIGHT_PATH)" (echo ERROR: Hollow Knight directory "$(HOLLOW_KNIGHT_PATH)" not found. && exit /b 1)
+	@echo Downloading latest BepInEx 6 bleeding edge build...
+	@if not exist "Output" mkdir "Output"
+	@powershell -Command "$$page = Invoke-WebRequest -Uri 'https://builds.bepinex.dev/projects/bepinex_be' -UseBasicParsing; $$link = ($$page.Links | Where-Object { $$_.href -match 'Unity\.Mono-win-x64.*\.zip$$' } | Select-Object -First 1).href; if (-not $$link) { Write-Host 'ERROR: Could not find BepInEx download link' -ForegroundColor Red; exit 1 }; $$url = 'https://builds.bepinex.dev' + $$link; $$fileName = [System.IO.Path]::GetFileName($$link); Write-Host \"Downloading $$fileName...\"; Invoke-WebRequest -Uri $$url -OutFile \"Output\$$fileName\" -UseBasicParsing; Write-Host 'Extracting to Hollow Knight directory...'; Expand-Archive -Path \"Output\$$fileName\" -DestinationPath '$(HOLLOW_KNIGHT_PATH)' -Force; Write-Host 'BepInEx updated successfully!' -ForegroundColor Green; Write-Host \"Archive saved to: Output\$$fileName\""
+
+# Refresh game assemblies from Hollow Knight installation
+# Run this after any Hollow Knight game update to get fresh DLLs
+.PHONY: refresh-libs
+refresh-libs:
+	@echo "Refreshing game assemblies from Hollow Knight installation..."
+	@if not exist "$(MANAGED_PATH)" (echo ERROR: Hollow Knight Managed folder not found at "$(MANAGED_PATH)" && echo Please verify your Hollow Knight installation path in the Makefile. && exit /b 1)
+	@if not exist "$(MANAGED_PATH)\Assembly-CSharp.dll" (echo ERROR: Assembly-CSharp.dll not found in "$(MANAGED_PATH)" && exit /b 1)
+	@if not exist "$(MANAGED_PATH)\PlayMaker.dll" (echo ERROR: PlayMaker.dll not found in "$(MANAGED_PATH)" && exit /b 1)
+	@if not exist "CabbyCodes\lib" mkdir "CabbyCodes\lib"
+	@copy /Y "$(MANAGED_PATH)\Assembly-CSharp.dll" "CabbyCodes\lib\Assembly-CSharp.dll"
+	@copy /Y "$(MANAGED_PATH)\PlayMaker.dll" "CabbyCodes\lib\PlayMaker.dll"
+	@echo "Game assemblies refreshed successfully in CabbyCodes\lib\"
+	@echo "NOTE: These are VANILLA assemblies. If Lumafly/HKAPI is installed, verify"
+	@echo "      game files through Steam first to get unmodified DLLs."
 
 # Check .NET SDK version
 .PHONY: check-sdk
@@ -275,6 +301,8 @@ help:
 	@echo "  run                    - Deploy and run Hollow Knight (defaults to BepInEx 6)"
 	@echo "  run 5		            - Deploy and run BepInEx 5 version"
 	@echo "  run 6		            - Deploy and run BepInEx 6 version"
+	@echo "  update-bepinex          - Download and install latest BepInEx 6 bleeding edge build"
+	@echo "  refresh-libs            - Refresh game DLLs from Hollow Knight installation"
 	@echo "  check-sdk              - Check .NET SDK version"
 	@echo "  info                   - Show project information"
 	@echo "  rev x.x.x              - Update version numbers across projects"

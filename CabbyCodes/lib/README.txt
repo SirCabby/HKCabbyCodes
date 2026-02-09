@@ -51,6 +51,24 @@ Build Configurations Using This Folder
 For Lumafly builds, use the lib-lumafly folder instead with the 
 HKAPI-patched Assembly-CSharp.dll.
 
+After Game Patches
+------------------
+When Hollow Knight receives a game update, the managed assemblies change and
+these DLLs must be refreshed. Stale DLLs can cause build errors or runtime
+crashes.
+
+Quick refresh using the Makefile:
+  make refresh-libs
+
+This copies fresh Assembly-CSharp.dll and PlayMaker.dll from your Hollow
+Knight installation into this folder.
+
+NOTE: If Lumafly/HKAPI is installed, verify game files through Steam first
+(Properties > Installed Files > Verify) to get the vanilla (unmodified) DLLs.
+
+After refreshing, rebuild:
+  make clean && make build
+
 Dependency Notes
 ----------------
 - NuGet packages (BepInEx, MonoMod, Unity) are restored automatically

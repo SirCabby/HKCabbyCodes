@@ -16,6 +16,7 @@ using CabbyCodes.Patches.SpriteViewer;
 using CabbyCodes.Patches.Teleport;
 using CabbyMenu.UI;
 using CabbyMenu.UI.Controls.InputField;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 namespace CabbyCodes
@@ -86,12 +87,74 @@ namespace CabbyCodes
 
         /// <summary>
         /// Called after Awake. Sets up the Unity Explorer and initializes the mod menu with all categories.
+        /// Each patch group is isolated in a NoInlining method so that a TypeLoadException from a missing
+        /// game type only kills that one method's JIT compilation, not the entire Start() method.
         /// </summary>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "Unity lifecycle method called by Unity engine")]
         private void Start()
         {
-            //UnityExplorer.ExplorerStandalone.CreateInstance();
+            // Initialize the core menu system - if this fails, the mod cannot function
+            try
+            {
+                InitializeMenuAndCategories();
+            }
+            catch (System.Exception ex)
+            {
+                BLogger.LogError("Failed to initialize CabbyCodes menu system: " + ex.Message);
+                BLogger.LogError("Stack trace: " + ex.StackTrace);
+                return;
+            }
 
+            // Apply patches with individual error handling so one failure doesn't prevent others.
+            // Each wrapper is [MethodImpl(NoInlining)] so a TypeLoadException from a missing game type
+            // is caught here instead of taking down the entire Start() method at JIT time.
+            try
+            {
+                ApplyQuickStartPatches();
+            }
+            catch (System.Exception ex)
+            {
+                BLogger.LogError("Failed to apply QuickStartPatch: " + ex.Message);
+            }
+
+            try
+            {
+                ApplyCustomSaveLoadPatches();
+            }
+            catch (System.Exception ex)
+            {
+                BLogger.LogError("Failed to apply CustomSaveLoadPatch: " + ex.Message);
+            }
+
+            try
+            {
+                ApplyFlagMonitorPatches();
+            }
+            catch (System.Exception ex)
+            {
+                BLogger.LogError("Failed to apply FlagMonitorPatch: " + ex.Message);
+            }
+
+            try
+            {
+                InitializePlayerPatchPanels();
+            }
+            catch (System.Exception ex)
+            {
+                BLogger.LogError("Failed to initialize PlayerPatch panels: " + ex.Message);
+            }
+
+            BLogger.LogInfo("CabbyCodes menu initialized successfully");
+        }
+
+        /// <summary>
+        /// Initializes the menu system and registers all categories.
+        /// Isolated with NoInlining so that type resolution failures in referenced patch classes
+        /// are caught by the caller's try-catch rather than failing Start()'s JIT compilation.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        private void InitializeMenuAndCategories()
+        {
             // Create the game state provider
             gameStateProvider = new GameStateProvider();
 
@@ -163,29 +226,46 @@ namespace CabbyCodes
                 // Defer the restoration until the dropdown is initialized
                 cabbyMenu.SetDeferredCategoryRestoration(lastSelectedCategory);
             }
+        }
 
-            // Apply quick start patches
+        /// <summary>
+        /// Applies quick start patches. Isolated to contain JIT TypeLoadExceptions.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        private static void ApplyQuickStartPatches()
+        {
             QuickStartPatch.ApplyPatches();
-            
-            // Apply custom save/load patches
+        }
+
+        /// <summary>
+        /// Applies custom save/load patches. Isolated to contain JIT TypeLoadExceptions.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        private static void ApplyCustomSaveLoadPatches()
+        {
             CustomSaveLoadPatch.ApplyPatches();
+        }
 
-            // Apply flag monitor patches
+        /// <summary>
+        /// Applies flag monitor patches and initializes monitoring UI.
+        /// Isolated to contain JIT TypeLoadExceptions (e.g., from changed Unity text types).
+        /// </summary>
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        private static void ApplyFlagMonitorPatches()
+        {
             FlagMonitorPatch.ApplyPatches();
-            
-            // Initialize scene monitoring for flag monitor
             FlagMonitorPatch.InitializeSceneMonitoring();
-
-            // Ensure flag monitor panel exists if it was previously enabled
             FlagMonitorReference.EnsurePanelExists();
-
-            // Ensure file logging is set up if it was previously enabled
             FlagFileLoggingReference.EnsureFileExists();
+        }
 
-            // Initialize player patches immediately on startup (don't wait for category selection)
+        /// <summary>
+        /// Initializes player patch panels. Isolated to contain JIT TypeLoadExceptions.
+        /// </summary>
+        [MethodImpl(MethodImplOptions.NoInlining)]
+        private static void InitializePlayerPatchPanels()
+        {
             PlayerPatch.AddPanels();
-
-            BLogger.LogInfo("CabbyCodes menu initialized successfully");
         }
 
         /// <summary>
@@ -194,6 +274,12 @@ namespace CabbyCodes
         [System.Diagnostics.CodeAnalysis.SuppressMessage("CodeQuality", "IDE0051:Remove unused private members", Justification = "Unity lifecycle method called by Unity engine")]
         private void Update()
         {
+            // Guard against Start() failure - if initialization didn't complete, skip Update
+            if (gameStateProvider == null || cabbyMenu == null)
+            {
+                return;
+            }
+
             // Track menu state changes for heart piece reload logic
             bool currentMenuState = gameStateProvider.ShouldShowMenu();
             if (currentMenuState != lastMenuState)

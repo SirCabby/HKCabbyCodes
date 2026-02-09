@@ -168,8 +168,8 @@ For users who prefer BepInEx 6 or have an existing BepInEx 6 setup.
 
 #### Installation Steps
 1. **Install BepInEx 6**:
-   - Download BepInEx 6 from [GitHub](https://github.com/BepInEx/BepInEx/releases)
-     - Download `BepInEx-Unity.Mono-win-x64-6.0.0-pre.2.zip`
+   - Download BepInEx 6 from the [BepInEx Bleeding Edge builds page](https://builds.bepinex.dev/projects/bepinex_be)
+     - Download the latest `BepInEx-Unity.Mono-win-x64-6.0.0-be.*.zip` (e.g. `6.0.0-be.753` or newer)
    - Extract to your Hollow Knight directory:
      - `C:\Program Files (x86)\Steam\steamapps\common\Hollow Knight`
    - Run the game once to generate BepInEx folders
@@ -194,8 +194,8 @@ For users with an existing BepInEx 5 setup or compatibility requirements.
 
 #### Installation Steps
 1. **Install BepInEx 5**:
-   - Download BepInEx 5 from [GitHub](https://github.com/BepInEx/BepInEx/releases/tag/v5.4.23.2)
-     - Download `BepInEx_win_x64_5.4.23.2.zip`
+   - Download BepInEx 5 from [GitHub](https://github.com/BepInEx/BepInEx/releases/tag/v5.4.23.4)
+     - Download `BepInEx_win_x64_5.4.23.4.zip`
    - Extract to your Hollow Knight directory:
      - `C:\Program Files (x86)\Steam\steamapps\common\Hollow Knight`
    - Run the game once to generate BepInEx folders
@@ -272,6 +272,15 @@ Custom teleport locations are automatically saved to the config file and will pe
 
 **Values not updating:**
 - Check that input values are within the required range
+
+**Game updated and mods stopped working (BepInEx):**
+- Hollow Knight game patches can break BepInEx itself, not just individual mods. If you see a crash on startup with errors mentioning `MonoMod`, `HarmonyLib`, or `ConsoleSetOutFix`, your BepInEx installation is outdated.
+- **Fix**: Download and install the latest BepInEx bleeding edge build from the [BepInEx Bleeding Edge builds page](https://builds.bepinex.dev/projects/bepinex_be). Replace the existing BepInEx files in your Hollow Knight directory with the new ones.
+- After updating BepInEx, verify the game launches with the BepInEx console visible before reinstalling mods.
+
+**Game updated and mods stopped working (Lumafly):**
+- Try updating the Modding API through Lumafly first. Lumafly typically handles game patch compatibility automatically.
+- If CabbyCodes specifically doesn't work after a game patch, check for mod updates through Lumafly or the [releases page](https://github.com/SirCabby/HKCabbyCodes/releases).
 
 ## 🛠️ Development
 
@@ -477,6 +486,12 @@ Each contains:
 **Missing dependencies:**
 - BepInEx builds: Check `CabbyCodes/lib/README.txt` for required files
 - Lumafly builds: Check `CabbyCodes/lib-lumafly/README.txt` for required files
+
+**After a Hollow Knight game patch:**
+- Game updates change `Assembly-CSharp.dll` and may break compilation or runtime behavior
+- Run `make refresh-libs` to copy fresh game DLLs from your Hollow Knight installation
+- If Lumafly/HKAPI is installed, verify game files through Steam first to get vanilla DLLs
+- Rebuild after refreshing: `make clean && make build`
 
 **Deployment issues:**
 - Use `make deploy` to automatically copy both DLLs

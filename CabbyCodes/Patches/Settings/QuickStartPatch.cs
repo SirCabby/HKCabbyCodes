@@ -180,16 +180,23 @@ namespace CabbyCodes.Patches.Settings
         /// </summary>
         private static void ApplyIntroSkipPatches()
         {
-            if (hookStartManagerStart == null)
+            try
             {
-                var startMethod = typeof(StartManager).GetMethod("Start", BindingFlags.NonPublic | BindingFlags.Instance);
-                if (startMethod != null)
+                if (hookStartManagerStart == null)
                 {
-                    hookStartManagerStart = new Hook(
-                        startMethod,
-                        typeof(QuickStartPatch).GetMethod(nameof(OnStartManagerStart), BindingFlags.NonPublic | BindingFlags.Static)
-                    );
+                    var startMethod = typeof(StartManager).GetMethod("Start", BindingFlags.NonPublic | BindingFlags.Instance);
+                    if (startMethod != null)
+                    {
+                        hookStartManagerStart = new Hook(
+                            startMethod,
+                            typeof(QuickStartPatch).GetMethod(nameof(OnStartManagerStart), BindingFlags.NonPublic | BindingFlags.Static)
+                        );
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                CabbyCodesPlugin.BLogger.LogError("QuickStartPatch: Failed to apply intro skip hooks - " + ex.Message);
             }
         }
 
@@ -198,16 +205,23 @@ namespace CabbyCodes.Patches.Settings
         /// </summary>
         private static void ApplyQuickLoadPatches()
         {
-            if (hookGameManagerUpdate == null)
+            try
             {
-                var updateMethod = typeof(GameManager).GetMethod("Update", BindingFlags.NonPublic | BindingFlags.Instance);
-                if (updateMethod != null)
+                if (hookGameManagerUpdate == null)
                 {
-                    hookGameManagerUpdate = new Hook(
-                        updateMethod,
-                        typeof(QuickStartPatch).GetMethod(nameof(OnGameManagerUpdate), BindingFlags.NonPublic | BindingFlags.Static)
-                    );
+                    var updateMethod = typeof(GameManager).GetMethod("Update", BindingFlags.NonPublic | BindingFlags.Instance);
+                    if (updateMethod != null)
+                    {
+                        hookGameManagerUpdate = new Hook(
+                            updateMethod,
+                            typeof(QuickStartPatch).GetMethod(nameof(OnGameManagerUpdate), BindingFlags.NonPublic | BindingFlags.Static)
+                        );
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                CabbyCodesPlugin.BLogger.LogError("QuickStartPatch: Failed to apply quick load hooks - " + ex.Message);
             }
         }
 

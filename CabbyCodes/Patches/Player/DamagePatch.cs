@@ -52,19 +52,26 @@ namespace CabbyCodes.Patches.Player
 
         private static void ApplyHooks()
         {
-            if (hookHit == null)
+            try
             {
-                // Get the Hit method with HitInstance parameter
-                var hitMethod = typeof(HealthManager).GetMethod(nameof(HealthManager.Hit), 
-                    BindingFlags.Public | BindingFlags.Instance, 
-                    null, 
-                    new Type[] { typeof(HitInstance) }, 
-                    null);
-                    
-                hookHit = new Hook(
-                    hitMethod,
-                    typeof(DamagePatch).GetMethod(nameof(OnHit), BindingFlags.NonPublic | BindingFlags.Static)
-                );
+                if (hookHit == null)
+                {
+                    // Get the Hit method with HitInstance parameter
+                    var hitMethod = typeof(HealthManager).GetMethod(nameof(HealthManager.Hit), 
+                        BindingFlags.Public | BindingFlags.Instance, 
+                        null, 
+                        new Type[] { typeof(HitInstance) }, 
+                        null);
+                        
+                    hookHit = new Hook(
+                        hitMethod,
+                        typeof(DamagePatch).GetMethod(nameof(OnHit), BindingFlags.NonPublic | BindingFlags.Static)
+                    );
+                }
+            }
+            catch (Exception ex)
+            {
+                CabbyCodesPlugin.BLogger.LogError("DamagePatch: Failed to apply hooks - " + ex.Message);
             }
         }
 

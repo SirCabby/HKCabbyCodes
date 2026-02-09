@@ -8,7 +8,6 @@ using System.Collections;
 using CabbyCodes.Flags;
 using System;
 using System.IO;
-using TMPro;
 using CabbyCodes.Scenes;
 
 namespace CabbyCodes.Patches.Flags.Triage
@@ -16,7 +15,7 @@ namespace CabbyCodes.Patches.Flags.Triage
     public class FlagMonitorPatch
     {
         public static GameObject notificationPanel;
-        public static TextMeshProUGUI notificationText;
+        public static Text notificationText;
         private static readonly Queue<string> notificationQueue = new Queue<string>();
         private const int MAX_NOTIFICATIONS = 200;
         private static readonly FlagMonitorReference monitorReference = FlagMonitorReference.Instance;

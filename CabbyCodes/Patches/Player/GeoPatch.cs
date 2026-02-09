@@ -50,19 +50,26 @@ namespace CabbyCodes.Patches.Player
 
         private static void ApplyHooks()
         {
-            if (hookTakeGeo == null)
+            try
             {
-                hookTakeGeo = new Hook(
-                    typeof(PlayerData).GetMethod(nameof(PlayerData.TakeGeo), BindingFlags.Public | BindingFlags.Instance),
-                    typeof(GeoPatch).GetMethod(nameof(OnTakeGeo), BindingFlags.NonPublic | BindingFlags.Static)
-                );
+                if (hookTakeGeo == null)
+                {
+                    hookTakeGeo = new Hook(
+                        typeof(PlayerData).GetMethod(nameof(PlayerData.TakeGeo), BindingFlags.Public | BindingFlags.Instance),
+                        typeof(GeoPatch).GetMethod(nameof(OnTakeGeo), BindingFlags.NonPublic | BindingFlags.Static)
+                    );
+                }
+                if (hookGeoCounterTakeGeo == null)
+                {
+                    hookGeoCounterTakeGeo = new Hook(
+                        typeof(GeoCounter).GetMethod(nameof(GeoCounter.TakeGeo), BindingFlags.Public | BindingFlags.Instance),
+                        typeof(GeoPatch).GetMethod(nameof(OnGeoCounterTakeGeo), BindingFlags.NonPublic | BindingFlags.Static)
+                    );
+                }
             }
-            if (hookGeoCounterTakeGeo == null)
+            catch (Exception ex)
             {
-                hookGeoCounterTakeGeo = new Hook(
-                    typeof(GeoCounter).GetMethod(nameof(GeoCounter.TakeGeo), BindingFlags.Public | BindingFlags.Instance),
-                    typeof(GeoPatch).GetMethod(nameof(OnGeoCounterTakeGeo), BindingFlags.NonPublic | BindingFlags.Static)
-                );
+                CabbyCodesPlugin.BLogger.LogError("GeoPatch: Failed to apply hooks - " + ex.Message);
             }
         }
 

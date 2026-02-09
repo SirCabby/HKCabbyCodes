@@ -60,8 +60,7 @@ namespace CabbyMenu.UI.Controls.InputField
             inputFieldPanelLayout.preferredWidth = size.x;
             inputFieldPanelLayout.preferredHeight = size.y;
 
-            Transform textTransform = inputFieldGo.transform.Find("Text");
-            Text textComponent = textTransform.GetComponent<Text>();
+            Text textComponent = inputField.textComponent;
             new TextMod(textComponent).SetFontStyle(FontStyle.Bold).SetFontSize(Constants.DEFAULT_FONT_SIZE).SetAlignment(TextAnchor.MiddleLeft);
             
             // Add border to the input field

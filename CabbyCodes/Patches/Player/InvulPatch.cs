@@ -79,26 +79,33 @@ namespace CabbyCodes.Patches.Player
 
         private static void ApplyHooks()
         {
-            if (hookTakeHealth == null)
+            try
             {
-                hookTakeHealth = new Hook(
-                    typeof(PlayerData).GetMethod(nameof(PlayerData.TakeHealth), BindingFlags.Public | BindingFlags.Instance),
-                    typeof(InvulPatch).GetMethod(nameof(OnTakeHealth), BindingFlags.NonPublic | BindingFlags.Static)
-                );
+                if (hookTakeHealth == null)
+                {
+                    hookTakeHealth = new Hook(
+                        typeof(PlayerData).GetMethod(nameof(PlayerData.TakeHealth), BindingFlags.Public | BindingFlags.Instance),
+                        typeof(InvulPatch).GetMethod(nameof(OnTakeHealth), BindingFlags.NonPublic | BindingFlags.Static)
+                    );
+                }
+                if (hookWouldDie == null)
+                {
+                    hookWouldDie = new Hook(
+                        typeof(PlayerData).GetMethod(nameof(PlayerData.WouldDie), BindingFlags.Public | BindingFlags.Instance),
+                        typeof(InvulPatch).GetMethod(nameof(OnWouldDie), BindingFlags.NonPublic | BindingFlags.Static)
+                    );
+                }
+                if (hookTakeDamage == null)
+                {
+                    hookTakeDamage = new Hook(
+                        typeof(HeroController).GetMethod(nameof(HeroController.TakeDamage), BindingFlags.Public | BindingFlags.Instance),
+                        typeof(InvulPatch).GetMethod(nameof(OnTakeDamage), BindingFlags.NonPublic | BindingFlags.Static)
+                    );
+                }
             }
-            if (hookWouldDie == null)
+            catch (Exception ex)
             {
-                hookWouldDie = new Hook(
-                    typeof(PlayerData).GetMethod(nameof(PlayerData.WouldDie), BindingFlags.Public | BindingFlags.Instance),
-                    typeof(InvulPatch).GetMethod(nameof(OnWouldDie), BindingFlags.NonPublic | BindingFlags.Static)
-                );
-            }
-            if (hookTakeDamage == null)
-            {
-                hookTakeDamage = new Hook(
-                    typeof(HeroController).GetMethod(nameof(HeroController.TakeDamage), BindingFlags.Public | BindingFlags.Instance),
-                    typeof(InvulPatch).GetMethod(nameof(OnTakeDamage), BindingFlags.NonPublic | BindingFlags.Static)
-                );
+                CabbyCodesPlugin.BLogger.LogError("InvulPatch: Failed to apply hooks - " + ex.Message);
             }
         }
 

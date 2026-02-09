@@ -254,9 +254,9 @@ namespace CabbyMenu.UI.Controls.InputField
             if (rectTransform == null) return 0;
             if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(rectTransform, mousePosition, null, out Vector2 localPoint))
                 return 0;
-            Transform textTransform = InputFieldGo.transform.Find("Text");
-            if (textTransform == null) return 0;
-            Text textComponent = textTransform.GetComponent<Text>();
+            // Get the text component via the InputField reference (hierarchy-independent)
+            UnityEngine.UI.InputField field = GetInputField();
+            Text textComponent = field != null ? field.textComponent : null;
             if (textComponent == null) return 0;
             float textStartX = -rectTransform.rect.width / 2f + 5f; // Approximate text start position with padding
             float mouseX = localPoint.x - textStartX;
