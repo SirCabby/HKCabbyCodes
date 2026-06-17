@@ -392,6 +392,8 @@ namespace CabbyCodes.Patches.Teleport
         /// <param name="location">The teleport location to create a panel for.</param>
         private static void AddCustomPanel(TeleportLocation location)
         {
+            string hotkeyActionId = Settings.CustomHotkeyManager.TeleportActionId(location.DisplayName);
+
             ButtonPanel buttonPanel = new ButtonPanel(() =>
             {
                 var menu = CabbyCodesPlugin.cabbyMenu;
@@ -415,6 +417,7 @@ namespace CabbyCodes.Patches.Teleport
             PanelAdder.AddDestroyButtonToPanel(buttonPanel, () =>
             {
                 savedTeleports.Remove(location);
+                Settings.CustomHotkeyManager.Unregister(hotkeyActionId, true);
                 if (location is CustomTeleportLocation customLocation)
                 {
                     try
@@ -465,6 +468,9 @@ namespace CabbyCodes.Patches.Teleport
                 }
 
             }, "Save", new Vector2(CabbyMenu.Constants.MIN_PANEL_WIDTH, CabbyMenu.Constants.DEFAULT_PANEL_HEIGHT));
+
+            // Add hotkey button (right of the row) to quick-run this teleport during gameplay
+            Settings.CustomHotkeyManager.AttachRowButton(buttonPanel, hotkeyActionId, () => DoTeleport(location), location.DisplayName);
         }
 
         /// <summary>

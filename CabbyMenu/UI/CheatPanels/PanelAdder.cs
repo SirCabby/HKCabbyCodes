@@ -43,6 +43,43 @@ namespace CabbyMenu.UI.CheatPanels
                 (text) => ButtonBuilder.BuildDefault(buttonText), action);
         }
 
+        /// <summary>
+        /// Adds a button anchored to the right edge of a panel, positioned to the left of the
+        /// destroy (X) button. Uses absolute positioning (ignores the HorizontalLayoutGroup).
+        /// </summary>
+        /// <param name="targetPanel">The panel to add the button to.</param>
+        /// <param name="action">Click handler for the button.</param>
+        /// <param name="buttonText">Text to display on the button.</param>
+        /// <param name="size">Size of the button.</param>
+        /// <param name="rightOffset">Distance from the panel's right edge to the button's right edge
+        /// (e.g. the destroy button's width plus a gap).</param>
+        /// <returns>The created button GameObject.</returns>
+        public static GameObject AddButtonAtRightEdge(CheatPanel targetPanel, UnityAction action, string buttonText, Vector2 size, float rightOffset)
+        {
+            (GameObject button, _, _) = ButtonBuilder.BuildDefault(buttonText);
+            button.GetComponent<Button>().onClick.AddListener(action);
+
+            if (targetPanel.cheatPanel == null)
+            {
+                return button;
+            }
+
+            button.transform.SetParent(targetPanel.cheatPanel.transform, false);
+
+            RectTransform buttonRect = button.GetComponent<RectTransform>();
+            buttonRect.sizeDelta = size;
+
+            // Ignore the HorizontalLayoutGroup so we can position absolutely at the right edge.
+            LayoutElement buttonLayout = button.AddComponent<LayoutElement>();
+            buttonLayout.ignoreLayout = true;
+
+            buttonRect.anchorMin = new Vector2(0.99f, 0.5f);
+            buttonRect.anchorMax = new Vector2(0.99f, 0.5f);
+            buttonRect.anchoredPosition = new Vector2(-(rightOffset + (size.x / 2f)), 0f);
+
+            return button;
+        }
+
         public static GameObject AddToggleButton(CheatPanel panel, int siblingIndex, ISyncedReference<bool> syncedReference)
         {
             GameObject buttonPanel = DefaultControls.CreatePanel(new DefaultControls.Resources());

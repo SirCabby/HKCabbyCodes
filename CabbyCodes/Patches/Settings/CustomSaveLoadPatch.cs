@@ -83,6 +83,7 @@ namespace CabbyCodes.Patches.Settings
             foreach (string saveFileName in SavedGameManager.GetCustomSaveFiles())
             {
                 string displayName = SavedGameManager.GetDisplayNameFromFileName(saveFileName);
+                string hotkeyActionId = CustomHotkeyManager.SaveActionId(saveFileName);
 
                 var buttonPanel = new ButtonPanel(() =>
                 {
@@ -111,6 +112,7 @@ namespace CabbyCodes.Patches.Settings
                     // actual deletion logic after panel removal
                     if (SavedGameManager.DeleteCustomSave(saveFileName))
                     {
+                        CustomHotkeyManager.Unregister(hotkeyActionId, true);
                         SaveGameAnalysisPatch.RefreshFileList();
                         onListChanged?.Invoke();
                     }
@@ -165,6 +167,9 @@ namespace CabbyCodes.Patches.Settings
                         SavedGameManager.SaveCustomGame(customName);
                     }
                 }, "Save", new Vector2(CabbyMenu.Constants.MIN_PANEL_WIDTH, CabbyMenu.Constants.DEFAULT_PANEL_HEIGHT));
+
+                // Add hotkey button (right of the row) to quick-load this save during gameplay
+                CustomHotkeyManager.AttachRowButton(buttonPanel, hotkeyActionId, () => QuickLoad(saveFileName), displayName);
 
                 panels.Add(buttonPanel);
             }
@@ -228,6 +233,15 @@ namespace CabbyCodes.Patches.Settings
                 // Reset saving flag once callback completes
                 isSaving = false;
             });
+        }
+
+        /// <summary>
+        /// Quick-loads a custom save file immediately (no confirmation popup). Used by row hotkeys.
+        /// </summary>
+        /// <param name="saveFileName">The name of the save file to load.</param>
+        public static void QuickLoad(string saveFileName)
+        {
+            LoadCustomSave(saveFileName);
         }
 
         /// <summary>

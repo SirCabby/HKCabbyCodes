@@ -70,6 +70,7 @@ namespace CabbyCodes
             configFile = Config;
 
             QuickOpenHotkeyManager.Initialize(configFile);
+            CustomHotkeyManager.Initialize(configFile);
 
             // Initialize flag monitor configuration early so it's available when panels are created
             FlagMonitorReference.InitializeConfig();
@@ -301,6 +302,7 @@ namespace CabbyCodes
             cabbyMenu.Update();
             FlagMonitorReference.UpdatePanelVisibility();
             QuickOpenHotkeyManager.Update();
+            CustomHotkeyManager.Update();
         }
         
         // Track the last known menu state
