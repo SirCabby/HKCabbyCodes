@@ -119,6 +119,125 @@ namespace CabbyCodes.SavedGames
         }
 
         /// <summary>
+        /// Starts a failsafe watchdog that guarantees any active loading/reload popup is dismissed
+        /// once the game returns to normal play. This protects against the loading modal staying
+        /// open if the scene-entry event or the teleport coroutine that normally hides it never
+        /// fires or never completes. Runs on this persistent (DontDestroyOnLoad) instance so it
+        /// survives the scene transition into the loaded game.
+        /// </summary>
+        public static void EnsureLoadingPopupHidden()
+        {
+            EnsureInstance();
+            if (_instance != null)
+            {
+                _instance.StartCoroutine(LoadingPopupFailsafe());
+            }
+        }
+
+        /// <summary>
+        /// Watchdog coroutine: waits until the loading popup has been dismissed normally, the game
+        /// is clearly back in normal play, or a hard timeout elapses - then force-hides any popup
+        /// that is still showing.
+        /// </summary>
+        private static System.Collections.IEnumerator LoadingPopupFailsafe()
+        {
+            const float hardTimeout = 30f;   // absolute backstop from the moment the load began
+            const float playableGrace = 3f;  // once back in normal play, let the normal path clean up first
+
+            float start = Time.realtimeSinceStartup;
+            float playableSince = -1f;
+
+            while (true)
+            {
+                // The normal path already cleaned everything up - nothing left to do.
+                if (!IsAnyLoadingPopupVisible())
+                {
+                    yield break;
+                }
+
+                float now = Time.realtimeSinceStartup;
+                if (now - start > hardTimeout)
+                {
+                    CabbyCodesPlugin.BLogger.LogWarning("GameReloadManager: Loading popup failsafe hit hard timeout; forcing cleanup.");
+                    break;
+                }
+
+                if (IsBackInNormalGameplay())
+                {
+                    if (playableSince < 0f)
+                    {
+                        playableSince = now;
+                    }
+                    else if (now - playableSince > playableGrace)
+                    {
+                        CabbyCodesPlugin.BLogger.LogWarning("GameReloadManager: Game is playable but the loading popup is still open; forcing cleanup.");
+                        break;
+                    }
+                }
+                else
+                {
+                    playableSince = -1f;
+                }
+
+                yield return null;
+            }
+
+            ForceHideAllLoadingPopups();
+        }
+
+        /// <summary>
+        /// Returns true if either the custom-save loading popup or the reload popup is still active.
+        /// </summary>
+        private static bool IsAnyLoadingPopupVisible()
+        {
+            return CustomSaveLoadPatch.GetCurrentLoadingPopup() != null || currentReloadPopup != null;
+        }
+
+        /// <summary>
+        /// Returns true when the hero is back under normal player control (loaded, unpaused,
+        /// accepting input, standing on the ground, and not sitting at a bench).
+        /// </summary>
+        private static bool IsBackInNormalGameplay()
+        {
+            var gm = GameManager._instance;
+            if (gm == null) return false;
+            if (gm.gameState != GlobalEnums.GameState.PLAYING) return false;
+            if (gm.inputHandler == null || !gm.inputHandler.acceptingInput) return false;
+            if (PlayerData.instance == null || PlayerData.instance.atBench) return false;
+
+            var hero = gm.hero_ctrl;
+            if (hero == null) return false;
+
+            bool onGround = false;
+            try { onGround = hero.cState != null && hero.cState.onGround; } catch { }
+            return onGround;
+        }
+
+        /// <summary>
+        /// Force-hides and destroys any loading/reload popup that is still showing.
+        /// </summary>
+        private static void ForceHideAllLoadingPopups()
+        {
+            var loadingPopup = CustomSaveLoadPatch.GetCurrentLoadingPopup();
+            if (loadingPopup != null)
+            {
+                try
+                {
+                    loadingPopup.Hide();
+                    loadingPopup.Destroy();
+                }
+                catch (Exception ex)
+                {
+                    CabbyCodesPlugin.BLogger.LogWarning(string.Format("GameReloadManager: failsafe error hiding loading popup: {0}", ex.Message));
+                }
+                CustomSaveLoadPatch.ClearCurrentLoadingPopup();
+            }
+
+            // Clears reload sources and hides/destroys the reload popup.
+            ClearAllReloadRequests();
+        }
+
+        /// <summary>
         /// Creates a loading popup for reloads.
         /// </summary>
         /// <returns>The created loading popup, or null if creation fails.</returns>

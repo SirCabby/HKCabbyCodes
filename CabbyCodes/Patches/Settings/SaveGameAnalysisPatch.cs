@@ -111,7 +111,7 @@ namespace CabbyCodes.Patches.Settings
                     using (MemoryStream memoryStream = new MemoryStream(fileData))
                     {
                         string encryptedData = (string)binaryFormatter.Deserialize(memoryStream);
-                        json = Encryption.Decrypt(encryptedData);
+                        json = CabbyCodes.SavedGames.CabbyEncryption.Decrypt(encryptedData);
                         isEncrypted = true;
                     }
                 }

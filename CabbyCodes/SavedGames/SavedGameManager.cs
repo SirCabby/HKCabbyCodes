@@ -15,6 +15,12 @@ namespace CabbyCodes.SavedGames
     {
         private const string SAVE_FILE_EXTENSION = ".dat";
 
+        /// <summary>
+        /// Failsafe timeout (seconds) for waiting on the player to leave the bench after a save
+        /// load. If exceeded, the load proceeds anyway so the loading popup can never hang open.
+        /// </summary>
+        private const float BENCH_STAND_TIMEOUT = 30f;
+
         public static string GetCabbySavesDirectory()
         {
             string baseSaveDir = Application.persistentDataPath;
@@ -136,7 +142,7 @@ namespace CabbyCodes.SavedGames
                 byte[] fileData;
                 if (gameManager.gameConfig.useSaveEncryption && !Platform.Current.IsFileSystemProtected)
                 {
-                    string encryptedData = Encryption.Encrypt(jsonData);
+                    string encryptedData = CabbyEncryption.Encrypt(jsonData);
                     BinaryFormatter binaryFormatter = new BinaryFormatter();
                     using (MemoryStream memoryStream = new MemoryStream())
                     {
@@ -158,11 +164,43 @@ namespace CabbyCodes.SavedGames
             }
         }
 
+        /// <summary>
+        /// Decodes raw custom-save bytes into JSON, auto-detecting the format: HK's encrypted
+        /// format is a BinaryFormatter-serialized string (AES via <see cref="CabbyEncryption"/>),
+        /// while older/plain saves are raw UTF8 JSON. Detection is content-based so a file always
+        /// loads correctly regardless of the current encryption setting.
+        /// </summary>
+        private static string DecodeSaveData(byte[] fileData)
+        {
+            try
+            {
+                BinaryFormatter binaryFormatter = new BinaryFormatter();
+                using (MemoryStream memoryStream = new MemoryStream(fileData))
+                {
+                    if (binaryFormatter.Deserialize(memoryStream) is string encryptedData)
+                    {
+                        return CabbyEncryption.Decrypt(encryptedData);
+                    }
+                }
+            }
+            catch
+            {
+                // Not a BinaryFormatter/encrypted payload - fall through to plain JSON.
+            }
+            return Encoding.UTF8.GetString(fileData);
+        }
+
         private static void LoadCustomGameInternal(string filePath, Action<bool> callback)
         {
+            // Failsafe watchdog: guarantee the loading/reload popup is dismissed once the game is
+            // back in normal play (or after a hard timeout), even if the load below dies before it
+            // can clean up its own popup. Started here so it runs regardless of what happens inside
+            // the load coroutine.
+            GameReloadManager.EnsureLoadingPopupHidden();
+
             // Get the existing loading popup that was created when user clicked load
             var loadingPopup = Patches.Settings.CustomSaveLoadPatch.GetCurrentLoadingPopup();
-            
+
             // Add a delay to ensure the popup has time to display before proceeding
             if (loadingPopup != null)
             {
@@ -198,20 +236,9 @@ namespace CabbyCodes.SavedGames
             {
                 byte[] fileData = File.ReadAllBytes(filePath);
                 GameManager gameManager = GameManager.instance;
-                string jsonData;
-                if (gameManager.gameConfig.useSaveEncryption && !Platform.Current.IsFileSystemProtected)
-                {
-                    BinaryFormatter binaryFormatter = new BinaryFormatter();
-                    using (MemoryStream memoryStream = new MemoryStream(fileData))
-                    {
-                        string encryptedData = (string)binaryFormatter.Deserialize(memoryStream);
-                        jsonData = Encryption.Decrypt(encryptedData);
-                    }
-                }
-                else
-                {
-                    jsonData = Encoding.UTF8.GetString(fileData);
-                }
+                // Detect the format from the file contents (not the current game config) so an
+                // encrypted save still loads even if encryption is toggled off, and vice versa.
+                string jsonData = DecodeSaveData(fileData);
                 var saveGameData = JsonUtility.FromJson<Patches.Settings.SaveGameData>(jsonData);
                 PlayerData.instance = saveGameData.playerData;
                 gameManager.playerData = saveGameData.playerData;
@@ -233,7 +260,7 @@ namespace CabbyCodes.SavedGames
 
                 gameManager.inputHandler.RefreshPlayerData();
                 gameManager.ContinueGame();
-                
+
                 // Always trigger cheat state restoration after the game loads, regardless of scene data
                 void cheatRestoreHandler()
                 {
@@ -372,9 +399,16 @@ namespace CabbyCodes.SavedGames
                 // Also update reload popup message if it exists
                 UpdateReloadPopupMessage("Get off bench to restore position");
 
-                // Wait until the player STANDS UP again (atBench becomes false)
+                // Wait until the player STANDS UP again (atBench becomes false), with a failsafe
+                // timeout so a stuck bench state can never hang the load (and its popup) forever.
+                float benchStandStart = Time.realtimeSinceStartup;
                 while (PlayerData.instance != null && PlayerData.instance.atBench)
                 {
+                    if (Time.realtimeSinceStartup - benchStandStart > BENCH_STAND_TIMEOUT)
+                    {
+                        CabbyCodesPlugin.BLogger.LogWarning("TeleportAfterBench: Timed out waiting for the player to leave the bench; restoring position anyway.");
+                        break;
+                    }
                     yield return null; // still sitting
                 }
             }
